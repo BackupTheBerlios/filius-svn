@@ -1,0 +1,4 @@
+In diesem Verzeichnis sind zusaetzliche Bibliotheken fuer Filius enthalten:
+- htmlparser.jar: wird verwendet von der virtuellen Anwendung Webbrowser zum Parsen von HTML-Dateien. Diese Bibliothek kann unter http://htmlparser.sourceforge.net/ bezogen werden.
+- tools.jar: wird verwendet zur Uebersetzung eigener virtueller Anwendungen zur Laufzeit. Diese Bibliothek ist auch Bestandteil von JDK
+- jna.jar: Zugriff auf native Ressourcen; v.a. noetig, um User-Home unter Windows zu ermitteln (vgl. Java-Bug #4787931)
