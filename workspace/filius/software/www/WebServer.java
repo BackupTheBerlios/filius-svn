@@ -28,8 +28,6 @@ package filius.software.www;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.ListIterator;
 import java.util.StringTokenizer;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -38,7 +36,6 @@ import filius.Main;
 import filius.rahmenprogramm.Base64;
 import filius.rahmenprogramm.Information;
 import filius.software.clientserver.TCPServerAnwendung;
-import filius.software.dns.ResourceRecord;
 import filius.software.system.Datei;
 import filius.software.system.Dateisystem;
 import filius.software.system.InternetKnotenBetriebssystem;
@@ -272,13 +269,16 @@ public class WebServer extends TCPServerAnwendung {
 		Datei vhosts;
 		StringBuffer text;
 		Dateisystem dateisystem;
+		String host, directory;
 
 		dateisystem = getSystemSoftware().getDateisystem();
 
 		text = new StringBuffer();
 
 		for(int i=0; i<vHostArray.length; i++) {
-			text.append(vHostArray[i][0]+"\n"+vHostArray[i][1]+"\n");
+			host = vHostArray[i][0];
+			directory = vHostArray[i][1];
+			text.append((host != null ? host : "") + "\n" + (directory != null ? directory : "") + "\n");
 		}
 
 		vhosts = new Datei();
@@ -296,15 +296,15 @@ public class WebServer extends TCPServerAnwendung {
 		Dateisystem dateisystem;
 
 		vHostArray = new String[5][2];
-
+		int row=0;
+		int col=0;
+		
 		dateisystem = getSystemSoftware().getDateisystem();
 		vhosts = dateisystem.holeDatei(dateisystem.holeRootPfad()+Dateisystem.FILE_SEPARATOR+"www.conf"+Dateisystem.FILE_SEPARATOR+"vhosts");
 
 		if (vhosts != null) {
 			tokenizer = new StringTokenizer(vhosts.getDateiInhalt(), "\n");
 
-			int row=0;
-			int col=0;
 			while (tokenizer.hasMoreTokens()) {
 				line = tokenizer.nextToken().trim();
 				vHostArray[row][col] = line;
@@ -317,11 +317,9 @@ public class WebServer extends TCPServerAnwendung {
 				}
 			}
 		}
-		else {
-			for (int row=0; row<5; row++)
-				for (int col=0; col<2; col++) {
-					vHostArray[row][col] = "";
-				}
+		for (; row < 5; row++) {
+			vHostArray[row][0] = "";
+			vHostArray[row][1] = "";
 		}
 	}
 

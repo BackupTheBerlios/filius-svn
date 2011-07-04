@@ -33,19 +33,19 @@ import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JLabel;
-import filius.gui.anwendungssicht.JTableEditable;
 import javax.swing.table.DefaultTableModel;
 
 import filius.Main;
 import filius.software.www.WebServer;
 
 public class GUIApplicationWebServerWindow extends GUIApplicationWindow {
+	
+	private static final int  VHOST_NUMBER=5;
 
 	private static final long serialVersionUID = 1L;
 
@@ -90,7 +90,7 @@ public class GUIApplicationWebServerWindow extends GUIApplicationWindow {
 		centerBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		JLabel vHostLabel = new JLabel(messages.getString("webserver_msg3"));
 		
-		DefaultTableModel tablemodel = new DefaultTableModel(5,2);
+		DefaultTableModel tablemodel = new DefaultTableModel(VHOST_NUMBER,2);
 		vHostTable = new JTableEditable(tablemodel, true, "WWW");
 		vHostTable.setParentGUI(this);
 		JScrollPane tableScrollPane = new JScrollPane(vHostTable); // necessary for table headers...
@@ -135,11 +135,17 @@ public class GUIApplicationWebServerWindow extends GUIApplicationWindow {
 		tablemodel.setRowCount(0);
 		
 		for(int i=0; i<vhosts.length; i++) {
-			Vector<Comparable> v = new Vector<Comparable>();
+			Vector<Comparable<String>> v = new Vector<Comparable<String>>();
 			if(vhosts[i][0]!=null) v.add(vhosts[i][0]);
 			else v.add("");
 			if(vhosts[i][1]!=null) v.add(vhosts[i][1]);
 			else v.add("");
+			tablemodel.addRow(v);
+		}
+		for (int i=vhosts.length; i<VHOST_NUMBER; i++) {
+			Vector<Comparable<String>> v = new Vector<Comparable<String>>();
+			v.add("");
+			v.add("");
 			tablemodel.addRow(v);
 		}
 		updateUI();
