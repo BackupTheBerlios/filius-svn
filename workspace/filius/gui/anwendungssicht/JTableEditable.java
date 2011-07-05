@@ -33,9 +33,6 @@ import javax.swing.table.TableModel;
 import filius.software.dns.DNSServer;
 import filius.software.www.WebServer;
 
-import filius.Main;
-
-
 public class JTableEditable extends JTable {
 
 	private static final long serialVersionUID = 1L;
