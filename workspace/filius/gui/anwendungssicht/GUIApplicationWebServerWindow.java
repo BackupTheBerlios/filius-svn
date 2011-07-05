@@ -46,6 +46,8 @@ import filius.software.www.WebServer;
 public class GUIApplicationWebServerWindow extends GUIApplicationWindow {
 	
 	private static final int  VHOST_NUMBER=5;
+	
+	private final GUIApplicationWebServerWindow that = this;
 
 	private static final long serialVersionUID = 1L;
 
@@ -164,11 +166,16 @@ public class GUIApplicationWebServerWindow extends GUIApplicationWindow {
 
 	public void update(Observable arg0, Object arg1) {
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (GUIApplicationWebServerWindow), update("+arg0+","+arg1+")");
-		if (logArea != null) {
+		if (logArea != null && arg1 != null) {
 			logArea.append(arg1.toString() + "\n");
 		}
 
-		aktualisieren();
+		try {
+			aktualisieren();
+		}
+		catch (Exception e) {
+			Main.debug.println("GUIApplicationWebServerWindow: update() Exception: " + e.getMessage());
+		}
 
 		Main.debug
 				.println("GUIApplicationWebServerWindow: update() aufgerufen.");

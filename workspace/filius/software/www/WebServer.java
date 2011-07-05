@@ -217,6 +217,7 @@ public class WebServer extends TCPServerAnwendung {
 		if(val!=null) vHostArray[row][col] = val;
 		else vHostArray[row][col] = "";
 //		Main.debug.println("DEBUG WebServer:  vHostArray (danach):\n"+printVHostTable());
+		this.saveVHosts();
 	}
 	
 	public String vhostPrefix(String vhost) {
@@ -261,7 +262,6 @@ public class WebServer extends TCPServerAnwendung {
 	public void beenden() {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (WebServer), beenden()");
 		super.beenden();
-		saveVHosts();
 	}
 
 	private void saveVHosts() {
