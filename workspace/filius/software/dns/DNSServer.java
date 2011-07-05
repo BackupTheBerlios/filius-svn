@@ -34,8 +34,6 @@ import filius.software.clientserver.UDPServerAnwendung;
 import filius.software.system.Datei;
 import filius.software.system.Dateisystem;
 import filius.software.transportschicht.Socket;
-import filius.software.transportschicht.TCPSocket;
-import filius.software.transportschicht.UDPSocket;
 
 public class DNSServer extends UDPServerAnwendung {
 
@@ -62,7 +60,6 @@ public class DNSServer extends UDPServerAnwendung {
 	public void beenden() {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (DNSServer), beenden()");
 		super.beenden();
-		schreibeRecordListe();
 	}
 
 	public LinkedList<ResourceRecord> holeResourceRecords() {
@@ -75,6 +72,7 @@ public class DNSServer extends UDPServerAnwendung {
 		
 		rr = new ResourceRecord(domainname, typ, rdata);
 		records.add(rr);
+		this.schreibeRecordListe();
 	}
 
 	private void initialisiereRecordListe() {
@@ -107,8 +105,7 @@ public class DNSServer extends UDPServerAnwendung {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (DNSServer), schreibeRecordListe()");
 		Datei hosts;
 		StringBuffer text;
-		ListIterator it;
-		boolean erfolg;
+		ListIterator<ResourceRecord> it;
 		Dateisystem dateisystem;
 
 		dateisystem = getSystemSoftware().getDateisystem();
@@ -123,8 +120,8 @@ public class DNSServer extends UDPServerAnwendung {
 		hosts = new Datei();
 		hosts.setDateiInhalt(text.toString());
 		hosts.setName("hosts");
-
-		erfolg = dateisystem.speicherDatei(dateisystem.holeRootPfad()+Dateisystem.FILE_SEPARATOR+"dns", hosts);
+		
+		dateisystem.speicherDatei(dateisystem.holeRootPfad()+Dateisystem.FILE_SEPARATOR+"dns", hosts);
 	}
 
 	public void changeSingleEntry(int recordIdx, int partIdx, String type, String newValue) {
@@ -147,12 +144,13 @@ public class DNSServer extends UDPServerAnwendung {
 				}
 			}
 		}
+		this.schreibeRecordListe();
 	}
 	
 	public void loescheResourceRecord(String domainname, String typ) {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (DNSServer), loescheResourceRecord("+domainname+","+typ+")");
 		ResourceRecord rr;
-		ListIterator it;
+		ListIterator<ResourceRecord> it;
 		boolean fertig = false;
 
 		it = records.listIterator();
@@ -169,7 +167,7 @@ public class DNSServer extends UDPServerAnwendung {
 	public ResourceRecord holeRecord(String domainname, String typ) {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (DNSServer), holeRecord("+domainname+","+typ+")");
 		ResourceRecord rr;
-		ListIterator it;
+		ListIterator<ResourceRecord> it;
 
 		it = records.listIterator();
 		while (it.hasNext()) {
