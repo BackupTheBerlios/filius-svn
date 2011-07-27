@@ -57,7 +57,7 @@ import filius.gui.SplashScreen;
 import filius.rahmenprogramm.I18n;
 import filius.rahmenprogramm.Information;
 import filius.rahmenprogramm.SzenarioVerwaltung;
-import filius.sysinternal.TeeOutputStream;
+import filius.rahmenprogramm.TeeOutputStream;
 
 /**
  * In dieser Klasse wird die Anwendung gestartet und beendet. Das wird in den

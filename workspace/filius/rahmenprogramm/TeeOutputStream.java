@@ -31,7 +31,7 @@
  * @author Christian Eibl
  * Feb. 2010
 */
-package filius.sysinternal;
+package filius.rahmenprogramm;
 
 import java.io.*;
 
