@@ -133,7 +133,7 @@ public class HTTPNachricht implements I18n {
 					for (int i = 1; i < zeilen.length; i++) {
 						if (zeilen[i].equals("")) {
 							daten = new StringBuffer();
-							for (int j = i; j < zeilen.length; j++) {
+							for (int j = i+1; j < zeilen.length; j++) {
 								daten.append(zeilen[j]);
 								if (j < zeilen.length - 1) daten.append("\n");
 							}
