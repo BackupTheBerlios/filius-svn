@@ -72,7 +72,7 @@ public class SMTPMitarbeiter extends ServerMitarbeiter
 
 		this.socket = socket;
 		this.emailServer = server.holeEmailServer();
-		senden(messages.getString("sw_smtpmitarbeiter_msg1")+emailServer.getMailDomain());
+		senden(messages.getString("sw_smtpmitarbeiter_msg1") + " " + emailServer.getMailDomain());
 	}
 
 //	Methoden
