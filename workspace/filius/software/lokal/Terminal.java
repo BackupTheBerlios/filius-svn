@@ -25,10 +25,7 @@
 */
 package filius.software.lokal;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Calendar;
-import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -36,13 +33,12 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import filius.Main;
 import filius.rahmenprogramm.I18n;
-import filius.software.Anwendung;
+import filius.software.clientserver.ClientAnwendung;
 import filius.software.system.Betriebssystem;
 import filius.software.system.Datei;
 import filius.software.system.Dateisystem;
 import filius.software.system.InternetKnotenBetriebssystem;
 import filius.software.vermittlungsschicht.IP;
-import filius.software.clientserver.ClientAnwendung;
 
 
 /**
@@ -143,8 +139,6 @@ public class Terminal extends ClientAnwendung implements I18n {
 		else {
 			srcString = Dateisystem.evaluatePathString(filius.software.system.Dateisystem.absoluterPfad(getAktuellerOrdner())+Dateisystem.FILE_SEPARATOR+srcString);
 		}
-		String srcDir = Dateisystem.getDirectory(srcString);
-		String srcFile = Dateisystem.getBasename(srcString);
 		String destString = args[1];
 		if(destString.length()>0 && destString.substring(0,1).equals(Dateisystem.FILE_SEPARATOR)) {   // 'pfad' is absolute path!
 			destString = Dateisystem.evaluatePathString(destString);
@@ -220,8 +214,8 @@ public class Terminal extends ClientAnwendung implements I18n {
 		}
 		String ausgabe = messages.getString("sw_terminal_msg7");
 
-		LinkedList routingTabelle = getSystemSoftware().getWeiterleitungstabelle().holeTabelle();
-		ListIterator it = routingTabelle.listIterator();
+		LinkedList<String[]> routingTabelle = getSystemSoftware().getWeiterleitungstabelle().holeTabelle();
+		ListIterator<String[]> it = routingTabelle.listIterator();
 
 		while (it.hasNext())
 		{
@@ -274,7 +268,7 @@ public class Terminal extends ClientAnwendung implements I18n {
 
 		if(args[0].isEmpty()) {
 			liste = getSystemSoftware().getDateisystem().listeVerzeichnis(aktuellerOrdner);
-			currPath = getSystemSoftware().getDateisystem().absoluterPfad(aktuellerOrdner);
+			currPath = Dateisystem.absoluterPfad(aktuellerOrdner);
 		}
 		else {
 			if(args[0].length()>0 && args[0].substring(0,1).equals(Dateisystem.FILE_SEPARATOR)) {  // argument given as absolute path!
@@ -462,6 +456,45 @@ public class Terminal extends ClientAnwendung implements I18n {
 		return ergebnis;
 	}
 	
+	public String netstat(String[] args) {
+		/*TransportProtokoll transport;
+		StringBuffer ergebnis = new StringBuffer();
+		Enumeration<Integer> benutztePorts;
+		int port;
+		SocketSchnittstelle tmpSocket;
+		String platzhalterAdresse = "                      ";
+		
+		ergebnis.append("| Protocol | Local Address          | Foreign Address        | State       |\n");
+		ergebnis.append("----------------------------------------------------------------------------\n");
+		
+		transport = this.getSystemSoftware().holeTcp();
+		benutztePorts = transport.holeAktiveSockets().keys();
+		while (benutztePorts.hasMoreElements()) {
+			port = benutztePorts.nextElement().intValue();
+			
+			try {
+				tmpSocket = transport.holeSocket(port);
+				if (tmpSocket instanceof Socket) {
+					
+				}
+				else if (tmpSocket instanceof ServerSocket) {
+					
+				}
+			} catch (SocketException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
+		transport = this.getSystemSoftware().holeUdp();
+		
+		
+		return ergebnis.toString(); */
+		
+		return this.help(args);
+	}
+	
 	/**
 	 *
 	 * test
@@ -583,7 +616,7 @@ public class Terminal extends ClientAnwendung implements I18n {
 		benachrichtigeBeobachter(new Boolean(true));   // inform about a multiple data transmission to the observer
 		benachrichtigeBeobachter("PING "+args[0]+" ("+destIp+")");
 		int sendNumPackets = 4;		// how many ping requests to be sent; adjust here!
-		LinkedList fakeList = new LinkedList<Object>();  // just used for thread-specific delay
+		LinkedList<Object> fakeList = new LinkedList<Object>();  // just used for thread-specific delay
 		
 		int receivedReplies = 0;
 		for (int num=0; num<sendNumPackets; num++) {

@@ -25,8 +25,6 @@
 */
 package filius.software.transportschicht;
 
-import java.util.StringTokenizer;
-
 import filius.Main;
 import filius.exception.SocketException;
 import filius.exception.TimeOutException;
@@ -290,5 +288,9 @@ public abstract class Socket implements SocketSchnittstelle, I18n {
 	public int holeZielPort() {
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (Socket), holeZielPort()");
 		return zielPort;
+	}
+	
+	public int holeLokalenPort() {
+		return lokalerPort;
 	}
 }

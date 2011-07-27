@@ -99,7 +99,9 @@ public abstract class ServerMitarbeiter extends Thread implements I18n {
 		String nachricht = null;
 		while (running) {
 			try {
-				if(socket.istVerbunden()) { nachricht = socket.empfangen(); }
+				if(socket.istVerbunden()) { 
+					nachricht = socket.empfangen(); 
+				}
 				else if (socket instanceof TCPSocket && ((TCPSocket) socket).isSortOfConnected()) {  // Umgehen der Exception!
 					// CAVE: im Socket wird eigentlich noch "zustand" auf CLOSED gesetzt vor Werfen der Exception
 					socket.schliessen();

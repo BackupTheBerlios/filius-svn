@@ -264,7 +264,7 @@ public class SMTPMitarbeiter extends ServerMitarbeiter
 		}
 		catch (Exception e) {
 			e.printStackTrace(Main.debug);
-			emailServer.benachrichtigeBeobachter(messages.getString("sw_smtpmitarbeiter_msg14")+socket.holeZielIPAdresse());
+			emailServer.benachrichtigeBeobachter(messages.getString("sw_smtpmitarbeiter_msg14") + " " + socket.holeZielIPAdresse());
 		}
 	}
 }

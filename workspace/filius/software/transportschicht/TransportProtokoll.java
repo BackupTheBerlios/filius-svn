@@ -77,6 +77,10 @@ public abstract class TransportProtokoll extends Protokoll implements I18n,
 		this.typ = typ;
 		portTabelle = new Hashtable<Integer, SocketSchnittstelle>();
 	}
+	
+	public Hashtable<Integer, SocketSchnittstelle> holeAktiveSockets() {
+		return this.portTabelle;
+	}
 
 	public int holeTyp() {
 		return typ;
