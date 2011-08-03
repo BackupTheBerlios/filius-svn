@@ -917,13 +917,13 @@ public class TCPSocket extends Socket implements Runnable {
 	 * @return ob der aktuelle Zustand ESTABLISHED ist
 	 */
 	public boolean istVerbunden() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (TCPSocket), istVerbunden()");
+		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (TCPSocket), istVerbunden(), port: " + this.holeLokalenPort());
 		return (zustand == ESTABLISHED);
 	}
 	
 	/* workaround function for more ugly exception provoking original code */
 	public boolean isSortOfConnected() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (TCPSocket), isSortOfConnected()");
+		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (TCPSocket), isSortOfConnected(), port: " + this.holeLokalenPort());
 	    if (zustand>=5 && zustand<=11) {
 	    	return true;
 	    }
