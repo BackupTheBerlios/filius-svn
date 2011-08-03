@@ -139,8 +139,8 @@ public class SMTPMitarbeiter extends ServerMitarbeiter
 			}
 			else if (tmp.equalsIgnoreCase("DATA")) {
 				if (!mailFrom.equals("") && rcptTo.size() > 0) {
-				senden(messages.getString("sw_smtpmitarbeiter_msg8"));
-				zustand = DATA;
+					senden(messages.getString("sw_smtpmitarbeiter_msg8"));
+					zustand = DATA;
 				}
 				else {
 					senden(messages.getString("sw_smtpmitarbeiter_msg9"));
@@ -168,6 +168,7 @@ public class SMTPMitarbeiter extends ServerMitarbeiter
 		}
 		else if (zustand == END) {
 			senden(messages.getString("sw_smtpmitarbeiter_msg11"));
+			zustand = ENVELOPE;
 		}
 	}
 
@@ -195,7 +196,7 @@ public class SMTPMitarbeiter extends ServerMitarbeiter
 			{
 				empfaengerKonto = emailServer.sucheKonto(benutzer);
 				empfaengerKonto.getNachrichten().add(kopie);
-				emailServer.benachrichtigeBeobachter(messages.getString("sw_smtpmitarbeiter_msg12")+empfaengerKonto.getBenutzername()+ messages.getString("sw_smtpmitarbeiter_msg13"));
+				emailServer.benachrichtigeBeobachter(messages.getString("sw_smtpmitarbeiter_msg12")+" "+empfaengerKonto.getBenutzername()+" "+ messages.getString("sw_smtpmitarbeiter_msg13"));
 			}
 			else
 			{

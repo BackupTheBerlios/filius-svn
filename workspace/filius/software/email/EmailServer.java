@@ -360,9 +360,9 @@ public class EmailServer extends Anwendung implements I18n
             while(iterN.hasNext())
             {
                 Email email = (Email)iterN.next();
-                emailStr = emailStr+"#"+ email.getAbsender()+"$"+llzuStr(email.getEmpfaenger())+"$"+
+                emailStr = emailStr+"#"+ (email.getAbsender()!=null ? email.getAbsender() : "") +"$"+llzuStr(email.getEmpfaenger())+"$"+
                   llzuStr(email.getCc())+"$"+llzuStr(email.getBcc())+"$"+email.getDateReceived()+"$"+
-                  email.getBetreff()+"$"+nltobr(replaceSpecialChar(email.getText()));
+                  (email.getBetreff()!=null ? email.getBetreff() : "") +"$"+nltobr(replaceSpecialChar(email.getText()));
 
             }
             ergebnis = ergebnis+konto.getBenutzername()+";"+this.mailDomain+";"+konto.getPasswort()+";"+
@@ -502,7 +502,6 @@ public class EmailServer extends Anwendung implements I18n
                 getRoot(), "mailserver");
         this.verzeichnis = getSystemSoftware().getDateisystem().verzeichnisKnoten(getSystemSoftware().getDateisystem().
                 getRoot(),"mailserver");
-        kontenLaden();
     }
 
     public synchronized void setListeBenutzerkonten(LinkedList listeBenutzerkonten)

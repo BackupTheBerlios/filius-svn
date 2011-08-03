@@ -162,7 +162,7 @@ public class Email {
 	public String toString() {
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (Email), toString()");
 		String ergebnis;
-		ListIterator it;
+		ListIterator<String> it;
 		String toListe = "", ccListe = "";
 
 		it = empfaenger.listIterator();
@@ -186,13 +186,25 @@ public class Email {
 			if (it.hasNext()) ccListe = ccListe + ", ";
 		}
 
-		ergebnis = "From: " + absender.trim() + "" + "\n";
-			
-		if (!toListe.equals("")) ergebnis += "To: " + toListe + "\n";
-		if (!ccListe.equals("")) ergebnis += "Cc: " + ccListe + "\n";
-		ergebnis += "Subject: " + betreff.trim()+"\n";
-		if (!dateReceived.equals("")) ergebnis += "Date Received: "+dateReceived+"\n";
-		ergebnis+= "\n" + text.trim();
+		ergebnis = "";
+		if (absender != null) {
+			ergebnis += "From: " + absender.trim() + "" + "\n";
+		}
+		if (!toListe.equals("")) {
+			ergebnis += "To: " + toListe + "\n";
+		}
+		if (!ccListe.equals("")) {
+			ergebnis += "Cc: " + ccListe + "\n";
+		}
+		if (betreff != null) {
+			ergebnis += "Subject: " + betreff.trim()+"\n";
+		}
+		if (!dateReceived.equals("")) {
+			ergebnis += "Date Received: "+dateReceived+"\n";
+		}
+		if (text != null) {
+			ergebnis+= "\n" + text.trim();
+		}
 
 		return ergebnis;
 	}
