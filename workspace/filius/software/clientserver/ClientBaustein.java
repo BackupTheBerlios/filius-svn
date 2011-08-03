@@ -85,23 +85,34 @@ public class ClientBaustein extends ClientAnwendung implements I18n {
 	 */
 	private String zielIPAdresse;
 
-	/** Diese Methode ist <b>nicht blockierend</b> */
+	/** Methode zum Verbindungsaufbau zu einem Server. Hier wird der
+	 * Client-Socket als TCP/IP-Socket erzeugt. Wenn UDP verwendet werden soll,
+	 * muss diese Methode ueberschrieben werden. <br />
+	 * Diese Methode ist <b>nicht blockierend</b>. Diese Methode veranlasst den
+	 * Aufruf von <code>initialisiereSocket</code> in einem anderen Thread. */
 	public void verbinden() {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (ClientBaustein), verbinden()");
-		verbinden(zielIPAdresse, new Integer(zielPort));
+		Object[] args;
+
+		args = new Object[2];
+		args[0] = zielIPAdresse;
+		args[1] = new Integer(zielPort);
+
+		ausfuehren("initialisiereSocket", args);
+		
+		ausfuehren("empfangeNachricht", null);
 	}
 
-	/**
-	 * Methode zum Verbindungsaufbau zu einem Server. Hier wird der
+	/** Methode zum Verbindungsaufbau zu einem Server. Hier wird der
 	 * Client-Socket als TCP/IP-Socket erzeugt. Wenn UDP verwendet werden soll,
 	 * muss diese Methode ueberschrieben werden. <br />
 	 * Diese Methode ist <b>nicht blockierend</b>. Diese Methode veranlasst den
 	 * Aufruf von <code>initialisiereSocket</code> in einem anderen Thread.
-	 *
+	 * 
 	 * @param zielAdresse
 	 * @param port
 	 */
-	private void verbinden(String zielAdresse, Integer port) {
+	/*private void verbinden(String zielAdresse, Integer port) {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (ClientBaustein), verbinden("+zielAdresse+","+port+")");
 		Object[] args;
 
@@ -110,7 +121,7 @@ public class ClientBaustein extends ClientAnwendung implements I18n {
 		args[1] = port;
 
 		ausfuehren("initialisiereSocket", args);
-	}
+	}*/
 
 	/**
 	 * Nicht-blockierende Methode zum Versenden einer Nachricht an den Server.
@@ -120,7 +131,7 @@ public class ClientBaustein extends ClientAnwendung implements I18n {
 	 * @param nachricht
 	 *            die zu versendende Nachricht
 	 */
-	public void senden(String nachricht) {
+	/*public void senden(String nachricht) {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (ClientBaustein), senden("+nachricht+")");
 		Object[] args;
 
@@ -128,12 +139,12 @@ public class ClientBaustein extends ClientAnwendung implements I18n {
 		args[0] = nachricht;
 
 		ausfuehren("versendeNachricht", args);
-	}
+	}*/
 
-	public void empfangen() {
+	/*public void empfangen() {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (ClientBaustein), empfangen()");
 		ausfuehren("empfangeNachricht", null);
-	}
+	}*/
 
 	/**
 	 * Methode zum Aufbau einer Verbindung mit einem TCP-Socket. Diese Methode
@@ -159,21 +170,10 @@ public class ClientBaustein extends ClientAnwendung implements I18n {
 	 * Methode zum trennen einer Verbindung. Der Socket wird durch den Aufruf
 	 * der Methode schliessen() geschlossen und und der Socket fuer diese
 	 * Anwendung auf null gesetzt. <br />
-	 * Diese Methode ist <b>nicht blockierend</b>. Diese Methode veranlasst den
-	 * Aufruf von <code>schliesseSocket</code> in einem anderen Thread.
+	 * Diese Methode ist <b> blockierend</b>. 
 	 */
 	public void trennen() {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (ClientBaustein), trennen()");
-
-		ausfuehren("schliesseSocket", null);
-	}
-
-	/**
-	 * Diese Methode ist <b>blockierend</b> und sollte nicht direkt von der GUI
-	 * aufgerufen werden.
-	 */
-	public void schliesseSocket() {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (ClientBaustein), schliesseSocket()");
 		if (socket != null) {
 			socket.schliessen();
 			socket = null;
@@ -185,7 +185,20 @@ public class ClientBaustein extends ClientAnwendung implements I18n {
 	 * Diese Methode ist <b>blockierend</b> und sollte nicht direkt von der GUI
 	 * aufgerufen werden.
 	 */
-	public void versendeNachricht(String nachricht) {
+	/*public void schliesseSocket() {
+		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (ClientBaustein), schliesseSocket()");
+		if (socket != null) {
+			socket.schliessen();
+			socket = null;
+			benachrichtigeBeobachter(messages.getString("sw_clientbaustein_msg3"));
+		}
+	}*/
+
+	/**
+	 * Diese Methode ist <b>blockierend</b> und sollte nicht direkt von der GUI
+	 * aufgerufen werden.
+	 */
+	public void senden(String nachricht) {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (ClientBaustein), versendeNachricht("+nachricht+")");
 
 		if (socket != null && socket.istVerbunden()) {
@@ -215,16 +228,18 @@ public class ClientBaustein extends ClientAnwendung implements I18n {
 
 		if (socket != null && socket.istVerbunden()) {
 			try {
-				nachricht = socket.empfangen();
-				if (nachricht != null) {
-					benachrichtigeBeobachter(">>" + nachricht);
-				}
-				else {
-					benachrichtigeBeobachter(messages.getString("sw_clientbaustein_msg5")
-							+ socket.holeZielIPAdresse() + ":"
-							+ socket.holeZielPort() + messages.getString("sw_clientbaustein_msg6"));
-
-					socket.schliessen();
+				while (this.istVerbunden()) {
+					nachricht = socket.empfangen();
+					if (nachricht != null) {
+						benachrichtigeBeobachter(">>" + nachricht);
+					}
+					else {
+						benachrichtigeBeobachter(messages.getString("sw_clientbaustein_msg5") + " "
+								+ socket.holeZielIPAdresse() + ":"
+								+ socket.holeZielPort() + " " + messages.getString("sw_clientbaustein_msg6"));
+	
+						socket.schliessen();
+					}
 				}
 			}
 			catch (Exception e) {

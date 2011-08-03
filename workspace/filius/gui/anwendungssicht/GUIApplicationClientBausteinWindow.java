@@ -40,7 +40,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import filius.Main;
 import filius.software.clientserver.ClientBaustein;
 
 /** <p> Diese Klasse stellt die Benutzungsoberflaeche fuer das Client-Programm
@@ -159,7 +158,6 @@ public class GUIApplicationClientBausteinWindow extends GUIApplicationWindow {
 		btSenden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				((ClientBaustein) holeAnwendung()).senden(taSenden.getText());
-				((ClientBaustein) holeAnwendung()).empfangen();
 				taSenden.setText("");
 			}
 		});
