@@ -102,18 +102,13 @@ public abstract class ServerMitarbeiter extends Thread implements I18n {
 				if(socket.istVerbunden()) { 
 					nachricht = socket.empfangen(); 
 				}
-				else if (socket instanceof TCPSocket && ((TCPSocket) socket).isSortOfConnected()) {  // Umgehen der Exception!
-					// CAVE: im Socket wird eigentlich noch "zustand" auf CLOSED gesetzt vor Werfen der Exception
-					socket.schliessen();
-					running = false;
-					server.entferneMitarbeiter(this);
-				}
 				
 				if (nachricht != null) {
 					server.benachrichtigeBeobachter(">>" + nachricht);
 					verarbeiteNachricht(nachricht);
+					nachricht = null;
 				}
-				else if (socket != null && socket.istVerbunden()){
+				else if (socket != null){
 					socket.schliessen();
 
 					server.benachrichtigeBeobachter(messages.getString("sw_servermitarbeiter_msg1")+" "
@@ -124,7 +119,6 @@ public abstract class ServerMitarbeiter extends Thread implements I18n {
 				}
 			}
 			catch (VerbindungsException e) {
-				// print not necessary, since this exception is expected
 				e.printStackTrace(Main.debug);
 				server.benachrichtigeBeobachter(e.getMessage());
 				socket.schliessen();
