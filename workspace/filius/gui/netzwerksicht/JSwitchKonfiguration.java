@@ -142,6 +142,7 @@ public class JSwitchKonfiguration extends JKonfiguration implements I18n {
 	@Override
 	public void updateAttribute() {
 		name.setText(((Switch)holeHardware()).getName());
+		checkCloud.setSelected(((Switch)holeHardware()).isCloud());
 	}
 
 }
