@@ -238,7 +238,7 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		gateway = new JTextField("192.168.0.1");
 		gateway.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
-				ueberpruefen(EingabenUeberpruefung.musterIpAdresse, gateway);
+				ueberpruefen(EingabenUeberpruefung.musterIpAdresseAuchLeer, gateway);
 			}
 		});
 		gateway.addActionListener(actionListener);
@@ -265,7 +265,7 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		dns = new JTextField("192.168.0.1");
 		dns.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
-				ueberpruefen(EingabenUeberpruefung.musterIpAdresse, dns);
+				ueberpruefen(EingabenUeberpruefung.musterIpAdresseAuchLeer, dns);
 			}
 		});
 		dns.addActionListener(actionListener);

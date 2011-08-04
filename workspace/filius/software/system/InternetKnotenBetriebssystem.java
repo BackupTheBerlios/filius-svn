@@ -572,10 +572,10 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 		InternetKnoten knoten;
 		NetzwerkInterface nic;
 		Iterator<?> it;
-		gateway = IP.ipCheck(gateway);
+		gateway = (gateway != null && gateway.trim().equals("")) ? gateway.trim() : IP.ipCheck(gateway);
 
 		if (gateway != null
-				&& EingabenUeberpruefung.isGueltig(gateway,EingabenUeberpruefung.musterIpAdresse)
+				&& EingabenUeberpruefung.isGueltig(gateway,EingabenUeberpruefung.musterIpAdresseAuchLeer)
 				&& getKnoten() instanceof InternetKnoten) {
 			knoten = (InternetKnoten) getKnoten();
 			it = knoten.getNetzwerkInterfaces().listIterator();
@@ -676,10 +676,10 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 		InternetKnoten knoten;
 		NetzwerkInterface nic;
 		Iterator<?> it;
-		dns = IP.ipCheck(dns);
+		dns = (dns != null && dns.trim().equals("")) ? dns.trim() : IP.ipCheck(dns);
 
 		if (dns != null
-				&& EingabenUeberpruefung.isGueltig(dns,EingabenUeberpruefung.musterIpAdresse)
+				&& EingabenUeberpruefung.isGueltig(dns,EingabenUeberpruefung.musterIpAdresseAuchLeer)
 				&& getKnoten() instanceof InternetKnoten) {
 			knoten = (InternetKnoten) getKnoten();
 			it = knoten.getNetzwerkInterfaces().listIterator();
