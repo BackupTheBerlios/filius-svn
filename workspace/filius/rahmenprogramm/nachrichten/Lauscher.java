@@ -26,8 +26,10 @@
 package filius.rahmenprogramm.nachrichten;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Vector;
@@ -36,12 +38,10 @@ import filius.Main;
 import filius.rahmenprogramm.I18n;
 import filius.software.netzzugangsschicht.EthernetFrame;
 import filius.software.transportschicht.TcpSegment;
-import filius.software.transportschicht.TransportProtokoll;
 import filius.software.transportschicht.UdpSegment;
 import filius.software.vermittlungsschicht.ArpPaket;
-import filius.software.vermittlungsschicht.IpPaket;
 import filius.software.vermittlungsschicht.IcmpPaket;
-import filius.software.vermittlungsschicht.VermittlungsProtokoll;
+import filius.software.vermittlungsschicht.IpPaket;
 
 public class Lauscher implements I18n {
 
@@ -79,8 +79,9 @@ public class Lauscher implements I18n {
 
 	public void reset() {
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+", reset()");
-		lauscher = null;
+		//lauscher = null;
 		datenEinheiten = new HashMap<String, LinkedList<Object[]>>();
+		this.benachrichtigeBeobachter(null);
 	}
 
 	public static Lauscher getLauscher() {
@@ -106,9 +107,21 @@ public class Lauscher implements I18n {
 	private void benachrichtigeBeobachter(String rechnerId) {
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+", benachrichtigeBeobachter("+rechnerId+")");
 		LinkedList<LauscherBeobachter> liste;
-		ListIterator it;
+		Collection<LinkedList<LauscherBeobachter>> collection;
+		ListIterator<LauscherBeobachter> it;
+		Iterator<LinkedList<LauscherBeobachter>> valueIt;
 
-		liste = this.beobachter.get(rechnerId);
+		if (rechnerId == null) {
+			collection = this.beobachter.values();
+			liste = new LinkedList<LauscherBeobachter>();
+			valueIt = collection.iterator();
+			while (valueIt.hasNext()) {
+				liste.addAll((LinkedList<LauscherBeobachter>)valueIt.next());
+			}
+		}
+		else {
+			liste = this.beobachter.get(rechnerId);
+		}
 //		Main.debug.println("\tbenachrichtigeBeobachter for "+rechnerId+" gave list "+(liste==null ? "<null>" : liste.toString()));
 		if (liste != null) {
 			it = liste.listIterator();
@@ -188,7 +201,7 @@ public class Lauscher implements I18n {
 		Vector<Object[]> daten;
 		LinkedList<Object[]> liste;
 		Object[] frameMitZeitstempel, neuerEintrag;
-		ListIterator it;
+		ListIterator<Object[]> it;
 		Calendar zeit;
 		EthernetFrame frame;
 		IpPaket ipPaket;
