@@ -9,7 +9,7 @@
  **     supervisors:
  **         Stefan Freischlad (maintainer until 2009), Peer Stechert
  ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
- **         
+ **         and Stefan Freischlad
  ** Filius is free software: you can redistribute it and/or modify
  ** it under the terms of the GNU General Public License as published by
  ** the Free Software Foundation, either version 2 of the License, or
