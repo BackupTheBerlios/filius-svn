@@ -33,9 +33,11 @@ import java.util.Hashtable;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.RootPaneContainer;
 
 import filius.rahmenprogramm.I18n;
 import filius.software.system.SystemSoftware;
@@ -70,6 +72,7 @@ public class LauscherDialog extends JDialog implements I18n {
 
 	private LauscherDialog(Frame owner) {
 		super(owner);
+		((JFrame) owner).getLayeredPane().setLayer(this, JLayeredPane.PALETTE_LAYER);
 
 		Image image;
 

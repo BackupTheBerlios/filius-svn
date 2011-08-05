@@ -738,13 +738,13 @@ public class GUIEvents implements I18n {
 
 		if (item.getKnoten() instanceof Host) {
 			bs = (Betriebssystem)((Host)item.getKnoten()).getSystemSoftware();
-			LauscherDialog.getLauscherDialog(null).addTabelle(bs, bs.holeMACAdresse());
-			LauscherDialog.getLauscherDialog(null).setVisible(true);
+			LauscherDialog.getLauscherDialog(JMainFrame.getJMainFrame()).addTabelle(bs, bs.holeMACAdresse());
+			LauscherDialog.getLauscherDialog(JMainFrame.getJMainFrame()).setVisible(true);
 		}
 		else if (item.getKnoten() instanceof Modem) {
 			ModemFirmware firmware = (ModemFirmware)((Modem)item.getKnoten()).getSystemSoftware();
-			LauscherDialog.getLauscherDialog(null).addTabelle(firmware, firmware.toString());
-			LauscherDialog.getLauscherDialog(null).setVisible(true);
+			LauscherDialog.getLauscherDialog(JMainFrame.getJMainFrame()).addTabelle(firmware, firmware.toString());
+			LauscherDialog.getLauscherDialog(JMainFrame.getJMainFrame()).setVisible(true);
 		}
 	}
 
