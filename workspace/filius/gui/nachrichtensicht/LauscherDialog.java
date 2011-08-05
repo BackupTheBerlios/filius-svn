@@ -30,8 +30,6 @@ import java.awt.Frame;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -76,9 +74,9 @@ public class LauscherDialog extends JDialog implements I18n {
 		Image image;
 
 		setTitle(messages.getString("lauscherdialog_msg1"));
-		setBounds(0, (int) Toolkit.getDefaultToolkit().getScreenSize()
-				.getHeight() - 340, ((int) Toolkit.getDefaultToolkit()
-				.getScreenSize().getWidth()), 300);
+		setBounds(20, (int) Toolkit.getDefaultToolkit().getScreenSize()
+				.getHeight() - 300, ((int) Toolkit.getDefaultToolkit()
+				.getScreenSize().getWidth()) - 40, 300);
 		image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/gfx/allgemein/nachrichtenfenster_icon.png"));
 		setIconImage(image);
 
@@ -105,6 +103,7 @@ public class LauscherDialog extends JDialog implements I18n {
 			tabelle.update();
 			panel = new JPanel(new BorderLayout());
 			scrollPane = new JScrollPane(tabelle);
+			tabelle.setScrollPane(scrollPane);
 			panel.add(scrollPane, BorderLayout.CENTER);
 
 

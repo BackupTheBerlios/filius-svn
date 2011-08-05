@@ -28,14 +28,19 @@ package filius.gui.nachrichtensicht;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
 
 import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
@@ -59,10 +64,14 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 	private JCheckBox vermittlungCheckBox;
 	private JCheckBox transportCheckBox;
 	private JCheckBox anwendungCheckBox;
+	
+	private JCheckBoxMenuItem checkbox;
 
 	private JDialog schichtenKonfigDialog;
 
 	private JDialog dialog;
+	private JScrollPane scrollPane = null;
+	private boolean autoscroll = true;
 	private JPopupMenu menu;
 
 	public NachrichtenTabelle(JDialog dialog, String interfaceId) {
@@ -115,6 +124,10 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 		});
 
 		update();
+	}
+
+	public void setScrollPane(JScrollPane scrollPane) {
+		this.scrollPane = scrollPane;
 	}
 
 	private JDialog getDialog() {
@@ -193,6 +206,18 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 			}
 		});
 		menu.add(menuItem);
+		
+		checkbox = new JCheckBoxMenuItem(messages.getString("nachrichtentabelle_msg8"), autoscroll);
+		checkbox.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				if (autoscroll != checkbox.getState()) {
+					menu.setVisible(false);
+					autoscroll = checkbox.getState();
+					update();
+				}
+			}
+		});
+		menu.add(checkbox);
 
 		menu.setVisible(false);
 		dialog.getRootPane().getLayeredPane().add(menu);
@@ -206,7 +231,8 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 	}
 
 	public void update() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (NachrichtenTabelle), update()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+				+ " (NachrichtenTabelle), update()");
 		Object[][] daten;
 		Vector<Object[]> gefilterteDaten;
 		int[] colWidth, colMaxWidth;
@@ -214,45 +240,55 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 
 		colWidth = new int[this.getColumnCount()];
 		colMaxWidth = new int[this.getColumnCount()];
-		for (int i=0; i<colWidth.length; i++) {
-			colWidth[i] = this.getColumnModel().getColumn(i).getPreferredWidth();
+		for (int i = 0; i < colWidth.length; i++) {
+			colWidth[i] = this.getColumnModel().getColumn(i)
+					.getPreferredWidth();
 			colMaxWidth[i] = this.getColumnModel().getColumn(i).getMaxWidth();
 		}
 
 		daten = Lauscher.getLauscher().getDaten(interfaceId);
-			gefilterteDaten = new Vector<Object[]>();
-			for (int i=0; i<daten.length; i++) {
-				if (daten[i][SCHICHT_SPALTE].equals(Lauscher.PROTOKOLL_SCHICHTEN[0])) {
-					if (zaehler < gefilterteDaten.size()) {
-						gefilterteDaten.addElement(new Object[daten[i].length]);
-						zaehler = gefilterteDaten.size();
-					}
-					if (netzzugangCheckBox.isSelected()) gefilterteDaten.addElement(daten[i]);
+		gefilterteDaten = new Vector<Object[]>();
+		for (int i = 0; i < daten.length; i++) {
+			if (daten[i][SCHICHT_SPALTE]
+					.equals(Lauscher.PROTOKOLL_SCHICHTEN[0])) {
+				if (zaehler < gefilterteDaten.size()) {
+					gefilterteDaten.addElement(new Object[daten[i].length]);
+					zaehler = gefilterteDaten.size();
 				}
-				else if (daten[i][SCHICHT_SPALTE].equals(Lauscher.PROTOKOLL_SCHICHTEN[1])) {
-					if (vermittlungCheckBox.isSelected()) gefilterteDaten.addElement(daten[i]);
-				}
-				else if (daten[i][SCHICHT_SPALTE].equals(Lauscher.PROTOKOLL_SCHICHTEN[2])) {
-					if (transportCheckBox.isSelected()) gefilterteDaten.addElement(daten[i]);
-				}
-				else if (daten[i][SCHICHT_SPALTE].equals(Lauscher.PROTOKOLL_SCHICHTEN[3])) {
-					if (anwendungCheckBox.isSelected()) gefilterteDaten.addElement(daten[i]);
-				}
-				else {
+				if (netzzugangCheckBox.isSelected())
 					gefilterteDaten.addElement(daten[i]);
-				}
+			} else if (daten[i][SCHICHT_SPALTE]
+					.equals(Lauscher.PROTOKOLL_SCHICHTEN[1])) {
+				if (vermittlungCheckBox.isSelected())
+					gefilterteDaten.addElement(daten[i]);
+			} else if (daten[i][SCHICHT_SPALTE]
+					.equals(Lauscher.PROTOKOLL_SCHICHTEN[2])) {
+				if (transportCheckBox.isSelected())
+					gefilterteDaten.addElement(daten[i]);
+			} else if (daten[i][SCHICHT_SPALTE]
+					.equals(Lauscher.PROTOKOLL_SCHICHTEN[3])) {
+				if (anwendungCheckBox.isSelected())
+					gefilterteDaten.addElement(daten[i]);
+			} else {
+				gefilterteDaten.addElement(daten[i]);
 			}
-			daten = new Object[gefilterteDaten.size()][Lauscher.SPALTEN.length];
-			for (int i=0; i<gefilterteDaten.size(); i++) {
-				daten[i] = (Object[]) gefilterteDaten.elementAt(i);
-			}
+		}
+		daten = new Object[gefilterteDaten.size()][Lauscher.SPALTEN.length];
+		for (int i = 0; i < gefilterteDaten.size(); i++) {
+			daten[i] = (Object[]) gefilterteDaten.elementAt(i);
+		}
 
-		((DefaultTableModel)this.getModel()).setDataVector(daten, Lauscher.SPALTEN);
+		((DefaultTableModel) this.getModel()).setDataVector(daten,
+				Lauscher.SPALTEN);
 
-		for (int i=0; i<colWidth.length; i++) {
+		for (int i = 0; i < colWidth.length; i++) {
 			this.getColumnModel().getColumn(i).setMaxWidth(colMaxWidth[i]);
 			this.getColumnModel().getColumn(i).setPreferredWidth(colWidth[i]);
 		}
 		this.getColumnModel().getColumn(6).setResizable(true);
+		
+		if (scrollPane != null && scrollPane.getViewport() != null && autoscroll) {
+			scrollPane.getViewport().setViewPosition(new Point(0, this.getHeight()));
+		}
 	}
 }
