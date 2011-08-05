@@ -53,7 +53,7 @@ public class SplashScreen extends JWindow
         JLabel l = new JLabel(new ImageIcon(getClass().getResource("/"+filename)));
         getContentPane().add(l, BorderLayout.CENTER);
 
-        JLabel info = new JLabel("Uni Siegen 2010 (Version "+Information.getVersion()+")");
+        JLabel info = new JLabel("Version "+Information.getVersion());
         info.setForeground(Color.BLACK);
         info.setFont(new Font("Dialog", Font.PLAIN, 10));
         getContentPane().add(info, BorderLayout.SOUTH);

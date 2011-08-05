@@ -206,7 +206,7 @@ public class Information implements Serializable {
 
 	/** aktuelle Programmversion */
 	public static String getVersion() {
-		return "1.3.1.4 (30. April 2011)";
+		return "1.4 (7. August 2011)";
 	}
 
 	/**

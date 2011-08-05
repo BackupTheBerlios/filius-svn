@@ -13,7 +13,6 @@
 
     <p align="center"> <img src="splashscreen-mini.png"> </p>
 
-    <p> Universit&auml;t Siegen 2010 
-      (http://www.die.informatik.uni-siegen.de/pgfilius/)</p>
+    <p> http://www.lernsoftware-filius.de </p>
   </body>
 </html>

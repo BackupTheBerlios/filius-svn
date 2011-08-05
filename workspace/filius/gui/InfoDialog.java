@@ -25,25 +25,22 @@
 */
 package filius.gui;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.SystemColor;
+
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.Frame;
-import java.awt.BorderLayout;
-import javax.swing.JDialog;
-import java.awt.Dimension;
 import javax.swing.SwingConstants;
 
-import filius.Main;
 import filius.rahmenprogramm.I18n;
 import filius.rahmenprogramm.Information;
-
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.Color;
-import java.awt.SystemColor;
 
 public class InfoDialog extends JDialog implements I18n {
 
@@ -73,7 +70,7 @@ public class InfoDialog extends JDialog implements I18n {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(300, 450);
+		this.setSize(350, 500);
 		setLocation((getToolkit().getScreenSize().width-getWidth())/2, (getToolkit().getScreenSize().height-getHeight())/2);
 		this.setForeground(Color.blue);
 		this.setTitle(messages.getString("infodialog_msg1"));
@@ -138,16 +135,18 @@ public class InfoDialog extends JDialog implements I18n {
 			maintainer.setText(
 			                "<html>"+
 					"<b>"+messages.getString("infodialog_msg5")+"</b>"+
-					"<p>"+ messages.getString("infodialog_msg7")+
-			                " Christian J. Eibl<br/>" +
-					"(filius&#x40;fameibl.de)<br/> &nbsp;</p>" +
+					"<p>"+ 
+			                "Christian J. Eibl (filius&#x40;fameibl.de)<br/> " +
+			                "Stefan Freischlad <br/>&nbsp;</p>" +
 					"<p>"+messages.getString("infodialog_msg8")+"<br/>" +
-					"http://bugs.fameibl.de" +
+					"http://bugs.fameibl.de " + 
+					messages.getString("infodialog_msg9") +
+					" http://www.lernsoftware-filius.de."+
 					"</p></html>");
 			maintainer.setVerticalAlignment(SwingConstants.TOP);
 			maintainer.setForeground(Color.WHITE);
 			maintainer.setFont(new Font("Dialog", Font.PLAIN, 12));
-			maintainer.setPreferredSize(new Dimension(270, 100));
+			maintainer.setPreferredSize(new Dimension(270, 150));
 
 			version = new JLabel();
 			version.setText(messages.getString("infodialog_msg6")+" "+Information.getVersion());
