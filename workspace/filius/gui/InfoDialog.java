@@ -13,7 +13,7 @@
 ** Filius is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation, either version 2 of the License, or
-** (at your option) any later version.
+** (at your option) version 3.
 ** 
 ** Filius is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied
@@ -70,7 +70,7 @@ public class InfoDialog extends JDialog implements I18n {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(350, 500);
+		this.setSize(350, 550);
 		setLocation((getToolkit().getScreenSize().width-getWidth())/2, (getToolkit().getScreenSize().height-getHeight())/2);
 		this.setForeground(Color.blue);
 		this.setTitle(messages.getString("infodialog_msg1"));
@@ -149,10 +149,15 @@ public class InfoDialog extends JDialog implements I18n {
 			maintainer.setPreferredSize(new Dimension(270, 150));
 
 			version = new JLabel();
-			version.setText(messages.getString("infodialog_msg6")+" "+Information.getVersion());
-			version.setFont(new Font("Dialog", Font.BOLD, 12));
+			version.setText("<html><center><p><b>"+
+					messages.getString("infodialog_msg6")+" "+Information.getVersion()+ 
+					"</b></p><br/><p><small>"+
+					messages.getString("infodialog_msg10")+
+					"</small></p></center></html>");
+			version.setFont(new Font("Dialog", Font.PLAIN, 12));
 			version.setForeground(Color.WHITE);
-			version.setHorizontalAlignment(SwingConstants.CENTER);
+			version.setVerticalAlignment(SwingConstants.TOP);
+			version.setPreferredSize(new Dimension(270, 80));
 
 			jContentPane = new JBackgroundPanel();
 			jContentPane.setBackgroundImage("gfx/allgemein/info_hintergrund.png");

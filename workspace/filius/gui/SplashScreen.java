@@ -13,7 +13,7 @@
 ** Filius is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
 ** the Free Software Foundation, either version 2 of the License, or
-** (at your option) any later version.
+** (at your option) version 3.
 ** 
 ** Filius is distributed in the hope that it will be useful,
 ** but WITHOUT ANY WARRANTY; without even the implied
@@ -36,11 +36,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JWindow;
 
+import filius.rahmenprogramm.I18n;
 import filius.rahmenprogramm.Information;
 
 
 /* Basiert auf SplashScreen von Tony Colston, JavaWorld.com, 11/17/00 */
-public class SplashScreen extends JWindow
+public class SplashScreen extends JWindow implements I18n
 {
     /**
 	 *
@@ -53,7 +54,7 @@ public class SplashScreen extends JWindow
         JLabel l = new JLabel(new ImageIcon(getClass().getResource("/"+filename)));
         getContentPane().add(l, BorderLayout.CENTER);
 
-        JLabel info = new JLabel("Version "+Information.getVersion());
+        JLabel info = new JLabel(" Version "+Information.getVersion()+", " + messages.getString("splashscreen_msg1"));
         info.setForeground(Color.BLACK);
         info.setFont(new Font("Dialog", Font.PLAIN, 10));
         getContentPane().add(info, BorderLayout.SOUTH);
