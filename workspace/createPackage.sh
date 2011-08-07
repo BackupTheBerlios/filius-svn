@@ -19,6 +19,8 @@ cp lib/*jar distpackage/filius/lib/.
 cp -r hilfe/* distpackage/filius/hilfe/.
 cp -r config distpackage/filius/.
 cp Changelog distpackage/filius/.
+cp GPLv2.txt distpackage/filius/.
+cp GPLv3.txt distpackage/filius/.
 
 echo "Remove unneeded files..."
 rm -f distpackage/filius/hilfe/entwurfsansichtDetail.html
