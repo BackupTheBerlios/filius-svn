@@ -124,6 +124,7 @@ public class SimplexVerbindung implements Runnable {
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (SimplexVerbindung), anschluesseTrennen()");
 		anschluss1.entferneVerbindung();
 		anschluss2.entferneVerbindung();
+		this.setThreadRunning(false);
 	}
 	public Verbindung getVerbindung() {
 		return verbindung;

@@ -89,8 +89,6 @@ public class GUIEvents implements I18n {
 			aktivesItem, ziel2;
 
 	private JSidebarButton loeschlabel;
-	
-	private GUIKabelItem popupRemoveCable;
 
 	private JCablePanel kabelPanelVorschau;
 
@@ -263,7 +261,7 @@ public class GUIEvents implements I18n {
 					maxMinusY=GUIContainer.FLAECHE_HOEHE,
 					maxPlusY=GUIContainer.FLAECHE_HOEHE;
 				int tempM, tempP;
-				ListIterator it = markedlist.listIterator();
+				ListIterator<Object> it = markedlist.listIterator();
 				while (it.hasNext()) {
 					JSidebarButton templbl = ((GUIKnotenItem) it.next()).getImageLabel();
 					tempM=templbl.getX()+((int) templbl.getWidth()/2);
@@ -528,14 +526,14 @@ public class GUIEvents implements I18n {
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+", clickedCable("+e+")");
 		// Falls kein neues Objekt erstellt werden soll
 		LinkedList<GUIKabelItem> itemlist = GUIContainer.getGUIContainer().getCablelist();
-		ListIterator it = itemlist.listIterator();
+		ListIterator<GUIKabelItem> it = itemlist.listIterator();
 		GUIKabelItem tempitem = null;
 		GUIContainer c = GUIContainer.getGUIContainer();
 		int mouseX = e.getX() + c.getScrollPane().getHorizontalScrollBar().getValue();
 		int mouseY = e.getY() + c.getScrollPane().getVerticalScrollBar().getValue();
 
 		while (it.hasNext()) {
-			tempitem = (GUIKabelItem) it.next();
+			tempitem = it.next();
 			
 			if (c.aufObjekt(tempitem.getKabelpanel(), 
 					mouseX, mouseY)) {  // item clicked, i.e., mouse pointer within item bounds
@@ -611,7 +609,6 @@ public class GUIEvents implements I18n {
 		neuesKabel.getKabelpanel().updateBounds();
 		draftpanel.updateUI();
 		cablelist.add(neuesKabel);
-		neuesKabel.getKabelpanel().setZiel2(tempitem);
 		if (neuesKabel.getKabelpanel().getZiel1().getKnoten() instanceof Modem) {
 			Modem vrOut = (Modem) neuesKabel.getKabelpanel().getZiel1()
 					.getKnoten();
@@ -814,7 +811,7 @@ public class GUIEvents implements I18n {
 	 * context menu in case of clicking on single cable item
 	 * --> used for deleting a single cable
 	 */
-	private void contextMenuCable(GUIKabelItem cable, MouseEvent e) {
+	private void contextMenuCable(final GUIKabelItem cable, MouseEvent e) {
 
 			final JMenuItem pmRemoveCable = new JMenuItem(messages.getString("guievents_msg5"));
 			pmRemoveCable.setActionCommand("removecable");
@@ -823,7 +820,7 @@ public class GUIEvents implements I18n {
 			ActionListener al = new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (e.getActionCommand() == pmRemoveCable.getActionCommand()) {
-						removeSingleCable();
+						removeSingleCable(cable);
 					}
 				}
 			};
@@ -834,8 +831,6 @@ public class GUIEvents implements I18n {
 			GUIContainer.getGUIContainer().getDraftpanel().add(popmen);
 			popmen.setVisible(true);
 			popmen.show(GUIContainer.getGUIContainer().getDraftpanel(), e.getX(), e.getY());
-			
-			popupRemoveCable = cable;
 	}
 
 	/**
@@ -846,57 +841,46 @@ public class GUIEvents implements I18n {
 	public void itemLoeschen(JSidebarButton loeschlabel, GUIKnotenItem loeschitem) {
 		loeschlabel.setVisible(false);
 		GUIContainer.getGUIContainer().setProperty(null);
-		ListIterator cit = GUIContainer.getGUIContainer().getCablelist()
-				.listIterator();
-		GUIKabelItem cittemp = new GUIKabelItem();
-		LinkedList<GUIKabelItem> citlist = new LinkedList<GUIKabelItem>();
+		ListIterator<GUIKabelItem> iteratorAlleKabel = GUIContainer.getGUIContainer().getCablelist().listIterator();
+		GUIKabelItem kabel = new GUIKabelItem();
+		LinkedList<GUIKabelItem> loeschKabel = new LinkedList<GUIKabelItem>();
+		
 		// Zu löschende Elemente werden in eine temporäre Liste gepackt
-		while (cit.hasNext()) {
-			cittemp = (GUIKabelItem) cit.next();
-			if (cittemp.getKabelpanel().getZiel1().equals(loeschitem)
-					|| cittemp.getKabelpanel().getZiel2().equals(loeschitem)) {
-				citlist.add(cittemp);
+		while (iteratorAlleKabel.hasNext()) {
+			kabel = (GUIKabelItem) iteratorAlleKabel.next();
+			if (kabel.getKabelpanel().getZiel1().equals(loeschitem) || kabel.getKabelpanel().getZiel2().equals(loeschitem)) {
+				loeschKabel.add(kabel);
 			}
 		}
+		
 		// Temporäre Liste der zu löschenden Kabel wird iteriert und dabei
 		// werden die Kabel aus der globalen Kabelliste gelöscht
 		// und vom Panel entfernt
-		ListIterator ctt = citlist.listIterator();
-		while (ctt.hasNext()) {
-			cittemp = (GUIKabelItem) ctt.next();
+		ListIterator<GUIKabelItem> iteratorLoeschKabel = loeschKabel.listIterator();
+		while (iteratorLoeschKabel.hasNext()) {
+			kabel = iteratorLoeschKabel.next();
 
-			try {
-				cittemp.getDasKabel().anschluesseTrennen();
-			} catch (VerbindungsException e) {
-				e.printStackTrace(Main.debug);
-			}
-
-			GUIContainer.getGUIContainer().getCablelist().remove(cittemp);
-			GUIContainer.getGUIContainer().getDraftpanel()
-					.remove(cittemp.getKabelpanel());
-
+			this.removeSingleCable(kabel);
 		}
 
 		GUIContainer.getGUIContainer().getGUIKnotenItemList().remove(loeschitem);
-		GUIContainer.getGUIContainer().getDraftpanel()
-				.remove(loeschlabel);
+		GUIContainer.getGUIContainer().getDraftpanel().remove(loeschlabel);
 		GUIContainer.getGUIContainer().getDraftpanel().updateUI();
 		GUIContainer.getGUIContainer().updateViewport();
 
 	}
 
 	// remove a single cable without using touching the connected node
-	private void removeSingleCable() {
-		if(popupRemoveCable == null) return; // no cable to be removed (this variable should be set in contextMenuCable)
+	private void removeSingleCable(GUIKabelItem cable) {
+		if(cable == null) return; // no cable to be removed (this variable should be set in contextMenuCable)
 		try {
-			popupRemoveCable.getDasKabel().anschluesseTrennen();
+			cable.getDasKabel().anschluesseTrennen();
 		}
 		catch (VerbindungsException e) {
 			e.printStackTrace(Main.debug);
 		}
-		GUIContainer.getGUIContainer().getCablelist().remove(popupRemoveCable);
-		GUIContainer.getGUIContainer().getDraftpanel().remove(popupRemoveCable.getKabelpanel());
-		popupRemoveCable = null;
+		GUIContainer.getGUIContainer().getCablelist().remove(cable);
+		GUIContainer.getGUIContainer().getDraftpanel().remove(cable.getKabelpanel());
 		GUIContainer.getGUIContainer().updateViewport();
 	}
 
@@ -908,45 +892,30 @@ public class GUIEvents implements I18n {
 	 *
 	 */
 	private void kabelEntfernen() {
-		ListIterator cit = GUIContainer.getGUIContainer().getCablelist()
-				.listIterator();
-		GUIKabelItem cittemp = new GUIKabelItem();
+		ListIterator<GUIKabelItem> iteratorAlleKabel = GUIContainer.getGUIContainer().getCablelist().listIterator();
+		GUIKabelItem tempKabel = null;
 		LinkedList<GUIKabelItem> loeschListe = new LinkedList<GUIKabelItem>();
 
 		// Zu löschende Elemente werden in eine temporäre Liste gepackt
-		while (cit.hasNext()) {
-			cittemp = (GUIKabelItem) cit.next();
-			if (cittemp.getKabelpanel().getZiel1().equals(loeschitem)) {
-				loeschListe.add(cittemp);
-
-				try {
-					cittemp.getDasKabel().anschluesseTrennen();
-				} catch (VerbindungsException e) {
-					e.printStackTrace(Main.debug);
-				}
+		while (iteratorAlleKabel.hasNext()) {
+			tempKabel = (GUIKabelItem) iteratorAlleKabel.next();
+			if (tempKabel.getKabelpanel().getZiel1().equals(loeschitem)) {
+				loeschListe.add(tempKabel);
 			}
 
-			if (cittemp.getKabelpanel().getZiel2().equals(loeschitem)) {
-				loeschListe.add(cittemp);
+			if (tempKabel.getKabelpanel().getZiel2().equals(loeschitem)) {
+				loeschListe.add(tempKabel);
 				ziel2 = loeschitem;
-
-				try {
-					cittemp.getDasKabel().anschluesseTrennen();
-				} catch (VerbindungsException e) {
-					e.printStackTrace(Main.debug);
-				}
 			}
-
 		}
 
 		// Temporäre Liste der zu löschenden Kabel wird iteriert und dabei
 		// werden die Kabel aus der globalen Kabelliste gelöscht
 		// und vom Panel entfernt
-		ListIterator ctt = loeschListe.listIterator();
-		while (ctt.hasNext()) {
-			cittemp = (GUIKabelItem) ctt.next();
-			GUIContainer.getGUIContainer().getCablelist().remove(cittemp);
-			GUIContainer.getGUIContainer().getDraftpanel().remove(cittemp.getKabelpanel());
+		ListIterator<GUIKabelItem> iteratorLoeschKabel = loeschListe.listIterator();
+		while (iteratorLoeschKabel.hasNext()) {
+			tempKabel = iteratorLoeschKabel.next();
+			this.removeSingleCable(tempKabel);
 		}
 
 		GUIContainer.getGUIContainer().updateViewport();

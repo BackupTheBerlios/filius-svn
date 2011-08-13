@@ -31,8 +31,6 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -117,7 +115,8 @@ public class GUIContainer implements Serializable, I18n {
 
 	int abstandy, abstandx;
 
-	private LinkedList<Object> itemlist, cablelist;
+	private LinkedList<Object> itemlist;
+	private LinkedList<GUIKabelItem> cablelist;
 
 	/* HashMap in der die Hardware gespeichert wird */
 	/*
@@ -128,7 +127,7 @@ public class GUIContainer implements Serializable, I18n {
 	 * }
 	 */
 
-	public LinkedList getGUIKnotenItemList() {
+	public LinkedList<Object> getGUIKnotenItemList() {
 		return itemlist;
 	}
 
@@ -195,7 +194,7 @@ public class GUIContainer implements Serializable, I18n {
 		kabelvorschau.setVisible(false);
 		layeredpane.add(kabelvorschau);
 
-		cablelist = new LinkedList<Object>();
+		cablelist = new LinkedList<GUIKabelItem>();
 		/*
 		 * Hauptmenü wird erstellt und dem Container hinzugefügt
 		 */
@@ -400,7 +399,7 @@ public class GUIContainer implements Serializable, I18n {
 
 		SzenarioVerwaltung.getInstance().setzeGeaendert();
 
-		ListIterator it = itemlist.listIterator();
+		ListIterator<Object> it = itemlist.listIterator();
 		while (it.hasNext()) {
 			item = (GUIKnotenItem) it.next();
 			item.getImageLabel().setSelektiert(false);
@@ -653,7 +652,7 @@ public class GUIContainer implements Serializable, I18n {
 	 */
 	public void updateCables() {
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (GUIContainer), updateCables()");
-		ListIterator it = cablelist.listIterator();
+		ListIterator<GUIKabelItem> it = cablelist.listIterator();
 		while (it.hasNext()) {
 			GUIKabelItem tempCable = (GUIKabelItem) it.next();
 			tempCable.getKabelpanel().updateBounds();
@@ -713,11 +712,11 @@ public class GUIContainer implements Serializable, I18n {
 		updateViewport();
 	}
 
-	public LinkedList getCablelist() {
+	public LinkedList<GUIKabelItem> getCablelist() {
 		return cablelist;
 	}
 
-	public void setCablelist(LinkedList cablelist) {
+	public void setCablelist(LinkedList<GUIKabelItem> cablelist) {
 		this.cablelist = cablelist;
 	}
 
@@ -752,7 +751,7 @@ public class GUIContainer implements Serializable, I18n {
 	}
 
 	public void showDesktop(GUIKnotenItem hardwareItem) {
-		ListIterator it;
+		ListIterator<GUIDesktopWindow> it;
 		Betriebssystem bs;
 		GUIDesktopWindow tmpDesktop = null;
 		boolean fertig = false;
@@ -763,7 +762,7 @@ public class GUIContainer implements Serializable, I18n {
 
 			it = desktopWindowList.listIterator();
 			while (!fertig && it.hasNext()) {
-				tmpDesktop = (GUIDesktopWindow) it.next();
+				tmpDesktop = it.next();
 				if (bs == tmpDesktop.getBetriebssystem()) {
 					tmpDesktop.setVisible(true);
 					fertig = true;
@@ -797,11 +796,11 @@ public class GUIContainer implements Serializable, I18n {
 	}
 
 	public void closeDesktops() {
-		ListIterator it;
+		ListIterator<GUIDesktopWindow> it;
 
 		it = desktopWindowList.listIterator();
 		while (it.hasNext()) {
-			((GUIDesktopWindow) it.next()).setVisible(false);
+			it.next().setVisible(false);
 			it.remove();
 		}
 	}
@@ -899,7 +898,7 @@ public class GUIContainer implements Serializable, I18n {
 	}
 	
 	public JSidebarButton getLabelforKnoten(Knoten node) {
-		LinkedList list = getGUIKnotenItemList();
+		LinkedList<Object> list = getGUIKnotenItemList();
 		for (int i=0; i<list.size(); i++) {
 			if (((GUIKnotenItem) list.get(i)).getKnoten().equals(node)) {
 				return ((GUIKnotenItem) list.get(i)).getImageLabel();
