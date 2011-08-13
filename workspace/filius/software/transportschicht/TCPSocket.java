@@ -572,7 +572,7 @@ public class TCPSocket extends Socket implements Runnable {
 				while (!bestaetigt && (rtt < Verbindung.holeRTT())
 						&& zustand == ESTABLISHED);
 			}
-			if (!bestaetigt) {
+			if (!bestaetigt && zustand != CLOSED) {
 				zustand = CLOSED;
 				throw new TimeOutException(messages
 						.getString("sw_tcpsocket_msg8"));
