@@ -84,7 +84,7 @@ public class ModemFirmware extends SystemSoftware implements Runnable, I18n {
 	 * Die IP-Adresse des anderen Rechners, auf dem das Server-Modem laeuft. D.
 	 * h. dieses Attribut wird nur im Client-Modus verwendet.
 	 */
-	private String ipAdresse;
+	private String ipAdresse = "localhost";
 
 	private OutputStream out;
 
@@ -197,7 +197,7 @@ public class ModemFirmware extends SystemSoftware implements Runnable, I18n {
 	public void starten() {
 		gestartet = true;
 
-			leerePortPuffer();
+		leerePortPuffer();
 	}
 
 	/**

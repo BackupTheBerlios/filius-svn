@@ -44,10 +44,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
-import javax.swing.JList;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
 
 import filius.Main;
 import filius.rahmenprogramm.I18n;
@@ -128,9 +127,9 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 		gesamtBox.add(Box.createVerticalStrut(10));
 
 		Box topButtonBox = Box.createHorizontalBox();
-		topButtonBox.add(removeButton);
-		topButtonBox.add(Box.createHorizontalStrut(32));
 		topButtonBox.add(addButton);
+		topButtonBox.add(Box.createHorizontalStrut(32));
+		topButtonBox.add(removeButton);
 		gesamtBox.add(topButtonBox);
 		gesamtBox.add(Box.createVerticalStrut(10));
 
