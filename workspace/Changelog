@@ -1,6 +1,27 @@
 FILIUS Changelog
 ================
 
+*filius-1.4 (7. Aug 2011)
+-------------------------
+- Fehlerbehebung: 
+  - Bildbetrachter: Anzeige von Bildern wieder möglich 
+  - E-Mail-Programm: Platzhaltergrafik für Nachrichten wird wieder angezeigt
+  - Webserver: Anzeige leerer Eingabefelder in Oberfläche (statt "null")
+  - DNS-Server: Synchronisation zwischen Oberfläche und Konfigurationstextdatei
+  - Gnutella: Fehler bei Dateiübertragung behoben
+  - E-Mail-Server: Robustere Verarbeitung von E-Mails durch SMTP-Server
+  - Switch: Die Darstellung als Wolke kann auch wieder rückgängig gemacht werden
+  - Programmstart: Fehler bei Prüfung der Schreibrechte auf Benutzerverzeichnis 
+    unter Windows behoben
+  - Info-Dialog: Alle Angaben werden wieder vollständig angezeigt (unter Linux)
+  - Nachrichtenansicht: Löschen der Tabelleninhalte korrigiert
+- Echo-Client: Jetzt können hierüber E-Mails versendet (SMTP) und abgerufen 
+  (POP3) werden.
+- Rechnerkonfiguration: Jetzt können Gateway- und DNS-Server-Adressen wieder 
+  entfernt werden.
+- Nachrichtenansicht: Jetzt steht eine Option "automatisches Scrollen" über
+  Kontextmenü zur Verfügung und das Dialogfenster bleibt immer im Vordergrund.
+
 *filius-1.3.1.4 (30. Apr 2011)
 ------------------------------
 - Verwendung von Java Native Access zur korrekten Ermittlung von
