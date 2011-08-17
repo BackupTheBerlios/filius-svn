@@ -32,34 +32,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import filius.Main;
 import filius.gui.GUIContainer;
 import filius.hardware.Hardware;
 import filius.hardware.knoten.Modem;
-import filius.hardware.knoten.Switch;
-import filius.hardware.knoten.Vermittlungsrechner;
 import filius.rahmenprogramm.I18n;
 import filius.software.system.ModemFirmware;
 
 public class JModemKonfiguration extends JKonfiguration implements I18n, Observer {
+
+	private static final long serialVersionUID = 1L;
 
 	private JTextField name; // Name,Name,20,String,editable,Neuer
 
@@ -70,7 +63,7 @@ public class JModemKonfiguration extends JKonfiguration implements I18n, Observe
 
 	private JButton btStartStop;
 
-	public JModemKonfiguration(Hardware hardware) {
+	protected JModemKonfiguration(Hardware hardware) {
 		super(hardware);
 
 		((Modem)holeHardware()).getSystemSoftware().addObserver(this);
@@ -283,9 +276,8 @@ public class JModemKonfiguration extends JKonfiguration implements I18n, Observe
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (JModemKonfiguration), update("+arg0+","+arg1+")");
 		updateAttribute();
 
-		if (arg1 != null) {
-			JOptionPane.showMessageDialog(this, arg1);
-		}
+//		if (arg1 != null) {
+//			JOptionPane.showMessageDialog(this, arg1);
+//		}
 	}
-
 }

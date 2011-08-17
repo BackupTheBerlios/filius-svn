@@ -170,7 +170,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 	}
 	private LinkedList<LinePanel> cables;
 
-	public JVermittlungsrechnerKonfiguration(Hardware hardware) {
+	protected JVermittlungsrechnerKonfiguration(Hardware hardware) {
 		super(hardware);
 	}
 

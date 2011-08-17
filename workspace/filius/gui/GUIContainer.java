@@ -839,21 +839,13 @@ public class GUIContainer implements Serializable, I18n {
 		}
 
 		if (hardwareItem == null) {
-			property = new JKonfiguration(null);
-		} else if (hardwareItem.getKnoten() instanceof Host) {
-			property = new JHostKonfiguration(hardwareItem.getKnoten());
-		} else if (hardwareItem.getKnoten() instanceof Modem) {
-			property = new JModemKonfiguration(hardwareItem.getKnoten());
-		} else if (hardwareItem.getKnoten() instanceof Switch) {
-			property = new JSwitchKonfiguration(hardwareItem.getKnoten());
-		} else if (hardwareItem.getKnoten() instanceof Vermittlungsrechner) {
-			property = new JVermittlungsrechnerKonfiguration(hardwareItem
-					.getKnoten());
+			property = JKonfiguration.getInstance(null);
 		} else {
-			property = new JKonfiguration(null);
+			property = JKonfiguration.getInstance(hardwareItem.getKnoten());
 		}
 
 		if (property != null) {
+		    property.updateAttribute();
 			JMainFrame.getJMainFrame().getContentPane().add(property,
 					BorderLayout.SOUTH);
 			property.updateUI();

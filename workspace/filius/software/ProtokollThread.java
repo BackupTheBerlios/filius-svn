@@ -125,6 +125,6 @@ public abstract class ProtokollThread extends Thread {
 		if (getState().equals(State.WAITING) || getState().equals(State.BLOCKED)) {
 			interrupt();
 		}
-		this.puffer.clear();
+		if (this.puffer != null) this.puffer.clear();
 	}
 }

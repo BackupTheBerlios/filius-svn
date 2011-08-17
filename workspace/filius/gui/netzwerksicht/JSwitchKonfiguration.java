@@ -33,33 +33,30 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.JCheckBox;
-import javax.swing.ImageIcon;
 
 import filius.gui.GUIContainer;
 import filius.hardware.Hardware;
 import filius.hardware.knoten.Switch;
-import filius.hardware.knoten.Vermittlungsrechner;
 import filius.rahmenprogramm.I18n;
 
 public class JSwitchKonfiguration extends JKonfiguration implements I18n {
 
+	private static final long serialVersionUID = 1L;
 	private JTextField name; // Name,Name,20,String,editable,Neuer
 	private JCheckBox checkCloud;
 
-	public JSwitchKonfiguration(Hardware hardware) {
+	protected JSwitchKonfiguration(Hardware hardware) {
 		super(hardware);
 	}
 
-	@Override
 	public void aenderungenAnnehmen() {
 		((Switch)holeHardware()).setName(name.getText());
 

@@ -47,13 +47,10 @@ import filius.Main;
 import filius.gui.GUIContainer;
 import filius.gui.JMainFrame;
 import filius.hardware.Hardware;
-import filius.hardware.NetzwerkInterface;
 import filius.hardware.knoten.Host;
 import filius.rahmenprogramm.EingabenUeberpruefung;
 import filius.rahmenprogramm.I18n;
-import filius.software.dhcp.DHCPServer;
 import filius.software.system.Betriebssystem;
-import filius.software.vermittlungsschicht.IP;
 
 public class JHostKonfiguration extends JKonfiguration implements I18n {
 
@@ -78,7 +75,7 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 	private JButton btDhcp;
 
 
-	public JHostKonfiguration(Hardware hardware) {
+	protected JHostKonfiguration(Hardware hardware) {
 		super(hardware);
 	}
 
@@ -110,8 +107,6 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 	protected void initAttributEingabeBox(Box box) {
 		JLabel tempLabel;
 		Box tempBox;
-		final DHCPServer server;
-		Host host;
 		FocusListener focusListener;
 		ActionListener actionListener;
 
@@ -308,8 +303,6 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		tempBox = Box.createHorizontalBox();
 		tempBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
 
-		host = (Host) holeHardware();
-		server = ((Betriebssystem)host.getSystemSoftware()).getDHCPServer();
 		btDhcp = new JButton(messages.getString("jhostkonfiguration_msg8"));
 		btDhcp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
