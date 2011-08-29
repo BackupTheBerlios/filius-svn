@@ -65,306 +65,306 @@ import filius.rahmenprogramm.TeeOutputStream;
  */
 public class Main implements I18n {
 
-    /**
-     * ueber diesen Stream werden Nachrichten ausgegeben, die fuer die
-     * Fehlersuche nuetzlich sind. NOTE: in loggen(..) gesetzt
-     */
-    public static PrintStream debug;
+	/**
+	 * ueber diesen Stream werden Nachrichten ausgegeben, die fuer die
+	 * Fehlersuche nuetzlich sind. NOTE: in loggen(..) gesetzt
+	 */
+	public static PrintStream debug;
 
-    /**
-     * Der Start laeuft folgendermassen ab:
-     * <ol>
-     * <li>Anzeigen eines Startfensters</li>
-     * <li>Initialisierung des Programm-Hauptfensters</li>
-     * <li>Laden eines Szenarios, entweder
-     * <ul>
-     * <li>ein mit dem Programmstart uebergebene Szenariodatei oder</li>
-     * <li>das zuletzt geoeffnete bzw. gespeicherte Szenario</li>
-     * </ul>
-     * </li>
-     * <li>Ausblenden des Startfensters</li>
-     * </ol>
-     */
-    public static void starten(String szenarioDatei) {
-	Main.debug.println("INVOKED (static) filius.Main, starten(" + szenarioDatei + ")");
-	SplashScreen splashScreen;
-	XMLDecoder xmldec;
-	String konfigPfad;
-	Object[] programmKonfig;
+	/**
+	 * Der Start laeuft folgendermassen ab:
+	 * <ol>
+	 * <li>Anzeigen eines Startfensters</li>
+	 * <li>Initialisierung des Programm-Hauptfensters</li>
+	 * <li>Laden eines Szenarios, entweder
+	 * <ul>
+	 * <li>ein mit dem Programmstart uebergebene Szenariodatei oder</li>
+	 * <li>das zuletzt geoeffnete bzw. gespeicherte Szenario</li>
+	 * </ul>
+	 * </li>
+	 * <li>Ausblenden des Startfensters</li>
+	 * </ol>
+	 */
+	public static void starten(String szenarioDatei) {
+		Main.debug.println("INVOKED (static) filius.Main, starten(" + szenarioDatei + ")");
+		SplashScreen splashScreen;
+		XMLDecoder xmldec;
+		String konfigPfad;
+		Object[] programmKonfig;
 
-	konfigPfad = Information.getInformation().getArbeitsbereichPfad() + "konfig.xml";
-	if (!(new File(konfigPfad)).exists()) {
-	    Object[] possibleValues = { "Deutsch", "English" };
-	    Object selectedValue = JOptionPane.showInputDialog(null, "", "Language", JOptionPane.INFORMATION_MESSAGE,
-		    null, possibleValues, possibleValues[0]);
-	    if (selectedValue != null && selectedValue.equals(possibleValues[0]))
-		Information.getInformation().setLocale(new Locale("de", "DE"));
-	    else
-		Information.getInformation().setLocale(new Locale("en", "GB"));
-	} else {
-	    try {
+		konfigPfad = Information.getInformation().getArbeitsbereichPfad() + "konfig.xml";
+		if (!(new File(konfigPfad)).exists()) {
+			Object[] possibleValues = { "Deutsch", "English" };
+			Object selectedValue = JOptionPane.showInputDialog(null, "", "Language", JOptionPane.INFORMATION_MESSAGE,
+			        null, possibleValues, possibleValues[0]);
+			if (selectedValue != null && selectedValue.equals(possibleValues[0]))
+				Information.getInformation().setLocale(new Locale("de", "DE"));
+			else
+				Information.getInformation().setLocale(new Locale("en", "GB"));
+		} else {
+			try {
 
-		xmldec = new XMLDecoder(new BufferedInputStream(new FileInputStream(konfigPfad)));
+				xmldec = new XMLDecoder(new BufferedInputStream(new FileInputStream(konfigPfad)));
 
-		programmKonfig = (Object[]) xmldec.readObject();
+				programmKonfig = (Object[]) xmldec.readObject();
 
-		if (programmKonfig != null && programmKonfig.length == 4) {
-		    JMainFrame.getJMainFrame().setBounds((Rectangle) programmKonfig[0]);
+				if (programmKonfig != null && programmKonfig.length == 4) {
+					JMainFrame.getJMainFrame().setBounds((Rectangle) programmKonfig[0]);
 
-		    if (szenarioDatei == null)
-			szenarioDatei = (String) programmKonfig[1];
-		    if (programmKonfig[2] != null && programmKonfig[3] != null)
-			Information.getInformation().setLocale(
-				new Locale((String) programmKonfig[2], (String) programmKonfig[3]));
+					if (szenarioDatei == null)
+						szenarioDatei = (String) programmKonfig[1];
+					if (programmKonfig[2] != null && programmKonfig[3] != null)
+						Information.getInformation().setLocale(
+						        new Locale((String) programmKonfig[2], (String) programmKonfig[3]));
+				}
+			} catch (Exception e) {
+				e.printStackTrace(Main.debug);
+			}
 		}
-	    } catch (Exception e) {
-		e.printStackTrace(Main.debug);
-	    }
-	}
 
-	// adapt dialog buttons to current language, since Java does not do this
-	// automatically
-	UIManager.put("OptionPane.cancelButtonText", messages.getString("main_dlg_CANCEL"));
-	UIManager.put("OptionPane.noButtonText", messages.getString("main_dlg_NO"));
-	UIManager.put("OptionPane.okButtonText", messages.getString("main_dlg_OK"));
-	UIManager.put("OptionPane.yesButtonText", messages.getString("main_dlg_YES"));
+		// adapt dialog buttons to current language, since Java does not do this
+		// automatically
+		UIManager.put("OptionPane.cancelButtonText", messages.getString("main_dlg_CANCEL"));
+		UIManager.put("OptionPane.noButtonText", messages.getString("main_dlg_NO"));
+		UIManager.put("OptionPane.okButtonText", messages.getString("main_dlg_OK"));
+		UIManager.put("OptionPane.yesButtonText", messages.getString("main_dlg_YES"));
 
-	splashScreen = new SplashScreen("gfx/allgemein/splashscreen.png", null);
-	splashScreen.setVisible(true);
-	splashScreen.setAlwaysOnTop(true);
+		splashScreen = new SplashScreen("gfx/allgemein/splashscreen.png", null);
+		splashScreen.setVisible(true);
+		splashScreen.setAlwaysOnTop(true);
 
-	GUIContainer.getGUIContainer().initialisieren();
-	long splashTime = new Long(System.currentTimeMillis());
+		GUIContainer.getGUIContainer().initialisieren();
+		long splashTime = new Long(System.currentTimeMillis());
 
-	if (szenarioDatei != null) {
-	    try {
-		SzenarioVerwaltung.getInstance().laden(szenarioDatei,
-			GUIContainer.getGUIContainer().getGUIKnotenItemList(),
-			GUIContainer.getGUIContainer().getCablelist());
-	    } catch (Exception e) {
-		e.printStackTrace(Main.debug);
-	    }
-	} else {
-	    SzenarioVerwaltung.getInstance().laden(GUIContainer.getGUIContainer().getGUIKnotenItemList(),
-		    GUIContainer.getGUIContainer().getCablelist());
-	}
-
-	GUIContainer.getGUIContainer().setProperty(null);
-	GUIContainer.getGUIContainer().updateViewport();
-	try {
-	    Thread.sleep(10);
-	} catch (Exception e) {
-	}
-	GUIContainer.getGUIContainer().updateCables();
-
-	splashTime = System.currentTimeMillis() - splashTime; // time difference
-							      // since
-							      // Splashscreen
-							      // made visible
-	Main.debug.println("Splash Screen shown for " + splashTime + " ms");
-	if (splashTime < 1000) {
-	    try {
-		Thread.sleep(1000 - splashTime);
-	    } catch (Exception e) {
-	    }
-	} // sleep until 1s is over
-	splashScreen.setAlwaysOnTop(false);
-	splashScreen.setVisible(false);
-    }
-
-    /**
-     * Das Beenden des Programms laeuft folgendermassen ab:
-     * <ol>
-     * <li>Wechsel in den Entwurfsmodus (und damit beenden der virtuellen
-     * Software und der damit verbundenen Threads</li>
-     * <li>Pruefung, ob eine Aenderung am Szenario vorgenommen wurde
-     * <ul>
-     * <li>wenn Szenario geaendert wurde, wird gefragt, ob die Datei noch
-     * gespeichert werden soll</li>
-     * <li>wenn das Szenario nicht gespeichert werden soll, werden die
-     * Aenderungen verworfen</li>
-     * <li>wenn die Abfrage abgebrochen wird, wird Filius nicht beendet</li>
-     * </ul>
-     * </li>
-     * <li>Programmkonfiguration wird gespeichert</li>
-     * <li>das Verzeichnis fuer temporaere Dateien wird geloescht</li>
-     * </ol>
-     */
-    public static void beenden() {
-	Main.debug.println("INVOKED (static) filius.Main, beenden()");
-	Object[] programmKonfig;
-	XMLEncoder encoder = null;
-	FileOutputStream fos = null;
-	int entscheidung;
-	boolean abbruch = false;
-
-	GUIContainer.getGUIContainer().getMenu().selectMode(GUIMainMenu.MODUS_ENTWURF);
-
-	if (SzenarioVerwaltung.getInstance().istGeaendert()) {
-	    entscheidung = JOptionPane.showConfirmDialog(JMainFrame.getJMainFrame(), messages.getString("main_msg1"),
-		    messages.getString("main_msg2"), JOptionPane.YES_NO_OPTION);
-	    if (entscheidung == JOptionPane.YES_OPTION) {
-		abbruch = false;
-	    } else {
-		abbruch = true;
-	    }
-	}
-	if (!abbruch) {
-	    programmKonfig = new Object[4];
-	    programmKonfig[0] = JMainFrame.getJMainFrame().getBounds();
-	    programmKonfig[1] = SzenarioVerwaltung.getInstance().holePfad();
-	    programmKonfig[2] = Information.getInformation().getLocale().getLanguage();
-	    programmKonfig[3] = Information.getInformation().getLocale().getCountry();
-
-	    try {
-		fos = new FileOutputStream(Information.getInformation().getArbeitsbereichPfad() + "konfig.xml");
-		encoder = new XMLEncoder(new BufferedOutputStream(fos));
-
-		encoder.writeObject(programmKonfig);
-	    } catch (Exception e) {
-		e.printStackTrace(Main.debug);
-	    } finally {
-		if (encoder != null)
-		    encoder.close();
-		if (fos != null) {
-		    try {
-			fos.close();
-		    } catch (IOException e) {
-		    }
+		if (szenarioDatei != null) {
+			try {
+				SzenarioVerwaltung.getInstance().laden(szenarioDatei,
+				        GUIContainer.getGUIContainer().getGUIKnotenItemList(),
+				        GUIContainer.getGUIContainer().getCablelist());
+			} catch (Exception e) {
+				e.printStackTrace(Main.debug);
+			}
+		} else {
+			SzenarioVerwaltung.getInstance().laden(GUIContainer.getGUIContainer().getGUIKnotenItemList(),
+			        GUIContainer.getGUIContainer().getCablelist());
 		}
-	    }
-	    SzenarioVerwaltung.loescheVerzeichnisInhalt(Information.getInformation().getTempPfad());
-	    System.exit(0);
 
-	}
-    }
-
-    private static boolean loggen(String logDateiPfad) {
-	if (logDateiPfad != null) {
-	    try {
-		Main.debug = new PrintStream(new TeeOutputStream(new FileOutputStream(logDateiPfad), null)); // sonst:
-													     // System.out
-													     // für
-													     // Screen
-		System.out.println("Ausgaben werden in Datei '" + logDateiPfad + "' protokolliert.");
-		System.setErr(Main.debug);
-	    } catch (FileNotFoundException e) {
-		System.err.println("Error: logging could not be realised due to FileNotFoundException:\n\t'"
-			+ e.toString() + "'");
-		Main.debug = new PrintStream(new TeeOutputStream(null, null)); // do
-									       // not
-									       // log;
-	    } catch (Exception e) {
-		System.err.println("Error: logging could not be realised; reason not specified:\n\t'" + e.toString()
-			+ "'");
-		Main.debug = new PrintStream(new TeeOutputStream(null, null)); // do
-									       // not
-									       // log;
-	    }
-	} else {
-	    Main.debug = new PrintStream(new TeeOutputStream(null, null)); // do
-									   // not
-									   // log
-	    System.out
-		    .println("Es werden keine Ausgaben zur Fehlersuche protokolliert!\nSollte dies gewuenscht sein, so starten Sie Filius bitte mit der Option '-l':\n\tFilius.exe -l\nbzw.\tjava -jar filius.jar -l");
-	}
-
-	return true;
-    }
-
-    /**
-     * Hier wird das Programm Filius gestartet! Wenn ein Parameter uebergeben
-     * wird, wird geprueft, ob es sich um eine existierende Datei handelt. Dann
-     * wird der Pfad an die Methode zum Starten uebergeben als eine
-     * Szenario-Datei, die zum Start geladen werden soll.
-     */
-    public static void main(String[] args) {
-	String currWD = filius.rahmenprogramm.Information.initArbeitsbereichPfad;
-	File file;
-	boolean log = false;
-	boolean setWD = false; // auxiliary flag to reset working directory
-	String newWD = null;
-	String argsString = "";
-
-	if (args != null && args.length >= 1) {
-	    for (int i = 0; i < args.length; i++) {
-		argsString += args[i] + " ";
-		if (setWD) {
-		    if (!args[i].startsWith("-")) {
-			newWD = args[i].trim();
-			currWD = newWD; // set working directory (not yet set in
-					// Information class, otherwise an
-					// Exception would emerge!)
-			// filius.rahmenprogramm.Information.getInformation().setArbeitsbereichPfad(newWD);
-		    } else {
-			System.err
-				.println("Parameter '-wd' ohne Argument verwendet! Korrekte Verwendung (Beispiel):  '-wd /home/user'\n");
-			System.err
-				.println("Parameter '-wd' without content! Correct usage (example):  '-wd /home/user'\n");
-			System.exit(1);
-		    }
-		    setWD = false;
-		    continue;
+		GUIContainer.getGUIContainer().setProperty(null);
+		GUIContainer.getGUIContainer().updateViewport();
+		try {
+			Thread.sleep(10);
+		} catch (Exception e) {
 		}
-		// Protokollieren in Datei?
-		if (args[i].startsWith("-l")) {
-		    log = true;
-		    continue;
-		}
-		if (args[i].startsWith("-wd")) {
-		    setWD = true;
-		}
-	    }
-	    if ((currWD.isEmpty())
-		    || (!currWD.substring(currWD.length() - 1).equals(System.getProperty("file.separator"))))
-		if (filius.rahmenprogramm.Information.getInformation(currWD + System.getProperty("file.separator")) == null)
-		    System.exit(6); // check, whether working directory is
-				    // usable... else provide dialog for correct
-				    // paths
-		else if (filius.rahmenprogramm.Information.getInformation(currWD) == null)
-		    System.exit(6);
-	    if (log) {
-		log = loggen(filius.rahmenprogramm.Information.getInformation().getArbeitsbereichPfad() + "filius.log");
-	    }
-	    if (!log) {
-		loggen(null);
-	    } // if no logging specified on command line or logging to file
-	      // fails, then set logging to null
-	} else {
-	    if (filius.rahmenprogramm.Information.getInformation(currWD) == null)
-		System.exit(6);
-	    loggen(null);
+		GUIContainer.getGUIContainer().updateCables();
+
+		splashTime = System.currentTimeMillis() - splashTime; // time difference
+		// since
+		// Splashscreen
+		// made visible
+		Main.debug.println("Splash Screen shown for " + splashTime + " ms");
+		if (splashTime < 1000) {
+			try {
+				Thread.sleep(1000 - splashTime);
+			} catch (Exception e) {
+			}
+		} // sleep until 1s is over
+		splashScreen.setAlwaysOnTop(false);
+		splashScreen.setVisible(false);
 	}
 
-	Main.debug.println("------------------------------------------------------");
-	Main.debug.println("\tJava Version: " + System.getProperty("java.version"));
-	Main.debug.println("\tJava Directory: " + System.getProperty("java.home"));
-	Main.debug.println("\tFILIUS Version: " + filius.rahmenprogramm.Information.getVersion());
-	Main.debug.println("\tParameters: '" + argsString.trim() + "'");
-	// +"\n\tWD Base: "+newWD
-	Main.debug.println("\tFILIUS Installation: "
-		+ filius.rahmenprogramm.Information.getInformation().getProgrammPfad());
-	Main.debug.println("\tFILIUS Working Directory: "
-		+ filius.rahmenprogramm.Information.getInformation().getArbeitsbereichPfad());
-	Main.debug.println("\tFILIUS Temp Directory: "
-		+ filius.rahmenprogramm.Information.getInformation().getTempPfad());
-	Main.debug.println("------------------------------------------------------\n");
+	/**
+	 * Das Beenden des Programms laeuft folgendermassen ab:
+	 * <ol>
+	 * <li>Wechsel in den Entwurfsmodus (und damit beenden der virtuellen
+	 * Software und der damit verbundenen Threads</li>
+	 * <li>Pruefung, ob eine Aenderung am Szenario vorgenommen wurde
+	 * <ul>
+	 * <li>wenn Szenario geaendert wurde, wird gefragt, ob die Datei noch
+	 * gespeichert werden soll</li>
+	 * <li>wenn das Szenario nicht gespeichert werden soll, werden die
+	 * Aenderungen verworfen</li>
+	 * <li>wenn die Abfrage abgebrochen wird, wird Filius nicht beendet</li>
+	 * </ul>
+	 * </li>
+	 * <li>Programmkonfiguration wird gespeichert</li>
+	 * <li>das Verzeichnis fuer temporaere Dateien wird geloescht</li>
+	 * </ol>
+	 */
+	public static void beenden() {
+		Main.debug.println("INVOKED (static) filius.Main, beenden()");
+		Object[] programmKonfig;
+		XMLEncoder encoder = null;
+		FileOutputStream fos = null;
+		int entscheidung;
+		boolean abbruch = false;
 
-	if (args != null && ((args.length >= 1 && !log) || (args.length >= 2 && log))) {
-	    // Projekt-Datei als letztes Argument uebergeben?
-	    try {
-		file = new File(args[args.length - 1]);
-		if (file.exists()) {
-		    starten(file.getAbsolutePath());
-		} else
-		    starten(null);
-	    } catch (Exception e) {
-		e.printStackTrace();
-		starten(null);
-	    }
-	} else {
-	    starten(null);
+		GUIContainer.getGUIContainer().getMenu().selectMode(GUIMainMenu.MODUS_ENTWURF);
+
+		if (SzenarioVerwaltung.getInstance().istGeaendert()) {
+			entscheidung = JOptionPane.showConfirmDialog(JMainFrame.getJMainFrame(), messages.getString("main_msg1"),
+			        messages.getString("main_msg2"), JOptionPane.YES_NO_OPTION);
+			if (entscheidung == JOptionPane.YES_OPTION) {
+				abbruch = false;
+			} else {
+				abbruch = true;
+			}
+		}
+		if (!abbruch) {
+			programmKonfig = new Object[4];
+			programmKonfig[0] = JMainFrame.getJMainFrame().getBounds();
+			programmKonfig[1] = SzenarioVerwaltung.getInstance().holePfad();
+			programmKonfig[2] = Information.getInformation().getLocale().getLanguage();
+			programmKonfig[3] = Information.getInformation().getLocale().getCountry();
+
+			try {
+				fos = new FileOutputStream(Information.getInformation().getArbeitsbereichPfad() + "konfig.xml");
+				encoder = new XMLEncoder(new BufferedOutputStream(fos));
+
+				encoder.writeObject(programmKonfig);
+			} catch (Exception e) {
+				e.printStackTrace(Main.debug);
+			} finally {
+				if (encoder != null)
+					encoder.close();
+				if (fos != null) {
+					try {
+						fos.close();
+					} catch (IOException e) {
+					}
+				}
+			}
+			SzenarioVerwaltung.loescheVerzeichnisInhalt(Information.getInformation().getTempPfad());
+			System.exit(0);
+
+		}
 	}
-    }
+
+	private static boolean loggen(String logDateiPfad) {
+		if (logDateiPfad != null) {
+			try {
+				Main.debug = new PrintStream(new TeeOutputStream(new FileOutputStream(logDateiPfad), null)); // sonst:
+				// System.out
+				// für
+				// Screen
+				System.out.println("Ausgaben werden in Datei '" + logDateiPfad + "' protokolliert.");
+				System.setErr(Main.debug);
+			} catch (FileNotFoundException e) {
+				System.err.println("Error: logging could not be realised due to FileNotFoundException:\n\t'"
+				        + e.toString() + "'");
+				Main.debug = new PrintStream(new TeeOutputStream(null, null)); // do
+				// not
+				// log;
+			} catch (Exception e) {
+				System.err.println("Error: logging could not be realised; reason not specified:\n\t'" + e.toString()
+				        + "'");
+				Main.debug = new PrintStream(new TeeOutputStream(null, null)); // do
+				// not
+				// log;
+			}
+		} else {
+			Main.debug = new PrintStream(new TeeOutputStream(null, null)); // do
+			// not
+			// log
+			System.out
+			        .println("Es werden keine Ausgaben zur Fehlersuche protokolliert!\nSollte dies gewuenscht sein, so starten Sie Filius bitte mit der Option '-l':\n\tFilius.exe -l\nbzw.\tjava -jar filius.jar -l");
+		}
+
+		return true;
+	}
+
+	/**
+	 * Hier wird das Programm Filius gestartet! Wenn ein Parameter uebergeben
+	 * wird, wird geprueft, ob es sich um eine existierende Datei handelt. Dann
+	 * wird der Pfad an die Methode zum Starten uebergeben als eine
+	 * Szenario-Datei, die zum Start geladen werden soll.
+	 */
+	public static void main(String[] args) {
+		String currWD = filius.rahmenprogramm.Information.initArbeitsbereichPfad;
+		File file;
+		boolean log = false;
+		boolean setWD = false; // auxiliary flag to reset working directory
+		String newWD = null;
+		String argsString = "";
+
+		if (args != null && args.length >= 1) {
+			for (int i = 0; i < args.length; i++) {
+				argsString += args[i] + " ";
+				if (setWD) {
+					if (!args[i].startsWith("-")) {
+						newWD = args[i].trim();
+						currWD = newWD; // set working directory (not yet set in
+						// Information class, otherwise an
+						// Exception would emerge!)
+						// filius.rahmenprogramm.Information.getInformation().setArbeitsbereichPfad(newWD);
+					} else {
+						System.err
+						        .println("Parameter '-wd' ohne Argument verwendet! Korrekte Verwendung (Beispiel):  '-wd /home/user'\n");
+						System.err
+						        .println("Parameter '-wd' without content! Correct usage (example):  '-wd /home/user'\n");
+						System.exit(1);
+					}
+					setWD = false;
+					continue;
+				}
+				// Protokollieren in Datei?
+				if (args[i].startsWith("-l")) {
+					log = true;
+					continue;
+				}
+				if (args[i].startsWith("-wd")) {
+					setWD = true;
+				}
+			}
+			if ((currWD.isEmpty())
+			        || (!currWD.substring(currWD.length() - 1).equals(System.getProperty("file.separator"))))
+				if (filius.rahmenprogramm.Information.getInformation(currWD + System.getProperty("file.separator")) == null)
+					System.exit(6); // check, whether working directory is
+				// usable... else provide dialog for correct
+				// paths
+				else if (filius.rahmenprogramm.Information.getInformation(currWD) == null)
+					System.exit(6);
+			if (log) {
+				log = loggen(filius.rahmenprogramm.Information.getInformation().getArbeitsbereichPfad() + "filius.log");
+			}
+			if (!log) {
+				loggen(null);
+			} // if no logging specified on command line or logging to file
+			  // fails, then set logging to null
+		} else {
+			if (filius.rahmenprogramm.Information.getInformation(currWD) == null)
+				System.exit(6);
+			loggen(null);
+		}
+
+		Main.debug.println("------------------------------------------------------");
+		Main.debug.println("\tJava Version: " + System.getProperty("java.version"));
+		Main.debug.println("\tJava Directory: " + System.getProperty("java.home"));
+		Main.debug.println("\tFILIUS Version: " + filius.rahmenprogramm.Information.getVersion());
+		Main.debug.println("\tParameters: '" + argsString.trim() + "'");
+		// +"\n\tWD Base: "+newWD
+		Main.debug.println("\tFILIUS Installation: "
+		        + filius.rahmenprogramm.Information.getInformation().getProgrammPfad());
+		Main.debug.println("\tFILIUS Working Directory: "
+		        + filius.rahmenprogramm.Information.getInformation().getArbeitsbereichPfad());
+		Main.debug.println("\tFILIUS Temp Directory: "
+		        + filius.rahmenprogramm.Information.getInformation().getTempPfad());
+		Main.debug.println("------------------------------------------------------\n");
+
+		if (args != null && ((args.length >= 1 && !log) || (args.length >= 2 && log))) {
+			// Projekt-Datei als letztes Argument uebergeben?
+			try {
+				file = new File(args[args.length - 1]);
+				if (file.exists()) {
+					starten(file.getAbsolutePath());
+				} else
+					starten(null);
+			} catch (Exception e) {
+				e.printStackTrace();
+				starten(null);
+			}
+		} else {
+			starten(null);
+		}
+	}
 
 }
