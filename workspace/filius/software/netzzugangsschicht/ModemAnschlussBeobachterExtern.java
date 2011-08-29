@@ -101,16 +101,13 @@ public class ModemAnschlussBeobachterExtern extends ProtokollThread {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (ModemAnschlussBeobachterExtern), verarbeiteDatenEinheit("+datenEinheit.toString()+")");
 		EthernetFrame frame;
 
-		if (firmware.istGestartet()){
-		frame = (EthernetFrame) datenEinheit;
+		if (firmware.istGestartet()) {
+			frame = (EthernetFrame) datenEinheit;
 
-		synchronized (((Modem) firmware.getKnoten()).getErstenAnschluss()
-				.getAusgangsPuffer()) {
-			((Modem) firmware.getKnoten()).getErstenAnschluss()
-					.getAusgangsPuffer().add(frame);
-			((Modem) firmware.getKnoten()).getErstenAnschluss()
-					.getAusgangsPuffer().notify();
-		}
+			synchronized (((Modem) firmware.getKnoten()).getErstenAnschluss().getAusgangsPuffer()) {
+				((Modem) firmware.getKnoten()).getErstenAnschluss().getAusgangsPuffer().add(frame);
+				((Modem) firmware.getKnoten()).getErstenAnschluss().getAusgangsPuffer().notify();
+			}
 		}
 	}
 }
