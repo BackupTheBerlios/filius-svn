@@ -25,6 +25,12 @@
 */
 package filius.hardware;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 import filius.Main;
@@ -52,6 +58,28 @@ public class NetzwerkInterface implements Serializable{
 		setGateway("");
 		setDns("");
 		anschluss = new Port(this);
+		
+		this.initPersistenceAttributes();
+	}
+	
+	/** This method is used to mark the MAC address as transient property in order to avoid 
+	 * use of the same MAC address if the same project is opened twice.
+	 */
+	private void initPersistenceAttributes() {
+		BeanInfo info;
+		try {
+			info = Introspector.getBeanInfo(NetzwerkInterface.class);
+			PropertyDescriptor[] propertyDescriptors = info.getPropertyDescriptors();
+			for (PropertyDescriptor descriptor : propertyDescriptors) {
+
+				if (descriptor.getName().equals("mac")) {
+					descriptor.setValue("transient", Boolean.TRUE);
+					break;
+				}
+			}
+		} catch (IntrospectionException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Port getPort() {
@@ -99,8 +127,10 @@ public class NetzwerkInterface implements Serializable{
 	}
 
 	public void setMac(String mac) {
-		Information.getInformation().macHinzufuegen(mac);
-		this.mac = mac;
+		if (mac != null) {
+			Information.getInformation().macHinzufuegen(mac);
+			this.mac = mac;
+		}
 	}
 
 	public String getSubnetzMaske() {
