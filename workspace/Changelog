@@ -1,6 +1,12 @@
 FILIUS Changelog
 ================
 
+*filius-1.4.1 (1. Sept 2011)
+----------------------------
+- Fehler bei Aenderung des Aufbaus behoben
+- TCP-Timeout-Fehlermeldung erfolgt nicht mehr im Konfigurationsmodus
+- Fehlerhafte Modemfunktionalität korrigiert
+
 *filius-1.4 (7. Aug 2011)
 -------------------------
 - Fehlerbehebung: 
