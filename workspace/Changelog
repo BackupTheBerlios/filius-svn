@@ -1,6 +1,10 @@
 FILIUS Changelog
 ================
 
+*filius-1.4.2 (15. Sept 2011)
+-----------------------------
+- Fehler bei Aufruf mit Parameter "-wd" zur expliziten Auswahl des Arbeitsverzeichnisses behoben
+
 *filius-1.4.1 (1. Sept 2011)
 ----------------------------
 - Fehler bei Aenderung des Aufbaus behoben
