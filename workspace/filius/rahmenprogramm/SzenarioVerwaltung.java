@@ -590,25 +590,22 @@ public class SzenarioVerwaltung extends Observable implements I18n {
 		
 		if (path.exists()) {
 			fileListe = path.listFiles();
-			for (int i=0; i<fileListe.length; i++) {
-			file = fileListe[i];
-			if (file.isDirectory()) {
-				if (!loescheDateien(file.getAbsolutePath())) {
-					Main.debug.println("ERROR (static): Ordner "
-							+ file.getAbsolutePath()
-							+ " konnte nicht geloescht werden.");
+			for (int i = 0; i < fileListe.length; i++) {
+				file = fileListe[i];
+				if (file.isDirectory()) {
+					if (!loescheDateien(file.getAbsolutePath())) {
+						Main.debug.println("ERROR (static): Ordner " + file.getAbsolutePath()
+						        + " konnte nicht geloescht werden.");
+						return false;
+					}
+				} else if (!file.delete()) {
+					Main.debug.println("ERROR (static): Datei " + file.getAbsolutePath()
+					        + " konnte nicht geloescht werden.");
 					return false;
+				} else {
+
 				}
 			}
-			else if (!file.delete()) {
-				Main.debug.println("ERROR (static): Datei "
-						+ file.getAbsolutePath()
-						+ " konnte nicht geloescht werden.");
-				return false;
-			} else {
-				
-			}
-		}
 		}
 		return true;
 	}

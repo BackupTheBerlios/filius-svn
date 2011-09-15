@@ -69,7 +69,7 @@ public class Main implements I18n {
 	 * ueber diesen Stream werden Nachrichten ausgegeben, die fuer die
 	 * Fehlersuche nuetzlich sind. NOTE: in loggen(..) gesetzt
 	 */
-	public static PrintStream debug;
+	public static PrintStream debug = System.out;
 
 	/**
 	 * Der Start laeuft folgendermassen ab:
@@ -315,21 +315,24 @@ public class Main implements I18n {
 					setWD = true;
 				}
 			}
-			if ((currWD.isEmpty())
-			        || (!currWD.substring(currWD.length() - 1).equals(System.getProperty("file.separator"))))
-				if (filius.rahmenprogramm.Information.getInformation(currWD + System.getProperty("file.separator")) == null)
-					System.exit(6); // check, whether working directory is
+			if (currWD.isEmpty()
+			        || (!currWD.substring(currWD.length() - 1).equals(System.getProperty("file.separator")))) {
+				// check, whether working directory is
 				// usable... else provide dialog for correct
 				// paths
+				if (filius.rahmenprogramm.Information.getInformation(currWD + System.getProperty("file.separator")) == null)
+					System.exit(6); 
 				else if (filius.rahmenprogramm.Information.getInformation(currWD) == null)
 					System.exit(6);
+			}
+			// if no logging specified on command line or logging to file
+			// fails, then set logging to null
 			if (log) {
 				log = loggen(filius.rahmenprogramm.Information.getInformation().getArbeitsbereichPfad() + "filius.log");
 			}
 			if (!log) {
 				loggen(null);
-			} // if no logging specified on command line or logging to file
-			  // fails, then set logging to null
+			} 
 		} else {
 			if (filius.rahmenprogramm.Information.getInformation(currWD) == null)
 				System.exit(6);
