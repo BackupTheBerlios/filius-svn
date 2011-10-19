@@ -258,8 +258,8 @@ public class ModemFirmware extends SystemSoftware implements Runnable, I18n {
 	private void leerePortPuffer() {
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ModemFirmware), leerePortPuffer()");
 		synchronized (((Modem) getKnoten()).getErstenAnschluss()
-				.getEingangsPuffer()) {
-			((Modem) getKnoten()).getErstenAnschluss().getEingangsPuffer()
+				.holeEingangsPuffer()) {
+			((Modem) getKnoten()).getErstenAnschluss().holeEingangsPuffer()
 					.clear();
 		}
 	}

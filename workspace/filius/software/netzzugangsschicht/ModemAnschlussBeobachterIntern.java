@@ -59,7 +59,7 @@ public class ModemAnschlussBeobachterIntern extends ProtokollThread {
 	public ModemAnschlussBeobachterIntern(ModemFirmware firmware,
 			OutputStream out) {
 		super(((Modem) firmware.getKnoten()).getErstenAnschluss()
-				.getEingangsPuffer());
+				.holeEingangsPuffer());
 		Main.debug.println("INVOKED-2 ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (ModemAnschlussBeobachterIntern), constr: ModemAnschlussBeobachterIntern("+firmware+","+out+")");
 
 		this.firmware = firmware;

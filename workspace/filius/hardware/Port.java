@@ -78,12 +78,16 @@ public class Port implements Serializable {
 		this.verbindung = null;
 	}
 
-	public LinkedList<EthernetFrame> getAusgangsPuffer() {
+	public LinkedList<EthernetFrame> holeAusgangsPuffer() {
 		return ausgangsPuffer;
 	}
 
-	public LinkedList<EthernetFrame> getEingangsPuffer() {
+	public LinkedList<EthernetFrame> holeEingangsPuffer() {
 		return eingangsPuffer;
+	}
+	
+	public void setzeEingangsPuffer(LinkedList<EthernetFrame> puffer) {
+		this.eingangsPuffer = puffer;
 	}
 
 	public Verbindung getVerbindung() {

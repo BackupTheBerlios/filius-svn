@@ -54,7 +54,7 @@ public class EthernetThread extends ProtokollThread {
 	 * Ethernet-Schicht und der Netzwerkkarte
 	 */
 	public EthernetThread(Ethernet ethernet, NetzwerkInterface nic) {
-		super(nic.getPort().getEingangsPuffer());
+		super(nic.getPort().holeEingangsPuffer());
 		Main.debug.println("INVOKED-2 ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (EthernetThread), constr: EthernetThread("+ethernet+","+nic+")");
 
 		this.ethernet = ethernet;

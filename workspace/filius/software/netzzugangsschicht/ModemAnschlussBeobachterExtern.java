@@ -104,9 +104,9 @@ public class ModemAnschlussBeobachterExtern extends ProtokollThread {
 		if (firmware.istGestartet()) {
 			frame = (EthernetFrame) datenEinheit;
 
-			synchronized (((Modem) firmware.getKnoten()).getErstenAnschluss().getAusgangsPuffer()) {
-				((Modem) firmware.getKnoten()).getErstenAnschluss().getAusgangsPuffer().add(frame);
-				((Modem) firmware.getKnoten()).getErstenAnschluss().getAusgangsPuffer().notify();
+			synchronized (((Modem) firmware.getKnoten()).getErstenAnschluss().holeAusgangsPuffer()) {
+				((Modem) firmware.getKnoten()).getErstenAnschluss().holeAusgangsPuffer().add(frame);
+				((Modem) firmware.getKnoten()).getErstenAnschluss().holeAusgangsPuffer().notify();
 			}
 		}
 	}

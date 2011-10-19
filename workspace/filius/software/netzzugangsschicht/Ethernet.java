@@ -109,9 +109,9 @@ public class Ethernet extends Protokoll {
 			nic = (NetzwerkInterface) it.next();
 
 			if (nic.getMac().equalsIgnoreCase(zielMAC)) {
-				synchronized (nic.getPort().getEingangsPuffer()) {
-					nic.getPort().getEingangsPuffer().add(ethernetFrame);
-					nic.getPort().getEingangsPuffer().notify();
+				synchronized (nic.getPort().holeEingangsPuffer()) {
+					nic.getPort().holeEingangsPuffer().add(ethernetFrame);
+					nic.getPort().holeEingangsPuffer().notify();
 				}
 				gesendet = true;
 			}
@@ -124,12 +124,12 @@ public class Ethernet extends Protokoll {
 				nic = (NetzwerkInterface) it.next();
 
 				if (nic.getMac().equalsIgnoreCase(startMAC)) {
-					synchronized (nic.getPort().getAusgangsPuffer()) {
+					synchronized (nic.getPort().holeAusgangsPuffer()) {
 						//Main.debug
 								//.println("EthernetThread: Paket wird in Ausgangspuffer geschrieben "
 										//+ nic.getPort());
-						nic.getPort().getAusgangsPuffer().add(ethernetFrame);
-						nic.getPort().getAusgangsPuffer().notify();
+						nic.getPort().holeAusgangsPuffer().add(ethernetFrame);
+						nic.getPort().holeAusgangsPuffer().notify();
 					}
 					Lauscher.getLauscher().addDatenEinheit(nic.getMac(),
 							ethernetFrame);

@@ -26,14 +26,8 @@
 package filius.software.system;
 
 //Netzwerkziel, Netzwerkmaske, ZielIp(Gateway), Schnittstelle
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.ListIterator;
-
 import filius.Main;
 import filius.rahmenprogramm.Information;
-import filius.rahmenprogramm.SzenarioVerwaltung;
 import filius.software.firewall.Firewall;
 import filius.software.firewall.FirewallWebKonfig;
 import filius.software.firewall.FirewallWebLog;
@@ -50,12 +44,6 @@ public class VermittlungsrechnerBetriebssystem extends
 		InternetKnotenBetriebssystem {
 
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Die Bezeichner fuer Firewall und Webserver fuer den Zugriff auf diese
-	 * Anwendungen
-	 */
-	private String firewallName = null, webserverName = null;
 
 	/** Konstruktor mit Initialisierung von Firewall und Webserver */
 	public VermittlungsrechnerBetriebssystem() {

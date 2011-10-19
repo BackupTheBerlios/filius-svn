@@ -53,7 +53,7 @@ public class SwitchPortBeobachter extends ProtokollThread {
 	 * zu ueberwachenden Anschluss.
 	 */
 	public SwitchPortBeobachter(SwitchFirmware switchFirmware, Port anschluss) {
-		super(anschluss.getEingangsPuffer());
+		super(anschluss.holeEingangsPuffer());
 		Main.debug.println("INVOKED-2 ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (SwitchPortBeobachter), constr: SwitchPortBeobachter("+switchFirmware+","+anschluss+")");
 
 		this.switchFirmware = switchFirmware;
@@ -97,9 +97,9 @@ public class SwitchPortBeobachter extends ProtokollThread {
 						//+ etp.getZielMacAdresse() + " an Port "
 						//+ zielAnschluss.toString());
 
-				synchronized (zielAnschluss.getAusgangsPuffer()) {
-					zielAnschluss.getAusgangsPuffer().add(etp);
-					zielAnschluss.getAusgangsPuffer().notify();
+				synchronized (zielAnschluss.holeAusgangsPuffer()) {
+					zielAnschluss.holeAusgangsPuffer().add(etp);
+					zielAnschluss.holeAusgangsPuffer().notify();
 				}
 			}
 			else {
@@ -114,9 +114,9 @@ public class SwitchPortBeobachter extends ProtokollThread {
 //							+ aktiverAnschluss.toString());
 					if (!aktiverAnschluss.isPortFrei()
 							&& (aktiverAnschluss != anschluss)) {
-						synchronized (aktiverAnschluss.getAusgangsPuffer()) {
-							aktiverAnschluss.getAusgangsPuffer().add(etp);
-							aktiverAnschluss.getAusgangsPuffer().notify();
+						synchronized (aktiverAnschluss.holeAusgangsPuffer()) {
+							aktiverAnschluss.holeAusgangsPuffer().add(etp);
+							aktiverAnschluss.holeAusgangsPuffer().notify();
 						}
 					}
 				}

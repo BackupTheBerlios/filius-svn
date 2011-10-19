@@ -48,7 +48,7 @@ import filius.software.vermittlungsschicht.IpPaket;
  */
 public class FirewallThread extends ProtokollThread {
 
-	private LinkedList<IpPaket> ipPufferAusgang;
+	private LinkedList<IpPaket> ausgangsPuffer;
 	private Firewall firewall;
 
 	public FirewallThread(Firewall firewall) {
@@ -59,17 +59,17 @@ public class FirewallThread extends ProtokollThread {
 
 	/*
 	 * tauscht den IP-Puffer zwischen Ethernetschicht und Vermittlungsschicht aus, und startet
-	 * den Thread zur Überwachung den Datenaustausches
+	 * den Thread zur Überwachung des Datenaustausches
 	 */
 	public void starten(){
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (FirewallThread), starten()");
-		LinkedList<IpPaket> ipPufferEingang;
+		LinkedList<IpPaket> eingangsPuffer;
 
 		super.starten();
 
-		ipPufferAusgang = firewall.getSystemSoftware().holeEthernet().holeIPPuffer();
-		ipPufferEingang = (LinkedList<IpPaket>) holeEingangsPuffer();
-		firewall.getSystemSoftware().holeEthernet().setzeIPPuffer(ipPufferEingang);
+		ausgangsPuffer = firewall.getSystemSoftware().holeEthernet().holeIPPuffer();
+		eingangsPuffer = (LinkedList<IpPaket>) holeEingangsPuffer();
+		firewall.getSystemSoftware().holeEthernet().setzeIPPuffer(eingangsPuffer);
 
 	}
 
@@ -86,11 +86,11 @@ public class FirewallThread extends ProtokollThread {
 		//oder nicht weiterleiten
 
 		if(!firewall.istPaketZulaessig(ipPaket)){
-			synchronized(ipPufferAusgang){
+			synchronized(ausgangsPuffer){
 				//Main.debug.println("FirewallThread: Paket wurde von FirewallThread weitergeleitet");
 
-				ipPufferAusgang.add(ipPaket);
-				ipPufferAusgang.notify();
+				ausgangsPuffer.add(ipPaket);
+				ausgangsPuffer.notify();
 			}
 		}
 	}

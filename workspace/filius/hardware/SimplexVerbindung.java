@@ -67,22 +67,22 @@ public class SimplexVerbindung implements Runnable {
 		EthernetFrame frame;
 
 		while(threadRunning){
-			synchronized(anschluss1.getAusgangsPuffer()){
-				if(anschluss1.getAusgangsPuffer().size() < 1){
+			synchronized(anschluss1.holeAusgangsPuffer()){
+				if(anschluss1.holeAusgangsPuffer().size() < 1){
 					try {
 						//Main.debug.println("DEBUG ("+this.hashCode()+", K"+verbindung.hashCode()+"): SimplexVerbindung, run:   set wait()");
 						verbindung.setAktiv(false);
-						anschluss1.getAusgangsPuffer().wait();
+						anschluss1.holeAusgangsPuffer().wait();
 					}
 					catch (InterruptedException e) {
 						e.printStackTrace(Main.debug);
 					}
 				}
-				if(anschluss1.getAusgangsPuffer().size() > 0){
+				if(anschluss1.holeAusgangsPuffer().size() > 0){
 					//Main.debug.println("DEBUG ("+this.hashCode()+", K"+verbindung.hashCode()+"): SimplexVerbindung, run:   set wait()");
 					verbindung.setAktiv(true);
-					frame = (EthernetFrame)anschluss1.getAusgangsPuffer().getFirst();
-					anschluss1.getAusgangsPuffer().remove(frame);
+					frame = (EthernetFrame)anschluss1.holeAusgangsPuffer().getFirst();
+					anschluss1.holeAusgangsPuffer().remove(frame);
 
 					LinkedList liste = new LinkedList();
 					synchronized(liste){
@@ -94,9 +94,9 @@ public class SimplexVerbindung implements Runnable {
 						}
 					}
 
-					synchronized(anschluss2.getEingangsPuffer()){
-						anschluss2.getEingangsPuffer().add(frame);
-						anschluss2.getEingangsPuffer().notify();
+					synchronized(anschluss2.holeEingangsPuffer()){
+						anschluss2.holeEingangsPuffer().add(frame);
+						anschluss2.holeEingangsPuffer().notify();
 					}
 				}
 			}
