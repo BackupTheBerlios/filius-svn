@@ -653,13 +653,21 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 			// if NIC is connected, then extract connected foreign component
 			node = holeVerbundeneKomponente(nic);
 			if(node != null) {
+				String remoteAddress = "";
+				Verbindung connection = this.getConnectedCable(nic);
+				Port[] ports = connection.getAnschluesse();
+				for (Port port : ports) {
+					if (port.getNIC() != nic) {
+						remoteAddress = port.getNIC().getIp();
+					}
+				}
 				btnLocal[nicNr-1].setBackground(Color.GREEN);
 				btnLocal[nicNr-1].setEnabled(true);
 				btnRemote[nicNr-1] = new JButton(new ImageIcon(getClass().getResource("/gfx/hardware/rj45.png")));
 				btnRemote[nicNr-1].setEnabled(false);
 				lblRemote[nicNr-1] = new JLabel();
 				if(node instanceof filius.hardware.knoten.InternetKnoten) {
-					lblRemote[nicNr-1].setText("<html>"+node.getName()+"<br>("+((InternetKnotenBetriebssystem) node.getSystemSoftware()).holeIPAdresse()+")</html>");
+					lblRemote[nicNr-1].setText("<html>"+node.getName()+"<br>("+remoteAddress+")</html>");
 				}
 				else {
 					lblRemote[nicNr-1].setText(node.getName());
