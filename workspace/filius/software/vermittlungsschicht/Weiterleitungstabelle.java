@@ -234,8 +234,9 @@ public class Weiterleitungstabelle implements I18n {
 			}
 
 			// Eintrag fuer Standardgateway, wenn es konfiguriert wurde
-			gateway = firmware.getStandardGateway().trim();
-			if (gateway != null && !gateway.equals("")) {
+			gateway = firmware.getStandardGateway();
+			if (gateway != null && !gateway.trim().equals("")) {
+				gateway = gateway.trim();
 				it = knoten.getNetzwerkInterfaces().listIterator();
 				tmp = null;
 				while (it.hasNext()) {
