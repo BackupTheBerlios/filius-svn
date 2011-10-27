@@ -7,11 +7,17 @@
 
     <form action=":action_pfad:" method="POST">
 	<center> <table border="0" cellspacing="5" width="400"> <tr><td> <h2>Firewall-Konfiguration </h2> </td></tr><tr><td>
-      <table bgcolor="#E0E0E0" border="0" width="100%">
+      <table bgcolor="#E0E0E0" border="0" width="100%" cellpadding="5">
+        <tr>
+          <td>
+            <h3>&Uuml;berwachte Netzwerkschnittstellen:</h3>
+          </td>
+        </tr>
+        <tr><td align="center"><table border="0" cellpadding="5">
+:nic_activation:
+      </table></td></tr>
 	    <tr>
-          <td><input name="firewall_aktiv" type="checkbox" value="aktiviert" size="30" maxlength="40" :aktiv:>
-            Firewall aktivieren </input></td>
-          <td><input type="submit" value="Speichern"></td>
+          <td align="center"><input type="submit" value="Speichern"></td>
         </tr>
       </table>
 

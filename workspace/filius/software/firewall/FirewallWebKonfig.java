@@ -29,23 +29,16 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
-
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
-import javax.swing.text.html.FormSubmitEvent;
-import javax.swing.text.html.HTMLEditorKit;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.LinkedList;
-
-
-import java.util.StringTokenizer;
+import java.util.Vector;
 
 import filius.Main;
-import filius.software.system.SystemSoftware;
-import filius.software.system.VermittlungsrechnerBetriebssystem;
-import filius.software.www.*;
+import filius.hardware.NetzwerkInterface;
+import filius.hardware.knoten.InternetKnoten;
+import filius.software.www.WebServer;
+import filius.software.www.WebServerPlugIn;
 
 
 public class FirewallWebKonfig extends WebServerPlugIn{
@@ -100,7 +93,11 @@ public class FirewallWebKonfig extends WebServerPlugIn{
 
 			//Main.debug.println("String mit submit in FirewallWebKonfig angekommen: "+post);
 			//String zerlegen und überprüfen:
-			submitTeile = post.split("&");
+			try {
+	            submitTeile = URLDecoder.decode(post, "UTF-8").split("&");
+            } catch (UnsupportedEncodingException e) {
+            	submitTeile = post.split("&");
+            }
 
 			//Die ersten 5 Einträge des Arrays sind immer gleich
 
@@ -121,107 +118,105 @@ public class FirewallWebKonfig extends WebServerPlugIn{
 	 *
 	 * @param zeilen
 	 */
-	private void firewallBestuecken(String postTeil){
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (FirewallWebKonfig), firewallBestuecken("+postTeil+")");
+	private void firewallBestuecken(String postTeil) {
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (FirewallWebKonfig), firewallBestuecken(" + postTeil + ")");
 
 		int regel;
-		boolean firewallAktiv = false;
-		String empfaengerUnten=null, empfaengerOben=null;
-		String absenderUnten=null, absenderOben=null;
+		String empfaengerUnten = null, empfaengerOben = null;
+		String absenderUnten = null, absenderOben = null;
 
+		// Firewall bestücken:
+		if (webserver.getSystemSoftware() != null) {
 
-//		Firewall bestücken:
-		if(webserver.getSystemSoftware() != null ){
+			// Main.debug.println("POST-String wird zerlegt");
+			String[][] fwAttribute = postStringZerlegen(postTeil);
+			Vector<Integer> activeNics = new Vector<Integer>();
+			for (int i = 0; i < fwAttribute.length; i++) {
+				// Main.debug.println("\t"+fwAttribute[i][0]+"="+fwAttribute[i][1]);
+				if (fwAttribute[i][0].equals("nic")) {
+					activeNics.add(Integer.parseInt(fwAttribute[i][1]));
+				}
 
-			//Main.debug.println("POST-String wird zerlegt");
-			String [][] fwAttribute = postStringZerlegen(postTeil);
-			for (int i=0; i<fwAttribute.length; i++) {
-				//Main.debug.println("\t"+fwAttribute[i][0]+"="+fwAttribute[i][1]);
-			if(fwAttribute[i][0].equals("firewall_aktiv")){
-				//Main.debug.println("\t\tfirewall_aktiv");
-				if (fwAttribute[i][1].equals("aktiviert")) {
-					//Main.debug.println("\t\t\tFirewall wurde aktiviert");
-					firewallAktiv = true;
+				else if (fwAttribute[i][0].equals("empfaenger_regel_loeschen")) {
+					// Main.debug.println("\t\tempfaenger_regel_loeschen");
+					try {
+						regel = Integer.parseInt(fwAttribute[i][1]) - 1;
+						firewall.entferneEmpfaengerRegel(regel);
+					} catch (Exception e) {
+					}
+				}
+
+				else if (fwAttribute[i][0].equals("absender_regel_loeschen")) {
+					// Main.debug.println("\t\tabsender_regel_loeschen");
+					try {
+						regel = Integer.parseInt(fwAttribute[i][1]) - 1;
+						firewall.entferneAbsenderRegel(regel);
+					} catch (Exception e) {
+					}
+				}
+
+				else if (fwAttribute[i][0].equals("port_regel_loeschen")) {
+					// Main.debug.println("\t\tport_regel_loeschen");
+					try {
+						regel = Integer.parseInt(fwAttribute[i][1]) - 1;
+						firewall.entferneRegelPort(regel);
+					} catch (Exception e) {
+					}
+				}
+
+				else if (fwAttribute[i][0].equals("empfaenger_untere_grenze")) {
+					// Main.debug.println("\t\tempfaenger_untere_grenze");
+					empfaengerUnten = fwAttribute[i][1];
+				} else if (fwAttribute[i][0].equals("empfaenger_obere_grenze")) {
+					// Main.debug.println("\t\tempfaenger_obere_grenze");
+					empfaengerOben = fwAttribute[i][1];
+				} else if (fwAttribute[i][0].equals("absender_untere_grenze")) {
+					// Main.debug.println("\t\tabsender_untere_grenze");
+					absenderUnten = fwAttribute[i][1];
+				} else if (fwAttribute[i][0].equals("absender_obere_grenze")) {
+					// Main.debug.println("\t\tabsender_obere_grenze");
+					absenderOben = fwAttribute[i][1];
+				} else if (fwAttribute[i][0].equals("port")) {
+					// Main.debug.println("\t\tport");
+					try {
+						regel = Integer.parseInt(fwAttribute[i][1]);
+						firewall.eintragHinzufuegenPort("" + regel);
+					} catch (Exception e) {
+					}
 				}
 			}
 
-			else if(fwAttribute[i][0].equals("empfaenger_regel_loeschen")){
-				//Main.debug.println("\t\tempfaenger_regel_loeschen");
-				try {
-					regel = Integer.parseInt(fwAttribute[i][1]) - 1;
-					firewall.entferneEmpfaengerRegel(regel);
-				}
-				catch (Exception e) {}
-			}
-
-			else if(fwAttribute[i][0].equals("absender_regel_loeschen")){
-				//Main.debug.println("\t\tabsender_regel_loeschen");
-				try {
-					regel = Integer.parseInt(fwAttribute[i][1]) - 1;
-					firewall.entferneAbsenderRegel(regel);
-				}
-				catch (Exception e) {}
-			}
-
-			else if(fwAttribute[i][0].equals("port_regel_loeschen")){
-				//Main.debug.println("\t\tport_regel_loeschen");
-				try {
-					regel = Integer.parseInt(fwAttribute[i][1]) - 1;
-					firewall.entferneRegelPort(regel);
-				}
-				catch (Exception e) {}
-			}
-
-			else if(fwAttribute[i][0].equals("empfaenger_untere_grenze")){
-				//Main.debug.println("\t\tempfaenger_untere_grenze");
-				empfaengerUnten = fwAttribute[i][1];
-			}
-			else if(fwAttribute[i][0].equals("empfaenger_obere_grenze")){
-				//Main.debug.println("\t\tempfaenger_obere_grenze");
-				empfaengerOben = fwAttribute[i][1];
-			}
-			else if(fwAttribute[i][0].equals("absender_untere_grenze")){
-				//Main.debug.println("\t\tabsender_untere_grenze");
-				absenderUnten = fwAttribute[i][1];
-			}
-			else if(fwAttribute[i][0].equals("absender_obere_grenze")){
-				//Main.debug.println("\t\tabsender_obere_grenze");
-				absenderOben = fwAttribute[i][1];
-			}
-			else if(fwAttribute[i][0].equals("port")){
-				//Main.debug.println("\t\tport");
-				try {
-					regel = Integer.parseInt(fwAttribute[i][1]);
-					firewall.eintragHinzufuegenPort(""+regel);
-				}
-				catch (Exception e) {}
-			}
-			}
-
-			if (empfaengerUnten!=null && !empfaengerUnten.trim().equals("")) {
-				if (empfaengerOben!=null && !empfaengerOben.trim().equals("")) {
+			if (empfaengerUnten != null && !empfaengerUnten.trim().equals("")) {
+				if (empfaengerOben != null && !empfaengerOben.trim().equals("")) {
 					firewall.eintragHinzufuegen(empfaengerUnten, empfaengerOben, Firewall.EMPFAENGER_FILTER);
-				}
-				else {
+				} else {
 					firewall.eintragHinzufuegen(empfaengerUnten, empfaengerUnten, Firewall.EMPFAENGER_FILTER);
 				}
 			}
-			if (absenderUnten!=null && !absenderUnten.trim().equals("")) {
-				if (absenderOben!=null && !absenderOben.trim().equals("")) {
+			if (absenderUnten != null && !absenderUnten.trim().equals("")) {
+				if (absenderOben != null && !absenderOben.trim().equals("")) {
 					firewall.eintragHinzufuegen(absenderUnten, absenderOben, Firewall.ABSENDER_FILTER);
-				}
-				else {
+				} else {
 					firewall.eintragHinzufuegen(absenderUnten, absenderUnten, Firewall.ABSENDER_FILTER);
 				}
 			}
 
+			LinkedList<NetzwerkInterface> allNics = ((InternetKnoten) this.getFirewall().getSystemSoftware()
+			        .getKnoten()).getNetzwerkInterfaces();
+			Vector<Integer> inactiveNics = new Vector<Integer>();
+			for (int i = 0; i < allNics.size(); i++) {
+				if (!activeNics.contains(new Integer(i))) {
+					inactiveNics.add(new Integer(i));
+				}
+			}
+			this.firewall.setInactiveNics(inactiveNics);
 		}
-		firewall.setAktiviert(firewallAktiv);
 	}
 
 	private String erstelleZeilenEmpfaengerRegeln() {
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (FirewallWebKonfig), erstelleZeilenEmpfaengerRegeln()");
-		LinkedList regeln;
+		LinkedList<String> regeln;
 		String tmp;
 		String [] ipArray;
 		StringBuffer zeilen = new StringBuffer();
@@ -245,7 +240,7 @@ public class FirewallWebKonfig extends WebServerPlugIn{
 
 	private String erstelleZeilenAbsenderRegeln() {
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (FirewallWebKonfig), erstelleZeilenAbsenderRegeln()");
-		LinkedList regeln;
+		LinkedList<String> regeln;
 		String tmp;
 		String [] ipArray;
 		StringBuffer zeilen = new StringBuffer();
@@ -269,7 +264,7 @@ public class FirewallWebKonfig extends WebServerPlugIn{
 
 	private String erstelleZeilenPortRegeln() {
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (FirewallWebKonfig), erstelleZeilenPortRegeln()");
-		LinkedList regeln;
+		LinkedList<Object[]> regeln;
 		String tmp;
 		StringBuffer zeilen = new StringBuffer();
 
@@ -290,7 +285,6 @@ public class FirewallWebKonfig extends WebServerPlugIn{
 
 
 	/*
-	 * @author Weyer
 	 * diese Seite erstellt den kompletten Quelltext für die konfig.html
 	 */
 	private String konfigSeiteErstellen(){
@@ -307,12 +301,21 @@ public class FirewallWebKonfig extends WebServerPlugIn{
 
 			html = html.replaceAll(":action_pfad:", getPfad());
 
-			if (firewall.isAktiviert()) {
-				html = html.replaceAll(":aktiv:", "checked=\"checked\"");
+			LinkedList<NetzwerkInterface> allNics = ((InternetKnoten)this.getFirewall().getSystemSoftware().getKnoten()).getNetzwerkInterfaces();
+			LinkedList<NetzwerkInterface> activeNics = firewall.holeNetzwerkInterfaces();
+			StringBuffer nicSelectionHtml = new StringBuffer();
+			int idx = 0;
+			for (NetzwerkInterface nic : allNics) {
+				nicSelectionHtml.append("\t\t<tr><td><input name=\"nic\" type=\"checkbox\" value=\""+(idx++)+"\" size=\"30\" maxlength=\"40\"");
+				if (activeNics.contains(nic)) {
+					nicSelectionHtml.append(" checked=\"checked\"");
+				}
+				nicSelectionHtml.append(" /></td><td>" + nic.getIp() + "</td></tr>");
+				if (allNics.indexOf(nic) < allNics.size()-1) {
+					nicSelectionHtml.append(" \n");
+				}
 			}
-			else {
-				html = html.replaceAll(":aktiv:", "");
-			}
+			html = html.replaceAll(":nic_activation:", nicSelectionHtml.toString());
 
 			html = html.replaceAll(":empfaenger_regeln:", erstelleZeilenEmpfaengerRegeln());
 			html = html.replaceAll(":absender_regeln:", erstelleZeilenAbsenderRegeln());

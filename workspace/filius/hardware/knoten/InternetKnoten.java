@@ -34,12 +34,13 @@ import filius.hardware.Port;
 
 public abstract class InternetKnoten extends Knoten {
 
-	private LinkedList netzwerkInterfaces = new LinkedList();
+	private static final long serialVersionUID = 1L;
+	private LinkedList<NetzwerkInterface> netzwerkInterfaces = new LinkedList<NetzwerkInterface>();
 
 
 	public Port holeFreienPort(){
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (InternetKnoten), holeFreienPort()");
-		ListIterator iter = getNetzwerkInterfaces().listIterator();
+		ListIterator<NetzwerkInterface> iter = getNetzwerkInterfaces().listIterator();
 		while(iter.hasNext()){
 			NetzwerkInterface nic = (NetzwerkInterface)iter.next();
 			Port anschluss = nic.getPort();
@@ -66,7 +67,7 @@ public abstract class InternetKnoten extends Knoten {
 	{
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (InternetKnoten), getNetzwerkInterfaceByMac("+mac+")");
 		NetzwerkInterface rueckgabe = null;
-		ListIterator it = this.netzwerkInterfaces.listIterator();
+		ListIterator<NetzwerkInterface> it = this.netzwerkInterfaces.listIterator();
 		while (it.hasNext())
 		{
 			NetzwerkInterface ni = (NetzwerkInterface) it.next();
@@ -92,7 +93,7 @@ public abstract class InternetKnoten extends Knoten {
 			return (NetzwerkInterface)netzwerkInterfaces.getFirst();
 		}
 		NetzwerkInterface rueckgabe = null;
-		ListIterator it = this.netzwerkInterfaces.listIterator();
+		ListIterator<NetzwerkInterface> it = this.netzwerkInterfaces.listIterator();
 		while (it.hasNext())
 		{
 			NetzwerkInterface ni = (NetzwerkInterface) it.next();
@@ -104,11 +105,11 @@ public abstract class InternetKnoten extends Knoten {
 		return rueckgabe;
 	}
 
-	public LinkedList getNetzwerkInterfaces() {
+	public LinkedList<NetzwerkInterface> getNetzwerkInterfaces() {
 		return netzwerkInterfaces;
 	}
 
-	public void setNetzwerkInterfaces(LinkedList netzwerkInterfaces) {
+	public void setNetzwerkInterfaces(LinkedList<NetzwerkInterface> netzwerkInterfaces) {
 		this.netzwerkInterfaces = netzwerkInterfaces;
 	}
 
@@ -124,7 +125,7 @@ public abstract class InternetKnoten extends Knoten {
     public void setzeAnzahlAnschluesse(int anzahlAnschluesse) {
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (InternetKnoten), setzeAnzahlAnschluesse("+anzahlAnschluesse+")");
 
-        netzwerkInterfaces = new LinkedList();
+        netzwerkInterfaces = new LinkedList<NetzwerkInterface>();
         for (int i=0;i<anzahlAnschluesse;i++)
         {
         	netzwerkInterfaces.add(new NetzwerkInterface());

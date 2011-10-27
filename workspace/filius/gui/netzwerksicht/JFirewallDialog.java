@@ -27,32 +27,46 @@ package filius.gui.netzwerksicht;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Vector;
-import java.awt.color.*;
 import java.util.LinkedList;
+import java.util.Vector;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+
 import filius.Main;
-import filius.rahmenprogramm.*;
-import filius.software.firewall.*;
+import filius.hardware.NetzwerkInterface;
+import filius.hardware.knoten.InternetKnoten;
+import filius.rahmenprogramm.EingabenUeberpruefung;
+import filius.rahmenprogramm.I18n;
+import filius.software.firewall.Firewall;
 
 public class JFirewallDialog extends JDialog implements I18n {
 
+	private static final long serialVersionUID = 1L;
+	
+	private static final Color TAB_COLOR = new Color(200,221,242);
+	
 	JFirewallDialog jfd = null;
 	Firewall firewall;
+	private LinkedList<NetzwerkInterface> nics;
 
-	private JTable tTabelle;
 	private JTable tTabelleAbsender;
 	private JTable tTabelleZiel;
 	private JTable tTabellePort;
@@ -67,19 +81,18 @@ public class JFirewallDialog extends JDialog implements I18n {
 	private JTextField tfZielVon, tfZielBis;
 	private JTextField tfPort;
 
-	private JCheckBox cbEinAus;
-	private JCheckBox cbSynAck;
-
-
+	private JCheckBox[] nicSelection;
+	
 	public JFirewallDialog(Firewall firewall, JFrame dummyFrame){
 		super(dummyFrame, messages.getString("jfirewalldialog_msg1"), true);
 	  	Main.debug.println("INVOKED-2 ("+this.hashCode()+") "+getClass()+", constr: JFirewallDialog("+firewall+","+dummyFrame+")");
 		this.firewall = firewall;
+		this.nics = ((InternetKnoten)firewall.getSystemSoftware().getKnoten()).getNetzwerkInterfaces();
+		
 		jfd = this;
 		this.setBounds(this.getX(), this.getY(), 600,300);
 
 		erzeugeFenster();
-
 	}
 
 	private Box erzeugeAbsenderBox() {
@@ -100,6 +113,9 @@ public class JFirewallDialog extends JDialog implements I18n {
 
 		textArea = new JTextArea();
 		textArea.setText(messages.getString("jfirewalldialog_msg2"));
+		textArea.setLineWrap(true);
+		textArea.setWrapStyleWord(true);
+		textArea.setBackground(TAB_COLOR);
 		textArea.setEditable(false);
 
 		hBox.add(textArea);
@@ -187,6 +203,70 @@ public class JFirewallDialog extends JDialog implements I18n {
 
 		return vBox;
 	}
+	
+	private Box erzeugeNicBox() {
+		Box vBox, hBox;
+		JTextArea textArea;
+
+		vBox = Box.createVerticalBox();
+		vBox.add(Box.createVerticalStrut(10));
+
+
+		hBox = Box.createHorizontalBox();
+		hBox.add(Box.createHorizontalStrut(10));
+
+		textArea = new JTextArea();
+		textArea.setText(messages.getString("jfirewalldialog_msg17"));
+		textArea.setLineWrap(true);
+		textArea.setWrapStyleWord(true);
+		textArea.setEditable(false);
+		textArea.setBackground(TAB_COLOR);
+
+		hBox.add(textArea);
+		hBox.add(Box.createHorizontalStrut(10));
+		vBox.add(hBox);
+		vBox.add(Box.createVerticalStrut(10));
+
+		LinkedList<NetzwerkInterface> activeNics = this.firewall.holeNetzwerkInterfaces();
+		this.nicSelection = new JCheckBox[this.nics.size()];
+		int i = 0;
+		for (NetzwerkInterface nic : this.nics) {
+			this.nicSelection[i] = new JCheckBox(nic.getIp(), activeNics.contains(nic));
+			this.nicSelection[i].setBackground(TAB_COLOR);
+			this.nicSelection[i].addActionListener(new ActionListener()	{
+				public void actionPerformed(ActionEvent evt) {
+					JCheckBox cb = (JCheckBox)evt.getSource();
+					String ip = cb.getText();
+					NetzwerkInterface nic = null;
+					
+					for (NetzwerkInterface tmp : JFirewallDialog.this.nics) {
+						if (tmp.getIp() == ip) {
+							nic = tmp;
+							break;
+						}
+					}
+					if (nic == null) return;
+					else if (cb.isSelected()) {
+						JFirewallDialog.this.firewall.hinzuNetzwerkInterface(nic);
+					}
+					else {
+						JFirewallDialog.this.firewall.entferneNetzwerkInterface(nic);
+					}
+				}
+			});
+			
+			hBox = Box.createHorizontalBox();
+			hBox.add(Box.createHorizontalStrut(10));
+			hBox.add(this.nicSelection[i]);
+			hBox.setPreferredSize(new Dimension(150,20));
+			vBox.add(hBox);
+			i++;
+		}
+		
+		vBox.add(Box.createVerticalStrut(1000));
+
+		return vBox;
+	}
 
 	private Box erzeugeEmpfaengerBox() {
 	  	Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+", erzeugeEmpfaengerBox()");
@@ -207,8 +287,10 @@ public class JFirewallDialog extends JDialog implements I18n {
 
 		textArea = new JTextArea();
 		textArea.setText(messages.getString("jfirewalldialog_msg8"));
+		textArea.setLineWrap(true);
+		textArea.setWrapStyleWord(true);
 		textArea.setEditable(false);
-		textArea.setBackground(getBackground());
+		textArea.setBackground(TAB_COLOR);
 
 		hBox.add(textArea);
 		hBox.add(Box.createHorizontalStrut(10));
@@ -315,8 +397,10 @@ public class JFirewallDialog extends JDialog implements I18n {
 
 		textArea = new JTextArea();
 		textArea.setText(messages.getString("jfirewalldialog_msg10"));
+		textArea.setLineWrap(true);
+		textArea.setWrapStyleWord(true);
 		textArea.setEditable(false);
-		textArea.setBackground(getBackground());
+		textArea.setBackground(TAB_COLOR);
 
 		hBox.add(textArea);
 		hBox.add(Box.createHorizontalStrut(10));
@@ -404,20 +488,15 @@ public class JFirewallDialog extends JDialog implements I18n {
 
 		hauptPanel = new JPanel(new BorderLayout());
 
-		cbEinAus = new JCheckBox(messages.getString("jfirewalldialog_msg13"));//Bei true nur mit 1 durchlassen
-		cbEinAus.addActionListener(new ActionListener()	{
-			public void actionPerformed(ActionEvent arg0) {
-				firewall.setAktiviert(cbEinAus.isSelected());
-				updateAttribute();
-
-			}
-		});
-		hauptPanel.add(cbEinAus, BorderLayout.NORTH);
-
 		tp = new JTabbedPane();
+		tp.add(messages.getString("jfirewalldialog_msg18"), erzeugeNicBox());
+		tp.setBackgroundAt(0, TAB_COLOR);
 		tp.add(messages.getString("jfirewalldialog_msg14"), erzeugeAbsenderBox());
+		tp.setBackgroundAt(1, TAB_COLOR);
 		tp.add(messages.getString("jfirewalldialog_msg15"), erzeugeEmpfaengerBox());
+		tp.setBackgroundAt(2, TAB_COLOR);
 		tp.add(messages.getString("jfirewalldialog_msg16"), erzeugePortBox());
+		tp.setBackgroundAt(3, TAB_COLOR);
 
 		tp.addChangeListener(new ChangeListener()
 		{
@@ -438,17 +517,10 @@ public class JFirewallDialog extends JDialog implements I18n {
 	public void updateAttribute() {
 	  	Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+", updateAttribute()");
 
-		LinkedList liste;
+		LinkedList<?> liste;
 		Vector<String> vector;
 		DefaultTableModel model;
 		String[] array;
-
-		if(firewall.isAktiviert()){
-			cbEinAus.setSelected(true);
-		}
-		else{
-			cbEinAus.setSelected(false);
-		}
 
 		liste = firewall.getPortList();
 		model = (DefaultTableModel)tTabellePort.getModel();
@@ -483,8 +555,5 @@ public class JFirewallDialog extends JDialog implements I18n {
 			vector.addElement(array[1]);
 			model.addRow(vector);
 		}
-
-
-
 	}
 }

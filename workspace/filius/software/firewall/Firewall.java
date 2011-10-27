@@ -26,11 +26,15 @@
 package filius.software.firewall;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 import filius.Main;
+import filius.hardware.NetzwerkInterface;
 import filius.hardware.knoten.InternetKnoten;
+import filius.rahmenprogramm.EingabenUeberpruefung;
 import filius.rahmenprogramm.I18n;
 import filius.software.Anwendung;
+import filius.software.system.InternetKnotenBetriebssystem;
 import filius.software.transportschicht.Segment;
 import filius.software.transportschicht.SocketSchnittstelle;
 import filius.software.transportschicht.TCPSocket;
@@ -79,7 +83,10 @@ public class Firewall extends Anwendung implements I18n {
 	 * als Personal Firewall oder als Gateway benutzt wird.
 	 */
 	private int modus;
-	private FirewallThread thread;
+	private LinkedList<FirewallThread> threads = new LinkedList<FirewallThread>();
+	
+	private Vector<Integer> inactiveNics = new Vector<Integer>();
+
 
 	/** Konstruktor initialisiert Listen mit Regeln für die Firewall. Außerdem setzt ein
 	Firewall-Beobachter Nachrichten ins Logfenster
@@ -99,11 +106,21 @@ public class Firewall extends Anwendung implements I18n {
 	/** startet die Anwendung Firewall.
 	 */
 	public void starten(){
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (Firewall), starten()");
-		super.starten();
+		if (this.holeNetzwerkInterfaces() != null) {
+			Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+			        + " (Firewall), starten()");
+			super.starten();
 
-		thread = new FirewallThread(this);
+			for (NetzwerkInterface nic : this.holeNetzwerkInterfaces()) {
+				this.starteFirewallThread(nic);
+			}
+		}
+	}
+	
+	private void starteFirewallThread(NetzwerkInterface nic) {
+		FirewallThread thread = new FirewallThread(this, nic);
 		thread.starten();
+		this.threads.add(thread);
 	}
 
 
@@ -114,7 +131,19 @@ public class Firewall extends Anwendung implements I18n {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (Firewall), beenden()");
 		super.beenden();
 
-		thread.beenden();
+		this.beendeFirewallThread(null);
+	}
+	
+	private void beendeFirewallThread(NetzwerkInterface nic) {
+		for (FirewallThread thread : this.threads) {
+			if (nic == null) {
+				thread.beenden();
+			}
+			else if (nic == thread.getNetzwerkInterface()) {
+				thread.beenden();
+				break;
+			}
+		}
 	}
 
 
@@ -128,8 +157,8 @@ public class Firewall extends Anwendung implements I18n {
 	 * Segment an einen geoeffnet Client-Socket gerichtet ist. Dann wird es
 	 * dennoch weitergeleitet. </p>
 	 */
-	public boolean istPaketZulaessig(IpPaket ipPaket){
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (Firewall), istPaketZulaessig("+ipPaket+")");
+	public boolean pruefePaketVerwerfen(IpPaket ipPaket){
+		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (Firewall), pruefePaketVerwerfen("+ipPaket+")");
 		Segment segment;
 		InternetKnoten knoten;
 		SocketSchnittstelle socket;
@@ -335,6 +364,11 @@ public class Firewall extends Anwendung implements I18n {
 	 */
 	public void eintragHinzufuegen(String von, String bis, String typ){
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (Firewall), eintragHinzufuegen("+von+","+bis+","+typ+")");
+		if (!EingabenUeberpruefung.isGueltig(von, EingabenUeberpruefung.musterIpAdresse)
+				|| !EingabenUeberpruefung.isGueltig(bis, EingabenUeberpruefung.musterIpAdresseAuchLeer)) {
+			return;
+		}
+		
 		if(bis.equals("")){
 			bis = " ";
 		}
@@ -492,6 +526,16 @@ public class Firewall extends Anwendung implements I18n {
 
 		return pruef;
 	}
+	
+	/**
+	 * Methode fuer den Zugriff auf das Betriebssystem, auf dem diese Anwendung
+	 * laeuft.
+	 *
+	 * @param bs
+	 */
+	public void setSystemSoftware(InternetKnotenBetriebssystem bs) {
+		super.setSystemSoftware(bs);
+	}
 
 
 
@@ -510,14 +554,14 @@ public class Firewall extends Anwendung implements I18n {
 		benachrichtigeBeobachter("Firewall "+(aktiviert?"aktiviert":"deaktiviert"));
 		this.aktiviert = aktiviert;
 	}
-	public LinkedList getEmpfaengerFilterList() {
+	public LinkedList<String> getEmpfaengerFilterList() {
 		return empfaengerFilter;
 	}
 	public void setEmpfaengerFilterList(LinkedList<String> ipList) {
 		this.empfaengerFilter = ipList;
 	}
 
-	public LinkedList getAbsenderFilterList() {
+	public LinkedList<String> getAbsenderFilterList() {
 		return absenderFilter;
 	}
 	public void setAbsenderFilterList(LinkedList<String> ipList) {
@@ -538,4 +582,77 @@ public class Firewall extends Anwendung implements I18n {
 	public int getModus() {
 		return modus;
 	}
+
+
+	public void setzeNetzwerkInterfaces(LinkedList<NetzwerkInterface> netzwerkInterfaces) {
+		LinkedList<NetzwerkInterface> allNics = this.getAllNetworkInterfaces();
+		
+		this.inactiveNics.removeAllElements();
+	    for (NetzwerkInterface nic : allNics) {
+	    	if (netzwerkInterfaces.indexOf(nic) == -1) {
+	    		this.inactiveNics.add(new Integer(allNics.indexOf(nic)));
+	    	}
+	    }
+    }
+
+
+	public LinkedList<NetzwerkInterface> holeNetzwerkInterfaces() {
+		LinkedList<NetzwerkInterface> allNics = this.getAllNetworkInterfaces();
+		LinkedList<NetzwerkInterface> result = new LinkedList<NetzwerkInterface>();
+		
+		for (NetzwerkInterface nic : allNics) {
+			try {
+				if (!this.inactiveNics.contains(new Integer(allNics.indexOf(nic)))) {
+					result.addLast(nic);
+				}
+			} catch (IndexOutOfBoundsException e) {
+			}
+		}
+		return result;
+    }
+	
+	private LinkedList<NetzwerkInterface> getAllNetworkInterfaces() {
+		InternetKnoten host = (InternetKnoten) this.getSystemSoftware().getKnoten();
+			
+		return host.getNetzwerkInterfaces();
+	}
+	
+	public boolean hinzuNetzwerkInterface(NetzwerkInterface nic) {
+		int idx = this.getAllNetworkInterfaces().indexOf(nic);
+		if (this.inactiveNics.contains(new Integer(idx))) {
+			this.inactiveNics.remove(new Integer(idx));
+			
+			if (this.running) {
+				this.starteFirewallThread(nic);
+			}
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public boolean entferneNetzwerkInterface(NetzwerkInterface nic) {
+		int idx = this.getAllNetworkInterfaces().indexOf(nic);
+		if (! this.inactiveNics.contains(new Integer(idx))) {
+			this.inactiveNics.add(new Integer(idx));
+			
+			if (this.running) {
+				this.beendeFirewallThread(nic);
+			}
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	public Vector<Integer> getInactiveNics() {
+    	return inactiveNics;
+    }
+
+
+	public void setInactiveNics(Vector<Integer> inactiveNics) {
+    	this.inactiveNics = inactiveNics;
+    }
 }

@@ -32,6 +32,10 @@ import filius.software.firewall.Firewall;
 import filius.software.firewall.FirewallWebKonfig;
 import filius.software.firewall.FirewallWebLog;
 import filius.software.www.WebServer;
+import filius.hardware.NetzwerkInterface;
+import filius.hardware.knoten.InternetKnoten;
+import filius.hardware.knoten.Knoten;
+import filius.hardware.knoten.Vermittlungsrechner;
 
 /**
  * Diese Klasse stellt die Funktionalitaet eines Betriebssystems fuer
@@ -52,6 +56,10 @@ public class VermittlungsrechnerBetriebssystem extends
 
 		initialisiereFirewallUndWebserver();
 	}
+	
+	public void setKnoten(Knoten vermittlungsrechner) {
+		super.setKnoten(vermittlungsrechner);
+	}
 
 	/**
 	 * Methode zur initialisierung der Firewall und des Web-Servers mit den
@@ -59,40 +67,40 @@ public class VermittlungsrechnerBetriebssystem extends
 	 * Web-Schnittstelle
 	 */
 	private void initialisiereFirewallUndWebserver() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (VermittlungsrechnerBetriebssystem), initialisiereFirewallUndWebserver()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (VermittlungsrechnerBetriebssystem), initialisiereFirewallUndWebserver()");
 		FirewallWebLog weblog;
 		FirewallWebKonfig webkonfig;
 		WebServer server = null;
 		Firewall firewall = null;
 
-				// Installation von Firewall und Webserver
-				installiereSoftware("filius.software.firewall.Firewall");
-				installiereSoftware("filius.software.www.WebServer");
-//				while(firewall==null) {
-					firewall = (Firewall) holeSoftware("filius.software.firewall.Firewall");
-//				}
-//				while(server==null) {
-					server = (WebServer) holeSoftware("filius.software.www.WebServer");
-//				}
-				firewall.setModus(Firewall.GATEWAY);
+		// Installation von Firewall und Webserver
+		installiereSoftware("filius.software.firewall.Firewall");
+		installiereSoftware("filius.software.www.WebServer");
+		// while(firewall==null) {
+		firewall = this.holeFirewall();
+		// }
+		// while(server==null) {
+		server = this.holeWebServer();
+		// }
+		firewall.setModus(Firewall.GATEWAY);
 
-				// Erweiterung des Webservers fuer die Anzeige der
-				// Log-Eintraege der Firewall
-				weblog = new FirewallWebLog();
-				weblog.setFirewall(firewall);
-				weblog.setPfad("log.html");
-				server.setzePlugIn(weblog);
+		// Erweiterung des Webservers fuer die Anzeige der
+		// Log-Eintraege der Firewall
+		weblog = new FirewallWebLog();
+		weblog.setFirewall(firewall);
+		weblog.setPfad("log.html");
+		server.setzePlugIn(weblog);
 
-				// Erweiterung des Webservers fuer die Konfiguration
-				// der Firewall
-				webkonfig = new FirewallWebKonfig();
-				webkonfig.setWebserver(server);
-				webkonfig.setFirewall(firewall);
-				webkonfig.setPfad("konfig.html");
-				server.setzePlugIn(webkonfig);
+		// Erweiterung des Webservers fuer die Konfiguration
+		// der Firewall
+		webkonfig = new FirewallWebKonfig();
+		webkonfig.setWebserver(server);
+		webkonfig.setFirewall(firewall);
+		webkonfig.setPfad("konfig.html");
+		server.setzePlugIn(webkonfig);
 
-				server.erzeugeIndexDatei(Information.getInformation().getProgrammPfad()
-						+ "config/firewall_index.txt");
+		server.erzeugeIndexDatei(Information.getInformation().getProgrammPfad() + "config/firewall_index.txt");
 	}
 
 	/**
@@ -102,6 +110,7 @@ public class VermittlungsrechnerBetriebssystem extends
 	 */
 	public void starten() {
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (VermittlungsrechnerBetriebssystem), starten()");
+
 		super.starten();
 
 		// Startet den Web-Server

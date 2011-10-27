@@ -106,8 +106,6 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 
 	private JWeiterleitungsTabelle weiterleitungstabelle;
 
-	private JFirewallDialog firewallDialog = null;
-
 	private JCheckBox alleEintraegeAnzeigen;
 
 	private JButton[] btnLocal = new JButton[8];
@@ -212,20 +210,19 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 	 * wird von der Schaltflaeche "Firewall einrichten" in der GUI aufgerufen
 	 */
 	private void firewallDialogAnzeigen() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (JVermittlungsrechnerKonfiguration), firewallDialogAnzeigen()");
-		if (firewallDialog == null) {
-			Firewall firewall = ((VermittlungsrechnerBetriebssystem) ((Vermittlungsrechner) holeHardware())
-					.getSystemSoftware()).holeFirewall();
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (JVermittlungsrechnerKonfiguration), firewallDialogAnzeigen()");
 
-			firewallDialog = new JFirewallDialog(firewall, JMainFrame
-					.getJMainFrame());
-			firewallDialog.setBounds(100, 100, 520, 340);
-			firewallDialog.setName(messages
-					.getString("jvermittlungsrechnerkonfiguration_msg1"));
-		}
-		firewallDialog.updateAttribute(); // muss hier passieren, damit beim
-											// oeffnen immer die aktuellen Werte
-		// vorhanden sind!
+		Firewall firewall = ((VermittlungsrechnerBetriebssystem) ((Vermittlungsrechner) holeHardware())
+		        .getSystemSoftware()).holeFirewall();
+
+		JFirewallDialog firewallDialog = new JFirewallDialog(firewall, JMainFrame.getJMainFrame());
+		firewallDialog.setBounds(100, 100, 520, 340);
+		firewallDialog.setName(messages.getString("jvermittlungsrechnerkonfiguration_msg1"));
+
+		firewallDialog.updateAttribute(); 	// muss hier passieren, damit beim
+		                                  	// oeffnen immer die aktuellen Werte
+											// vorhanden sind!
 		firewallDialog.setVisible(true);
 	}
 
@@ -352,6 +349,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 			}
 		});
 		vBox.add(btFirewall);
+		vBox.add(Box.createVerticalStrut(5));
 
 		changeBasicSettingsButton = new JButton(messages
 				.getString("jvermittlungsrechnerkonfiguration_msg23"));

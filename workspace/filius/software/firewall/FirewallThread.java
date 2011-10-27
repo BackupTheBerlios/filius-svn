@@ -30,14 +30,8 @@ import java.util.LinkedList;
 
 import filius.Main;
 import filius.hardware.NetzwerkInterface;
-import filius.hardware.knoten.InternetKnoten;
 import filius.software.ProtokollThread;
-import filius.software.netzzugangsschicht.Ethernet;
-import filius.software.netzzugangsschicht.EthernetThread;
-import filius.software.system.Betriebssystem;
-import filius.software.system.VermittlungsrechnerBetriebssystem;
-import filius.software.transportschicht.Segment;
-import filius.software.transportschicht.TcpSegment;
+import filius.software.netzzugangsschicht.EthernetFrame;
 import filius.software.vermittlungsschicht.IpPaket;
 
 /*
@@ -48,13 +42,19 @@ import filius.software.vermittlungsschicht.IpPaket;
  */
 public class FirewallThread extends ProtokollThread {
 
-	private LinkedList<IpPaket> ausgangsPuffer;
+	private LinkedList<EthernetFrame> ausgangsPuffer;
 	private Firewall firewall;
+	private NetzwerkInterface netzwerkInterface = null;
 
-	public FirewallThread(Firewall firewall) {
-		super(new LinkedList<IpPaket>());
+	public NetzwerkInterface getNetzwerkInterface() {
+    	return netzwerkInterface;
+    }
+
+	public FirewallThread(Firewall firewall, NetzwerkInterface nic) {
+		super(new LinkedList<EthernetFrame>());
 		Main.debug.println("INVOKED-2 ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (FirewallThread), constr: FirewallThread("+firewall+")");
 		this.firewall = firewall;
+		this.netzwerkInterface = nic;
 	}
 
 	/*
@@ -63,14 +63,20 @@ public class FirewallThread extends ProtokollThread {
 	 */
 	public void starten(){
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (FirewallThread), starten()");
-		LinkedList<IpPaket> eingangsPuffer;
+		LinkedList<EthernetFrame> eingangsPuffer;
 
 		super.starten();
 
-		ausgangsPuffer = firewall.getSystemSoftware().holeEthernet().holeIPPuffer();
-		eingangsPuffer = (LinkedList<IpPaket>) holeEingangsPuffer();
-		firewall.getSystemSoftware().holeEthernet().setzeIPPuffer(eingangsPuffer);
+		this.ausgangsPuffer = netzwerkInterface.getPort().holeEingangsPuffer();
+		eingangsPuffer = (LinkedList<EthernetFrame>) holeEingangsPuffer();
+		netzwerkInterface.getPort().setzeEingangsPuffer(eingangsPuffer);
 
+	}
+	
+	public void beenden() {
+		super.beenden();
+		
+		netzwerkInterface.getPort().setzeEingangsPuffer(this.ausgangsPuffer);
 	}
 
 	//getter und setter:
@@ -78,18 +84,23 @@ public class FirewallThread extends ProtokollThread {
 	@Override
 	protected void verarbeiteDatenEinheit(Object datenEinheit) {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (FirewallThread), verarbeiteDatenEinheit("+datenEinheit.toString()+")");
-		IpPaket ipPaket = (IpPaket) datenEinheit;
+		IpPaket ipPaket = null;
+		EthernetFrame frame = (EthernetFrame) datenEinheit;
+		
+		if (frame.getDaten() instanceof IpPaket) {
+			ipPaket = (IpPaket) frame.getDaten();
+		}
 
 //		Hier erfolgt nun die Abfrage, ob die Pakete laut Firewall in Ordnung sind:
 		 //Bei false werden die Pakete weitergeleitet
 		//Am Ende in den Ausgangspuffer schreiben, und weiterreichen an EthernetThread
 		//oder nicht weiterleiten
 
-		if(!firewall.istPaketZulaessig(ipPaket)){
+		if(ipPaket == null || !firewall.pruefePaketVerwerfen(ipPaket)){
 			synchronized(ausgangsPuffer){
 				//Main.debug.println("FirewallThread: Paket wurde von FirewallThread weitergeleitet");
 
-				ausgangsPuffer.add(ipPaket);
+				ausgangsPuffer.add(frame);
 				ausgangsPuffer.notify();
 			}
 		}

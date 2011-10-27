@@ -30,7 +30,6 @@ import java.util.Observer;
 
 import filius.Main;
 import filius.rahmenprogramm.I18n;
-import filius.software.www.WebServer;
 import filius.software.www.WebServerPlugIn;
 
 /**
@@ -44,12 +43,10 @@ import filius.software.www.WebServerPlugIn;
 public class FirewallWebLog extends WebServerPlugIn implements Observer, I18n {
 
 
-	private Firewall firewall;
 	private String logDaten = "";
 
 
 	public void setFirewall(Firewall firewall) {
-		this.firewall = firewall;
 		firewall.hinzuBeobachter(this);
 	}
 
