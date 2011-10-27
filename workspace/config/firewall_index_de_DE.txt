@@ -4,8 +4,8 @@
 </head>
 <h1>Firewall-Administration</h1>
 
-<p> <a href="konfig.html"> Konfiguration </a> </p>
-<p> <a href="log.html"> Log-Eintr&auml;ge </a> </p>
+<p> <a href="konfig.html">Konfiguration</a> </p>
+<p> <a href="log.html">Log-Eintr&auml;ge anzeigen</a> </p>
 
 </body>
 </html>

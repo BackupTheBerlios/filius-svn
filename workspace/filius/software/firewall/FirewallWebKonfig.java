@@ -37,6 +37,7 @@ import java.util.Vector;
 import filius.Main;
 import filius.hardware.NetzwerkInterface;
 import filius.hardware.knoten.InternetKnoten;
+import filius.rahmenprogramm.Information;
 import filius.software.www.WebServer;
 import filius.software.www.WebServerPlugIn;
 
@@ -297,7 +298,7 @@ public class FirewallWebKonfig extends WebServerPlugIn{
 
 			try{
 
-			html = textDateiEinlesen("config/firewall_konfig_webseite.txt");
+			html = textDateiEinlesen("config/firewall_konfig_webseite_"+Information.getInformation().getLocale().toString()+".txt");
 
 			html = html.replaceAll(":action_pfad:", getPfad());
 

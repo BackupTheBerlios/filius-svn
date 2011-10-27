@@ -27,7 +27,7 @@
       <table  border="0" bgcolor="#E0E0E0" width="100%" cellpadding="5">
         <tr>
           <td colspan="4">
-            <h3>Blockierte Empf&auml;nger-IP-Adressen:</h3>
+            <h3>Blockierte Empf&auml;nger (IP-Adressen):</h3>
           </td>
         </tr>
         <tr>
@@ -38,7 +38,7 @@
           <td><input name="empfaenger_obere_grenze" type="text" size="12" maxlength="15"></td>
         </tr>
         <tr>
-          <td>Regel entfernen: </td>
+          <td>Regel anhand der lfd. Nummer entfernen: </td>
           <td> <input name="empfaenger_regel_loeschen" type="text" size="5" maxlength="3">
         </tr>
         <tr>
@@ -68,7 +68,7 @@
       <table  border="0" bgcolor="#E0E0E0" width="100%" cellpadding="5">
         <tr>
           <td colspan="4">
-            <h3>Blockierte Absender-IP-Adressen:</h3>
+            <h3>Blockierte Absender (IP-Adressen):</h3>
           </td>
         </tr>
         <tr>
@@ -79,7 +79,7 @@
           <td><input name="absender_obere_grenze" type="text" size="12" maxlength="15"></td>
         </tr>
         <tr>
-          <td>Regel entfernen: </td>
+          <td>Regel anhand der lfd. Nummer entfernen: </td>
           <td> <input name="absender_regel_loeschen" type="text" size="5" maxlength="3">
         </tr>
         <tr>
