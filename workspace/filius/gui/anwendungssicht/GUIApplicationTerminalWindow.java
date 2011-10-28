@@ -27,20 +27,16 @@ package filius.gui.anwendungssicht;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Observable;
 import java.util.StringTokenizer;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -50,6 +46,7 @@ import javax.swing.event.InternalFrameEvent;
 
 import filius.Main;
 import filius.software.lokal.Terminal;
+import filius.software.system.Dateisystem;
 
 
 /**
@@ -91,9 +88,11 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 		terminalField.setBackground(new Color(0,0,0));
 		terminalField.setFont(new Font("Courier New",Font.PLAIN,11));
 		terminalField.setFocusable(false);
+		terminalField.setBorder(null);
 
 		tpPane = new JScrollPane(terminalField);  // make textfield scrollable
 		tpPane.setBorder(null);
+		tpPane.setBackground(new Color(0,0,0));
 		tpPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER); // do not show vert. scrollbar
 		tpPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); // do not show hor. scrollbar
 		
@@ -157,12 +156,10 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
             }
 
 			public void keyReleased(KeyEvent arg0) {
-				// TODO Auto-generated method stub
 
 			}
 
 			public void keyTyped(KeyEvent arg0) {
-				// TODO Auto-generated method stub
 
 			}
 
@@ -206,74 +203,65 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 		pack();
 
 		inputField.requestFocus();
-		this.inputLabel.setText("root "+holeAnwendung().getSystemSoftware().getDateisystem().absoluterPfad(((Terminal)holeAnwendung()).getAktuellerOrdner())+"> ");
+		this.inputLabel.setText("root "+Dateisystem.absoluterPfad(((Terminal)holeAnwendung()).getAktuellerOrdner())+"> ");
 	}
 
 	public void setMultipleObserverEvents(boolean flag) {
-		multipleObserverEvents = flag;
 	}
 	
 	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void windowClosing(WindowEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
 	}
 
 	public void internalFrameActivated(InternalFrameEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void internalFrameClosed(InternalFrameEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void internalFrameClosing(InternalFrameEvent e) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	public void internalFrameDeactivated(InternalFrameEvent e) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	public void internalFrameDeiconified(InternalFrameEvent e) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	public void internalFrameIconified(InternalFrameEvent e) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	public void internalFrameOpened(InternalFrameEvent e) {
-		// TODO Auto-generated method stub
+		
 	}
 
 	public void update(Observable arg0, Object arg1) {
@@ -281,16 +269,20 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 		if (arg1 == null) return;
 		if (jobRunning) {
 			//Main.debug.println("DEBUG:  terminalField.height="+terminalField.getHeight()+", tpPane.height="+tpPane.getHeight());
-			if (arg1 instanceof Boolean) { multipleObserverEvents=((Boolean) arg1).booleanValue(); }
+			if (arg1 instanceof Boolean) { 
+				multipleObserverEvents=((Boolean) arg1).booleanValue(); 
+			}
 			else {   // expect String
 				this.terminalField.append(arg1.toString());
+				//this.terminalField.updateUI();
 				try {
 					// mini delay to let the terminalField reliably update its new height
 					Thread.sleep(200);
 				} catch (InterruptedException e) {}
+				this.tpPane.repaint();
 				this.tpPane.getVerticalScrollBar().setValue(this.tpPane.getVerticalScrollBar().getMaximum());
 				if(!multipleObserverEvents) {  // is this observer call expected to be the last one for the current command, i.e., multipleOverserverEvents=false?
-					this.inputLabel.setText("root "+holeAnwendung().getSystemSoftware().getDateisystem().absoluterPfad(((Terminal)holeAnwendung()).getAktuellerOrdner())+"> ");
+					this.inputLabel.setText("root "+Dateisystem.absoluterPfad(((Terminal)holeAnwendung()).getAktuellerOrdner())+"> ");
 			    	this.inputLabel.setVisible(true);
 			    	jobRunning=false;
 				}

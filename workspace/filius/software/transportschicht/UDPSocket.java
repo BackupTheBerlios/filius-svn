@@ -247,5 +247,14 @@ public class UDPSocket extends Socket {
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (UDPSocket), istVerbunden()");
 		return verbunden;
 	}
+	
+	public String getStateAsString() {
+		if (this.istVerbunden()) {
+			return "CONNECTED";
+		}
+		else {
+			return "DISCONNECTED";
+		}
+	}
 
 }

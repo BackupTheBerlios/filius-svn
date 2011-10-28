@@ -293,4 +293,6 @@ public abstract class Socket implements SocketSchnittstelle, I18n {
 	public int holeLokalenPort() {
 		return lokalerPort;
 	}
+	
+	public abstract String getStateAsString();
 }

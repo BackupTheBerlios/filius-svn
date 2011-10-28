@@ -113,6 +113,10 @@ public class ServerSocket implements SocketSchnittstelle, I18n {
 					+ lokalerPort + messages.getString("sw_serversocket_msg2"));
 		}
 	}
+	
+	public int getLocalPort() {
+		return this.lokalerPort;
+	}
 
 	/**
 	 * Methode zum Eintragen eines neuen Sockets in die Socket-Liste

@@ -26,18 +26,24 @@
 package filius.software.lokal;
 
 import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import filius.Main;
+import filius.exception.SocketException;
 import filius.rahmenprogramm.I18n;
 import filius.software.clientserver.ClientAnwendung;
 import filius.software.system.Betriebssystem;
 import filius.software.system.Datei;
 import filius.software.system.Dateisystem;
 import filius.software.system.InternetKnotenBetriebssystem;
+import filius.software.transportschicht.ServerSocket;
+import filius.software.transportschicht.Socket;
+import filius.software.transportschicht.SocketSchnittstelle;
+import filius.software.transportschicht.TransportProtokoll;
 import filius.software.vermittlungsschicht.IP;
 
 
@@ -256,13 +262,11 @@ public class Terminal extends ClientAnwendung implements I18n {
 			benachrichtigeBeobachter(messages.getString("sw_terminal_msg32")+messages.getString("sw_terminal_msg43"));
 			return messages.getString("sw_terminal_msg32")+messages.getString("sw_terminal_msg43");   // wrong number of parameters
 		}
-		LinkedList liste;
-		ListIterator it;
+		LinkedList<Object> liste;
 		StringBuffer inhalt;
 		String currPath;
 		int anzahlVerzeichnisse = 0;
 		int anzahlDateien = 0;
-		Object tmp;
 		Datei tmpDatei;
 		int leerzeichen;
 
@@ -277,7 +281,7 @@ public class Terminal extends ClientAnwendung implements I18n {
 			}
 			else {
 				liste = getSystemSoftware().getDateisystem().listeVerzeichnis(Dateisystem.verzeichnisKnoten(aktuellerOrdner,args[0]));
-				currPath = Dateisystem.evaluatePathString(getSystemSoftware().getDateisystem().absoluterPfad(aktuellerOrdner) + Dateisystem.FILE_SEPARATOR + args[0]);
+				currPath = Dateisystem.evaluatePathString(Dateisystem.absoluterPfad(aktuellerOrdner) + Dateisystem.FILE_SEPARATOR + args[0]);
 			}
 		}			
 
@@ -288,10 +292,8 @@ public class Terminal extends ClientAnwendung implements I18n {
 		else {
 			inhalt = new StringBuffer();
 			inhalt.append(messages.getString("sw_terminal_msg9") + " " + currPath + ":\n");
-			it = liste.listIterator();
-
-			while (it.hasNext()) {
-				tmp = it.next();
+			
+			for (Object tmp : liste) {
 				// Fall Datei:
 				if (tmp instanceof Datei) {
 					anzahlDateien++;
@@ -457,42 +459,71 @@ public class Terminal extends ClientAnwendung implements I18n {
 	}
 	
 	public String netstat(String[] args) {
-		/*TransportProtokoll transport;
+		TransportProtokoll transport;
 		StringBuffer ergebnis = new StringBuffer();
+		String protocol;
+		
+		ergebnis.append(messages.getString("sw_terminal_msg49"));
+		ergebnis.append("--------------------------------------------------------------------------\n");
+		
+		transport = this.getSystemSoftware().holeTcp();
+		protocol = "TCP";
+		this.processTransportProtocol(ergebnis, transport, protocol);
+		
+		transport = this.getSystemSoftware().holeUdp();
+		protocol = "UDP";
+		this.processTransportProtocol(ergebnis, transport, protocol);		
+		
+		benachrichtigeBeobachter(ergebnis);
+		return ergebnis.toString();
+	}
+	
+	private void processTransportProtocol(StringBuffer ergebnis, TransportProtokoll transport, String protocol) {
 		Enumeration<Integer> benutztePorts;
 		int port;
 		SocketSchnittstelle tmpSocket;
-		String platzhalterAdresse = "                      ";
+		String[] socketData;
 		
-		ergebnis.append("| Protocol | Local Address          | Foreign Address        | State       |\n");
-		ergebnis.append("----------------------------------------------------------------------------\n");
-		
-		transport = this.getSystemSoftware().holeTcp();
 		benutztePorts = transport.holeAktiveSockets().keys();
 		while (benutztePorts.hasMoreElements()) {
 			port = benutztePorts.nextElement().intValue();
 			
 			try {
 				tmpSocket = transport.holeSocket(port);
-				if (tmpSocket instanceof Socket) {
-					
-				}
-				else if (tmpSocket instanceof ServerSocket) {
-					
-				}
+				socketData = this.getSocketInformation(tmpSocket);
+				
+				ergebnis.append(String.format("| %-8s ", protocol));
+				ergebnis.append(String.format("| %-6s ", ""+port));
+				ergebnis.append(String.format("| %-15s ", socketData[0]));
+				ergebnis.append(String.format("| %-15s ", socketData[1]));
+				ergebnis.append(String.format("| %-14s |\n", socketData[2]));
 			} catch (SocketException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private String[] getSocketInformation(SocketSchnittstelle socket) {
+		String[] routingEntry;
+		String localAddress="", remoteAddress="", state="";
+		if (socket instanceof Socket) {
+			remoteAddress = ((Socket) socket).holeZielIPAdresse();
+			routingEntry = ((InternetKnotenBetriebssystem)this.getSystemSoftware()).getWeiterleitungstabelle().holeWeiterleitungsZiele(remoteAddress);
+			if (routingEntry != null) {
+				localAddress = routingEntry[1];
+			}
+			else {
+				localAddress = "<unknown>";
+			}
+			state = ((Socket)socket).getStateAsString();
+		}
+		else if (socket instanceof ServerSocket) {
+			remoteAddress = "-";
+			localAddress = "-";
+			state = "LISTEN";
+		}
 		
-		
-		
-		transport = this.getSystemSoftware().holeUdp();
-		
-		
-		return ergebnis.toString(); */
-		
-		return this.help(args);
+		return new String[]{localAddress, remoteAddress, state};
 	}
 	
 	/**
@@ -616,7 +647,6 @@ public class Terminal extends ClientAnwendung implements I18n {
 		benachrichtigeBeobachter(new Boolean(true));   // inform about a multiple data transmission to the observer
 		benachrichtigeBeobachter("PING "+args[0]+" ("+destIp+")");
 		int sendNumPackets = 4;		// how many ping requests to be sent; adjust here!
-		LinkedList<Object> fakeList = new LinkedList<Object>();  // just used for thread-specific delay
 		
 		int receivedReplies = 0;
 		for (int num=0; num<sendNumPackets; num++) {

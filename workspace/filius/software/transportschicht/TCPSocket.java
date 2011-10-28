@@ -929,4 +929,33 @@ public class TCPSocket extends Socket implements Runnable {
 	    }
 	    else { return false; }
 	}
+	
+	public String getStateAsString() {
+		switch (this.zustand) {
+		case CLOSED:
+			return "CLOSED";
+		case LISTEN:
+			return "LISTEN";
+		case SYN_RCVD:
+			return "SYN_RCVD";
+		case SYN_SENT:
+			return "SYN_SENT";
+		case ESTABLISHED:
+			return "ESTABLISHED";
+		case CLOSE_WAIT:
+			return "CLOSE_WAIT";
+		case LAST_ACK:
+			return "LAST_ACK";
+		case FIN_WAIT_1:
+			return "FIN_WAIT_1";
+		case FIN_WAIT_2:
+			return "FIN_WAIT_2";
+		case CLOSING:
+			return "CLOSING";
+		case TIME_WAIT:
+			return "TIME_WAIT";
+		default:
+			return "<unknown>";
+		}
+	}
 }
