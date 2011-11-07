@@ -555,9 +555,11 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		else {
 			buttonStart.setText(messages.getString("dnsserver_msg1"));
 		}
-		this.updateARecordsTable();
-		this.updateMXRecordsTable();
-		this.updateNSRecordsTable();
+		if (this.ui != null) {
+    		this.updateARecordsTable();
+    		this.updateMXRecordsTable();
+    		this.updateNSRecordsTable();
+		}
 	}
 
 	public void update(Observable arg0, Object arg1) {
