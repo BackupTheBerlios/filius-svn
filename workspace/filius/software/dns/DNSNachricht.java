@@ -25,7 +25,6 @@
 */
 package filius.software.dns;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.StringTokenizer;
@@ -266,7 +265,7 @@ public class DNSNachricht {
 	 */
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		ListIterator it;
+		ListIterator<?> it;
 
 		buffer.append("ID=" + id + " ");
 		buffer.append("QR=" + queryResponse + " ");

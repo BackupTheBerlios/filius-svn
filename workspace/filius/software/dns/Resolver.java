@@ -26,7 +26,6 @@
 package filius.software.dns;
 
 import java.util.LinkedList;
-import java.util.ListIterator;
 import java.util.concurrent.TimeoutException;
 
 import filius.Main;
@@ -95,14 +94,11 @@ public class Resolver extends ClientAnwendung {
 	 * Methode zum Versenden einer Anfrage und zur Rueckgabe der
 	 * DNS-Server-Antwort als DNSNachricht
 	 */
-	private DNSNachricht holeResourceRecord(String typ, String domainname) throws java.util.concurrent.TimeoutException {
+	private DNSNachricht holeResourceRecord(String typ, String domainname, String dnsServer) throws java.util.concurrent.TimeoutException {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (Resolver), holeResourceRecord("+typ+","+domainname+")");
 		DNSNachricht anfrage, antwort = null;
 		String tmp;
-		String dnsServer;
 		UDPSocket socket = null;
-
-		dnsServer = getSystemSoftware().getDNSServer();
 
 		if (dnsServer != null && !dnsServer.equals("")) {
 		if (socket == null) {
@@ -149,7 +145,8 @@ public class Resolver extends ClientAnwendung {
 	public String holeIPAdresse(String domainname) throws TimeoutException {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (Resolver), holeIPAdresse("+domainname+")");
 		DNSNachricht antwort;
-		String adresse;
+		String adresse, dnsServerDomain;
+		String dnsServer = getSystemSoftware().getDNSServer();
 
 		if (domainname.equalsIgnoreCase("localhost")) {
 			return "127.0.0.1";
@@ -161,45 +158,70 @@ public class Resolver extends ClientAnwendung {
 			return adresse;
 		}
 
-		antwort = holeResourceRecord(ResourceRecord.ADDRESS, domainname);
-		if (antwort == null) {
-			return null;
+		while (dnsServer != null) {
+			antwort = holeResourceRecord(ResourceRecord.ADDRESS, domainname,
+					dnsServer);
+			if (antwort == null) {
+				return null;
+			}
+
+			adresse = durchsucheRecordListe(ResourceRecord.ADDRESS, domainname,
+					antwort.holeAntwortResourceRecords());
+			if (adresse != null)
+				return adresse;
+
+			adresse = durchsucheRecordListe(ResourceRecord.ADDRESS, domainname,
+					antwort.holeAuthoritativeResourceRecords());
+			if (adresse != null)
+				return adresse;
+
+			adresse = durchsucheRecordListe(ResourceRecord.ADDRESS, domainname,
+					antwort.holeZusatzResourceRecords());
+			if (adresse != null)
+				return adresse;
+
+			dnsServerDomain = durchsucheRecordListe(ResourceRecord.NAME_SERVER,
+					antwort.holeAuthoritativeResourceRecords());
+			dnsServer = durchsucheRecordListe(ResourceRecord.ADDRESS,
+					dnsServerDomain, antwort.holeAntwortResourceRecords());
 		}
-
-		adresse = durchsucheRecordListe(ResourceRecord.ADDRESS, domainname,
-				antwort.holeAntwortResourceRecords());
-		if (adresse != null) return adresse;
-
-		adresse = durchsucheRecordListe(ResourceRecord.ADDRESS, domainname,
-				antwort.holeAuthoritativeResourceRecords());
-		if (adresse != null) return adresse;
-
-		adresse = durchsucheRecordListe(ResourceRecord.ADDRESS, domainname,
-				antwort.holeZusatzResourceRecords());
-		if (adresse != null) return adresse;
 
 		return null;
 	}
 
 	public String holeIPAdresseMailServer(String domainname) throws TimeoutException {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (Resolver), holeIPAdressMailServer("+domainname+")");
-		DNSNachricht antwort;
-		String mailserver, adresse;
+		DNSNachricht antwort=null;
+		String mailserver=null, adresse, dnsServerDomain;
+		String dnsServer = getSystemSoftware().getDNSServer();
 
-		antwort = holeResourceRecord(ResourceRecord.MAIL_EXCHANGE, domainname);
-		if (antwort == null) {
-			return null;
+		while (dnsServer != null) {
+			antwort = holeResourceRecord(ResourceRecord.MAIL_EXCHANGE,
+					domainname, dnsServer);
+			if (antwort == null) {
+				return null;
+			}
+
+			mailserver = durchsucheRecordListe(ResourceRecord.MAIL_EXCHANGE,
+					domainname, antwort.holeAntwortResourceRecords());
+			if (mailserver == null)
+				mailserver = durchsucheRecordListe(
+						ResourceRecord.MAIL_EXCHANGE, domainname,
+						antwort.holeAuthoritativeResourceRecords());
+			if (mailserver == null)
+				mailserver = durchsucheRecordListe(
+						ResourceRecord.MAIL_EXCHANGE, domainname,
+						antwort.holeZusatzResourceRecords());
+			if (mailserver == null) {
+				dnsServerDomain = durchsucheRecordListe(
+						ResourceRecord.NAME_SERVER,
+						antwort.holeAuthoritativeResourceRecords());
+				dnsServer = durchsucheRecordListe(ResourceRecord.ADDRESS,
+						dnsServerDomain, antwort.holeAntwortResourceRecords());
+			}
 		}
-
-		mailserver = durchsucheRecordListe(ResourceRecord.MAIL_EXCHANGE,
-				domainname, antwort.holeAntwortResourceRecords());
 		if (mailserver == null)
-			mailserver = durchsucheRecordListe(ResourceRecord.MAIL_EXCHANGE,
-					domainname, antwort.holeAuthoritativeResourceRecords());
-		if (mailserver == null)
-			mailserver = durchsucheRecordListe(ResourceRecord.MAIL_EXCHANGE,
-					domainname, antwort.holeZusatzResourceRecords());
-		if (mailserver == null) return null;
+			return null;
 
 		adresse = durchsucheRecordListe(ResourceRecord.ADDRESS, mailserver,
 				antwort.holeAntwortResourceRecords());
@@ -217,17 +239,20 @@ public class Resolver extends ClientAnwendung {
 			return holeIPAdresse(mailserver);
 		}
 	}
+	
+	private String durchsucheRecordListe(String typ, LinkedList<ResourceRecord> liste) {
+		for (ResourceRecord rr : liste) {
+			if (rr.getType().equals(typ)) {
+				return rr.getRdata();
+			}
+		}
+		return null;
+	}
 
-	private String durchsucheRecordListe(String typ, String domainname,
-			LinkedList<ResourceRecord> liste) {
+	private String durchsucheRecordListe(String typ, String domainname, LinkedList<ResourceRecord> liste) {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (Resolver), durchsucheRecordListe("+typ+","+domainname+","+liste+")");
-		ResourceRecord rr;
-		ListIterator<?> it;
-
-		it = liste.listIterator();
-		while (it.hasNext()) {
-			rr = (ResourceRecord) it.next();
-
+		
+		for (ResourceRecord rr : liste) {
 			if (rr.getDomainname().equalsIgnoreCase(domainname)
 					&& rr.getType().equals(typ)) {
 				return rr.getRdata();

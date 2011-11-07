@@ -25,8 +25,6 @@
 */
 package filius.software.dns;
 
-import java.util.ListIterator;
-
 import filius.Main;
 import filius.software.clientserver.ServerMitarbeiter;
 import filius.software.transportschicht.Socket;
@@ -42,35 +40,34 @@ public class DNSServerMitarbeiter extends ServerMitarbeiter {
 	protected void verarbeiteNachricht(String dateneinheit) {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (DNSServerMitarbeiter), verarbeiteNachricht("+dateneinheit+")");
 		DNSNachricht nachricht, antwort;
-		Query query;
 		ResourceRecord record;
-		ListIterator it;
 
 		nachricht = new DNSNachricht(dateneinheit);
 		antwort = new DNSNachricht(DNSNachricht.RESPONSE);
 		antwort.setId(nachricht.getId());
 
-		it = nachricht.holeQueries().listIterator();
-		while (it.hasNext()) {
-			query = (Query)it.next();
+		for (Query query : nachricht.holeQueries()) {
 			server.benachrichtigeBeobachter(messages.getString("sw_dnsservermitarbeiter_msg1")+query);
 
 			record = ((DNSServer)server).holeRecord(query.holeDomainname(), query.holeTyp());
-
+			if (record == null) {
+				record = ((DNSServer)server).holeRecord(query.holeDomainname());
+			}
+			
 			if (record != null) {
 				if (record.getType().equals(ResourceRecord.ADDRESS)) {
 					antwort.hinzuAntwortResourceRecord(record.toString());
 				}
 				else if (record.getType().equals(ResourceRecord.NAME_SERVER)) {
 					antwort.hinzuAuthoritativeResourceRecord(record.toString());
-					record = ((DNSServer)server).holeRecord(record.getDomainname(), ResourceRecord.ADDRESS);
+					record = ((DNSServer)server).holeRecord(record.getRdata(), ResourceRecord.ADDRESS);
 					if (record != null) {
 						antwort.hinzuAntwortResourceRecord(record.toString());
 					}
 				}
 				else if (record.getType().equals(ResourceRecord.MAIL_EXCHANGE)) {
 					antwort.hinzuAntwortResourceRecord(record.toString());
-					record = ((DNSServer)server).holeRecord(record.getDomainname(), ResourceRecord.ADDRESS);
+					record = ((DNSServer)server).holeRecord(record.getRdata(), ResourceRecord.ADDRESS);
 					if (record != null) {
 						antwort.hinzuAntwortResourceRecord(record.toString());
 					}

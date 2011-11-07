@@ -63,6 +63,7 @@ public class DNSServer extends UDPServerAnwendung {
 	}
 
 	public LinkedList<ResourceRecord> holeResourceRecords() {
+		this.initialisiereRecordListe();
 		return records;
 	}
 
@@ -166,12 +167,8 @@ public class DNSServer extends UDPServerAnwendung {
 
 	public ResourceRecord holeRecord(String domainname, String typ) {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (DNSServer), holeRecord("+domainname+","+typ+")");
-		ResourceRecord rr;
-		ListIterator<ResourceRecord> it;
-
-		it = records.listIterator();
-		while (it.hasNext()) {
-			rr = (ResourceRecord)it.next();
+		
+		for (ResourceRecord rr : records) {
 			if (rr.getDomainname().equalsIgnoreCase(domainname)
 					&& rr.getType().equals(typ)) {
 				return rr;
@@ -179,6 +176,33 @@ public class DNSServer extends UDPServerAnwendung {
 		}
 
 		return null;
+	}
+	
+	public ResourceRecord holeRecord(String domainname) {
+		String domain;
+		String[] parts = domainname.split("\\.");
+
+		for (int i = 0; i < parts.length; i++) {
+			domain = this.implodeDomain(parts, i);
+			for (ResourceRecord rr : records) {
+				if (rr.getDomainname().equalsIgnoreCase(domain)) {
+					return rr;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	private String implodeDomain(String[] parts, int start) {
+		StringBuffer domain = new StringBuffer();
+		for (int i=start; i<parts.length; i++) {
+			domain.append(parts[i]);
+			if (i < parts.length-1) {
+				domain.append(".");
+			}
+		}
+		return domain.toString();
 	}
 
 	protected void neuerMitarbeiter(Socket socket) {

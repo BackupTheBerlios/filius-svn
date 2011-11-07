@@ -46,11 +46,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SpringLayout;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.MouseInputAdapter;
-import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -64,19 +63,20 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 
 	private static final long serialVersionUID = 1L;
 
-	private JPanel backPanel, aPanel, mxPanel;
+	private JPanel backPanel, aPanel, mxPanel, nsPanel;
 
-	private JTextField aDomainField, mxURLField, aIpField, mxMaildomainField;
+	private JTextField aDomainField, mxURLField, aIpField, mxMaildomainField, nsDomainField, nsDomainServerField;
 
-	private JLabel aDomainLabel, aIpLabel, mxURLLabel, mxMaildomainLabel;
+	private JLabel aDomainLabel, aIpLabel, mxURLLabel, mxMaildomainLabel, nsDomainLabel, nsDomainServerLabel;
 
 	private JTabbedPane tabbedPane;
 
 	private JButton mxAddButton, aAddButton, buttonStart, buttonEntfernen,
-			buttonMXEntfernen;
+			buttonMXEntfernen, nsAddButton, nsRemoveButton;
 
 	private JTableEditable aRecordsTable;
 	private JTableEditable mxRecordsTable;
+	private JTableEditable nsRecordsTable;
 
 	public GUIApplicationDNSServerWindow(final GUIDesktopPanel desktop,
 			String appName) {
@@ -111,9 +111,11 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 
 		initAPanel();
 		initMXPanel();
+		initNSPanel();
 
 		tabbedPane.addTab(messages.getString("dnsserver_msg2"), new ImageIcon(getClass().getResource("/gfx/desktop/peertopeer_netzwerk_klein.png")), aPanel);
 		tabbedPane.addTab(messages.getString("dnsserver_msg3"), new ImageIcon(getClass().getResource("/gfx/desktop/peertopeer_netzwerk_klein.png")), mxPanel);
+		tabbedPane.addTab(messages.getString("dnsserver_msg15"), new ImageIcon(getClass().getResource("/gfx/desktop/peertopeer_netzwerk_klein.png")), nsPanel);
 
 		hBox = Box.createHorizontalBox();
 		hBox.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -125,6 +127,14 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 
 		updateMXRecordsTable();
 		updateARecordsTable();
+		updateNSRecordsTable();
+		
+		this.addInternalFrameListener(new InternalFrameAdapter() {
+			public void internalFrameActivated(InternalFrameEvent e) {
+				GUIApplicationDNSServerWindow.this.aktualisieren();
+			}
+		});
+		
 		aktualisieren();
 	}
 
@@ -340,6 +350,109 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		mxPanel.add(vBox, BorderLayout.CENTER);
 	}
 
+	private void initNSPanel() {
+		Box vBox, hBox;
+		DefaultTableModel tabellenModell;
+		TableColumnModel tcm;
+		JScrollPane scrollPane;
+
+		nsPanel = new JPanel(new BorderLayout());
+
+		vBox = Box.createVerticalBox();
+		vBox.add(Box.createVerticalStrut(5));
+
+		hBox = Box.createHorizontalBox();
+		hBox.add(Box.createHorizontalStrut(5));
+
+		nsDomainLabel = new JLabel(messages.getString("dnsserver_msg16"));
+		nsDomainLabel.setPreferredSize(new Dimension(170, 25));
+		hBox.add(nsDomainLabel);
+		hBox.add(Box.createHorizontalStrut(5));
+
+		nsDomainField = new JTextField();
+		nsDomainField.setPreferredSize(new Dimension(275, 25));
+		hBox.add(nsDomainField);
+
+		vBox.add(hBox);
+		vBox.add(Box.createVerticalStrut(5));
+
+		hBox = Box.createHorizontalBox();
+		hBox.add(Box.createHorizontalStrut(5));
+
+		nsDomainServerLabel = new JLabel(messages.getString("dnsserver_msg17"));
+		nsDomainServerLabel.setPreferredSize(new Dimension(170, 25));
+		hBox.add(nsDomainServerLabel);
+		hBox.add(Box.createHorizontalStrut(5));
+
+		nsDomainServerField = new JTextField();
+		nsDomainServerField.setPreferredSize(new Dimension(275, 25));
+		hBox.add(nsDomainServerField);
+
+		vBox.add(hBox);
+		vBox.add(Box.createVerticalStrut(5));
+
+		hBox = Box.createHorizontalBox();
+		hBox.add(Box.createHorizontalStrut(5));
+
+		nsAddButton = new JButton(messages.getString("dnsserver_msg6"));
+		nsAddButton.addMouseListener(new MouseInputAdapter() {
+			public void mousePressed(MouseEvent e) {
+				{
+					if(!nsDomainField.getText().trim().isEmpty() && !nsDomainServerField.getText().trim().isEmpty()) {
+						((DNSServer) holeAnwendung()).hinzuRecord(nsDomainField
+							.getText(), ResourceRecord.NAME_SERVER,
+							nsDomainServerField.getText());
+						nsDomainField.setText("");
+						nsDomainServerField.setText("");
+						updateNSRecordsTable();
+					}
+				}
+			}
+		});
+		hBox.add(nsAddButton);
+
+		nsRemoveButton = new JButton(messages.getString("dnsserver_msg7"));
+		nsRemoveButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				int zeilenNummer = nsRecordsTable.getSelectedRow();
+				if (zeilenNummer != -1) {
+					String domainname = nsRecordsTable.getValueAt(zeilenNummer,
+							0).toString();
+					((DNSServer) holeAnwendung()).loescheResourceRecord(
+							domainname, ResourceRecord.NAME_SERVER);
+					Main.debug
+							.println("GUIApplicationDNSServerWindow: NS-Eintrag "
+									+ domainname + " geloescht");
+					updateNSRecordsTable();
+				}
+			}
+		});
+		hBox.add(nsRemoveButton);
+
+		vBox.add(hBox);
+		vBox.add(Box.createVerticalStrut(5));
+
+		tabellenModell = new DefaultTableModel(0, 2);
+		nsRecordsTable = new JTableEditable(tabellenModell, true, "NS");
+		nsRecordsTable.setParentGUI(this);   // tell the table who presents its values, such that the back-end DNS
+											 // server can be found for adapting resource entries
+		nsRecordsTable.setIntercellSpacing(new Dimension(5,5));
+		nsRecordsTable.setRowHeight(30);
+		nsRecordsTable.setShowGrid(false);
+		nsRecordsTable.setFillsViewportHeight(true);
+		nsRecordsTable.setBackground(Color.WHITE);
+		nsRecordsTable.setShowHorizontalLines(true);
+
+		tcm = nsRecordsTable.getColumnModel();
+		tcm.getColumn(0).setHeaderValue(messages.getString("dnsserver_msg18"));
+		tcm.getColumn(1).setHeaderValue(messages.getString("dnsserver_msg19"));
+
+		scrollPane = new JScrollPane(nsRecordsTable);
+		vBox.add(scrollPane);
+		nsPanel.add(vBox, BorderLayout.CENTER);
+	}
+
 	/**
 	 * Aktualisiert die Tabelle der A-Records
 	 *
@@ -351,13 +464,34 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		DefaultTableModel tabellenModell = (DefaultTableModel) aRecordsTable.getModel();
 		tabellenModell.setRowCount(0);
 
-		LinkedList tempListe = ((DNSServer) holeAnwendung()).holeResourceRecords();
+		LinkedList<ResourceRecord> tempListe = ((DNSServer) holeAnwendung()).holeResourceRecords();
 
-		ListIterator it = tempListe.listIterator();
+		ListIterator<ResourceRecord> it = tempListe.listIterator();
 		while (it.hasNext()) {
 			rr = (ResourceRecord) it.next();
 			if (rr.getType().equals(ResourceRecord.ADDRESS)) {
-				Vector<Comparable> v = new Vector<Comparable>();
+				Vector<String> v = new Vector<String>();
+				v.add(rr.getDomainname());
+				v.add(rr.getRdata());
+				tabellenModell.addRow(v);
+			}
+		}
+		updateUI();
+	}
+	
+	public void updateNSRecordsTable() {
+		ResourceRecord rr;
+
+		DefaultTableModel tabellenModell = (DefaultTableModel) nsRecordsTable.getModel();
+		tabellenModell.setRowCount(0);
+
+		LinkedList<ResourceRecord> tempListe = ((DNSServer) holeAnwendung()).holeResourceRecords();
+
+		ListIterator<ResourceRecord> it = tempListe.listIterator();
+		while (it.hasNext()) {
+			rr = (ResourceRecord) it.next();
+			if (rr.getType().equals(ResourceRecord.NAME_SERVER)) {
+				Vector<String> v = new Vector<String>();
 				v.add(rr.getDomainname());
 				v.add(rr.getRdata());
 				tabellenModell.addRow(v);
@@ -378,15 +512,15 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 				.getModel();
 		tabellenModell.setRowCount(0);
 
-		LinkedList tempListe = ((DNSServer) holeAnwendung())
+		LinkedList<ResourceRecord> tempListe = ((DNSServer) holeAnwendung())
 				.holeResourceRecords();
-		ListIterator it = tempListe.listIterator();
+		ListIterator<ResourceRecord> it = tempListe.listIterator();
 
 		while (it.hasNext()) {
 			rr = (ResourceRecord) it.next();
 			if (rr.getType().equals(ResourceRecord.MAIL_EXCHANGE)) {
 
-				Vector<Comparable> v = new Vector<Comparable>();
+				Vector<String> v = new Vector<String>();
 				v.add(rr.getDomainname());
 				v.add(rr.getRdata());
 				tabellenModell.addRow(v);
@@ -421,6 +555,9 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		else {
 			buttonStart.setText(messages.getString("dnsserver_msg1"));
 		}
+		this.updateARecordsTable();
+		this.updateMXRecordsTable();
+		this.updateNSRecordsTable();
 	}
 
 	public void update(Observable arg0, Object arg1) {
