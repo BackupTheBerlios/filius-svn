@@ -26,6 +26,7 @@
 package filius.gui.anwendungssicht;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
@@ -34,6 +35,7 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -47,8 +49,6 @@ public class GUIApplicationWebServerWindow extends GUIApplicationWindow {
 	
 	private static final int  VHOST_NUMBER=5;
 	
-	private final GUIApplicationWebServerWindow that = this;
-
 	private static final long serialVersionUID = 1L;
 
 	private JPanel backPanel;
@@ -57,7 +57,9 @@ public class GUIApplicationWebServerWindow extends GUIApplicationWindow {
 
 	private JButton buttonStart;
 	
+	private JCheckBox showVHosts;
 	private JTableEditable vHostTable;
+	private Box vHostBox = null, logBox = null;
 
 	public GUIApplicationWebServerWindow(final GUIDesktopPanel desktop,
 			String appName) {
@@ -84,13 +86,28 @@ public class GUIApplicationWebServerWindow extends GUIApplicationWindow {
 		Box upperBox = Box.createHorizontalBox();
 		upperBox.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		upperBox.add(buttonStart);
-		upperBox.add(Box.createHorizontalStrut(15));
-
+		upperBox.add(Box.createHorizontalStrut(100));
+		
+		showVHosts = new JCheckBox();
+		showVHosts.setSelected(this.isVHostAvailable());
+		showVHosts.setText(messages.getString("webserver_msg6"));
+		showVHosts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+	            JCheckBox checkBox = (JCheckBox) evt.getSource();
+	            GUIApplicationWebServerWindow.this.setVHostTableVisible(checkBox.isSelected());
+	            if (!checkBox.isSelected()) {
+	            	((WebServer) holeAnwendung()).resetVHosts();
+	            }
+            }});
+		upperBox.add(showVHosts);
+		
 		backPanel.add(upperBox, BorderLayout.NORTH);
 
-		Box centerBox = Box.createVerticalBox();
-		centerBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		JLabel vHostLabel = new JLabel(messages.getString("webserver_msg3"));
+		vHostBox = Box.createVerticalBox();
+		vHostBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		JLabel label = new JLabel(messages.getString("webserver_msg3"));
+		Box vHostLabel = Box.createHorizontalBox();
+		vHostLabel.add(label);
 		
 		DefaultTableModel tablemodel = new DefaultTableModel(VHOST_NUMBER,2);
 		vHostTable = new JTableEditable(tablemodel, true, "WWW");
@@ -107,27 +124,49 @@ public class GUIApplicationWebServerWindow extends GUIApplicationWindow {
 		vHostTable.setFillsViewportHeight(true);
         vHostTable.setBackground(java.awt.Color.WHITE);
         vHostTable.setShowHorizontalLines(true);
-		centerBox.add(vHostLabel);
-		centerBox.add(Box.createVerticalStrut(5));
-		centerBox.add(tableScrollPane);
-		backPanel.add(centerBox, BorderLayout.CENTER);
-		
+		vHostBox.add(vHostLabel);
+		vHostBox.add(Box.createVerticalStrut(5));
+		vHostBox.add(tableScrollPane);
+				
 		logArea = new JTextArea();
 		logArea.setEditable(false);
 		JScrollPane sPane = new JScrollPane(logArea);
 
-		Box lowerBox = Box.createHorizontalBox();
-		lowerBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		lowerBox.add(sPane);
-		lowerBox.setPreferredSize(new java.awt.Dimension(300,150));
-		backPanel.add(lowerBox, BorderLayout.SOUTH);
+		logBox = Box.createHorizontalBox();
+		logBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		logBox.add(sPane);
+		
+		backPanel.add(logBox, BorderLayout.SOUTH);
 
 		this.getContentPane().add(backPanel);
 		this.setClosable(true);
 
-		pack();
+		this.setVHostTableVisible(this.isVHostAvailable());
 
 		aktualisieren();
+	}
+	
+	private void setVHostTableVisible(boolean tableVisible) {
+		if (tableVisible) {
+			backPanel.add(vHostBox, BorderLayout.CENTER);
+			logBox.setPreferredSize(new java.awt.Dimension(300,150));
+		}
+		else {
+			backPanel.remove(vHostBox);
+			logBox.setPreferredSize(new java.awt.Dimension(300,350));
+		}
+		pack();
+	}
+	
+	private boolean isVHostAvailable() {
+		boolean vHostsAvailable = false;
+		String[][] vHosts = ((WebServer) holeAnwendung()).getVHostArray();
+		for (String[] vHost : vHosts) {
+			if (vHost[0] != null && !vHost[0].equals("") || vHost[1] != null && !vHost[1].equals("")) {
+				vHostsAvailable = true;
+			}
+		}
+		return vHostsAvailable;
 	}
 
 	public void updateTable() {

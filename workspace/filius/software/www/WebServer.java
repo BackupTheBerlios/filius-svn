@@ -57,10 +57,15 @@ public class WebServer extends TCPServerAnwendung {
 	public WebServer() {
 		super();
 		port = 80;
+		this.resetVHosts();
+	}
+	
+	public void resetVHosts() {
 		for(int i=0; i<vHostArray.length; i++) {
 			vHostArray[i][0]="";
 			vHostArray[i][1]="";
 		}
+		this.benachrichtigeBeobachter();
 	}
 
 	/**

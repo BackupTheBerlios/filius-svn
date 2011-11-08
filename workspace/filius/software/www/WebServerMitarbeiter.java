@@ -25,18 +25,10 @@
 */
 package filius.software.www;
 
-import java.util.HashMap;
-
 import filius.Main;
-import filius.exception.TimeOutException;
-import filius.exception.VerbindungsException;
-import filius.rahmenprogramm.Information;
 import filius.software.clientserver.ServerMitarbeiter;
 import filius.software.system.Datei;
-import filius.software.system.VermittlungsrechnerBetriebssystem;
-import filius.software.transportschicht.Socket;
 import filius.software.transportschicht.TCPSocket;
-import filius.software.www.WebServer;
 
 /*
  *
