@@ -1,6 +1,23 @@
 FILIUS Changelog
 ================
 
+*filius-1.4.3 (10. Nov 2011)
+----------------------------
+- Domain Name System: Das DNS erlaubt jetzt rekursive Abfragen zur Aufloesung
+  eines Domainnamens.
+- Webserver: Die optionale Konfiguration der virtuellen Hosts kann jetzt
+  ausgeblendet werden.
+- Firewall: Die Firewall der Vermittlungsrechner kann jetzt dezidiert fuer
+  die Netzwerkschnittstellen aktiviert werden.
+- Kommandozeile: Hier steht jetzt zusaetzlich der Befehl netstat zur Anzeige
+  aktiver Verbindungen zur Verfuegung.
+- In Textfeldern steht jetzt die Tastenfunktion <Strg>+a zur Verfuegung.
+- Fehlerbehebung:
+  - Netzwerkschnittstellenkonfiguration Vermittlungsrechner: Jetzt wird die 
+    richtige IP-Adresse eines verbundenen Vermittlungsrechners angezeigt.
+  - Datenaustausch ueber Vermittlungsrechner: Wenn Standardgateway nicht 
+    gesetzt wurde, erfolgt jetzt korrekte Ausnahmebehandlung.
+    
 *filius-1.4.2 (15. Sept 2011)
 -----------------------------
 - Fehler bei Aufruf mit Parameter "-wd" zur expliziten Auswahl des Arbeitsverzeichnisses behoben
