@@ -287,8 +287,7 @@ public class Main implements I18n {
 		String newWD = null;
 		String argsString = "";
 		boolean nativeLookAndFeel = false;
-		
-		
+		boolean verbose = false;
 
 		if (args != null && args.length >= 1) {
 			for (int i = 0; i < args.length; i++) {
@@ -321,6 +320,9 @@ public class Main implements I18n {
 				if (args[i].startsWith("-n")) {
 					nativeLookAndFeel = true;
 				}
+				if (args[i].startsWith("-v")) {
+					verbose = true;
+				}
 			}
 			if (currWD.isEmpty()
 			        || (!currWD.substring(currWD.length() - 1).equals(System.getProperty("file.separator")))) {
@@ -337,7 +339,7 @@ public class Main implements I18n {
 			if (log) {
 				log = loggen(filius.rahmenprogramm.Information.getInformation().getArbeitsbereichPfad() + "filius.log");
 			}
-			if (!log) {
+			if (!log && !verbose) {
 				loggen(null);
 			} 
 		} else {
