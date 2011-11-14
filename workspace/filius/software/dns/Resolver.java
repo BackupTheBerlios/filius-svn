@@ -101,35 +101,34 @@ public class Resolver extends ClientAnwendung {
 		UDPSocket socket = null;
 
 		if (dnsServer != null && !dnsServer.equals("")) {
-		if (socket == null) {
-			try {
-				socket = new UDPSocket(getSystemSoftware(), dnsServer, 53);
+			if (socket == null) {
+				try {
+					socket = new UDPSocket(getSystemSoftware(), dnsServer, 53);
 
-				anfrage = new DNSNachricht(DNSNachricht.QUERY);
-				anfrage.hinzuQuery(domainname + " " + typ + " IN");
+					anfrage = new DNSNachricht(DNSNachricht.QUERY);
+					anfrage.hinzuQuery(domainname + " " + typ + " IN");
 
-				socket.verbinden();
-				socket.senden(anfrage.toString());
-				tmp = socket.empfangen(Verbindung.holeRTT());
-				if (tmp == null) {
-					Main.debug.println("ERROR ("+this.hashCode()+"): keine Antwort auf Query empfangen");
-					throw new TimeoutException();  // inform calling function about Timeout
-				}
+					socket.verbinden();
+					socket.senden(anfrage.toString());
+					tmp = socket.empfangen(Verbindung.holeRTT());
+					if (tmp == null) {
+						Main.debug.println("ERROR (" + this.hashCode() + "): keine Antwort auf Query empfangen");
+						throw new TimeoutException(); // inform calling function
+													  // about Timeout
+					}
 
-				antwort = new DNSNachricht(tmp);
-				if (antwort.getId() != anfrage.getId()) {
+					antwort = new DNSNachricht(tmp);
+					if (antwort.getId() != anfrage.getId()) {
+						return null;
+					}
+					socket.schliessen();
+					socket = null;
+				} catch (VerbindungsException e) {
+					e.printStackTrace(Main.debug);
 					return null;
 				}
-				socket.schliessen();
-				socket = null;
 			}
-			catch (VerbindungsException e) {
-				e.printStackTrace(Main.debug);
-				return null;
-			}
-		}
-		}
-		else {
+		} else {
 			return null;
 		}
 
@@ -181,7 +180,7 @@ public class Resolver extends ClientAnwendung {
 				return adresse;
 
 			dnsServerDomain = durchsucheRecordListe(ResourceRecord.NAME_SERVER,
-					antwort.holeAuthoritativeResourceRecords());
+					antwort.holeAntwortResourceRecords());
 			dnsServer = durchsucheRecordListe(ResourceRecord.ADDRESS,
 					dnsServerDomain, antwort.holeAntwortResourceRecords());
 		}
@@ -195,7 +194,7 @@ public class Resolver extends ClientAnwendung {
 		String mailserver=null, adresse, dnsServerDomain;
 		String dnsServer = getSystemSoftware().getDNSServer();
 
-		while (dnsServer != null) {
+		while (dnsServer != null && mailserver == null) {
 			antwort = holeResourceRecord(ResourceRecord.MAIL_EXCHANGE,
 					domainname, dnsServer);
 			if (antwort == null) {
@@ -204,18 +203,20 @@ public class Resolver extends ClientAnwendung {
 
 			mailserver = durchsucheRecordListe(ResourceRecord.MAIL_EXCHANGE,
 					domainname, antwort.holeAntwortResourceRecords());
-			if (mailserver == null)
+			if (mailserver == null) {
 				mailserver = durchsucheRecordListe(
 						ResourceRecord.MAIL_EXCHANGE, domainname,
-						antwort.holeAuthoritativeResourceRecords());
-			if (mailserver == null)
+						antwort.holeAntwortResourceRecords());
+			}
+			if (mailserver == null) {
 				mailserver = durchsucheRecordListe(
 						ResourceRecord.MAIL_EXCHANGE, domainname,
-						antwort.holeZusatzResourceRecords());
+						antwort.holeAntwortResourceRecords());
+			}
 			if (mailserver == null) {
 				dnsServerDomain = durchsucheRecordListe(
 						ResourceRecord.NAME_SERVER,
-						antwort.holeAuthoritativeResourceRecords());
+						antwort.holeAntwortResourceRecords());
 				dnsServer = durchsucheRecordListe(ResourceRecord.ADDRESS,
 						dnsServerDomain, antwort.holeAntwortResourceRecords());
 			}

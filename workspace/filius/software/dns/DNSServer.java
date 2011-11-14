@@ -83,8 +83,9 @@ public class DNSServer extends UDPServerAnwendung {
 		String line;
 		ResourceRecord rr;
 		Dateisystem dateisystem;
+		LinkedList<ResourceRecord> tmp;
 
-		records = new LinkedList<ResourceRecord>();
+		tmp = new LinkedList<ResourceRecord>();
 
 		dateisystem = getSystemSoftware().getDateisystem();
 		hosts = dateisystem.holeDatei(dateisystem.holeRootPfad()+Dateisystem.FILE_SEPARATOR+"dns"+Dateisystem.FILE_SEPARATOR+"hosts");
@@ -96,10 +97,11 @@ public class DNSServer extends UDPServerAnwendung {
 				line = tokenizer.nextToken().trim();
 				if (!line.equals("") && !(line.split(" ", 5).length<4)) {
 				rr = new ResourceRecord(line);
-				records.add(rr);
+				tmp.add(rr);
 				}
 			}
 		}
+		records = tmp;
 	}
 
 	private void schreibeRecordListe() {
@@ -163,6 +165,7 @@ public class DNSServer extends UDPServerAnwendung {
 				fertig = true;
 			}
 		}
+		this.schreibeRecordListe();
 	}
 
 	public ResourceRecord holeRecord(String domainname, String typ) {

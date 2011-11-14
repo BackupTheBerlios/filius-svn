@@ -228,7 +228,7 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		vBox.add(Box.createVerticalStrut(5));
 
 		tabellenModell = new DefaultTableModel(0, 2);
-		aRecordsTable = new JTableEditable(tabellenModell, true, "A");
+		aRecordsTable = new JTableEditable(tabellenModell, false, "A");
 		aRecordsTable.setParentGUI(this);   // tell the table who presents its values, such that the back-end DNS
 											// server can be found for adapting resource entries
 		aRecordsTable.setIntercellSpacing(new Dimension(5,5));
@@ -331,7 +331,7 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		vBox.add(Box.createVerticalStrut(5));
 
 		tabellenModell = new DefaultTableModel(0, 2);
-		mxRecordsTable = new JTableEditable(tabellenModell, true, "MX");
+		mxRecordsTable = new JTableEditable(tabellenModell, false, "MX");
 		mxRecordsTable.setParentGUI(this);   // tell the table who presents its values, such that the back-end DNS
 											 // server can be found for adapting resource entries
 		mxRecordsTable.setIntercellSpacing(new Dimension(5,5));
@@ -398,7 +398,9 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		nsAddButton.addMouseListener(new MouseInputAdapter() {
 			public void mousePressed(MouseEvent e) {
 				{
-					if(!nsDomainField.getText().trim().isEmpty() && !nsDomainServerField.getText().trim().isEmpty()) {
+					if(!nsDomainField.getText().trim().isEmpty() && !nsDomainServerField.getText().trim().isEmpty() &&
+							EingabenUeberpruefung.isGueltig(nsDomainServerField.getText().trim(), EingabenUeberpruefung.musterDomain) && 
+							!EingabenUeberpruefung.isGueltig(nsDomainServerField.getText().trim(), EingabenUeberpruefung.musterIpAdresse)) {
 						((DNSServer) holeAnwendung()).hinzuRecord(nsDomainField
 							.getText(), ResourceRecord.NAME_SERVER,
 							nsDomainServerField.getText());
@@ -434,7 +436,7 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		vBox.add(Box.createVerticalStrut(5));
 
 		tabellenModell = new DefaultTableModel(0, 2);
-		nsRecordsTable = new JTableEditable(tabellenModell, true, "NS");
+		nsRecordsTable = new JTableEditable(tabellenModell, false, "NS");
 		nsRecordsTable.setParentGUI(this);   // tell the table who presents its values, such that the back-end DNS
 											 // server can be found for adapting resource entries
 		nsRecordsTable.setIntercellSpacing(new Dimension(5,5));

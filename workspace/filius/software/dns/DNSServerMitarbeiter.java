@@ -59,7 +59,7 @@ public class DNSServerMitarbeiter extends ServerMitarbeiter {
 					antwort.hinzuAntwortResourceRecord(record.toString());
 				}
 				else if (record.getType().equals(ResourceRecord.NAME_SERVER)) {
-					antwort.hinzuAuthoritativeResourceRecord(record.toString());
+					antwort.hinzuAntwortResourceRecord(record.toString());
 					record = ((DNSServer)server).holeRecord(record.getRdata(), ResourceRecord.ADDRESS);
 					if (record != null) {
 						antwort.hinzuAntwortResourceRecord(record.toString());
