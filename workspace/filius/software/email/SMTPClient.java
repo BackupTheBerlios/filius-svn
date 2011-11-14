@@ -124,8 +124,8 @@ public class SMTPClient extends ClientAnwendung implements I18n {
 
 			if (socket.istVerbunden())
 				anwendung.benachrichtigeBeobachter(messages.getString("sw_smtpclient_msg1")
-						+ socket.holeZielIPAdresse() + ":"
-						+ socket.holeZielPort() + messages.getString("sw_smtpclient_msg2"));
+						+" " + socket.holeZielIPAdresse() + ":"
+						+ socket.holeZielPort() + " " + messages.getString("sw_smtpclient_msg2"));
 		}
 		catch (Exception e) {
 			e.printStackTrace(Main.debug);
