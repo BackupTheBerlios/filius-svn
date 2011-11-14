@@ -476,7 +476,6 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 				tabellenModell.addRow(v);
 			}
 		}
-		updateUI();
 	}
 	
 	public void updateNSRecordsTable() {
@@ -497,7 +496,6 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 				tabellenModell.addRow(v);
 			}
 		}
-		updateUI();
 	}
 
 	/**
@@ -526,8 +524,6 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 				tabellenModell.addRow(v);
 			}
 		}
-
-		updateUI();
 	}
 
 	/**
@@ -563,6 +559,8 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 	}
 
 	public void update(Observable arg0, Object arg1) {
-		aktualisieren();
+		if (arg1 != null) {
+			aktualisieren();
+		}
 	}
 }

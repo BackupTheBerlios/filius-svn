@@ -26,7 +26,6 @@
 package filius.gui.anwendungssicht;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
@@ -189,7 +188,6 @@ public class GUIApplicationWebServerWindow extends GUIApplicationWindow {
 			v.add("");
 			tablemodel.addRow(v);
 		}
-		updateUI();
 	}
 	
 	private void aktualisieren() {

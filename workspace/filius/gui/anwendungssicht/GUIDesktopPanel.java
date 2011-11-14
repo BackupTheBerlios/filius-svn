@@ -134,8 +134,6 @@ public class GUIDesktopPanel extends JBackgroundPanel implements I18n, Observer 
 		desktopPane.add(iconPanel);
 		desktopPane.validate();
 		this.updateAnwendungen();
-		this.updateUI();
-
 	}
 
 	public void updateAnwendungen() {
