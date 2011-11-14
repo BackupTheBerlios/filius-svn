@@ -49,6 +49,7 @@ import java.util.Locale;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import filius.gui.GUIContainer;
 import filius.gui.GUIMainMenu;
@@ -285,6 +286,9 @@ public class Main implements I18n {
 		boolean setWD = false; // auxiliary flag to reset working directory
 		String newWD = null;
 		String argsString = "";
+		boolean nativeLookAndFeel = false;
+		
+		
 
 		if (args != null && args.length >= 1) {
 			for (int i = 0; i < args.length; i++) {
@@ -313,6 +317,9 @@ public class Main implements I18n {
 				}
 				if (args[i].startsWith("-wd")) {
 					setWD = true;
+				}
+				if (args[i].startsWith("-n")) {
+					nativeLookAndFeel = true;
 				}
 			}
 			if (currWD.isEmpty()
@@ -353,6 +360,20 @@ public class Main implements I18n {
 		        + filius.rahmenprogramm.Information.getInformation().getTempPfad());
 		Main.debug.println("------------------------------------------------------\n");
 
+		if (nativeLookAndFeel) {
+			try {
+				// Set System L&F
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			} catch (UnsupportedLookAndFeelException e) {
+				// handle exception
+			} catch (ClassNotFoundException e) {
+				// handle exception
+			} catch (InstantiationException e) {
+				// handle exception
+			} catch (IllegalAccessException e) {
+				// handle exception
+			}
+		}
 		if (args != null && ((args.length >= 1 && !log) || (args.length >= 2 && log))) {
 			// Projekt-Datei als letztes Argument uebergeben?
 			try {
