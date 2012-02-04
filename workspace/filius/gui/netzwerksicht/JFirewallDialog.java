@@ -27,6 +27,7 @@ package filius.gui.netzwerksicht;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
@@ -115,6 +116,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		textArea.setText(messages.getString("jfirewalldialog_msg2"));
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
+		textArea.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
 		textArea.setBackground(TAB_COLOR);
 		textArea.setEditable(false);
 
@@ -219,6 +221,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		textArea.setText(messages.getString("jfirewalldialog_msg17"));
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
+		textArea.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
 		textArea.setEditable(false);
 		textArea.setBackground(TAB_COLOR);
 
@@ -290,6 +293,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
 		textArea.setEditable(false);
+		textArea.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
 		textArea.setBackground(TAB_COLOR);
 
 		hBox.add(textArea);
@@ -399,6 +403,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		textArea.setText(messages.getString("jfirewalldialog_msg10"));
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
+		textArea.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
 		textArea.setEditable(false);
 		textArea.setBackground(TAB_COLOR);
 
