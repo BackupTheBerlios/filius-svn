@@ -62,7 +62,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final Color TAB_COLOR = new Color(200,221,242);
+	private static final Color TAB_COLOR = new Color(240,240,240);
 	
 	JFirewallDialog jfd = null;
 	Firewall firewall;
@@ -117,7 +117,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
 		textArea.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
-		textArea.setBackground(TAB_COLOR);
+		textArea.setOpaque(false);
 		textArea.setEditable(false);
 
 		hBox.add(textArea);
@@ -223,7 +223,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		textArea.setWrapStyleWord(true);
 		textArea.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
 		textArea.setEditable(false);
-		textArea.setBackground(TAB_COLOR);
+		textArea.setOpaque(false);
 
 		hBox.add(textArea);
 		hBox.add(Box.createHorizontalStrut(10));
@@ -235,7 +235,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		int i = 0;
 		for (NetzwerkInterface nic : this.nics) {
 			this.nicSelection[i] = new JCheckBox(nic.getIp(), activeNics.contains(nic));
-			this.nicSelection[i].setBackground(TAB_COLOR);
+			this.nicSelection[i].setOpaque(false);
 			this.nicSelection[i].addActionListener(new ActionListener()	{
 				public void actionPerformed(ActionEvent evt) {
 					JCheckBox cb = (JCheckBox)evt.getSource();
@@ -294,7 +294,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		textArea.setWrapStyleWord(true);
 		textArea.setEditable(false);
 		textArea.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
-		textArea.setBackground(TAB_COLOR);
+		textArea.setOpaque(false);
 
 		hBox.add(textArea);
 		hBox.add(Box.createHorizontalStrut(10));
@@ -405,7 +405,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		textArea.setWrapStyleWord(true);
 		textArea.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
 		textArea.setEditable(false);
-		textArea.setBackground(TAB_COLOR);
+		textArea.setOpaque(false);
 
 		hBox.add(textArea);
 		hBox.add(Box.createHorizontalStrut(10));
@@ -502,6 +502,9 @@ public class JFirewallDialog extends JDialog implements I18n {
 		tp.setBackgroundAt(2, TAB_COLOR);
 		tp.add(messages.getString("jfirewalldialog_msg16"), erzeugePortBox());
 		tp.setBackgroundAt(3, TAB_COLOR);
+		
+		tp.setOpaque(true);
+		tp.setBackground(TAB_COLOR);
 
 		tp.addChangeListener(new ChangeListener()
 		{
@@ -511,6 +514,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		});
 
 		hauptPanel.add(tp, BorderLayout.CENTER);
+		hauptPanel.setBackground(TAB_COLOR);
 
 		getContentPane().add(hauptPanel);
 	}
