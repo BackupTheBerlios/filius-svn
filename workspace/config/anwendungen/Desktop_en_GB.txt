@@ -8,6 +8,6 @@ Text editor;filius.software.lokal.TextEditor;filius.gui.anwendungssicht.GUIAppli
 Webbrowser;filius.software.www.WebBrowser;filius.gui.anwendungssicht.GUIApplicationWebBrowserWindow;gfx/desktop/icon_browser.png
 Webserver;filius.software.www.WebServer;filius.gui.anwendungssicht.GUIApplicationWebServerWindow;gfx/desktop/icon_webserver.png
 Echo server;filius.software.clientserver.ServerBaustein;filius.gui.anwendungssicht.GUIApplicationServerBausteinWindow;gfx/desktop/icon_serverbaustein.png
-Echo client;filius.software.clientserver.ClientBaustein;filius.gui.anwendungssicht.GUIApplicationClientBausteinWindow;gfx/desktop/icon_clientbaustein.png
+Generic client;filius.software.clientserver.ClientBaustein;filius.gui.anwendungssicht.GUIApplicationClientBausteinWindow;gfx/desktop/icon_clientbaustein.png
 Firewall;filius.software.firewall.Firewall;filius.gui.anwendungssicht.GUIApplicationFirewallWindow;gfx/desktop/icon_firewall.png
 Image viewer;filius.software.lokal.ImageViewer;filius.gui.anwendungssicht.GUIApplicationImageViewerWindow;gfx/desktop/icon_imageviewer.png
