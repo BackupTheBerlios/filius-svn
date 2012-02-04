@@ -35,6 +35,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,6 +43,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.geom.QuadCurve2D;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -55,10 +57,10 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.event.ChangeEvent;
@@ -69,10 +71,10 @@ import filius.exception.VerbindungsException;
 import filius.gui.GUIContainer;
 import filius.gui.JMainFrame;
 import filius.hardware.Hardware;
-import filius.hardware.Kabel;
 import filius.hardware.NetzwerkInterface;
 import filius.hardware.Port;
 import filius.hardware.Verbindung;
+import filius.hardware.Kabel;
 import filius.hardware.knoten.InternetKnoten;
 import filius.hardware.knoten.Knoten;
 import filius.hardware.knoten.LokalerKnoten;
@@ -607,7 +609,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 //		upperCompound.setBackground(Color.GREEN);
 		upperCompound.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 		upperCompound.setLayout(new BoxLayout(upperCompound, BoxLayout.X_AXIS));
-		upperCompound.setPreferredSize(new Dimension(650,360));
+		upperCompound.setPreferredSize(new Dimension(700,360));
 		
 		// -- create left column; connected foreign components
 		SpringLayout layoutRemote = new SpringLayout();
@@ -762,11 +764,11 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		usageNote.setLineWrap(true);
 		usageNote.setWrapStyleWord(true);
 		usageNote.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
-		usageNote.setSize(new Dimension(600,200));
+		usageNote.setSize(new Dimension(700,200));
 //		usageNote.setBorder(BorderFactory.createLineBorder(Color.GRAY,2));
 		noteCompound.add(Box.createVerticalGlue());
 		noteCompound.add(usageNote,BorderLayout.CENTER);
-		noteCompound.setMinimumSize(new Dimension(650,200));
+		noteCompound.setMinimumSize(new Dimension(700,200));
 		
 		// - create main button area
 		buttonCompound = new JPanel();
@@ -886,7 +888,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 			String idxStr = tmp.getName();
 			l = Integer.parseInt(idxStr.substring(0, 1));
 			r = Integer.parseInt(idxStr.substring(2));
-			//changeBasicSettingsDialog.pack();
+			changeBasicSettingsDialog.pack();
 			tmp.setStartPoint(-2,
 				              btnRemote[l].getY()+(btnRemote[l].getPreferredSize().height / 2));
 			tmp.setEndPoint(282,
@@ -898,8 +900,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		}
 		//-------------------------
 		
-//		changeBasicSettingsDialog.setSize(750, 600);
-		changeBasicSettingsDialog.pack();
+		changeBasicSettingsDialog.setSize(750, 530);
 		changeBasicSettingsDialog.setResizable(false);
 
 		changeBasicSettingsDialog.setVisible(true);
