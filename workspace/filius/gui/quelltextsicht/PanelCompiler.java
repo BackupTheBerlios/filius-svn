@@ -73,8 +73,8 @@ public class PanelCompiler extends JPanel implements I18n, Runnable {
 		this.anwendungsKlasse = anwendungsKlasse;
 		this.anwendungsName = anwendungsName;
 
-		setPreferredSize(new Dimension(700, 460));
-		setMaximumSize(new Dimension(700, 460));
+		setPreferredSize(new Dimension(700, 480));
+		setMaximumSize(new Dimension(700, 480));
 
 		initKomponenten();
 	}
@@ -88,7 +88,7 @@ public class PanelCompiler extends JPanel implements I18n, Runnable {
 		ausgabe = new JEditorPane();
 
 		scrollPane = new JScrollPane(ausgabe);
-		scrollPane.setPreferredSize(new Dimension(600, 300));
+		scrollPane.setPreferredSize(new Dimension(600, 400));
 
 		add(scrollPane, BorderLayout.CENTER);
 

@@ -41,6 +41,7 @@ import java.util.ListIterator;
 import javax.swing.ImageIcon;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.MouseInputAdapter;
 
@@ -53,12 +54,8 @@ import filius.gui.netzwerksicht.GUIKnotenItem;
 import filius.gui.netzwerksicht.GUISidebar;
 import filius.gui.netzwerksicht.GUISimulationPanel;
 import filius.gui.netzwerksicht.JCablePanel;
-import filius.gui.netzwerksicht.JHostKonfiguration;
 import filius.gui.netzwerksicht.JKonfiguration;
-import filius.gui.netzwerksicht.JModemKonfiguration;
 import filius.gui.netzwerksicht.JSidebarButton;
-import filius.gui.netzwerksicht.JSwitchKonfiguration;
-import filius.gui.netzwerksicht.JVermittlungsrechnerKonfiguration;
 import filius.hardware.Kabel;
 import filius.hardware.knoten.Host;
 import filius.hardware.knoten.Knoten;
@@ -68,6 +65,7 @@ import filius.hardware.knoten.Rechner;
 import filius.hardware.knoten.Switch;
 import filius.hardware.knoten.Vermittlungsrechner;
 import filius.rahmenprogramm.I18n;
+import filius.rahmenprogramm.Information;
 import filius.rahmenprogramm.SzenarioVerwaltung;
 import filius.software.system.Betriebssystem;
 
@@ -115,7 +113,7 @@ public class GUIContainer implements Serializable, I18n {
 
 	int abstandy, abstandx;
 
-	private LinkedList<Object> itemlist;
+	private LinkedList<GUIKnotenItem> itemlist;
 	private LinkedList<GUIKabelItem> cablelist;
 
 	/* HashMap in der die Hardware gespeichert wird */
@@ -127,7 +125,7 @@ public class GUIContainer implements Serializable, I18n {
 	 * }
 	 */
 
-	public LinkedList<Object> getGUIKnotenItemList() {
+	public LinkedList<GUIKnotenItem> getGUIKnotenItemList() {
 		return itemlist;
 	}
 
@@ -168,7 +166,10 @@ public class GUIContainer implements Serializable, I18n {
 		c = JMainFrame.getJMainFrame().getContentPane();
 		layeredpane = JMainFrame.getJMainFrame().getRootPane().getLayeredPane();
 
-		/* auswahl: area covered during mouse pressed, i.e., area with components to be selected */
+		/*
+		 * auswahl: area covered during mouse pressed, i.e., area with
+		 * components to be selected
+		 */
 		auswahl = new JMarkerPanel();
 		auswahl.setBounds(0, 0, 0, 0);
 		auswahl.setBackgroundImage("gfx/allgemein/auswahl.png");
@@ -190,7 +191,8 @@ public class GUIContainer implements Serializable, I18n {
 		 * Anfangs auf Invisible gestellt, und nur bei Verwendung sichtbar
 		 * gemacht.
 		 */
-		kabelvorschau = new JSidebarButton("", new ImageIcon(getClass().getResource("/gfx/allgemein/ziel1.png")), null);
+		kabelvorschau = new JSidebarButton("", new ImageIcon(getClass()
+				.getResource("/gfx/allgemein/ziel1.png")), null);
 		kabelvorschau.setVisible(false);
 		layeredpane.add(kabelvorschau);
 
@@ -205,22 +207,17 @@ public class GUIContainer implements Serializable, I18n {
 		setProperty(null);
 
 		/* sidebar wird erstellt und anschliessend dem Container c zugefüt */
-		try {
-			sidebar = GUISidebar.getGUISidebar();
-		} finally {
-		}
+		sidebar = GUISidebar.getGUISidebar();
 
 		/* draftpanel wird erstellt */
 		draftpanel = new GUIDraftPanel();
-
-		c.add(draftpanel, BorderLayout.CENTER);
 
 		/* simulationspanel wird erstellt */
 		simpanel = new GUISimulationPanel();
 		c.add(simpanel, BorderLayout.CENTER);
 		simpanel.setVisible(false);
 
-		itemlist = new LinkedList<Object>();
+		itemlist = new LinkedList<GUIKnotenItem>();
 
 		/*
 		 * Abstand verursacht durch Titelleiste muss ueber getInsets ausgelesen
@@ -250,7 +247,14 @@ public class GUIContainer implements Serializable, I18n {
 		sidebarScrollpane = new JScrollPane(sidebar.getLeistenpanel());
 		sidebarScrollpane
 				.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		sidebarScrollpane.getVerticalScrollBar().setUnitIncrement(10);
+		if (Information.isLowResolution()) {
+			sidebarScrollpane
+					.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+			sidebarScrollpane.getVerticalScrollBar().setUnitIncrement(10);
+		} else {
+			sidebarScrollpane
+					.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		}
 
 		c.add(sidebarScrollpane, BorderLayout.WEST);
 		c.add(scrollPane, BorderLayout.CENTER);
@@ -263,9 +267,11 @@ public class GUIContainer implements Serializable, I18n {
 			public void mousePressed(MouseEvent e) {
 				testlabel = sidebar.aufButton(e.getX(), e.getY());
 				if (testlabel != null) {
-					//Main.debug.println("GUIContainer: Maustaste wurde ueber "
-							//+ testlabel.getHardwareTyp() + " betaetigt.");
+					// Main.debug.println("GUIContainer: Maustaste wurde ueber "
+					// + testlabel.getHardwareTyp() + " betaetigt.");
 					neueVorschau(testlabel.getHardwareTyp(), e.getX(), e.getY());
+					GUIContainer.getGUIContainer().getKabelvorschau()
+							.setVisible(false);
 				}
 
 			}
@@ -280,8 +286,8 @@ public class GUIContainer implements Serializable, I18n {
 
 				if (dragVorschau.isVisible()
 						&& aufObjekt(draftpanel, e.getX()
-								- sidebar.getLeistenpanel().getWidth(), e
-								.getY())) {
+								- sidebar.getLeistenpanel().getWidth(),
+								e.getY())) {
 
 					x = e.getX()
 							+ scrollPane.getHorizontalScrollBar().getValue();
@@ -304,8 +310,8 @@ public class GUIContainer implements Serializable, I18n {
 					dragVorschau.setBounds(e.getX()
 							- (dragVorschau.getWidth() / 2), e.getY()
 							- (dragVorschau.getHeight() / 2)
-							+ menu.getMenupanel().getHeight(), dragVorschau
-							.getWidth(), dragVorschau.getHeight());
+							+ menu.getMenupanel().getHeight(),
+							dragVorschau.getWidth(), dragVorschau.getHeight());
 
 				}
 			}
@@ -346,10 +352,10 @@ public class GUIContainer implements Serializable, I18n {
 				if (kabelvorschau.isVisible()) {
 					kabelvorschau.setBounds(e.getX()
 							+ sidebar.getLeistenpanel().getWidth()
-							- (kabelvorschau.getWidth() / 2), e.getY()
-							+ menu.getMenupanel().getHeight()
-							- (kabelvorschau.getHeight() / 2), kabelvorschau
-							.getWidth(), kabelvorschau.getHeight());
+							- (kabelvorschau.getWidth() / 2),
+							e.getY() + menu.getMenupanel().getHeight()
+									- (kabelvorschau.getHeight() / 2),
+							kabelvorschau.getWidth(), kabelvorschau.getHeight());
 					if (ziel2Label != null)
 						ziel2Label.setLocation(e.getX()
 								+ scrollPane.getHorizontalScrollBar()
@@ -371,7 +377,8 @@ public class GUIContainer implements Serializable, I18n {
 	private GUIContainer() {
 		Image image;
 
-		image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/gfx/hardware/kabel.png"));
+		image = Toolkit.getDefaultToolkit().getImage(
+				getClass().getResource("/gfx/hardware/kabel.png"));
 		JMainFrame.getJMainFrame().setIconImage(image);
 	}
 
@@ -399,7 +406,7 @@ public class GUIContainer implements Serializable, I18n {
 
 		SzenarioVerwaltung.getInstance().setzeGeaendert();
 
-		ListIterator<Object> it = itemlist.listIterator();
+		ListIterator<GUIKnotenItem> it = itemlist.listIterator();
 		while (it.hasNext()) {
 			item = (GUIKnotenItem) it.next();
 			item.getImageLabel().setSelektiert(false);
@@ -407,22 +414,27 @@ public class GUIContainer implements Serializable, I18n {
 
 		if (label.getHardwareTyp().equals(Switch.holeHardwareTyp())) {
 			neuerKnoten = new Switch();
-			tempIcon = new ImageIcon(getClass().getResource("/"+GUISidebar.SWITCH));
+			tempIcon = new ImageIcon(getClass().getResource(
+					"/" + GUISidebar.SWITCH));
 
 		} else if (label.getHardwareTyp().equals(Rechner.holeHardwareTyp())) {
 			neuerKnoten = new Rechner();
-			tempIcon = new ImageIcon(getClass().getResource("/"+GUISidebar.RECHNER));
+			tempIcon = new ImageIcon(getClass().getResource(
+					"/" + GUISidebar.RECHNER));
 		} else if (label.getHardwareTyp().equals(Notebook.holeHardwareTyp())) {
 			neuerKnoten = new Notebook();
-			tempIcon = new ImageIcon(getClass().getResource("/"+GUISidebar.NOTEBOOK));
+			tempIcon = new ImageIcon(getClass().getResource(
+					"/" + GUISidebar.NOTEBOOK));
 		} else if (label.getHardwareTyp().equals(
 				Vermittlungsrechner.holeHardwareTyp())) {
 			neuerKnoten = new Vermittlungsrechner();
-			tempIcon = new ImageIcon(getClass().getResource("/"+GUISidebar.VERMITTLUNGSRECHNER));
+			tempIcon = new ImageIcon(getClass().getResource(
+					"/" + GUISidebar.VERMITTLUNGSRECHNER));
 
 			Object[] possibleValues = { "2", "3", "4", "5", "6", "7", "8" };
-			Object selectedValue = JOptionPane.showInputDialog(JMainFrame
-					.getJMainFrame(), messages.getString("guicontainer_msg1"),
+			Object selectedValue = JOptionPane.showInputDialog(
+					JMainFrame.getJMainFrame(),
+					messages.getString("guicontainer_msg1"),
 					messages.getString("guicontainer_msg2"),
 					JOptionPane.INFORMATION_MESSAGE, null, possibleValues,
 					possibleValues[0]);
@@ -433,9 +445,10 @@ public class GUIContainer implements Serializable, I18n {
 			}
 		} else if (label.getHardwareTyp().equals(Modem.holeHardwareTyp())) {
 			neuerKnoten = new Modem();
-			tempIcon = new ImageIcon(getClass().getResource("/"+GUISidebar.MODEM));
+			tempIcon = new ImageIcon(getClass().getResource(
+					"/" + GUISidebar.MODEM));
 		} else {
-			Main.debug.println("ERROR ("+this.hashCode()+"): "
+			Main.debug.println("ERROR (" + this.hashCode() + "): "
 					+ "unbekannter Hardwaretyp " + label.getHardwareTyp()
 					+ " konnte nicht erzeugt werden.");
 		}
@@ -444,8 +457,8 @@ public class GUIContainer implements Serializable, I18n {
 			templabel = new JSidebarButton(neuerKnoten.getName(), tempIcon,
 					neuerKnoten.holeHardwareTyp());
 			templabel.setBounds(x - templabel.getWidth() / 2
-					- sidebar.getLeistenpanel().getWidth(), y
-					- templabel.getHeight() / 2, templabel.getWidth(),
+					- sidebar.getLeistenpanel().getWidth(),
+					y - templabel.getHeight() / 2, templabel.getWidth(),
 					templabel.getHeight());
 
 			item = new GUIKnotenItem();
@@ -459,13 +472,19 @@ public class GUIContainer implements Serializable, I18n {
 			draftpanel.add(templabel);
 			draftpanel.repaint();
 
-			//Main.debug.println("GUIContainer: neue Hardware erzeugt ("
-					//+ neuerKnoten.getName() + ")");
-			GUIEvents.getGUIEvents().setNewItemActive(item);   // set active for further processing (to be evaluated by other methods)
-			
+			// Main.debug.println("GUIContainer: neue Hardware erzeugt ("
+			// + neuerKnoten.getName() + ")");
+			GUIEvents.getGUIEvents().setNewItemActive(item); // set active for
+																// further
+																// processing
+																// (to be
+																// evaluated by
+																// other
+																// methods)
+
 			return true;
 		} else {
-			//Main.debug.println("GUIContainer: Keine neue Hardware erzeugt!");
+			// Main.debug.println("GUIContainer: Keine neue Hardware erzeugt!");
 			return false;
 		}
 
@@ -489,7 +508,8 @@ public class GUIContainer implements Serializable, I18n {
 		if (ref == null) {
 			ref = new GUIContainer();
 			if (ref == null)
-				Main.debug.println("ERROR (static) getGUIContainer(): Fehler!!! ref==null");
+				Main.debug
+						.println("ERROR (static) getGUIContainer(): Fehler!!! ref==null");
 		}
 
 		return ref;
@@ -584,13 +604,13 @@ public class GUIContainer implements Serializable, I18n {
 		}
 
 		dragVorschau.setHardwareTyp(hardwareTyp);
-		dragVorschau.setIcon(new ImageIcon(getClass().getResource("/"+tmp)));
-		//Main.debug.println("GUIContainer: dragVorschau width = "
-				//+ dragVorschau.getWidth() + "  height = "
-				//+ dragVorschau.getHeight());
-		//Main.debug.println("\t\tdragVorschau.getIcon() width = "
-//				+ dragVorschau.getIcon().getIconWidth() + "  height = "
-//				+ dragVorschau.getIcon().getIconHeight());
+		dragVorschau.setIcon(new ImageIcon(getClass().getResource("/" + tmp)));
+		// Main.debug.println("GUIContainer: dragVorschau width = "
+		// + dragVorschau.getWidth() + "  height = "
+		// + dragVorschau.getHeight());
+		// Main.debug.println("\t\tdragVorschau.getIcon() width = "
+		// + dragVorschau.getIcon().getIconWidth() + "  height = "
+		// + dragVorschau.getIcon().getIconHeight());
 		dragVorschau.setBounds(x - (dragVorschau.getWidth() / 2), y
 				- (dragVorschau.getHeight() / 2)
 				+ menu.getMenupanel().getHeight(), dragVorschau.getWidth(),
@@ -635,10 +655,11 @@ public class GUIContainer implements Serializable, I18n {
 	}
 
 	public void updateViewport() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (GUIContainer), updateViewport()");
-		if (draftpanel.isVisible())
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+				+ " (GUIContainer), updateViewport()");
+		if (draftpanel.isVisible()) {
 			draftpanel.updateViewport(itemlist, cablelist);
-		else if (simpanel.isVisible())
+		} else if (simpanel.isVisible())
 			simpanel.updateViewport(itemlist, cablelist);
 	}
 
@@ -651,7 +672,8 @@ public class GUIContainer implements Serializable, I18n {
 	 * 
 	 */
 	public void updateCables() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (GUIContainer), updateCables()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+				+ " (GUIContainer), updateCables()");
 		ListIterator<GUIKabelItem> it = cablelist.listIterator();
 		while (it.hasNext()) {
 			GUIKabelItem tempCable = (GUIKabelItem) it.next();
@@ -680,8 +702,8 @@ public class GUIContainer implements Serializable, I18n {
 
 			closeDesktops();
 
-			JMainFrame.getJMainFrame().getContentPane().add(
-					getSidebarScrollpane(), BorderLayout.WEST);
+			JMainFrame.getJMainFrame().getContentPane()
+					.add(getSidebarScrollpane(), BorderLayout.WEST);
 			JMainFrame.getJMainFrame().invalidate();
 			JMainFrame.getJMainFrame().validate();
 
@@ -694,8 +716,11 @@ public class GUIContainer implements Serializable, I18n {
 			getDraftpanel().setVisible(false);
 			getSimpanel().setVisible(true);
 
-			JMainFrame.getJMainFrame().getContentPane().remove(
-					GUIContainer.getGUIContainer().getSidebarScrollpane());
+			JMainFrame
+					.getJMainFrame()
+					.getContentPane()
+					.remove(GUIContainer.getGUIContainer()
+							.getSidebarScrollpane());
 			JMainFrame.getJMainFrame().invalidate();
 			JMainFrame.getJMainFrame().validate();
 
@@ -705,8 +730,12 @@ public class GUIContainer implements Serializable, I18n {
 			getProperty().setVisible(false);
 
 			GUIContainer.getGUIContainer().getKabelvorschau().setVisible(false);
-			GUIContainer.getGUIContainer().getKabelvorschau().setIcon(
-					new ImageIcon(getClass().getResource("/gfx/allgemein/ziel1.png")));
+			GUIContainer
+					.getGUIContainer()
+					.getKabelvorschau()
+					.setIcon(
+							new ImageIcon(getClass().getResource(
+									"/gfx/allgemein/ziel1.png")));
 
 		}
 		updateViewport();
@@ -809,7 +838,8 @@ public class GUIContainer implements Serializable, I18n {
 		boolean maximieren = false;
 
 		if (property != null) {
-			property.doUnselectAction();  // do actions required prior to getting unselected (i.e., postprocessing)
+			property.doUnselectAction(); // do actions required prior to getting
+											// unselected (i.e., postprocessing)
 			JMainFrame.getJMainFrame().getContentPane().remove(property);
 			maximieren = property.isMaximiert();
 		}
@@ -817,8 +847,8 @@ public class GUIContainer implements Serializable, I18n {
 		property = conf;
 
 		if (property != null) {
-			JMainFrame.getJMainFrame().getContentPane().add(property,
-					BorderLayout.SOUTH);
+			JMainFrame.getJMainFrame().getContentPane()
+					.add(property, BorderLayout.SOUTH);
 			property.updateUI();
 			if (!maximieren) {
 				property.minimieren();
@@ -826,14 +856,15 @@ public class GUIContainer implements Serializable, I18n {
 				property.maximieren();
 			}
 		}
-		
+
 	}
-	
+
 	public void setProperty(GUIKnotenItem hardwareItem) {
 		boolean maximieren = false;
 
 		if (property != null) {
-			property.doUnselectAction();  // do actions required prior to getting unselected (i.e., postprocessing)
+			property.doUnselectAction(); // do actions required prior to getting
+											// unselected (i.e., postprocessing)
 			JMainFrame.getJMainFrame().getContentPane().remove(property);
 			maximieren = property.isMaximiert();
 		}
@@ -845,9 +876,9 @@ public class GUIContainer implements Serializable, I18n {
 		}
 
 		if (property != null) {
-		    property.updateAttribute();
-			JMainFrame.getJMainFrame().getContentPane().add(property,
-					BorderLayout.SOUTH);
+			property.updateAttribute();
+			JMainFrame.getJMainFrame().getContentPane()
+					.add(property, BorderLayout.SOUTH);
 			property.updateUI();
 			if (hardwareItem == null || !maximieren) {
 				property.minimieren();
@@ -888,10 +919,10 @@ public class GUIContainer implements Serializable, I18n {
 	public void setKabelPanelVorschau(JCablePanel kabelPanelVorschau) {
 		this.kabelPanelVorschau = kabelPanelVorschau;
 	}
-	
+
 	public JSidebarButton getLabelforKnoten(Knoten node) {
-		LinkedList<Object> list = getGUIKnotenItemList();
-		for (int i=0; i<list.size(); i++) {
+		LinkedList<GUIKnotenItem> list = getGUIKnotenItemList();
+		for (int i = 0; i < list.size(); i++) {
 			if (((GUIKnotenItem) list.get(i)).getKnoten().equals(node)) {
 				return ((GUIKnotenItem) list.get(i)).getImageLabel();
 			}

@@ -84,13 +84,13 @@ public class JMainFrame extends javax.swing.JFrame implements WindowListener, Ob
 																						  // items
 																						  // are
 																						  // selected
-							LinkedList<Object> itemlist = GUIContainer.getGUIContainer().getGUIKnotenItemList();
+							LinkedList<GUIKnotenItem> itemlist = GUIContainer.getGUIContainer().getGUIKnotenItemList();
 							JMarkerPanel auswahl = GUIContainer.getAuswahl();
 							JScrollPane scrollPane = GUIContainer.getGUIContainer().getScrollPane();
 							GUIKnotenItem tempitem;
 							int tx, ty, twidth, theight;
-							LinkedList<Object> markedlist = new LinkedList<Object>();
-							ListIterator<Object> it = itemlist.listIterator();
+							LinkedList<GUIKnotenItem> markedlist = new LinkedList<GUIKnotenItem>();
+							ListIterator<GUIKnotenItem> it = itemlist.listIterator();
 							while (it.hasNext()) {
 								tempitem = (GUIKnotenItem) it.next();
 								tx = tempitem.getImageLabel().getX();
@@ -237,7 +237,6 @@ public class JMainFrame extends javax.swing.JFrame implements WindowListener, Ob
 
 	public void windowClosed(WindowEvent e) {
 		// TODO Auto-generated method stub
-
 	}
 
 	/**

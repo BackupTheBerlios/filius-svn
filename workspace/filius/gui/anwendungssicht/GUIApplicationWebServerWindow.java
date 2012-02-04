@@ -118,7 +118,7 @@ public class GUIApplicationWebServerWindow extends GUIApplicationWindow {
 		Main.debug.println("DEBUG header value: '"+
 		   vHostTable.getColumnModel().getColumn(0).getHeaderValue()+"'");
 		vHostTable.setIntercellSpacing(new java.awt.Dimension(5,5));
-		vHostTable.setRowHeight(28);
+		vHostTable.setRowHeight(26);
 		vHostTable.setShowGrid(true);
 		vHostTable.setFillsViewportHeight(true);
         vHostTable.setBackground(java.awt.Color.WHITE);
@@ -148,7 +148,7 @@ public class GUIApplicationWebServerWindow extends GUIApplicationWindow {
 	private void setVHostTableVisible(boolean tableVisible) {
 		if (tableVisible) {
 			backPanel.add(vHostBox, BorderLayout.CENTER);
-			logBox.setPreferredSize(new java.awt.Dimension(300,150));
+			logBox.setPreferredSize(new java.awt.Dimension(300,148));
 		}
 		else {
 			backPanel.remove(vHostBox);

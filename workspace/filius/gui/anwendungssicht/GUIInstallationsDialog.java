@@ -29,6 +29,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -102,21 +103,27 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 		Box listenBox = Box.createHorizontalBox();
 		listenBox.add(Box.createHorizontalStrut(10));
 
-		JScrollPane ScrollAnwendungInstallieren = new JScrollPane(
+		JScrollPane scrollAnwendungInstallieren = new JScrollPane(
 				softwareInstalliert);
-		ScrollAnwendungInstallieren.setPreferredSize(new Dimension(150, 200));
-		wrapperInstBox.add(ScrollAnwendungInstallieren);
+		scrollAnwendungInstallieren.setPreferredSize(new Dimension(170, 200));
+		wrapperInstBox.add(scrollAnwendungInstallieren);
 
 		listenBox.add(wrapperInstBox);
 
 		listenBox.add(Box.createHorizontalGlue());
+		
+		Box topButtonBox = Box.createVerticalBox();
+		topButtonBox.add(addButton);
+		topButtonBox.add(Box.createVerticalStrut(10));
+		topButtonBox.add(removeButton);
+		listenBox.add(topButtonBox);
 
 		wrapperAvailBox.add(titleAvailable);
 		wrapperAvailBox.add(Box.createVerticalStrut(10));
 
 		JScrollPane scrollAnwendungVerfuegbar = new JScrollPane(
 				softwareVerfuegbar);
-		ScrollAnwendungInstallieren.setPreferredSize(new Dimension(150, 200));
+		scrollAnwendungVerfuegbar.setPreferredSize(new Dimension(170, 200));
 		wrapperAvailBox.add(scrollAnwendungVerfuegbar);
 		listenBox.add(wrapperAvailBox);
 
@@ -124,13 +131,6 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 
 		gesamtBox.add(Box.createVerticalStrut(10));
 		gesamtBox.add(listenBox);
-		gesamtBox.add(Box.createVerticalStrut(10));
-
-		Box topButtonBox = Box.createHorizontalBox();
-		topButtonBox.add(addButton);
-		topButtonBox.add(Box.createHorizontalStrut(32));
-		topButtonBox.add(removeButton);
-		gesamtBox.add(topButtonBox);
 		gesamtBox.add(Box.createVerticalStrut(10));
 
 		Box bottomButtonBox = Box.createVerticalBox();
@@ -145,7 +145,7 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 		this.setClosable(true);
 		this.setMaximizable(true);
 		this.setResizable(true);
-		this.setBounds(0, 80, 400, 360);
+		this.setBounds(0, 40, 480, 360);
 		this.setTitle(messages.getString("installationsdialog_msg1"));
 		this.setVisible(true);
 		this.setAnwendungsIcon("gfx/desktop/icon_softwareinstallation.png");
@@ -241,10 +241,12 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 
 		/* Buttons */
 		removeButton = new JButton(new ImageIcon(getClass().getResource("/gfx/allgemein/pfeil_rechts.png")));
+		removeButton.setMargin(new Insets(2,2,2,2));
 		removeButton.setActionCommand("remove");
 		removeButton.addActionListener(al);
 
 		addButton = new JButton(new ImageIcon(getClass().getResource("/gfx/allgemein/pfeil_links.png")));
+		addButton.setMargin(new Insets(2,2,2,2));
 		addButton.setActionCommand("add");
 		addButton.addActionListener(al);
 

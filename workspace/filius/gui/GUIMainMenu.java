@@ -32,7 +32,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
-import java.util.ListIterator;
 import java.util.LinkedList;
 
 import javax.swing.ImageIcon;
@@ -84,7 +83,7 @@ public class GUIMainMenu implements Serializable, I18n {
 	private int aktuellerModus = MODUS_ENTWURF;
 
 	private JButton btAktionsmodus, btEntwurfsmodus, btOeffnen, btSpeichern,
-			btNeu, btWizard, btHilfe, btInfo, btRTT;
+			btNeu, btWizard, btHilfe, btInfo;
 	
 	private LinkedList<DHCPServer> listDHCPServers = new LinkedList<DHCPServer>();
 
@@ -131,12 +130,6 @@ public class GUIMainMenu implements Serializable, I18n {
 				.getIconHeight());
 		btNeu.setActionCommand("neu");
 		btNeu.setToolTipText(messages.getString("guimainmemu_msg5"));
-
-		btRTT = new JButton();
-		btRTT.setIcon(new ImageIcon(getClass().getResource("/gfx/allgemein/rtt_norm.png")));
-		btRTT.setBounds(600, 5, btRTT.getIcon().getIconWidth(), btRTT.getIcon().getIconHeight());
-		btRTT.setActionCommand("rtt");
-		btRTT.setToolTipText(messages.getString("guimainmenu_msg14"));
 
 		btWizard = new JButton();
 		btWizard.setIcon(new ImageIcon(getClass().getResource("/gfx/allgemein/button_wizard.png")));
@@ -311,10 +304,6 @@ public class GUIMainMenu implements Serializable, I18n {
 						}
 					}
 				}
-
-				if (e.getActionCommand().equals(btRTT.getActionCommand())) {
-					rotateRTT();
-				}
 				
 				if (e.getActionCommand().equals(
 						btEntwurfsmodus.getActionCommand())) {
@@ -340,7 +329,6 @@ public class GUIMainMenu implements Serializable, I18n {
 		btEntwurfsmodus.addActionListener(al);
 		btAktionsmodus.addActionListener(al);
 		btWizard.addActionListener(al);
-		btRTT.addActionListener(al);
 		btInfo.addActionListener(al);
 		btHilfe.addActionListener(al);
 
@@ -377,7 +365,6 @@ public class GUIMainMenu implements Serializable, I18n {
 		menupanel.add(btSpeichern);
 		menupanel.add(verzoegerung);
 		menupanel.add(geschwindigkeit);
-		menupanel.add(btRTT);
 		menupanel.add(btWizard);
 		menupanel.add(btHilfe);
 		menupanel.add(btInfo);
@@ -393,24 +380,6 @@ public class GUIMainMenu implements Serializable, I18n {
 				return messages.getString("guimainmemu_msg13");
 			}
 		};
-	}
-
-	private void rotateRTT() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (GUIMainMenu), rotateRTT()");
-		int currRTT = Verbindung.getRTTfactor();
-		Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+" (GUIMainMenu), rotateRTT:  currRTT="+currRTT);
-		if(currRTT == 1) {
-			Verbindung.setRTTfactor(2);
-			btRTT.setIcon(new ImageIcon(getClass().getResource("/gfx/allgemein/rtt_slow2.png")));
-		}
-		else if(currRTT == 2) {
-			Verbindung.setRTTfactor(5);
-			btRTT.setIcon(new ImageIcon(getClass().getResource("/gfx/allgemein/rtt_slow5.png")));
-		}
-		else {
-			Verbindung.setRTTfactor(1);
-			btRTT.setIcon(new ImageIcon(getClass().getResource("/gfx/allgemein/rtt_norm.png")));
-		}
 	}
 	
 	public void changeSlider(int diff) {
@@ -429,7 +398,6 @@ public class GUIMainMenu implements Serializable, I18n {
 		else if (button.equals("btOeffnen"))       btOeffnen.doClick();
 		else if (button.equals("btSpeichern"))     btSpeichern.doClick();
 		else if (button.equals("btNeu"))           btNeu.doClick();
-		else if (button.equals("btRTT"))           btRTT.doClick();
 		else if (button.equals("btWizard"))        btWizard.doClick();
 		else if (button.equals("btHilfe"))         btHilfe.doClick();
 		else if (button.equals("btInfo"))          btInfo.doClick();
@@ -442,9 +410,8 @@ public class GUIMainMenu implements Serializable, I18n {
 	private void resetCableHL(int mode) {
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (GUIMainMenu), resetCableHL("+mode+")");
 		if(mode == MODUS_AKTION) {  // change to simulation view: de-highlight all cables
-			ListIterator it = GUIContainer.getGUIContainer().getCablelist().listIterator();
-			while (it.hasNext()) {
-				((GUIKabelItem) it.next()).getDasKabel().setAktiv(false);
+			for (GUIKabelItem cableItem : GUIContainer.getGUIContainer().getCablelist()) {
+				cableItem.getDasKabel().setAktiv(false);
 			}
 		}
 		else {  // change to development view: possibly highlight a cable (only for 'Vermittlungsrechner' configuration
@@ -456,9 +423,7 @@ public class GUIMainMenu implements Serializable, I18n {
 	
 	public void selectMode(int mode) {
 		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (GUIMainMenu), selectMode("+mode+")");
-		ListIterator it;
-		GUIKnotenItem tmpGUIItem;
-
+		
 		if (mode == MODUS_ENTWURF && aktuellerModus != MODUS_ENTWURF) {
 			//Main.debug.println("\tMode: MODUS_ENTWURF");
 			resetCableHL(mode);  // de-highlight cables
@@ -469,13 +434,9 @@ public class GUIMainMenu implements Serializable, I18n {
 
 			GUIHilfe.getGUIHilfe().laden("entwurfsmodus");
 
-			it = GUIContainer.getGUIContainer().getGUIKnotenItemList()
-					.listIterator();
-			while (it.hasNext()) {
-				tmpGUIItem = (GUIKnotenItem) it.next();
-
+			for (GUIKnotenItem knotenItem : GUIContainer.getGUIContainer().getGUIKnotenItemList()) {
 				SystemSoftware system;
-				system = tmpGUIItem.getKnoten().getSystemSoftware();
+				system = knotenItem.getKnoten().getSystemSoftware();
 				try {
 				system.beenden();
 				}
@@ -503,10 +464,9 @@ public class GUIMainMenu implements Serializable, I18n {
 			GUIHilfe.getGUIHilfe().laden("simulationsmodus");
 
 			// find all DHCP servers for delaying run-time start until servers are ready  
-			it = GUIContainer.getGUIContainer().getGUIKnotenItemList().listIterator();
 			SystemSoftware syssoft;
-			while (it.hasNext()) {
-				syssoft = ((GUIKnotenItem) it.next()).getKnoten().getSystemSoftware(); 
+			for (GUIKnotenItem knotenItem : GUIContainer.getGUIContainer().getGUIKnotenItemList()) {
+				syssoft = knotenItem.getKnoten().getSystemSoftware(); 
 				if (syssoft instanceof Betriebssystem) {
 				  if (((Betriebssystem) syssoft).getDHCPServer().isAktiv()) {
 					  //Main.debug.println("--DHCP-- found DHCP server in '"+syssoft.getKnoten().getName()+"'");
@@ -515,15 +475,12 @@ public class GUIMainMenu implements Serializable, I18n {
 				}
 			}
 			
-			it = GUIContainer.getGUIContainer().getGUIKnotenItemList().listIterator();
-			while (it.hasNext()) {
-				tmpGUIItem = (GUIKnotenItem) it.next();
-
+			for (GUIKnotenItem knotenItem : GUIContainer.getGUIContainer().getGUIKnotenItemList()) {
 				SystemSoftware system;
-				system = tmpGUIItem.getKnoten().getSystemSoftware();
+				system = knotenItem.getKnoten().getSystemSoftware();
 				system.starten();
 
-				GUIContainer.getGUIContainer().addDesktopWindow(tmpGUIItem);
+				GUIContainer.getGUIContainer().addDesktopWindow(knotenItem);
 			}
 
 			btOeffnen.setEnabled(false);

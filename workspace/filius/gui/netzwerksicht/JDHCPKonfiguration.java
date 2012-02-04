@@ -25,21 +25,18 @@
 */
 package filius.gui.netzwerksicht;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.ItemListener;
 import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -57,9 +54,8 @@ import filius.software.system.Betriebssystem;
 
 public class JDHCPKonfiguration extends JDialog implements I18n, ItemListener  {
 
+	private static final long serialVersionUID = 1L;
 	private DHCPServer server;
-	private Betriebssystem bs;
-
 	private JTextField tfObergrenze;
 	private JTextField tfUntergrenze;
 	private JTextField tfNetzmaske;
@@ -71,10 +67,9 @@ public class JDHCPKonfiguration extends JDialog implements I18n, ItemListener  {
 
 	public JDHCPKonfiguration (JFrame owner, String titel, Betriebssystem bs) {
 		super(owner, titel, true);
-		this.bs = bs;
 		this.server = bs.getDHCPServer();
 
-		this.setSize(380, 340);
+		this.setSize(380, 360);
 		this.setResizable(false);
 
 		//Main.debug.println(owner.getSize().width+" "+owner.getSize().height);

@@ -90,7 +90,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		this.nics = ((InternetKnoten)firewall.getSystemSoftware().getKnoten()).getNetzwerkInterfaces();
 		
 		jfd = this;
-		this.setBounds(this.getX(), this.getY(), 600,300);
+		this.setBounds(this.getX(), this.getY(), 600,600);
 
 		erzeugeFenster();
 	}
@@ -196,7 +196,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		columnModel.getColumn(1).setHeaderValue(messages.getString("jfirewalldialog_msg7"));
 
 		scrollPane = new JScrollPane(tTabelleAbsender);
-		scrollPane.setPreferredSize(new Dimension(150,250));
+		scrollPane.setPreferredSize(new Dimension(150,300));
 
 		vBox.add(scrollPane);
 		vBox.add(Box.createVerticalStrut(10));
@@ -370,7 +370,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		columnModel.getColumn(1).setHeaderValue(messages.getString("jfirewalldialog_msg7"));
 
 		scrollPane = new JScrollPane(tTabelleZiel);
-		scrollPane.setPreferredSize(new Dimension(150,250));
+		scrollPane.setPreferredSize(new Dimension(150,300));
 
 		vBox.add(scrollPane);
 		vBox.add(Box.createVerticalStrut(10));
@@ -468,7 +468,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		columnModel.getColumn(0).setHeaderValue(messages.getString("jfirewalldialog_msg12"));
 
 		scrollPane = new JScrollPane(tTabellePort);
-		scrollPane.setPreferredSize(new Dimension(150,250));
+		scrollPane.setPreferredSize(new Dimension(150,300));
 
 		vBox.add(scrollPane);
 		vBox.add(Box.createVerticalStrut(10));
@@ -508,7 +508,6 @@ public class JFirewallDialog extends JDialog implements I18n {
 		hauptPanel.add(tp, BorderLayout.CENTER);
 
 		getContentPane().add(hauptPanel);
-		pack();
 	}
 
 	/*

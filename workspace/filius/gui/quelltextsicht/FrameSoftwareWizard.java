@@ -71,7 +71,7 @@ public class FrameSoftwareWizard extends JDialog implements I18n {
 
 		Dimension screenSize =
             Toolkit.getDefaultToolkit().getScreenSize();
-        this.setSize(720, 560);
+        this.setSize(720, 600);
 		this.setLocation(screenSize.width/2 - (this.getWidth()/2),
                  screenSize.height/2 - (this.getHeight()/2));
 

@@ -36,7 +36,6 @@ package filius.gui;
 
 import java.awt.Graphics;
 import java.awt.Insets;
-import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;

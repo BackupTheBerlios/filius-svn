@@ -25,6 +25,7 @@
 */
 package filius.gui.netzwerksicht;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
@@ -32,7 +33,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -75,7 +75,7 @@ public class GUISidebar implements Serializable {
 
 	private JBackgroundPanel leistenpanel;
 
-	private List<Serializable> buttonList; // , configItems;
+	private List<JSidebarButton> buttonList; // , configItems;
 
 	private JLabel kabel_neu, kabelvorschau;
 
@@ -88,10 +88,21 @@ public class GUISidebar implements Serializable {
 	 */
 	private GUISidebar() {
 
-		buttonList = new LinkedList<Serializable>();
+		buttonList = new LinkedList<JSidebarButton>();
 
-		leistenpanel = new JBackgroundPanel();
-
+		leistenpanel = new JBackgroundPanel() {
+			private static final long serialVersionUID = 1L;
+			public Dimension getPreferredSize() {
+				int height=0, width=0;
+				for (Component component : this.getComponents()) {
+					if (component.getWidth() > width) width = component.getWidth();
+					height += component.getHeight();
+				}
+				height += 30;
+				return new Dimension(width, height);
+			}
+		};
+		
 		leistenpanel.setBackgroundImage("gfx/allgemein/leisten_hg.png");
 		leistenpanel.setEnabled(false);
 		kabelvorschau = GUIContainer.getGUIContainer().getKabelvorschau();
@@ -115,9 +126,6 @@ public class GUISidebar implements Serializable {
 		kabel_neu.setText(Kabel.holeHardwareTyp());
 		kabel_neu.setVerticalTextPosition(SwingConstants.BOTTOM);
 		kabel_neu.setHorizontalTextPosition(SwingConstants.CENTER);
-		kabel_neu.setBounds(5, 5, kabel_neu.getIcon().getIconWidth(), kabel_neu
-				.getIcon().getIconHeight()
-				+ kabel_neu.getFontMetrics(kabel_neu.getFont()).getHeight());
 
 		kabel_neu.setVerticalTextPosition(SwingConstants.BOTTOM);
 		kabel_neu.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -165,24 +173,20 @@ public class GUISidebar implements Serializable {
 		bildDateien[4] = MODEM;
 		hardwareTypen[4] = Modem.holeHardwareTyp();
 
-		int hoehe = kabel_neu.getIcon().getIconHeight();
+		//kabel_neu.setBorder(javax.swing.BorderFactory.createLineBorder(Color.red));
 
 		for (int i = 0; i < bildDateien.length && i < hardwareTypen.length; i++) {
 			icon = new ImageIcon(getClass().getResource("/"+bildDateien[i]));
 			newLabel = new JSidebarButton(hardwareTypen[i], icon,
 					hardwareTypen[i]);
-			newLabel.setBounds(5, 5, icon.getIconWidth(), icon.getIconHeight());
-
+			//newLabel.setBorder(javax.swing.BorderFactory.createLineBorder(Color.red));
+			
 			/* Label wird liste und Leiste hinzugefuegt */
 			buttonList.add(newLabel);
 			leistenpanel.add(newLabel);
-			hoehe += newLabel.getHeight()
-					+ newLabel.getFontMetrics(newLabel.getFont()).getHeight()
-					+ newLabel.getFontMetrics(newLabel.getFont()).getDescent();
 		}
 
-		leistenpanel.setPreferredSize(new Dimension(127, hoehe));
-
+		//leistenpanel.setBorder(javax.swing.BorderFactory.createLineBorder(Color.red));
 	}
 
 	public JBackgroundPanel getLeistenpanel() {
@@ -190,13 +194,10 @@ public class GUISidebar implements Serializable {
 	}
 
 	public JSidebarButton aufButton(int x, int y) {
-		JSidebarButton tmpLbl = null;
 		JSidebarButton klickLabel = null;
-		ListIterator it = buttonList.listIterator();
 		y += GUIContainer.getGUIContainer().getSidebarScrollpane()
 				.getVerticalScrollBar().getValue();
-		while (it.hasNext()) {
-			tmpLbl = (JSidebarButton) it.next();
+		for (JSidebarButton tmpLbl : buttonList) {
 			if (x >= tmpLbl.getX() && y >= tmpLbl.getY()
 					&& x <= tmpLbl.getX() + tmpLbl.getWidth()
 					&& y <= tmpLbl.getY() + tmpLbl.getHeight()) {

@@ -55,6 +55,16 @@ public class Information implements Serializable {
 	private static Information information = null;
 
 	private static WinFolders winFolders = new WinFolders();
+	
+	private static boolean lowResolution = false;
+
+	public static boolean isLowResolution() {
+		return lowResolution;
+	}
+
+	public static void setLowResolution(boolean smallResolution) {
+		Information.lowResolution = smallResolution;
+	}
 
 	public boolean initOk = false;
 

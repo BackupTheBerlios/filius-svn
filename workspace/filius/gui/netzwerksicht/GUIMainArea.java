@@ -119,7 +119,7 @@ public class GUIMainArea extends JBackgroundPanel implements Serializable {
 			add(tempcable.getKabelpanel());
 		}
 
-		add(GUIContainer.getGUIContainer().getMarkierung());
+		add(GUIContainer.getMarkierung());
 
 		updateUI();
 	}

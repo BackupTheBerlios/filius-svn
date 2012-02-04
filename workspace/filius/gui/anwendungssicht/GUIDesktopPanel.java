@@ -94,7 +94,7 @@ public class GUIDesktopPanel extends JBackgroundPanel implements I18n, Observer 
 
 		this.add(this.desktopPane, BorderLayout.CENTER);
 
-		iconPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+		iconPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 10));
 		iconPanel.setBounds(0, 0, 640, 432);
 		iconPanel.setOpaque(false);
 

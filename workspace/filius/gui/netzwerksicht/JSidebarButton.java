@@ -28,6 +28,7 @@ package filius.gui.netzwerksicht;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -87,11 +88,15 @@ public class JSidebarButton extends JLabel implements Observer {
 		int width;
 
 		width = this.getFontMetrics(this.getFont()).stringWidth(this.getText());
-		width += 15;
+		width += 5;
 		if (this.getIcon() != null && this.getIcon().getIconWidth() > width)
 			width = this.getIcon().getIconWidth();
 
 		return width;
+	}
+	
+	public Dimension getPreferredSize() {
+		return new Dimension(getWidth(), getHeight());
 	}
 
 	public int getHeight() {
