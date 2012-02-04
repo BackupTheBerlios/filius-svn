@@ -655,7 +655,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				Verbindung connection = this.getConnectedCable(nic);
 				Port[] ports = connection.getAnschluesse();
 				for (Port port : ports) {
-					if (port.getNIC() != nic) {
+					if (port.getNIC() == null && port.getNIC() != nic) {
 						remoteAddress = port.getNIC().getIp();
 					}
 				}
