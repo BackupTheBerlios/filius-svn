@@ -2,8 +2,8 @@
   <head>
     <title>Standardseite</title>
   </head>
-  <body bgcolor="#ccccff">
-    <h2 align="center"> FILIUS - Webserver </h2>
+  <body bgcolor="#ccddff" style="font-family:Verdana; text-align:center;">
+    <h2> FILIUS - Webserver </h2>
 
     <p>Herzlich Willkommen auf dem Webserver der Anwendung FILIUS!</p>
 
