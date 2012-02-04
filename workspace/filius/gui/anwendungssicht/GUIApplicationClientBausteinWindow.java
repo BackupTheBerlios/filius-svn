@@ -106,7 +106,7 @@ public class GUIApplicationClientBausteinWindow extends GUIApplicationWindow {
 
 		hBox = Box.createHorizontalBox();
 		label = new JLabel(messages.getString("clientbaustein_msg1"));
-		label.setPreferredSize(new Dimension(100, label.getHeight()));
+		label.setPreferredSize(new Dimension(140, label.getHeight()));
 		hBox.add(label);
 
 		tfServerAdresse = new JTextField();
@@ -117,7 +117,7 @@ public class GUIApplicationClientBausteinWindow extends GUIApplicationWindow {
 
 		hBox = Box.createHorizontalBox();
 		label = new JLabel(messages.getString("clientbaustein_msg2"));
-		label.setPreferredSize(new Dimension(100, label.getHeight()));
+		label.setPreferredSize(new Dimension(140, label.getHeight()));
 		hBox.add(label);
 
 		tfServerPort = new JTextField();
