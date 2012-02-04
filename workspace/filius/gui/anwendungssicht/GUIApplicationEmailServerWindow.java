@@ -239,14 +239,14 @@ public class GUIApplicationEmailServerWindow extends GUIApplicationWindow {
 		benutzerBox.add(benutzernameLabel);
 		benutzerBox.add(Box.createHorizontalStrut(2));
 		benutzerBox.add(benutzernameField);
-		benutzerBox.setPreferredSize(new Dimension(250, 20));
+		benutzerBox.setPreferredSize(new Dimension(250, 30));
 
 		Box passwortBox = Box.createHorizontalBox();
 		passwortBox.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		passwortBox.add(passwortLabel);
 		passwortBox.add(Box.createHorizontalStrut(2));
 		passwortBox.add(passwortField);
-		passwortBox.setPreferredSize(new Dimension(250, 20));
+		passwortBox.setPreferredSize(new Dimension(250, 30));
 
 		Box addButtonBox = Box.createHorizontalBox();
 		addButton = new JButton(messages.getString("emailserver_msg19"));

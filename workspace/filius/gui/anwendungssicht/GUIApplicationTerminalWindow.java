@@ -103,6 +103,7 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 		inputField.setCaretColor(new Color(222,222,222));
 		inputField.setBorder(null);
 		inputField.setFont(new Font("Courier New",Font.PLAIN,11));
+		inputField.setOpaque(false);
 
 		inputField.addKeyListener(new KeyListener() {
             public void keyPressed(KeyEvent e) {

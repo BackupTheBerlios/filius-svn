@@ -451,7 +451,7 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
 		/* Box mit An Feld und dazugehörigem Label */
 		Box kleineBox = Box.createHorizontalBox();
 		JLabel anLabel = new JLabel(messages.getString("emailanwendung_msg14"));
-		anLabel.setPreferredSize(new Dimension(50, 20));
+		anLabel.setPreferredSize(new Dimension(50, 30));
 		kleineBox.add(anLabel);
 		kleineBox.add(Box.createHorizontalStrut(5));
 		final JTextField anField = new JTextField();
@@ -468,7 +468,7 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
 		/* Box mit CC Feld und dazugehörigem Label */
 		kleineBox = Box.createHorizontalBox();
 		JLabel ccLabel = new JLabel(messages.getString("emailanwendung_msg15"));
-		ccLabel.setPreferredSize(new Dimension(50, 20));
+		ccLabel.setPreferredSize(new Dimension(50, 30));
 		kleineBox.add(ccLabel);
 		kleineBox.add(Box.createHorizontalStrut(5));
 		final JTextField ccField = new JTextField();
@@ -486,7 +486,7 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
 		/* Box mit CC Feld und dazugehörigem Label */
 		kleineBox = Box.createHorizontalBox();
 		JLabel bccLabel = new JLabel(messages.getString("emailanwendung_msg16"));
-		bccLabel.setPreferredSize(new Dimension(50, 20));
+		bccLabel.setPreferredSize(new Dimension(50, 30));
 		kleineBox.add(bccLabel);
 		kleineBox.add(Box.createHorizontalStrut(5));
 		final JTextField bccField = new JTextField();
@@ -505,7 +505,7 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
 		kleineBox = Box.createHorizontalBox();
 		JLabel betreffLabel = new JLabel(messages
 				.getString("emailanwendung_msg17"));
-		betreffLabel.setPreferredSize(new Dimension(50, 20));
+		betreffLabel.setPreferredSize(new Dimension(50, 30));
 		kleineBox.add(betreffLabel);
 		kleineBox.add(Box.createHorizontalStrut(5));
 		final JTextField betreffszeile = new JTextField();
