@@ -218,7 +218,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		        .getSystemSoftware()).holeFirewall();
 
 		JFirewallDialog firewallDialog = new JFirewallDialog(firewall, JMainFrame.getJMainFrame());
-		firewallDialog.setBounds(100, 100, 520, 340);
+		firewallDialog.setBounds(100, 100, 620, 340);
 		firewallDialog.setName(messages.getString("jvermittlungsrechnerkonfiguration_msg1"));
 
 		firewallDialog.updateAttribute(); 	// muss hier passieren, damit beim
@@ -656,7 +656,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				Verbindung connection = this.getConnectedCable(nic);
 				Port[] ports = connection.getAnschluesse();
 				for (Port port : ports) {
-					if (port.getNIC() == null && port.getNIC() != nic) {
+					if (port.getNIC() != null && port.getNIC() != nic) {
 						remoteAddress = port.getNIC().getIp();
 					}
 				}
