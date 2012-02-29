@@ -28,6 +28,7 @@ package filius.rahmenprogramm;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ import javax.swing.JFileChooser;
 
 import filius.Main;
 import filius.gui.nachrichtensicht.LauscherDialog;
+import filius.hardware.Verbindung;
 
 /**
  * In dieser Klasse werden die Verwaltungs-Informationen des Rahmenprogramms
@@ -55,7 +57,7 @@ public class Information implements Serializable {
 	private static Information information = null;
 
 	private static WinFolders winFolders = new WinFolders();
-	
+
 	private static boolean lowResolution = false;
 
 	public static boolean isLowResolution() {
@@ -93,17 +95,15 @@ public class Information implements Serializable {
 	 * der Pfad schliesst mit dem Pfad-Trennzeichen (unter UNIX "/")
 	 */
 	public static String initArbeitsbereichPfad = getHomeDir() // System.getProperty("user.home")
-			+ System.getProperty("file.separator");
+	        + System.getProperty("file.separator");
 
 	// actually used working directory, i.e., path to be used after initial
 	// tests
 	private String arbeitsbereichPfad = getHomeDir() // System.getProperty("user.home")
-			+ System.getProperty("file.separator")
-			+ ".filius"
-			+ System.getProperty("file.separator");
+	        + System.getProperty("file.separator") + ".filius" + System.getProperty("file.separator");
 
 	/** Lokalisierungsobjekt fuer Standard-Spracheinstellung */
-	private Locale locale = new Locale("de", "DE");
+	private Locale locale = null;
 
 	// private Locale locale = new Locale("en", "GB");
 
@@ -115,8 +115,7 @@ public class Information implements Serializable {
 				return path;
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.err
-						.println("EXCEPTION: error on using Java native access");
+				System.err.println("EXCEPTION: error on using Java native access");
 				return System.getProperty("user.home");
 			}
 		} else {
@@ -137,8 +136,7 @@ public class Information implements Serializable {
 		java.io.File testFile = null;
 
 		do {
-			directoryPath = currPath + ".filius"
-					+ System.getProperty("file.separator");
+			directoryPath = currPath + ".filius" + System.getProperty("file.separator");
 			try {
 				testFile = new java.io.File(directoryPath);
 				//
@@ -148,33 +146,29 @@ public class Information implements Serializable {
 				testFile = new java.io.File(directoryPath + randomString);
 				testFile.createNewFile();
 				if (!testFile.delete()) {
-					throw new Exception(
-							"EXCEPTION: Error on deleting test file in write-check");
+					throw new Exception("EXCEPTION: Error on deleting test file in write-check");
 				}
 
 				nowrite = false;
 			} catch (Exception e) {
 				// open dialog to choose another directory
-				javax.swing.JOptionPane
-						.showMessageDialog(
-								null,
-								"Fehler: Verzeichnis ist nicht schreibbar. Filius benötigt aber Schreibrechte.\n"
-										+ "Bitte wählen Sie ein Verzeichnis, für das Sie Schreibrechte besitzen.\n\n"
-										+ "Error: Directory is not writeable. But Filius needs write permissions.\n"
-										+ "Please choose a directory where you have write permissions.",
-								"Fehler / Error",
-								javax.swing.JOptionPane.ERROR_MESSAGE);
+				javax.swing.JOptionPane.showMessageDialog(null,
+				        "Fehler: Verzeichnis ist nicht schreibbar. Filius benötigt aber Schreibrechte.\n"
+				                + "Bitte wählen Sie ein Verzeichnis, für das Sie Schreibrechte besitzen.\n\n"
+				                + "Error: Directory is not writeable. But Filius needs write permissions.\n"
+				                + "Please choose a directory where you have write permissions.", "Fehler / Error",
+				        javax.swing.JOptionPane.ERROR_MESSAGE);
 				JFileChooser fc = new JFileChooser();
 				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				if (fc.showOpenDialog(new java.awt.Frame()) == JFileChooser.APPROVE_OPTION) {
-					currPath = fc.getSelectedFile().getAbsolutePath()
-							+ System.getProperty("file.separator");
+					currPath = fc.getSelectedFile().getAbsolutePath() + System.getProperty("file.separator");
 				} else
 					return false;
 			}
 		} while (nowrite);
-		arbeitsbereichPfad = currPath + ".filius"
-				+ System.getProperty("file.separator"); // set correct path
+		arbeitsbereichPfad = currPath + ".filius" + System.getProperty("file.separator"); // set
+																						  // correct
+																						  // path
 		return true;
 	}
 
@@ -227,8 +221,7 @@ public class Information implements Serializable {
 	public ResourceBundle holeResourceBundle() {
 		ResourceBundle bundle;
 
-		bundle = ResourceBundle.getBundle("filius.messages.MessagesBundle",
-				locale);
+		bundle = ResourceBundle.getBundle("filius.messages.MessagesBundle", locale);
 
 		return bundle;
 	}
@@ -274,55 +267,44 @@ public class Information implements Serializable {
 	 * werden</li>
 	 * </ul>
 	 */
-	private void initialisiereVerzeichnisse() throws FileNotFoundException,
-			IOException {
+	private void initialisiereVerzeichnisse() throws FileNotFoundException, IOException {
 		String pfad;
 
 		pfad = getArbeitsbereichPfad();
 		if (!(new java.io.File(pfad)).exists())
 			if (!(new java.io.File(pfad)).mkdirs())
-				Main.debug.println("ERROR (" + this.hashCode() + ") "
-						+ getClass() + "\n\t" + pfad
-						+ " konnte nicht erzeugt werden");
+				Main.debug.println("ERROR (" + this.hashCode() + ") " + getClass() + "\n\t" + pfad
+				        + " konnte nicht erzeugt werden");
 
 		pfad = getTempPfad();
 		if (!(new java.io.File(pfad)).exists())
 			if (!(new java.io.File(pfad)).mkdirs())
-				Main.debug.println("ERROR (" + this.hashCode() + ") "
-						+ getClass() + "\n\t" + pfad
-						+ " konnte nicht erzeugt werden");
+				Main.debug.println("ERROR (" + this.hashCode() + ") " + getClass() + "\n\t" + pfad
+				        + " konnte nicht erzeugt werden");
 
 		pfad = getAnwendungenPfad();
 		if (!(new java.io.File(pfad)).exists())
 			if (!(new java.io.File(pfad)).mkdirs())
-				Main.debug.println("ERROR (" + this.hashCode() + ") "
-						+ getClass() + "\n\t" + pfad
-						+ " konnte nicht erzeugt werden");
+				Main.debug.println("ERROR (" + this.hashCode() + ") " + getClass() + "\n\t" + pfad
+				        + " konnte nicht erzeugt werden");
 
-		pfad = getAnwendungenPfad() + "filius"
-				+ System.getProperty("file.separator") + "software"
-				+ System.getProperty("file.separator") + "clientserver"
-				+ System.getProperty("file.separator");
+		pfad = getAnwendungenPfad() + "filius" + System.getProperty("file.separator") + "software"
+		        + System.getProperty("file.separator") + "clientserver" + System.getProperty("file.separator");
 		if (!(new java.io.File(pfad)).exists())
 			if (!(new java.io.File(pfad)).mkdirs())
-				Main.debug.println("ERROR (" + this.hashCode() + ") "
-						+ getClass() + "\n\t" + pfad
-						+ " konnte nicht erzeugt werden");
+				Main.debug.println("ERROR (" + this.hashCode() + ") " + getClass() + "\n\t" + pfad
+				        + " konnte nicht erzeugt werden");
 
-		pfad = getAnwendungenPfad() + "filius"
-				+ System.getProperty("file.separator") + "gui"
-				+ System.getProperty("file.separator") + "anwendungssicht"
-				+ System.getProperty("file.separator");
+		pfad = getAnwendungenPfad() + "filius" + System.getProperty("file.separator") + "gui"
+		        + System.getProperty("file.separator") + "anwendungssicht" + System.getProperty("file.separator");
 		if (!(new java.io.File(pfad)).exists())
 			if (!(new java.io.File(pfad)).mkdirs())
-				Main.debug.println("ERROR (" + this.hashCode() + ") "
-						+ getClass() + "\n\t" + pfad
-						+ " konnte nicht erzeugt werden");
+				Main.debug.println("ERROR (" + this.hashCode() + ") " + getClass() + "\n\t" + pfad
+				        + " konnte nicht erzeugt werden");
 
 		pfad = getAnwendungenPfad() + "EigeneAnwendungen.txt";
 		if (!(new java.io.File(pfad)).exists())
-			(new java.io.File(getAnwendungenPfad() + "EigeneAnwendungen.txt"))
-					.createNewFile();
+			(new java.io.File(getAnwendungenPfad() + "EigeneAnwendungen.txt")).createNewFile();
 	}
 
 	/**
@@ -332,8 +314,7 @@ public class Information implements Serializable {
 	 * @return
 	 * @throws IOException
 	 */
-	public LinkedList<HashMap<String, String>> ladeProgrammListe()
-			throws IOException {
+	public LinkedList<HashMap<String, String>> ladeProgrammListe() throws IOException {
 		LinkedList<HashMap<String, String>> tmpList;
 		RandomAccessFile desktopFile;
 
@@ -359,15 +340,14 @@ public class Information implements Serializable {
 		return tmpList;
 	}
 
-	public LinkedList<HashMap<String, String>> ladePersoenlicheProgrammListe()
-			throws IOException {
+	public LinkedList<HashMap<String, String>> ladePersoenlicheProgrammListe() throws IOException {
 		LinkedList<HashMap<String, String>> tmpList;
 		RandomAccessFile desktopFile = null;
 
 		tmpList = new LinkedList<HashMap<String, String>>();
 		try {
-			desktopFile = new RandomAccessFile(Information.getInformation()
-					.getAnwendungenPfad() + "EigeneAnwendungen.txt", "r");
+			desktopFile = new RandomAccessFile(Information.getInformation().getAnwendungenPfad()
+			        + "EigeneAnwendungen.txt", "r");
 			for (String line; (line = desktopFile.readLine()) != null;) {
 				HashMap<String, String> tmpMap = new HashMap<String, String>();
 				if (!line.trim().equals("")) {
@@ -418,20 +398,17 @@ public class Information implements Serializable {
 			return programmPfad;
 		} else {
 			String str = System.getProperty("java.class.path");
-			programmPfad = System.getProperty("user.dir")
-					+ System.getProperty("file.separator");
+			programmPfad = System.getProperty("user.dir") + System.getProperty("file.separator");
 			if (str.indexOf("filius.jar") >= 0) { // run from jar file
 				if ((new File(str)).isAbsolute())
 					programmPfad = ""; // in case of absolute path, delete
-										// "user.dir" entry
+					                   // "user.dir" entry
 				// da Java beim Aufruf verschiedene Separatoren unterstützt,
 				// wird hier getrennt abgefragt...
 				if (str.indexOf("/") >= 0) {
-					programmPfad += str.substring(0, str.lastIndexOf("/"))
-							+ System.getProperty("file.separator");
+					programmPfad += str.substring(0, str.lastIndexOf("/")) + System.getProperty("file.separator");
 				} else if (str.indexOf("\\") >= 0) {
-					programmPfad += str.substring(0, str.lastIndexOf("\\"))
-							+ System.getProperty("file.separator");
+					programmPfad += str.substring(0, str.lastIndexOf("\\")) + System.getProperty("file.separator");
 				}
 			}
 			return programmPfad;
@@ -445,13 +422,13 @@ public class Information implements Serializable {
 		// Windows system (with drive letters!):
 		if (File.separator.equals("\\")) {
 			if (progPath.substring(1, 3).equals(workPath.substring(1, 3))) { // directories
-																				// on
-																				// same
-																				// drive
-																				// -->
-																				// remove
-																				// drive
-																				// letter
+				                                                             // on
+				                                                             // same
+				                                                             // drive
+				                                                             // -->
+				                                                             // remove
+				                                                             // drive
+				                                                             // letter
 				progPath = progPath.substring(2);
 				workPath = workPath.substring(2);
 			} else { // different drives; --> return absolute path
@@ -489,7 +466,7 @@ public class Information implements Serializable {
 		while (!finished) {
 			slashIdx = workPath.indexOf(File.separator);
 			if (slashIdx >= 0) { // subdirectories left to be stepped up via
-									// "../" strings
+				                 // "../" strings
 				relativePath += ".." + File.separator;
 				if (workPath.length() <= slashIdx + 2)
 					workPath = "";
@@ -526,17 +503,16 @@ public class Information implements Serializable {
 			while (tokenizer.hasMoreTokens()) {
 				token = tokenizer.nextToken().trim();
 				if (!token.isEmpty())
-					arbeitsbereichPfad += token
-							+ System.getProperty("file.separator");
+					arbeitsbereichPfad += token + System.getProperty("file.separator");
 			}
 		} else
 			arbeitsbereichPfad = otherWD + System.getProperty("file.separator"); // no
-																					// separators,
-																					// but
-																					// possibly
-																					// still
-																					// legitimate
-																					// String
+			                                                                     // separators,
+			                                                                     // but
+			                                                                     // possibly
+			                                                                     // still
+			                                                                     // legitimate
+			                                                                     // String
 
 		arbeitsbereichPfad += ".filius" + System.getProperty("file.separator");
 	}
@@ -546,8 +522,7 @@ public class Information implements Serializable {
 	 * werden
 	 */
 	public String getTempPfad() {
-		return getArbeitsbereichPfad() + "temp"
-				+ System.getProperty("file.separator");
+		return getArbeitsbereichPfad() + "temp" + System.getProperty("file.separator");
 	}
 
 	/**
@@ -556,8 +531,7 @@ public class Information implements Serializable {
 	 * gui/anwendungssicht/
 	 */
 	public String getAnwendungenPfad() {
-		return getArbeitsbereichPfad() + "anwendungen"
-				+ System.getProperty("file.separator");
+		return getArbeitsbereichPfad() + "anwendungen" + System.getProperty("file.separator");
 	}
 
 	/**
@@ -575,8 +549,7 @@ public class Information implements Serializable {
 			if (mac[i].length() == 1)
 				mac[i] = "0" + mac[i];
 		}
-		neueMac = mac[0] + ":" + mac[1] + ":" + mac[2] + ":" + mac[3] + ":"
-				+ mac[4] + ":" + mac[5];
+		neueMac = mac[0] + ":" + mac[1] + ":" + mac[2] + ":" + mac[3] + ":" + mac[4] + ":" + mac[5];
 
 		if (macPruefen(neueMac)) {
 			return neueMac;
@@ -612,5 +585,51 @@ public class Information implements Serializable {
 
 	public void setMaxVermittlungsStellen(int maxVermittlungsStellen) {
 		this.maxVermittlungsStellen = maxVermittlungsStellen;
+	}
+
+	public void loadIni() throws IOException {
+		StringBuffer pfad = new StringBuffer();
+		;
+		pfad.append(getProgrammPfad());
+		pfad.append("config" + File.separator + "filius.ini");
+
+		File tmpFile = new File(pfad.toString());
+		if (tmpFile.exists()) {
+			RandomAccessFile iniFile = null;
+
+			try {
+				iniFile = new RandomAccessFile(tmpFile.getAbsolutePath(), "r");
+				for (String line; (line = iniFile.readLine()) != null;) {
+					if (!line.trim().equals("") && !line.trim().startsWith("#")) {
+						StringTokenizer st = new StringTokenizer(line, "=");
+
+						if (st.hasMoreTokens()) {
+							String configKey = st.nextToken().trim();
+							if (st.hasMoreTokens()) {
+								String configValue = st.nextToken();
+								if (configKey.equalsIgnoreCase("locale")) {
+									String language = configValue.substring(0, configValue.indexOf("_"));
+									String country = configValue.substring(configValue.indexOf("_") + 1);
+									this.setLocale(new Locale(language, country));
+								} else if (configKey.equalsIgnoreCase("rtt")) {
+									if (Verbindung.getRTTfactor() == 1) {
+										Verbindung.setRTTfactor(Integer.parseInt(configValue));
+									}
+								}
+								else if(configKey.equalsIgnoreCase("native-look-n-feel")) {
+									if (configValue.trim().equals("1")) {
+										Main.activateNativeLookAndFeel();
+									}
+								}
+							}
+
+						}
+					}
+				}
+			} finally {
+				if (iniFile != null)
+					iniFile.close();
+			}
+		}
 	}
 }
