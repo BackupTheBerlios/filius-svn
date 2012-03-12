@@ -141,15 +141,15 @@ public class DNSServer extends UDPServerAnwendung {
 		ResourceRecord rrec = null;
 		int countA = 0;
 		while (it.hasNext()) { // iterating whole list is necessary, since MX
-							   // and A records are mixed in the records list!
-							   // :-(
+			                   // and A records are mixed in the records list!
+			                   // :-(
 			rrec = it.next();
 			if (rrec.getType().equals(type)) {
 				countA++;
 			}
 			if (countA - 1 == recordIdx) { // found A entry with (filtered)
-										   // index recordIdx
-			// Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+", changeSingleEntry:  aktuell: countA="+countA+", rrec="+rrec);
+				                           // index recordIdx
+				// Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+", changeSingleEntry:  aktuell: countA="+countA+", rrec="+rrec);
 				if (partIdx == 0) { // change URL
 					rrec.setDomainname(newValue);
 				} else if (partIdx == 3) { // change IP
@@ -191,14 +191,15 @@ public class DNSServer extends UDPServerAnwendung {
 		return null;
 	}
 
-	public ResourceRecord holeRecord(String domainname) {
+	public ResourceRecord holeNSRecord(String domainname) {
 		String domain;
 		String[] parts = domainname.split("\\.");
 
 		for (int i = 0; i < parts.length; i++) {
 			domain = this.implodeDomain(parts, i);
 			for (ResourceRecord rr : records) {
-				if (rr.getDomainname().equalsIgnoreCase(domain)) {
+				if (rr.getDomainname().equalsIgnoreCase(domain) 
+						&& rr.getType().equals(ResourceRecord.NAME_SERVER)) {
 					return rr;
 				}
 			}

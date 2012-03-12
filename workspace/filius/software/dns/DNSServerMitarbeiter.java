@@ -51,7 +51,7 @@ public class DNSServerMitarbeiter extends ServerMitarbeiter {
 
 			record = ((DNSServer)server).holeRecord(query.holeDomainname(), query.holeTyp());
 			if (record == null) {
-				record = ((DNSServer)server).holeRecord(query.holeDomainname());
+				record = ((DNSServer)server).holeNSRecord(query.holeDomainname());
 			}
 			
 			if (record != null) {
