@@ -104,6 +104,10 @@ public class Resolver extends ClientAnwendung {
 			if (socket == null) {
 				try {
 					socket = new UDPSocket(getSystemSoftware(), dnsServer, 53);
+					
+					if (!domainname.matches(".*\\.$")) {
+						domainname = domainname + ".";
+					}
 
 					anfrage = new DNSNachricht(DNSNachricht.QUERY);
 					anfrage.hinzuQuery(domainname + " " + typ + " IN");
@@ -156,6 +160,10 @@ public class Resolver extends ClientAnwendung {
 			                        // then return its content without leading zeros
 			return adresse;
 		}
+		
+		if (!domainname.matches(".*\\.$")) {
+			domainname += ".";
+		}
 
 		while (dnsServer != null) {
 			antwort = holeResourceRecord(ResourceRecord.ADDRESS, domainname,
@@ -181,6 +189,9 @@ public class Resolver extends ClientAnwendung {
 
 			dnsServerDomain = durchsucheRecordListe(ResourceRecord.NAME_SERVER,
 					antwort.holeAntwortResourceRecords());
+			if (!dnsServerDomain.matches(".*\\.$")) {
+				dnsServerDomain += ".";
+			}
 			dnsServer = durchsucheRecordListe(ResourceRecord.ADDRESS,
 					dnsServerDomain, antwort.holeAntwortResourceRecords());
 		}
@@ -193,6 +204,10 @@ public class Resolver extends ClientAnwendung {
 		DNSNachricht antwort=null;
 		String mailserver=null, adresse, dnsServerDomain;
 		String dnsServer = getSystemSoftware().getDNSServer();
+		
+		if (!domainname.matches(".*\\.$")) {
+			domainname += ".";
+		}
 
 		while (dnsServer != null && mailserver == null) {
 			antwort = holeResourceRecord(ResourceRecord.MAIL_EXCHANGE,
