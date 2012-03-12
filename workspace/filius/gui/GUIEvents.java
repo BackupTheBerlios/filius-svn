@@ -383,7 +383,9 @@ public class GUIEvents implements I18n {
 			}
 			else {
 				GUIKabelItem cableItem = clickedCable(e);
-				if((kabelPanelVorschau==null || !kabelPanelVorschau.isVisible()) && cableItem != null) {
+				if((kabelPanelVorschau==null || !kabelPanelVorschau.isVisible()) 
+						&& GUIContainer.getGUIContainer().getActiveSite() == GUIMainMenu.MODUS_ENTWURF
+						&& cableItem != null) {
 					contextMenuCable(cableItem,e);
 				}
 			}
