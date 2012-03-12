@@ -71,6 +71,8 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	@Override
 	protected void verarbeiteNachricht(String nachricht) {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), verarbeiteNachricht("+nachricht+")");
+		
+		emailServer.benachrichtigeBeobachter(socket.holeZielIPAdresse()+"< "+nachricht);
 		// ist der Befehl fuer den POP3Server (USER, STAT, ...)
 		String befehl = "";
 		// ist das Array, das die einzelnen Elemente der Clientdaten aufnimmt
@@ -82,17 +84,7 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 
 		// das erste Element ist immer der Befehl, bspw. DELE, RETR, STAT...
 		befehl = incoming[0];
-		//Main.debug
-				//.println("========================================================================================================");
-		//Main.debug
-				//.println("================================POP3Komm (run): NACHRICHT lautet: "
-						//+ nachricht + " ========================");
-		//Main.debug
-				//.println("================================POP3Komm (run): BEFEHL lautet: "
-						//+ befehl + " ==============================");
-		//Main.debug
-				//.println("========================================================================================================");
-
+		
 		// es folgt die Abfrage, welcher Befehl angekommen ist
 		if (befehl.equalsIgnoreCase("USER")) {
 			String antwort = "";
@@ -114,19 +106,7 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 				antwort = pass(incoming[1]);
 				password = incoming[1];
 				aktivesKonto = emailServer.sucheKonto(benutzername, password);
-				//Main.debug
-						//.println("===========================================================================");
-				//Main.debug
-						//.println("===========================================================================");
-				//Main.debug
-						//.println("==========================POP3Server arbeitet nun mit dem Konto: ==========");
-				//Main.debug
-						//.println("============Benutzername: "
-								//+ aktivesKonto.getBenutzername()
-								//+ " PW: "
-								//+ aktivesKonto.getPasswort()
-								//+ "===============================================================");
-
+				
 			} else {
 				antwort = "-ERR Please enter PASS";
 			}
@@ -432,7 +412,7 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 		String ergebnis = "";
 		if (isTransactionState()) {
 			try {
-				for (ListIterator iter = uebergebenesAktivesKonto
+				for (ListIterator<Email> iter = uebergebenesAktivesKonto
 						.getNachrichten().listIterator(); iter.hasNext();) {
 					Email email = (Email) iter.next();
 					email.setDelete(false);
@@ -464,7 +444,6 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	public String quit(EmailKonto uebergebenesAktivesKonto) {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), quit("+uebergebenesAktivesKonto+")");
 		String ergebnis = "";
-		int i;
 		if (isTransactionState()) {
 			try {
 				for(int idx=uebergebenesAktivesKonto.getNachrichten().size()-1; idx>=0; idx--) {
@@ -526,7 +505,7 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	 */
 	public boolean sucheBenutzer(String benutzernamen) {
 		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), sucheBenutzer("+benutzernamen+")");
-			for (ListIterator iter = emailServer.getListeBenutzerkonten()
+			for (ListIterator<EmailKonto> iter = emailServer.getListeBenutzerkonten()
 					.listIterator(); iter.hasNext();) {
 				EmailKonto konto = (EmailKonto) iter.next();
 				if ((konto.getBenutzername().equalsIgnoreCase(benutzernamen))) {
@@ -761,6 +740,7 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 			}
 		} catch (Exception e) {
 		}
+		emailServer.benachrichtigeBeobachter(socket.holeZielIPAdresse()+"> "+daten);
 		sendeNachricht(daten);
 	}
 

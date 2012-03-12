@@ -410,6 +410,5 @@ public class GUIApplicationEmailServerWindow extends GUIApplicationWindow {
 
 		Main.debug
 				.println("GUIApplicationWebServerWindow: update() aufgerufen.");
-		logArea.updateUI();
 	}
 }
