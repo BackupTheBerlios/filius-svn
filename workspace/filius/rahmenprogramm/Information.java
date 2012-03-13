@@ -28,7 +28,6 @@ package filius.rahmenprogramm;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -167,8 +166,8 @@ public class Information implements Serializable {
 			}
 		} while (nowrite);
 		arbeitsbereichPfad = currPath + ".filius" + System.getProperty("file.separator"); // set
-																						  // correct
-																						  // path
+		                                                                                  // correct
+		                                                                                  // path
 		return true;
 	}
 
@@ -210,7 +209,7 @@ public class Information implements Serializable {
 
 	/** aktuelle Programmversion */
 	public static String getVersion() {
-		return "1.4.3.1 (14. November 2011)";
+		return "1.4.4 (13. März 2012)";
 	}
 
 	/**
@@ -615,8 +614,7 @@ public class Information implements Serializable {
 									if (Verbindung.getRTTfactor() == 1) {
 										Verbindung.setRTTfactor(Integer.parseInt(configValue));
 									}
-								}
-								else if(configKey.equalsIgnoreCase("native-look-n-feel")) {
+								} else if (configKey.equalsIgnoreCase("native-look-n-feel")) {
 									if (configValue.trim().equals("1")) {
 										Main.activateNativeLookAndFeel();
 									}

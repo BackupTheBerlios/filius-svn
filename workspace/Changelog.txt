@@ -1,6 +1,27 @@
 FILIUS Changelog
 ================
 
+*filius-1.4.4 (13. Mar 2012)
+----------------------------
+- Domain Name System: Jetzt kann auch ein Resource Record fuer einen 
+  Wurzel-Name-Server konfiguriert werden.
+- Web-Server: Ueberarbeitung des Designs der Vorgabe-Webseite
+- Kleinere Anpassungen der Darstellungen (u.a. Umbenennung des
+  "Echo-Client" zu "Einfacher Client")
+- Programmkonfiguration: 
+  - Grundlegende Einstellungen zur Anzeige und Ausfuehrung koennen 
+    jetzt als Aufrufparameter oder mit einer Ini-Datei konfiguriert 
+    werden.
+  - RTT kann jetzt nicht mehr ueber Menue sondern nur noch als
+    Aufrufparameter bzw. per Ini-Datei geaendert werden.
+- Fehlerbehebungen: 
+  - Nachrichten des POP3-Servers werden im Log-Fenster angezeigt
+  - Flag fuer manuelle Einstellungen des DHCP-Servers wird persistiert
+  - Schnittstellenverwaltung der Vermittlungsrechner bei angeschlossenem 
+    Switch fuehrte zum Programmabbruch
+  - Anzeige des Kontextmenue fuer Kabel im Aktionsmodus wurde nicht
+    unterdrueckt
+
 *filius-1.4.3 (10. Nov 2011)
 ----------------------------
 - Domain Name System: Das DNS erlaubt jetzt rekursive Abfragen zur Aufloesung
