@@ -25,6 +25,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>src/main/assembly/info</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>src/main/assembly/config</directory>
             <outputDirectory>/config</outputDirectory>
             <includes>
