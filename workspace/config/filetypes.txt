@@ -1,3 +1,0 @@
-text;txt,cfg,bat,sh,html,htm,ini,php,xml
-sound;mp3,mp2,wav
-image;jpeg,jpg,bmp,tiff,png
