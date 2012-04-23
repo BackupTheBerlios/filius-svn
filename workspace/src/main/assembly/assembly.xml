@@ -18,6 +18,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>target</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>Filius.exe</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>src/main/assembly/scripts</directory>
             <outputDirectory></outputDirectory>
             <includes>
