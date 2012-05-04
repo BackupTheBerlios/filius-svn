@@ -25,14 +25,18 @@
  */
 package filius.rahmenprogramm;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
@@ -58,6 +62,8 @@ public class Information implements Serializable {
 	private static WinFolders winFolders = new WinFolders();
 
 	private static boolean lowResolution = false;
+
+	private static String version = null;
 
 	public static boolean isLowResolution() {
 		return lowResolution;
@@ -209,7 +215,21 @@ public class Information implements Serializable {
 
 	/** aktuelle Programmversion */
 	public static String getVersion() {
-		return "1.4.4 (13. März 2012)";
+		if (version == null) {
+			Properties properties = new Properties();
+			try {
+				InputStream in = Information.class.getClassLoader().getResourceAsStream("application.properties");
+				properties.load(in);
+				in.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			version = properties.getProperty("application.version") + " ("
+			        + properties.getProperty("application.buildDate") + ")";
+		}
+		return version;
 	}
 
 	/**
