@@ -7,6 +7,7 @@
 	<version>1.0-SNAPSHOT</version>
 	<properties>
 		<buildDate>11.03.2012</buildDate>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<packaging>jar</packaging>
 
