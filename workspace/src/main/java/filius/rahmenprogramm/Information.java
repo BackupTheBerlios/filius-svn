@@ -397,7 +397,7 @@ public class Information implements Serializable {
 		File tmpFile;
 
 		pfad.append(getProgrammPfad());
-		pfad.append("config" + fs + "anwendungen" + fs + "Desktop");
+		pfad.append("config" + fs + "Desktop");
 
 		tmpFile = new File(pfad.toString() + "_" + locale.toString() + ".txt");
 		if (tmpFile.exists()) {

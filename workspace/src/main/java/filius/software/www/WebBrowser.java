@@ -210,7 +210,7 @@ public class WebBrowser extends ClientAnwendung implements I18n {
 		}
 		else {
 			dateipfad = Information.getInformation().getProgrammPfad()
-					+ "config/http_fehler.txt";
+					+ "tmpl/http_fehler.txt";
 			try {
 				quelltext = einlesenTextdatei(dateipfad);
 			}

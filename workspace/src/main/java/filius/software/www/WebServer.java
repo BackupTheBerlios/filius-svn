@@ -136,7 +136,7 @@ public class WebServer extends TCPServerAnwendung {
 			if (!dateisystem.dateiVorhanden(verzeichnis, "index.html")) {
 
 				erzeugeIndexDatei(Information.getInformation().getProgrammPfad()
-						+ "config/webserver_index.txt");
+						+ "tmpl/webserver_index.txt");
 
 				// this was used for externally stored file... no longer working
 //				erzeugeDatei("splashscreen-mini", "png", Base64

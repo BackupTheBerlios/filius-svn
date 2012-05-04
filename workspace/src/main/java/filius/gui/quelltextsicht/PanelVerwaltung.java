@@ -138,7 +138,7 @@ public class PanelVerwaltung extends JPanel implements I18n {
 				+ "filius"+fs+"software"+fs+"clientserver"+fs+""
 				+ klasse + ".java";
 				quelltext = ladeQuelltext(Information.getInformation().getProgrammPfad()
-						+ "config"+fs+"quelltext_vorlagen"+fs+"client.txt");
+						+ "tmpl"+fs+"quelltext_vorlagen"+fs+"client.txt");
 				quelltext = quelltext.replaceAll("ClientBaustein", klasse);
 				speicherQuelltext(quelltext, dateien[0]);
 
@@ -147,7 +147,7 @@ public class PanelVerwaltung extends JPanel implements I18n {
 				+ "filius"+fs+"gui"+fs+"anwendungssicht"+fs+"GUIApplication"
 				+ klasse + "Window.java";
 				quelltext = ladeQuelltext(Information.getInformation().getProgrammPfad()
-						+ "config"+fs+"quelltext_vorlagen"+fs+"client_gui.txt");
+						+ "tmpl"+fs+"quelltext_vorlagen"+fs+"client_gui.txt");
 				quelltext = quelltext.replaceAll("ClientBaustein", klasse);
 				speicherQuelltext(quelltext, dateien[1]);
 			}
@@ -159,7 +159,7 @@ public class PanelVerwaltung extends JPanel implements I18n {
 				+ "filius"+fs+"software"+fs+"clientserver"+fs+""
 				+ klasse + "Mitarbeiter.java";
 				quelltext = ladeQuelltext(Information.getInformation().getProgrammPfad()
-						+ "config"+fs+"quelltext_vorlagen"+fs+"server_mitarbeiter.txt");
+						+ "tmpl"+fs+"quelltext_vorlagen"+fs+"server_mitarbeiter.txt");
 				quelltext = quelltext.replaceAll("ServerBaustein", klasse);
 				speicherQuelltext(quelltext, dateien[0]);
 
@@ -168,7 +168,7 @@ public class PanelVerwaltung extends JPanel implements I18n {
 				+ "filius"+fs+"software"+fs+"clientserver"+fs+""
 				+ klasse + ".java";
 				quelltext = ladeQuelltext(Information.getInformation().getProgrammPfad()
-						+ "config"+fs+"quelltext_vorlagen"+fs+"server.txt");
+						+ "tmpl"+fs+"quelltext_vorlagen"+fs+"server.txt");
 				quelltext = quelltext.replaceAll("ServerBaustein", klasse);
 				speicherQuelltext(quelltext, dateien[1]);
 
@@ -177,7 +177,7 @@ public class PanelVerwaltung extends JPanel implements I18n {
 				+ "filius"+fs+"gui"+fs+"anwendungssicht"+fs+"GUIApplication"
 				+ klasse + "Window.java";
 				quelltext = ladeQuelltext(Information.getInformation().getProgrammPfad()
-						+ "config"+fs+"quelltext_vorlagen"+fs+"server_gui.txt");
+						+ "tmpl"+fs+"quelltext_vorlagen"+fs+"server_gui.txt");
 				quelltext = quelltext.replaceAll("ServerBaustein", klasse);
 				speicherQuelltext(quelltext, dateien[2]);
 			}

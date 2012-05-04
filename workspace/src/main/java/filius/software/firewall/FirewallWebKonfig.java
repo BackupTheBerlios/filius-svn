@@ -298,7 +298,7 @@ public class FirewallWebKonfig extends WebServerPlugIn{
 
 			try{
 
-			html = textDateiEinlesen("config/firewall_konfig_webseite_"+Information.getInformation().getLocale().toString()+".txt");
+			html = textDateiEinlesen("tmpl/firewall_konfig_webseite_"+Information.getInformation().getLocale().toString()+".txt");
 
 			html = html.replaceAll(":action_pfad:", getPfad());
 

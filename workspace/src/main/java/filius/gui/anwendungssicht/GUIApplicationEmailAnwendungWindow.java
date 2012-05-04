@@ -230,7 +230,7 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
 		emailVorschau.setEditable(false);
 		emailVorschau
 				.setText("<html><head><base href=\"file:bilder\"></head><body>"
-						+ "<img src=\"config/email_icon.png\" align=\"top\">"
+						+ "<img src=\"img/email_icon.png\" align=\"top\">"
 						+ "<font face=arial>"
 						+ messages.getString("emailanwendung_msg4")
 						+ "!<br /></font>" + "</body></html>");

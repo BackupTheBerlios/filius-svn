@@ -100,7 +100,7 @@ public class VermittlungsrechnerBetriebssystem extends
 		webkonfig.setPfad("konfig.html");
 		server.setzePlugIn(webkonfig);
 
-		server.erzeugeIndexDatei(Information.getInformation().getProgrammPfad() + "config/firewall_index_"+Information.getInformation().getLocale()+".txt");
+		server.erzeugeIndexDatei(Information.getInformation().getProgrammPfad() + "tmpl/firewall_index_"+Information.getInformation().getLocale()+".txt");
 	}
 
 	/**
