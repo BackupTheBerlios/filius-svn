@@ -23,15 +23,6 @@
  ** You should have received a copy of the GNU General Public License
  ** along with Filius. If not, see <http://www.gnu.org/licenses/>.
  */
-/*
- * Main.java
- *
- * Created on 28. April 2006, 18:30
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package filius;
 
 import java.awt.Rectangle;
@@ -60,6 +51,7 @@ import filius.rahmenprogramm.I18n;
 import filius.rahmenprogramm.Information;
 import filius.rahmenprogramm.SzenarioVerwaltung;
 import filius.rahmenprogramm.TeeOutputStream;
+import filius.remote.RMIManager;
 
 /**
  * In dieser Klasse wird die Anwendung gestartet und beendet. Das wird in den
@@ -296,10 +288,10 @@ public class Main implements I18n {
 			for (int i = 0; i < args.length; i++) {
 				argsString += args[i] + " ";
 				// Protokollieren in Datei?
-				if (args[i].startsWith("-l")) {
+				if (args[i].equals("-l")) {
 					log = true;
 				}
-				if (args[i].startsWith("-wd")) {
+				if (args[i].equals("-wd")) {
 					if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
 						newWD = args[++i].trim();
 						currWD = newWD; // set working directory (not yet set in
@@ -315,20 +307,20 @@ public class Main implements I18n {
 						System.exit(1);
 					}
 				}
-				if (args[i].startsWith("-n")) {
+				if (args[i].equals("-n")) {
 					nativeLookAndFeel = true;
 				}
-				if (args[i].startsWith("-h")) {
+				if (args[i].equals("-h")) {
 					showUsageInformation();
 					System.exit(0);
 				}
-				if (args[i].startsWith("-s")) {
+				if (args[i].equals("-s")) {
 					Information.setLowResolution(true);
 				}
-				if (args[i].startsWith("-v")) {
+				if (args[i].equals("-v")) {
 					verbose = true;
 				}
-				if (args[i].startsWith("-r")) {
+				if (args[i].equals("-r")) {
 					if (args.length > i + 1 && !args[i + 1].startsWith("-")) {
 						try {
 							int rtt = Integer.parseInt(args[++i]);
@@ -346,6 +338,11 @@ public class Main implements I18n {
 						showUsageInformation();
 						System.exit(1);
 					}
+				}
+				if (args[i].equals("-rmi")) {
+					RMIManager rmiManager = RMIManager.getInstance();
+					rmiManager.initRMIRegistry();
+					rmiManager.publishFiliusRMISever();
 				}
 			}
 			if (currWD.isEmpty()
