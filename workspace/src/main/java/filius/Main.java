@@ -51,7 +51,6 @@ import filius.rahmenprogramm.I18n;
 import filius.rahmenprogramm.Information;
 import filius.rahmenprogramm.SzenarioVerwaltung;
 import filius.rahmenprogramm.TeeOutputStream;
-import filius.remote.RMIManager;
 
 /**
  * In dieser Klasse wird die Anwendung gestartet und beendet. Das wird in den
@@ -338,11 +337,6 @@ public class Main implements I18n {
 						showUsageInformation();
 						System.exit(1);
 					}
-				}
-				if (args[i].equals("-rmi")) {
-					RMIManager rmiManager = RMIManager.getInstance();
-					rmiManager.initRMIRegistry();
-					rmiManager.publishFiliusRMISever();
 				}
 			}
 			if (currWD.isEmpty()
