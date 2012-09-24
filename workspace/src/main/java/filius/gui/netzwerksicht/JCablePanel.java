@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package filius.gui.netzwerksicht;
 
@@ -46,9 +46,8 @@ import filius.hardware.NetzwerkInterface;
 import filius.hardware.Port;
 import filius.hardware.knoten.InternetKnoten;
 
-
 /**
- *
+ * 
  * @author Johannes Bade
  */
 public class JCablePanel extends javax.swing.JPanel implements Observer {
@@ -60,7 +59,7 @@ public class JCablePanel extends javax.swing.JPanel implements Observer {
 	private GUIKabelItem kabelItem;
 
 	private boolean kurven = true;
-	private QuadCurve2D currCurve=null;
+	private QuadCurve2D currCurve = null;
 
 	private Color kabelFarbe = new Color(64, 64, 64);
 
@@ -75,26 +74,26 @@ public class JCablePanel extends javax.swing.JPanel implements Observer {
 	}
 
 	public void updateBounds() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (JCablePanel), updateBounds()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (JCablePanel), updateBounds()");
 		int x1, x2, y1, y2, t1;
-//		Main.debug.println("DEBUG updateBounds, ziel1: ("
-//		          + ziel1.getImageLabel().getX()
-//		          + "/"
-//		          + ziel1.getImageLabel().getY()
-//		          + ")  [W="
-//		          + ziel1.getImageLabel().getWidth()
-//		          + "; H="
-//		          + ziel1.getImageLabel().getHeight()
-//		          + "]");
-//		Main.debug.println("DEBUG updateBounds, ziel2: ("
-//		        + ziel2.getImageLabel().getX()
-//		        + "/"
-//		        + ziel2.getImageLabel().getY()
-//		        + ")  [W="
-//		        + ziel2.getImageLabel().getWidth()
-//		        + "; H="
-//		        + ziel2.getImageLabel().getHeight()
-//		        + "]");
+		// Main.debug.println("DEBUG updateBounds, ziel1: ("
+		// + ziel1.getImageLabel().getX()
+		// + "/"
+		// + ziel1.getImageLabel().getY()
+		// + ")  [W="
+		// + ziel1.getImageLabel().getWidth()
+		// + "; H="
+		// + ziel1.getImageLabel().getHeight()
+		// + "]");
+		// Main.debug.println("DEBUG updateBounds, ziel2: ("
+		// + ziel2.getImageLabel().getX()
+		// + "/"
+		// + ziel2.getImageLabel().getY()
+		// + ")  [W="
+		// + ziel2.getImageLabel().getWidth()
+		// + "; H="
+		// + ziel2.getImageLabel().getHeight()
+		// + "]");
 
 		// Theoretisch korrekte Positionen
 		x1 = (int) (ziel1.getImageLabel().getX());
@@ -118,12 +117,17 @@ public class JCablePanel extends javax.swing.JPanel implements Observer {
 			y1 = y2;
 			y2 = t1;
 		}
-		setBounds(x1-2, y1-2, x2 - x1 +4, y2 - y1+4);   // add 2 for each direction to take care of linewidth
-		Main.debug.println("JCablePanel ("+this.hashCode()+"), bounds: "+x1+"/"+y1+", "+x2+"/"+y2+"  (W:"+(x2-x1)+", H:"+(y2-y1)+")");
+		setBounds(x1 - 2, y1 - 2, x2 - x1 + 4, y2 - y1 + 4); // add 2 for each
+															 // direction to
+															 // take care of
+															 // linewidth
+		Main.debug.println("JCablePanel (" + this.hashCode() + "), bounds: " + x1 + "/" + y1 + ", " + x2 + "/" + y2
+		        + "  (W:" + (x2 - x1) + ", H:" + (y2 - y1) + ")");
 	}
 
 	protected void paintComponent(Graphics g) {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (JCablePanel), paintComponent("+g+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (JCablePanel), paintComponent(" + g
+		        + ")");
 		super.paintComponent(g);
 
 		int x1, x2, y1, y2;
@@ -138,20 +142,20 @@ public class JCablePanel extends javax.swing.JPanel implements Observer {
 		g.setColor(kabelFarbe);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(2));
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 		if (isKurven()) {
 			int kp1 = (x1 - this.getX() + x2 - this.getX()) / 4;
-			if( (x1>x2 && y1>y2) ||
-			    (x1<x2 && y1<y2)) kp1 = 3*kp1;   // correct X value of control point for falling lines (upper left to lower right corner)
+			if ((x1 > x2 && y1 > y2) || (x1 < x2 && y1 < y2))
+				kp1 = 3 * kp1; // correct X value of control point for falling
+							   // lines (upper left to lower right corner)
 			int kp2 = (y1 - this.getY() + y2 - this.getY()) / 4;
-//			Main.debug.println("\trect: ("+x1+"/"+y1+") -> ("+kp1+"/"+kp2+") -> ("+x2+"/"+y2+"), thisXY: ("+this.getX()+"/"+this.getY()+"), color: "+kabelFarbe);
+			// Main.debug.println("\trect: ("+x1+"/"+y1+") -> ("+kp1+"/"+kp2+") -> ("+x2+"/"+y2+"), thisXY: ("+this.getX()+"/"+this.getY()+"), color: "+kabelFarbe);
 
-			QuadCurve2D myCurve = new QuadCurve2D.Double(x1 - this.getX(), y1
-					- this.getY(), // Punkt 1
-					kp1, kp2, // Kontrollpunkt k
-					x2 - this.getX(), y2 - this.getY() // Punkt 2
+			QuadCurve2D myCurve = new QuadCurve2D.Double(x1 - this.getX(), y1 - this.getY(), // Punkt
+																							 // 1
+			        kp1, kp2, // Kontrollpunkt k
+			        x2 - this.getX(), y2 - this.getY() // Punkt 2
 			);
 
 			// Kurve malen
@@ -159,88 +163,91 @@ public class JCablePanel extends javax.swing.JPanel implements Observer {
 			g2.draw(myCurve);
 			this.currCurve = myCurve;
 		} else {
-			g2.drawLine(x1 - this.getX(), y1 - this.getY(), x2 - this.getX(),
-					y2 - this.getY());
+			g2.drawLine(x1 - this.getX(), y1 - this.getY(), x2 - this.getX(), y2 - this.getY());
 		}
 		this.setOpaque(false);
 	}
 
 	/*
-	 * Method to examine whether the mouse was clicked close to a line representing a cable in filius.
-	 * ATTENTION: There are several workarounds necessary to cope with Java's strange boundary handling.
-	 * 		Thus, the actual bounds are tested prior to actually use them for determining a point to be
-	 * 		inside a bound of a curve or line, respectively.
+	 * Method to examine whether the mouse was clicked close to a line
+	 * representing a cable in filius. ATTENTION: There are several workarounds
+	 * necessary to cope with Java's strange boundary handling. Thus, the actual
+	 * bounds are tested prior to actually use them for determining a point to
+	 * be inside a bound of a curve or line, respectively.
 	 */
 	public boolean clicked(int x, int y) {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (JCablePanel), clicked("+x+","+y+")");
-		if(this.getHeight()<20 || this.getWidth()<20) return true;   // very slim panel --> always within collision area (incl. tolerance)
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (JCablePanel), clicked(" + x + "," + y
+		        + ")");
+		if (this.getHeight() < 20 || this.getWidth() < 20)
+			return true; // very slim panel --> always within collision area
+						 // (incl. tolerance)
 
-		int deltaX=0;
-		int deltaY=0;
-		int xFactor=1;  // factor for adjusting the deltaX sign according to orientation of line
-		double tmpX=0;
-		double tmpY=0;
+		int deltaX = 0;
+		int deltaY = 0;
+		int xFactor = 1; // factor for adjusting the deltaX sign according to
+						 // orientation of line
+		double tmpX = 0;
+		double tmpY = 0;
 		boolean invers = false;
-		
-		if(isKurven()) {
+
+		if (isKurven()) {
 			// test bounds placement and behaviour
 			tmpX = this.currCurve.getCtrlX();
 			tmpY = this.currCurve.getCtrlY() - 2;
-			if(!this.currCurve.contains(tmpX, tmpY)) {  // unexpected behaviour: bound is considered to be above curve
+			if (!this.currCurve.contains(tmpX, tmpY)) { // unexpected behaviour:
+														// bound is considered
+														// to be above curve
 				invers = true;
 			}
-			if(this.getWidth() < this.getHeight()) {
-				deltaX=10;
-				if(this.currCurve.getY1() > this.currCurve.getY2()) {
-					// line is "falling" from upper left to lower left corner; --> invert deltaX to move rightwards
+			if (this.getWidth() < this.getHeight()) {
+				deltaX = 10;
+				if (this.currCurve.getY1() > this.currCurve.getY2()) {
+					// line is "falling" from upper left to lower left corner;
+					// --> invert deltaX to move rightwards
 					xFactor = -1;
 				}
+			} else {
+				deltaY = 10;
 			}
-			else {
-				deltaY=10;
+
+			// FIXME: still suboptimal; bounds seem to be strange concepts
+			// (probably only are of closed curve considered as "bound")
+			QuadCurve2D topCurve = new QuadCurve2D.Double(this.currCurve.getX1() - (xFactor * deltaX),
+			        this.currCurve.getY1() + deltaY, this.currCurve.getCtrlX() - (xFactor * deltaX),
+			        this.currCurve.getCtrlY() + deltaY, this.currCurve.getX2() - (xFactor * deltaX),
+			        this.currCurve.getY2() + deltaY);
+			QuadCurve2D bottomCurve = new QuadCurve2D.Double(this.currCurve.getX1() + (xFactor * deltaX),
+			        this.currCurve.getY1() - deltaY, this.currCurve.getCtrlX() + (xFactor * deltaX),
+			        this.currCurve.getCtrlY() - deltaY, this.currCurve.getX2() + (xFactor * deltaX),
+			        this.currCurve.getY2() - deltaY);
+
+			// Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+" (JCablePanel), clicked:\n\tclicked within bounds of topCurve "+
+			// topCurve.getBounds()+": "+
+			// topCurve.contains(x-this.getX(), y-this.getY()));
+			// Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+" (JCablePanel), clicked:\n\tclicked within bounds of bottomCurve "+
+			// bottomCurve.getBounds()+": "+
+			// bottomCurve.contains(x-this.getX(), y-this.getY()));
+			if (!invers) {
+				// Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+" (JCablePanel), clicked:\n\tclicked between those bounds ["+(x-this.getX())+"/"+(y-this.getY())+"] (final result): "+
+				// (topCurve.contains(x-this.getX(), y-this.getY()) &&
+				// !bottomCurve.contains(x-this.getX(), y-this.getY()))
+				// );
+				return (topCurve.contains(x - this.getX(), y - this.getY()) && !bottomCurve.contains(x - this.getX(), y
+				        - this.getY()));
+			} else {
+				// Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+" (JCablePanel), clicked:\n\tclicked between those bounds ["+(x-this.getX())+"/"+(y-this.getY())+"] (final result, INVERSE): "+
+				// (topCurve.contains(x-this.getX(), y-this.getY()) &&
+				// !bottomCurve.contains(x-this.getX(), y-this.getY()))
+				// );
+				return (!topCurve.contains(x - this.getX(), y - this.getY()) && bottomCurve.contains(x - this.getX(), y
+				        - this.getY()));
 			}
-			
-			// FIXME: still suboptimal; bounds seem to be strange concepts (probably only are of closed curve considered as "bound")
-			QuadCurve2D topCurve = new QuadCurve2D.Double(	this.currCurve.getX1() - (xFactor * deltaX),
-															this.currCurve.getY1() + deltaY,
-															this.currCurve.getCtrlX() - (xFactor * deltaX),
-															this.currCurve.getCtrlY() + deltaY,
-															this.currCurve.getX2() - (xFactor * deltaX),
-															this.currCurve.getY2() + deltaY );
-			QuadCurve2D bottomCurve = new QuadCurve2D.Double(	this.currCurve.getX1() + (xFactor * deltaX),
-																this.currCurve.getY1() - deltaY,
-																this.currCurve.getCtrlX() + (xFactor * deltaX),
-																this.currCurve.getCtrlY() - deltaY,
-																this.currCurve.getX2() + (xFactor * deltaX),
-																this.currCurve.getY2() - deltaY );
-	
-	//		Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+" (JCablePanel), clicked:\n\tclicked within bounds of topCurve "+
-	//				topCurve.getBounds()+": "+
-	//				topCurve.contains(x-this.getX(), y-this.getY()));
-	//		Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+" (JCablePanel), clicked:\n\tclicked within bounds of bottomCurve "+
-	//				bottomCurve.getBounds()+": "+
-	//				bottomCurve.contains(x-this.getX(), y-this.getY()));
-			if(!invers) {
-//				Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+" (JCablePanel), clicked:\n\tclicked between those bounds ["+(x-this.getX())+"/"+(y-this.getY())+"] (final result): "+
-//						(topCurve.contains(x-this.getX(), y-this.getY()) &&
-//						 !bottomCurve.contains(x-this.getX(), y-this.getY()))
-//						);
-				return (topCurve.contains(x-this.getX(), y-this.getY()) && !bottomCurve.contains(x-this.getX(), y-this.getY()));
-			}
-			else {
-//				Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+" (JCablePanel), clicked:\n\tclicked between those bounds ["+(x-this.getX())+"/"+(y-this.getY())+"] (final result, INVERSE): "+
-//						(topCurve.contains(x-this.getX(), y-this.getY()) &&
-//						 !bottomCurve.contains(x-this.getX(), y-this.getY()))
-//						);
-				return (!topCurve.contains(x-this.getX(), y-this.getY()) && bottomCurve.contains(x-this.getX(), y-this.getY()));
-			}
-		}
-		else {  // cables represented by simple lines
+		} else { // cables represented by simple lines
 			// FIXME
 			return true;
 		}
 	}
-	
+
 	public GUIKnotenItem getZiel1() {
 		return ziel1;
 	}
@@ -260,9 +267,10 @@ public class JCablePanel extends javax.swing.JPanel implements Observer {
 
 	/**
 	 * @author Johannes Bade & Thomas Gerding
-	 *
-	 * Gibt zurück ob die Kabel als Geraden oder Kurven dargestellt werden.
-	 *
+	 * 
+	 *         Gibt zurück ob die Kabel als Geraden oder Kurven dargestellt
+	 *         werden.
+	 * 
 	 * @return boolean
 	 */
 	public boolean isKurven() {
@@ -271,10 +279,10 @@ public class JCablePanel extends javax.swing.JPanel implements Observer {
 
 	/**
 	 * @author Johannes Bade & Thomas Gerding
-	 *
-	 * Gibt an ob die Kabel als Geraden oder Kurven dargestellt werden.
-	 *
-	 *
+	 * 
+	 *         Gibt an ob die Kabel als Geraden oder Kurven dargestellt werden.
+	 * 
+	 * 
 	 * @param boolean
 	 */
 	public void setKurven(boolean kurven) {
@@ -283,12 +291,13 @@ public class JCablePanel extends javax.swing.JPanel implements Observer {
 
 	/**
 	 * @author Johannes Bade
-	 *
-	 * Wird genutzt um Kabel blinken zu lassen :)
+	 * 
+	 *         Wird genutzt um Kabel blinken zu lassen :)
 	 */
 	public void update(Observable o, Object arg) {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (JCablePanel), update("+o+","+arg+")");
-		
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (JCablePanel), update(" + o + ","
+		        + arg + ")");
+
 		if (arg.equals(Boolean.TRUE)) {
 			kabelFarbe = farbeBlinken;
 			this.setLocation(this.getX() - 1, this.getY());

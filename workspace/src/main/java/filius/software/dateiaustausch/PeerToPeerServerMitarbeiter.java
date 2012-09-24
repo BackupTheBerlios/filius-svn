@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.software.dateiaustausch;
 
 import java.util.LinkedList;
@@ -48,27 +48,28 @@ public class PeerToPeerServerMitarbeiter extends ServerMitarbeiter {
 	/**
 	 * Aufruf des Konstruktors der Oberklasse und Initialisierung der
 	 * zugehoerigen Instanz von PeerToPeerAnwendung
-	 *
+	 * 
 	 * @param server
 	 * @param socket
 	 * @param peerToPeerAnwendung
 	 */
-	PeerToPeerServerMitarbeiter(PeerToPeerServer server, Socket socket,
-			PeerToPeerAnwendung peerToPeerAnwendung) {
+	PeerToPeerServerMitarbeiter(PeerToPeerServer server, Socket socket, PeerToPeerAnwendung peerToPeerAnwendung) {
 		super(server, socket);
-		Main.debug.println("INVOKED-2 ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (PeerToPeerServerMitarbeiter), constr: PeerToPeerServerMitarbeiter("+server+","+socket+","+peerToPeerAnwendung+")");
+		Main.debug.println("INVOKED-2 (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (PeerToPeerServerMitarbeiter), constr: PeerToPeerServerMitarbeiter(" + server + "," + socket + ","
+		        + peerToPeerAnwendung + ")");
 
 		this.peerToPeerAnwendung = peerToPeerAnwendung;
 	}
 
 	/** Methode zum versenden von Antwortnachrichten */
 	void senden(String nachricht) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (PeerToPeerServerMitarbeiter), senden("+nachricht+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (PeerToPeerServerMitarbeiter), senden(" + nachricht + ")");
 		if (socket != null && socket.istVerbunden()) {
 			try {
 				socket.senden(nachricht);
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace(Main.debug);
 			}
 		}
@@ -77,7 +78,7 @@ public class PeerToPeerServerMitarbeiter extends ServerMitarbeiter {
 	/**
 	 * Zugriff auf die GUID der Anfrage-Nachricht, die durch diesen
 	 * Mitarbeiter-Thread verarbeitet wird.
-	 *
+	 * 
 	 * @return
 	 */
 	int holeGuid() {
@@ -87,19 +88,20 @@ public class PeerToPeerServerMitarbeiter extends ServerMitarbeiter {
 	/**
 	 * Diese Operation verarbeitet eine eingegangene HTTP-Anfrage:
 	 * <ol>
-	 * <li> Lesen der gesuchten Datei aus lokalem Dateisystem </li>
-	 * <li> Wenn die Datei vorhanden ist, Versenden der Datei; wenn die Datei
+	 * <li>Lesen der gesuchten Datei aus lokalem Dateisystem</li>
+	 * <li>Wenn die Datei vorhanden ist, Versenden der Datei; wenn die Datei
 	 * nicht vorhanden ist, verschicken einer HTTP-Antwort mit dem
-	 * Fehler-Status-Code 404 </li>
-	 * <li> Versenden der Antwort ueber den geoeffneten Socket </li>
+	 * Fehler-Status-Code 404</li>
+	 * <li>Versenden der Antwort ueber den geoeffneten Socket</li>
 	 * </ol>
-	 *
+	 * 
 	 * @param element
 	 *            die zu verarbeitende HTTP Anfrage in Form eines
 	 *            TcpPufferElements
 	 */
 	private void httpAnfrageVerarbeiten(String nachricht) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (PeerToPeerServerMitarbeiter), httpAnfrageVerarbeiten("+nachricht+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (PeerToPeerServerMitarbeiter), httpAnfrageVerarbeiten(" + nachricht + ")");
 		HTTPNachricht http, antwort;
 		Datei datei;
 
@@ -111,15 +113,13 @@ public class PeerToPeerServerMitarbeiter extends ServerMitarbeiter {
 			antwort.setStatusCode(200);
 			antwort.setContentType(datei.getDateiTyp());
 			antwort.setDaten(datei.getDateiInhalt());
-		}
-		else {
+		} else {
 			antwort.setStatusCode(404);
 		}
 
 		try {
 			socket.senden(antwort.toString());
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace(Main.debug);
 		}
 	}
@@ -127,19 +127,20 @@ public class PeerToPeerServerMitarbeiter extends ServerMitarbeiter {
 	/**
 	 * Methode zur Verarbeitung einer eingehenden Ping-Nachricht.
 	 * <ol>
-	 * <li> Absender des Ping-Pakets wird der Liste der bekannten Teilnehmer im
-	 * Peer-to-Peer-Netzwerk hinzugefuegt. </li>
-	 * <li> Erzeugen einer entsprechenden Pong-Nachricht, wenn auf diese
-	 * Ping-Nachricht nicht schon geantwortet wurde. </li>
-	 * <li> Erhoehung des Hop-Zahlers und Dekrementierung des TTL-Zaehlers der
-	 * Ping-Nachricht. </li>
-	 * <li> Weiterleitung des Ping-Pakets </li>
+	 * <li>Absender des Ping-Pakets wird der Liste der bekannten Teilnehmer im
+	 * Peer-to-Peer-Netzwerk hinzugefuegt.</li>
+	 * <li>Erzeugen einer entsprechenden Pong-Nachricht, wenn auf diese
+	 * Ping-Nachricht nicht schon geantwortet wurde.</li>
+	 * <li>Erhoehung des Hop-Zahlers und Dekrementierung des TTL-Zaehlers der
+	 * Ping-Nachricht.</li>
+	 * <li>Weiterleitung des Ping-Pakets</li>
 	 * </ol>
-	 *
+	 * 
 	 * @param pingPaket
 	 */
 	private void verarbeitePing(PingPaket pingPaket) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (PeerToPeerServerMitarbeiter), verarbeitePing("+pingPaket+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (PeerToPeerServerMitarbeiter), verarbeitePing(" + pingPaket + ")");
 		String pongNachricht;
 
 		peerToPeerAnwendung.hinzuTeilnehmer(pingPaket.getIp());
@@ -148,8 +149,7 @@ public class PeerToPeerServerMitarbeiter extends ServerMitarbeiter {
 		if (pongNachricht != null) {
 			try {
 				socket.senden(pongNachricht);
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace(Main.debug);
 			}
 		}
@@ -164,24 +164,23 @@ public class PeerToPeerServerMitarbeiter extends ServerMitarbeiter {
 	/**
 	 * Methode zur Verarbeitung einer eingehenden Suchanfrage (Query).
 	 * <ol>
-	 * <li> Erstellen der Ergebnisliste fuer eine Suchanfrage. Wenn auf die
+	 * <li>Erstellen der Ergebnisliste fuer eine Suchanfrage. Wenn auf die
 	 * Query-Nachricht bereits geantwortet wurde, wird keine Liste erzeugt.
-	 * Ausserdem wird damit zugleich veranlasst, dass die Suchanfrage
-	 * ggf. weitergeleitet wird.
-	 * </li>
+	 * Ausserdem wird damit zugleich veranlasst, dass die Suchanfrage ggf.
+	 * weitergeleitet wird.</li>
 	 * <li>
 	 * <ul>
-	 * <li> Wenn eine Liste mit mindestens einem Eintrag vorliegt, wird fuer
-	 * jede Datei eine Antwortnachricht ueber den Socket verschickt (Query-Hit).
-	 * </li>
+	 * <li>Wenn eine Liste mit mindestens einem Eintrag vorliegt, wird fuer jede
+	 * Datei eine Antwortnachricht ueber den Socket verschickt (Query-Hit).</li>
 	 * </ul>
 	 * </li>
 	 * </ol>
-	 *
+	 * 
 	 * @param queryPaket
 	 */
 	private void verarbeiteQuery(QueryPaket queryPaket) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (PeerToPeerServerMitarbeiter), verarbeiteQuery("+queryPaket+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (PeerToPeerServerMitarbeiter), verarbeiteQuery(" + queryPaket + ")");
 		LinkedList<Datei> dateien;
 		Datei aktuelleDatei;
 		Betriebssystem bs;
@@ -189,26 +188,22 @@ public class PeerToPeerServerMitarbeiter extends ServerMitarbeiter {
 
 		guid = queryPaket.getGuid();
 
-		dateien = peerToPeerAnwendung.verarbeiteAnfrage(socket
-				.holeZielIPAdresse(), queryPaket);
+		dateien = peerToPeerAnwendung.verarbeiteAnfrage(socket.holeZielIPAdresse(), queryPaket);
 
 		if (dateien != null && dateien.size() > 0) {
 			bs = (Betriebssystem) peerToPeerAnwendung.getSystemSoftware();
 
 			for (int i = 0; i < dateien.size(); i++) {
 				aktuelleDatei = (Datei) dateien.get(i);
-				antwortPaket = new QueryHitPaket(dateien.size(), 6346, bs
-						.holeIPAdresse(), "2", "", " ");
+				antwortPaket = new QueryHitPaket(dateien.size(), 6346, bs.holeIPAdresse(), "2", "", " ");
 				antwortPaket.setGuid(queryPaket.getGuid());
 				antwortPaket.setHops(0);
 				antwortPaket.setTtl(8);
-				antwortPaket.setErgebnis(aktuelleDatei.getName() + ": "
-						+ aktuelleDatei.holeGroesse() + " B");
+				antwortPaket.setErgebnis(aktuelleDatei.getName() + ": " + aktuelleDatei.holeGroesse() + " B");
 
 				try {
 					socket.senden(antwortPaket.toString());
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					e.printStackTrace(Main.debug);
 				}
 			}
@@ -222,7 +217,8 @@ public class PeerToPeerServerMitarbeiter extends ServerMitarbeiter {
 	 * und eine eingehende Suchanfrage (Query).
 	 */
 	protected void verarbeiteNachricht(String nachricht) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (PeerToPeerServerMitarbeiter), verarbeiteNachricht("+nachricht+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (PeerToPeerServerMitarbeiter), verarbeiteNachricht(" + nachricht + ")");
 		PeerToPeerPaket paket;
 		PingPaket pingPaket;
 		QueryPaket queryPaket;
@@ -230,16 +226,14 @@ public class PeerToPeerServerMitarbeiter extends ServerMitarbeiter {
 		if (nachricht != null) {
 			if (nachricht.startsWith("GET")) {
 				httpAnfrageVerarbeiten(nachricht);
-			}
-			else {
+			} else {
 				paket = new PeerToPeerPaket(nachricht);
 				guid = paket.getGuid();
 
 				if (paket.getPayload().equals("0x00")) {
 					pingPaket = new PingPaket(nachricht);
 					verarbeitePing(pingPaket);
-				}
-				else if (paket.getPayload().equals("0x80")) {
+				} else if (paket.getPayload().equals("0x80")) {
 					queryPaket = new QueryPaket(nachricht);
 					verarbeiteQuery(queryPaket);
 				}

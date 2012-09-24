@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.software.email;
 
 import java.util.LinkedList;
@@ -33,12 +33,12 @@ import filius.software.clientserver.ServerMitarbeiter;
 import filius.software.transportschicht.TCPSocket;
 
 /**
- *
+ * 
  * @author Andre Asschoff
- *
- * In der POP3 Schicht empfangeDaten gehe ich direkt auf TCP, ueberwache den
- * IncomingPuffer (TCP- PufferElemente) um den von mir benaetigten String direkt
- * auszulesen und zu bearbeiten.
+ * 
+ *         In der POP3 Schicht empfangeDaten gehe ich direkt auf TCP, ueberwache
+ *         den IncomingPuffer (TCP- PufferElemente) um den von mir benaetigten
+ *         String direkt auszulesen und zu bearbeiten.
  */
 
 public class POP3Mitarbeiter extends ServerMitarbeiter {
@@ -53,14 +53,15 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	private boolean transactionState = false;
 
 	private boolean authenticationState = true; // solange nicht angemeldet
-												// "true"
+	                                            // "true"
 
 	// das Konto, mit dem gearbeitet wird, auf das man sich angemeldet hat
 	private EmailKonto aktivesKonto;
 
 	public POP3Mitarbeiter(TCPSocket socket, POP3Server pop3Server) {
 		super(pop3Server, socket);
-		Main.debug.println("INVOKED-2 ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), constr: POP3Mitarbeiter("+socket+","+pop3Server+")");
+		Main.debug.println("INVOKED-2 (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), constr: POP3Mitarbeiter(" + socket + "," + pop3Server + ")");
 		this.socket = socket;
 		this.emailServer = pop3Server.holeEmailServer();
 
@@ -70,26 +71,26 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 
 	@Override
 	protected void verarbeiteNachricht(String nachricht) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), verarbeiteNachricht("+nachricht+")");
-		
-		emailServer.benachrichtigeBeobachter(socket.holeZielIPAdresse()+"< "+nachricht);
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), verarbeiteNachricht(" + nachricht + ")");
+
+		emailServer.benachrichtigeBeobachter(socket.holeZielIPAdresse() + "< " + nachricht);
 		// ist der Befehl fuer den POP3Server (USER, STAT, ...)
 		String befehl = "";
 		// ist das Array, das die einzelnen Elemente der Clientdaten aufnimmt
 		String[] incoming = new String[3]; // 3 Elemente fuer Befehl,
-											// Information und eins als Toni
-											// Polster
+		                                   // Information und eins als Toni
+		                                   // Polster
 
 		incoming = nachricht.split(" ");
 
 		// das erste Element ist immer der Befehl, bspw. DELE, RETR, STAT...
 		befehl = incoming[0];
-		
+
 		// es folgt die Abfrage, welcher Befehl angekommen ist
 		if (befehl.equalsIgnoreCase("USER")) {
 			String antwort = "";
-			if (!(isTransactionState() && isBenAuth())
-					&& isAuthenticationState()) {
+			if (!(isTransactionState() && isBenAuth()) && isAuthenticationState()) {
 				antwort = user(incoming[1]);
 				if (isBenAuth()) {
 					benutzername = incoming[1];
@@ -98,7 +99,7 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 			} else {
 				antwort = "-ERR Please enter USER";
 			}
-			//Main.debug.println("Antwort: "+antwort);
+			// Main.debug.println("Antwort: "+antwort);
 			sendeAntwort(antwort);
 		} else if (befehl.equalsIgnoreCase("PASS")) {
 			String antwort = "";
@@ -106,7 +107,7 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 				antwort = pass(incoming[1]);
 				password = incoming[1];
 				aktivesKonto = emailServer.sucheKonto(benutzername, password);
-				
+
 			} else {
 				antwort = "-ERR Please enter PASS";
 			}
@@ -119,8 +120,7 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 		} else if (befehl.equalsIgnoreCase("LIST")) {
 			if (incoming.length < 1) {
 				// listet die Email mit der nr == attribut auf
-				String antwort = list(Integer.parseInt(incoming[1]),
-						aktivesKonto);
+				String antwort = list(Integer.parseInt(incoming[1]), aktivesKonto);
 
 				sendeAntwort(antwort);
 			} else {
@@ -168,7 +168,8 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	}
 
 	public void schliesseSocket() {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), schliesseSocket()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), schliesseSocket()");
 		if (socket != null) {
 			socket.schliessen();
 			socket = null;
@@ -182,20 +183,21 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	 * aufgerufen, die ueberprueft, ob es einen solchen angemeldeten Benutzer
 	 * gibt. Wenn das zutrifft, wird der boolean setBenutzernameIstTrue auf
 	 * (true) gesetzt und dem Client das mitgeteilt.
-	 *
+	 * 
 	 * @param benutzername
 	 * @param verbindungsId
 	 */
 	public String user(String benutzername) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), user("+benutzername+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), user(" + benutzername + ")");
 		String ergebnis = "";
 
 		if (sucheBenutzer(benutzername)) {
-				setBenAuth(true);
-				ergebnis = "+OK enter password";
-			} else {
-				ergebnis = "-ERR user or password wrong";
-			}
+			setBenAuth(true);
+			ergebnis = "+OK enter password";
+		} else {
+			ergebnis = "-ERR user or password wrong";
+		}
 
 		return ergebnis;
 	}
@@ -203,12 +205,13 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	/**
 	 * Es wird ueberprueft, ob das Passwort richtig ist, fuer den zuvor
 	 * uebertragenen Benutzernamen.
-	 *
+	 * 
 	 * @param passwort
 	 * @param verbindungsId
 	 */
 	public String pass(String passwort) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), pass("+passwort+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), pass(" + passwort + ")");
 		String ergebnis = "";
 		try {
 			if (pruefePasswort(passwort)) {
@@ -234,15 +237,16 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	 * datenstring enthaelt die auszugebende Message. Anschlieï¿½end wird der
 	 * Status durch die Fktn. emailServer.sendeAntwort an den Client
 	 * uebertragen.
-	 *
+	 * 
 	 * @param verbindungsId
 	 */
 	public String stat(EmailKonto uebergebenesAktivesKonto) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), stat("+uebergebenesAktivesKonto+")");
-		//Main.debug
-				//.println("===========================================STAT - BenName: "
-						//+ uebergebenesAktivesKonto.getBenutzername()
-						//+ " Passwd: " + uebergebenesAktivesKonto.getPasswort());
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), stat(" + uebergebenesAktivesKonto + ")");
+		// Main.debug
+		// .println("===========================================STAT - BenName: "
+		// + uebergebenesAktivesKonto.getBenutzername()
+		// + " Passwd: " + uebergebenesAktivesKonto.getPasswort());
 		String daten = "";
 		if (isTransactionState()) {
 			try {
@@ -263,11 +267,12 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	 * (indexnr und groesse in bytes) ausgelesen. Die werden dann in einer
 	 * while-Schleife solange immer jede Email einzeln ausgegeben, bis alle
 	 * daten uebertragen wurden.
-	 *
+	 * 
 	 * @param verbindungsId
 	 */
 	public String list(EmailKonto uebergebenesAktivesKonto) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), list("+uebergebenesAktivesKonto+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), list(" + uebergebenesAktivesKonto + ")");
 		String ergebnis = "";
 		if (isTransactionState()) {
 			try {
@@ -281,8 +286,7 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 
 				int i = 0;
 				while (i < ergServer.length) {
-					ergebnis = ergebnis + ergServer[i] + " " + ergServer[i + 1]
-							+ "\n";
+					ergebnis = ergebnis + ergServer[i] + " " + ergServer[i + 1] + "\n";
 					i = i + 2;
 				}
 			} catch (Exception e) {
@@ -301,12 +305,13 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	 * EmailServers aufgerufen, um alle Emails in einen langen String zu
 	 * speichern. Dann wird die Email mit dem index "int i" mit ihrer groesse an
 	 * den Client gesendet.
-	 *
+	 * 
 	 * @param i
 	 * @param verbindungsId
 	 */
 	public String list(int i, EmailKonto uebergebenesAktivesKonto) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), list("+i+","+uebergebenesAktivesKonto+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), list(" + i + "," + uebergebenesAktivesKonto + ")");
 		String ergebnis = "";
 
 		if (isTransactionState()) {
@@ -320,8 +325,7 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 					// wenn der Index der Email (j) mit der gewuenschten
 					// Abfragenummer (i) uebereinstimmt
 					if (j == i) {
-						ergebnis = "+OK " + ergServer[i] + " "
-								+ ergServer[i + 1];
+						ergebnis = "+OK " + ergServer[i] + " " + ergServer[i + 1];
 					}
 					i = i + 2;
 				}
@@ -343,23 +347,22 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	 * gabe. Klappt das nicht, wird ein Fehler geworfen. Es wird auf jeden Fall
 	 * noch abgefragt, ob die Email bereits als zu loeschen markiert wurde, wenn
 	 * ja, dann darf sie nicht mehr abgesendet werden.
-	 *
+	 * 
 	 * @param i
 	 * @param verbindungsId
 	 */
 	public String retr(int i, EmailKonto uebergebenesAktivesKonto) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), retr("+i+","+uebergebenesAktivesKonto+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), retr(" + i + "," + uebergebenesAktivesKonto + ")");
 		Email abgerufeneEmail = emailsAbrufen(i, uebergebenesAktivesKonto);
 		String ergebnis = "";
 
 		if (isTransactionState()) {
 			try {
-				if (abgerufeneEmail.getDelete() == true
-						|| abgerufeneEmail.getNeu() == false) {
+				if (abgerufeneEmail.getDelete() == true || abgerufeneEmail.getNeu() == false) {
 					ergebnis = "-ERR no such message";
 				} else {
-					ergebnis = "+OK message follows " + "\n"
-							+ abgerufeneEmail.toString();
+					ergebnis = "+OK message follows " + "\n" + abgerufeneEmail.toString();
 					abgerufeneEmail.setNeu(false);
 				}
 			} catch (Exception e) {
@@ -376,12 +379,13 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	 * erfolgreich ausgefuehrt werden konnte, dann wird die Antwort an den
 	 * Client uebermittelt. Sonst erfolgt eine Exception, mit der ent-
 	 * sprechenden Antwort fuer den Client.
-	 *
+	 * 
 	 * @param i
 	 * @param verbindungsId
 	 */
 	public String dele(int i, EmailKonto uebergebenesAktivesKonto) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), dele("+i+","+uebergebenesAktivesKonto+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), dele(" + i + "," + uebergebenesAktivesKonto + ")");
 		String ergebnis = "";
 		if (isTransactionState()) {
 			try {
@@ -404,16 +408,17 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	 * true). Dieser Wert aller Emails in diesem Postfach wird dann auf false
 	 * gesetzt, sodass nach dem Abmelden keine Email geloescht wird. Dann wird
 	 * dem Client eine Nachricht ueber den erfolgreichen Vorgang uebermittelt.
-	 *
+	 * 
 	 * @param verbindungsId
 	 */
 	public String rset(EmailKonto uebergebenesAktivesKonto) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), rset("+uebergebenesAktivesKonto+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), rset(" + uebergebenesAktivesKonto + ")");
 		String ergebnis = "";
 		if (isTransactionState()) {
 			try {
-				for (ListIterator<Email> iter = uebergebenesAktivesKonto
-						.getNachrichten().listIterator(); iter.hasNext();) {
+				for (ListIterator<Email> iter = uebergebenesAktivesKonto.getNachrichten().listIterator(); iter
+				        .hasNext();) {
 					Email email = (Email) iter.next();
 					email.setDelete(false);
 				}
@@ -438,22 +443,24 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	 * entfernt. Anschliessend erfolgt eine Ausgabe des Servers und eine
 	 * Anweisung an den Client, selbst die Verbindung auch zu loeschen, wird
 	 * uebermittelt.
-	 *
+	 * 
 	 * @param verbindungsId
 	 */
 	public String quit(EmailKonto uebergebenesAktivesKonto) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), quit("+uebergebenesAktivesKonto+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), quit(" + uebergebenesAktivesKonto + ")");
 		String ergebnis = "";
 		if (isTransactionState()) {
 			try {
-				for(int idx=uebergebenesAktivesKonto.getNachrichten().size()-1; idx>=0; idx--) {
-					if(((Email) uebergebenesAktivesKonto.getNachrichten().get(idx)).getDelete()) {
+				for (int idx = uebergebenesAktivesKonto.getNachrichten().size() - 1; idx >= 0; idx--) {
+					if (((Email) uebergebenesAktivesKonto.getNachrichten().get(idx)).getDelete()) {
 						uebergebenesAktivesKonto.getNachrichten().remove(idx);
 					}
 				}
 				ergebnis = "+OK";
 			} catch (Exception e) {
-				Main.debug.println("EXCEPTION ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), quit: ");
+				Main.debug.println("EXCEPTION (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+				        + " (POP3Mitarbeiter), quit: ");
 				e.printStackTrace(Main.debug);
 			}
 		}
@@ -472,11 +479,12 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	 * evtl. Inaktivität kein autologoff gestartet wird. Beim Anstossen dieser
 	 * Methode wird einfach versucht ein System.out. zurueckzugeben, wenn wir
 	 * noch angemeldet sind, ansonsten wirft er einen Fehler.
-	 *
+	 * 
 	 * @return boolean
 	 */
 	public String noop() {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), noop()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), noop()");
 		String ergebnis = "";
 		try {
 			if (isTransactionState() == true) {
@@ -495,23 +503,23 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	}
 
 	/**
-	 * FUNKTIONIERT In dieser Methode wird ueberprueft, ob in der LinkedList aller
-	 * registrierten Nutzer dieses EmailServers ein Konto existiert, das auf
-	 * diesen Benutzernamen passt, also ob es ein Konto gibt, das diesen Namen
-	 * hat.
-	 *
+	 * FUNKTIONIERT In dieser Methode wird ueberprueft, ob in der LinkedList
+	 * aller registrierten Nutzer dieses EmailServers ein Konto existiert, das
+	 * auf diesen Benutzernamen passt, also ob es ein Konto gibt, das diesen
+	 * Namen hat.
+	 * 
 	 * @param benutzernamen
 	 * @return boolean
 	 */
 	public boolean sucheBenutzer(String benutzernamen) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), sucheBenutzer("+benutzernamen+")");
-			for (ListIterator<EmailKonto> iter = emailServer.getListeBenutzerkonten()
-					.listIterator(); iter.hasNext();) {
-				EmailKonto konto = (EmailKonto) iter.next();
-				if ((konto.getBenutzername().equalsIgnoreCase(benutzernamen))) {
-					return true;
-				}
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), sucheBenutzer(" + benutzernamen + ")");
+		for (ListIterator<EmailKonto> iter = emailServer.getListeBenutzerkonten().listIterator(); iter.hasNext();) {
+			EmailKonto konto = (EmailKonto) iter.next();
+			if ((konto.getBenutzername().equalsIgnoreCase(benutzernamen))) {
+				return true;
 			}
+		}
 		return false;
 	}
 
@@ -520,14 +528,15 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	 * uebermittelt, vom Lauscher Thread aufgefangen und uebergeben, vom Client
 	 * gesendet wurde, und schaut, ob es in der vom EmailServer verwalteten
 	 * LinkedList aller auf dem Server registierten Benutzerkonten in genau dem
-	 * Konto vorhanden ist, ueber dessen Benutzernamen sich der Client auch ange-
-	 * meldet hat oder will.
-	 *
+	 * Konto vorhanden ist, ueber dessen Benutzernamen sich der Client auch
+	 * ange- meldet hat oder will.
+	 * 
 	 * @param passwort
 	 * @return boolean
 	 */
 	public boolean pruefePasswort(String passwort) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), pruefePasswort("+passwort+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), pruefePasswort(" + passwort + ")");
 		boolean erfolg = false;
 
 		EmailKonto nowKonto = emailServer.sucheKonto(benutzername);
@@ -543,13 +552,13 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	 * den der USER angibt, als zu loeschen markieren. Diese soll dann nicht
 	 * mehr aufgefuehrt werden, und wird zum Schluss der Sitzung wirklich
 	 * geloescht.
-	 *
+	 * 
 	 * @param i
 	 * @return boolean
 	 */
-	public boolean emailsAlsGeloeschtMarkieren(int i,
-			EmailKonto uebergebenesAktivesKonto) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), emailsAlsGeloeschtMarkieren("+i+","+uebergebenesAktivesKonto+")");
+	public boolean emailsAlsGeloeschtMarkieren(int i, EmailKonto uebergebenesAktivesKonto) {
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), emailsAlsGeloeschtMarkieren(" + i + "," + uebergebenesAktivesKonto + ")");
 		Email email;
 		LinkedList emails = uebergebenesAktivesKonto.getNachrichten();
 		try {
@@ -580,31 +589,32 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	 * oder aufgelistet wurde, zurueckgegeben. Dazu wird der Wert isNeu auf
 	 * false gesetzt, die LL emails geleert (.clear()) und dann die gewuenschte
 	 * Email in der LL gespeichert als einzigstes Element.
-	 *
+	 * 
 	 * @param verbindungsId
 	 * @return LinkedList
 	 */
 	public Email emailsAbrufen(int i, EmailKonto uebergebenesAktivesKonto) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), emailsAbrufen("+i+","+uebergebenesAktivesKonto+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), emailsAbrufen(" + i + "," + uebergebenesAktivesKonto + ")");
 		LinkedList gespeicherteEmails = new LinkedList();
 		Email abgerufeneEmail = new Email();
 
 		try {
-			//Main.debug
-					//.println("===============================================================================");
-			//Main.debug.println("==============Konto: "
-					//+ uebergebenesAktivesKonto.getBenutzername()
-					//+ " ==============================");
-			//Main.debug
-					//.println("====================in emails Abrufen==========================================");
+			// Main.debug
+			// .println("===============================================================================");
+			// Main.debug.println("==============Konto: "
+			// + uebergebenesAktivesKonto.getBenutzername()
+			// + " ==============================");
+			// Main.debug
+			// .println("====================in emails Abrufen==========================================");
 			gespeicherteEmails = uebergebenesAktivesKonto.getNachrichten();
 
 			// nur die Email mit dem Index i abrufen
 			abgerufeneEmail = (Email) gespeicherteEmails.get(i);
-			//Main.debug
-					//.println("===================abgerufeneEmail: ===========================================");
-			//Main.debug.println("================Absender: "
-					//+ abgerufeneEmail.getAbsender() + " ====================");
+			// Main.debug
+			// .println("===================abgerufeneEmail: ===========================================");
+			// Main.debug.println("================Absender: "
+			// + abgerufeneEmail.getAbsender() + " ====================");
 		} catch (Exception e) {
 			e.printStackTrace(Main.debug);
 			emailServer.kontenSpeichern();
@@ -615,34 +625,33 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 
 	/**
 	 * FUNKTIONIERT BESCHREIBUNG UEBERARBEITEN Hier werden die Emails der Reihe
-	 * nach aufgelistet und wï¿½hrenddessen indiziert. Zunaechst wird ein Konto zu
-	 * der (bestehenden?) Verbindung gesucht, und dann abgefragt, ob diese Email
-	 * auch nicht geloescht werden soll. Wenn nein, wird anschliessend die
+	 * nach aufgelistet und wï¿½hrenddessen indiziert. Zunaechst wird ein Konto
+	 * zu der (bestehenden?) Verbindung gesucht, und dann abgefragt, ob diese
+	 * Email auch nicht geloescht werden soll. Wenn nein, wird anschliessend die
 	 * Groesse jeder Email einzeln ermittelt. Der Index der Email im Konto
-	 * (fortlaufend nummeriert ohne besonderes) und die Lï¿½nge der Email in bytes
-	 * wird dann in einem 2-dimensionalen Array gesichert. Hier liegt auch die
-	 * Groesse des Postfaches. Das Array kann max. 1000 verschiedene Emails
+	 * (fortlaufend nummeriert ohne besonderes) und die Lï¿½nge der Email in
+	 * bytes wird dann in einem 2-dimensionalen Array gesichert. Hier liegt auch
+	 * die Groesse des Postfaches. Das Array kann max. 1000 verschiedene Emails
 	 * erfassen. Das Array ist lediglich 2 Felder breit, fuer Index und
 	 * Email-Groesse(bytes).
-	 *
+	 * 
 	 * @param verbindungsId
 	 * @return String
 	 */
 	public String emailsAuflisten(EmailKonto uebergebenesAktivesKonto) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), emailsAuflisten("+uebergebenesAktivesKonto+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), emailsAuflisten(" + uebergebenesAktivesKonto + ")");
 		String str = "";
 
 		try {
-			for (ListIterator iter = uebergebenesAktivesKonto.getNachrichten()
-					.listIterator(); iter.hasNext();) {
+			for (ListIterator iter = uebergebenesAktivesKonto.getNachrichten().listIterator(); iter.hasNext();) {
 				int index = iter.nextIndex();
 				Email email = (Email) iter.next();
 
 				if (email.getDelete() == false) {
 					// Postfachgroesse in Oktetten, hier in bytes
-					String emailgroesse = email.getText() + email.getAbsender()
-							+ email.getBetreff() + email.getEmpfaenger()
-							+ email.getDateReceived();
+					String emailgroesse = email.getText() + email.getAbsender() + email.getBetreff()
+					        + email.getEmpfaenger() + email.getDateReceived();
 
 					// Ich mache hier einen langen String, der durch
 					// Sonderzeichen geteilt wird, um ihn spaeter wieder
@@ -670,15 +679,16 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	 * Postfach die Lï¿½nge ihrer Bytes gemessen und aufaddiert zu einem langen
 	 * String. Hat man dann die gesamte Lï¿½nge aller Strings im Postfach, wird
 	 * diese, und die gesamtanzahl aller Emails im Postfach in einem
-	 * 2-dimensionalen int- Array der Grï¿½ï¿½e 1 zurueckgegeben. Vor der Erzeugung
-	 * des Strings wird natuerlich noch abgefragt, ob die Email, die man gerade
-	 * betrachtet, nicht zum loeschen ist (getDelete). Wenn sie nicht geloescht
-	 * werden soll, dann wird sie dem String hinzugefuegt.
-	 *
+	 * 2-dimensionalen int- Array der Grï¿½ï¿½e 1 zurueckgegeben. Vor der
+	 * Erzeugung des Strings wird natuerlich noch abgefragt, ob die Email, die
+	 * man gerade betrachtet, nicht zum loeschen ist (getDelete). Wenn sie nicht
+	 * geloescht werden soll, dann wird sie dem String hinzugefuegt.
+	 * 
 	 * @return int [][]
 	 */
 	public int[] anzahlEmailsImPostfach(EmailKonto uebergebenesAktivesKonto) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), anzahlEmailsImPostfach("+uebergebenesAktivesKonto+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), anzahlEmailsImPostfach(" + uebergebenesAktivesKonto + ")");
 		String str = "";
 		int[] a = new int[2];
 		int i = 0;
@@ -687,24 +697,22 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 		// EmailKonto konto;
 		Email email;
 		try {
-			for (ListIterator iter = uebergebenesAktivesKonto.getNachrichten()
-					.listIterator(); iter.hasNext();) {
+			for (ListIterator iter = uebergebenesAktivesKonto.getNachrichten().listIterator(); iter.hasNext();) {
 				email = (Email) iter.next();
-				//Main.debug.println("==============EMAILS im Postfach von "
-						//+ uebergebenesAktivesKonto.getBenutzername()
-						//+ "===============");
-				//Main.debug.println("==============temp Email von: "
-						//+ email.getAbsender() + " =========================");
-				//Main.debug.println("==============temp Email isToDelete: "
-						//+ email.getDelete() + " ====================");
-				//Main.debug.println("==============temp Email isNeu: "
-						//+ email.getNeu() + " ============================");
-				//Main.debug
-						//.println("===============================================================================");
+				// Main.debug.println("==============EMAILS im Postfach von "
+				// + uebergebenesAktivesKonto.getBenutzername()
+				// + "===============");
+				// Main.debug.println("==============temp Email von: "
+				// + email.getAbsender() + " =========================");
+				// Main.debug.println("==============temp Email isToDelete: "
+				// + email.getDelete() + " ====================");
+				// Main.debug.println("==============temp Email isNeu: "
+				// + email.getNeu() + " ============================");
+				// Main.debug
+				// .println("===============================================================================");
 				if (email.getDelete() != true) {
-					str = str + email.getText() + email.getAbsender()
-							+ email.getBetreff() + email.getEmpfaenger()
-							+ email.getDateReceived();
+					str = str + email.getText() + email.getAbsender() + email.getBetreff() + email.getEmpfaenger()
+					        + email.getDateReceived();
 
 					i++;
 				}
@@ -733,26 +741,28 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
 	 * Port +"$"+ IDVerbindung.
 	 */
 	public void sendeAntwort(String daten) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), sendeAntwort("+daten+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), sendeAntwort(" + daten + ")");
 		try {
 			if (isTransactionState() || isBenAuth()) {
 				emailServer.kontenSpeichern();
 			}
 		} catch (Exception e) {
 		}
-		emailServer.benachrichtigeBeobachter(socket.holeZielIPAdresse()+"> "+daten);
+		emailServer.benachrichtigeBeobachter(socket.holeZielIPAdresse() + "> " + daten);
 		sendeNachricht(daten);
 	}
 
 	/**
 	 * Diese Mehtode wandelt eine LL in einen String, die einzelnen
 	 * Listenelemente durch Kommata getrennt.
-	 *
+	 * 
 	 * @param args
 	 * @return
 	 */
 	private String llzuStr(LinkedList args) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (POP3Mitarbeiter), llzuStr("+args+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (POP3Mitarbeiter), llzuStr(" + args + ")");
 		String str = "";
 		for (ListIterator iter = args.listIterator(); iter.hasNext();) {
 			str = str + ((String) iter.next()) + ",";

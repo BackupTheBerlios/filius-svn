@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.software.email;
 
 import java.util.LinkedList;
@@ -31,12 +31,11 @@ import filius.Main;
 import filius.rahmenprogramm.*;
 
 /**
- *
+ * 
  * @author Andre Asschoff.
- *
+ * 
  */
-public class EmailKonto
-{
+public class EmailKonto {
 	private String benutzername;
 	private String passwort;
 	private String nachname = "";
@@ -46,70 +45,55 @@ public class EmailKonto
 
 	private LinkedList nachrichten = new LinkedList();
 
-	public EmailKonto() {}
+	public EmailKonto() {
+	}
 
 	/* Liest durch Semicolon getrennte Werte ein */
-	public EmailKonto(String kontoString)
-	{
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (EmailKonto), constr: EmailKonto("+kontoString+")");
+	public EmailKonto(String kontoString) {
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (EmailKonto), constr: EmailKonto("
+		        + kontoString + ")");
 		String[] teile = kontoString.split(";");
-		if (teile.length > 8)
-		{
-			 pop3server  = teile[0];
-			 smtpserver = teile[1];
-			 pop3port = teile[2];
-			 smtpport = teile[3];
-			 benutzername = teile[4];
-			 passwort = teile[5];
-			 nachname = teile[6];
-			 vorname = teile[7];
-			 emailAdresse = teile[8];
+		if (teile.length > 8) {
+			pop3server = teile[0];
+			smtpserver = teile[1];
+			pop3port = teile[2];
+			smtpport = teile[3];
+			benutzername = teile[4];
+			passwort = teile[5];
+			nachname = teile[6];
+			vorname = teile[7];
+			emailAdresse = teile[8];
 		}
 	}
 
-	public String toString()
-	{
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (EmailKonto), toString()");
-		String ergebnis = ""
-		+ pop3server +";"
-		+ smtpserver+";"
-		+ pop3port+";"
-		+ smtpport+";"
-		+ benutzername+";"
-		+ passwort+";"
-		+ nachname+";"
-		+ vorname+";"
-		+ emailAdresse;
+	public String toString() {
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (EmailKonto), toString()");
+		String ergebnis = "" + pop3server + ";" + smtpserver + ";" + pop3port + ";" + smtpport + ";" + benutzername
+		        + ";" + passwort + ";" + nachname + ";" + vorname + ";" + emailAdresse;
 		return ergebnis;
 	}
 
-	public String getBenutzername()
-	{
+	public String getBenutzername() {
 		return benutzername;
 	}
 
-	public String getPasswort()
-	{
+	public String getPasswort() {
 		return passwort;
 	}
 
-	public LinkedList getNachrichten()
-	{
+	public LinkedList getNachrichten() {
 		return nachrichten;
 	}
 
-	public void setBenutzername(String benutzername)
-	{
+	public void setBenutzername(String benutzername) {
 		this.benutzername = benutzername;
 	}
 
-	public void setPasswort(String passwort)
-	{
+	public void setPasswort(String passwort) {
 		this.passwort = passwort;
 	}
 
-	public void setNachrichten(LinkedList nachrichten)
-	{
+	public void setNachrichten(LinkedList nachrichten) {
 		this.nachrichten = nachrichten;
 	}
 
@@ -118,8 +102,10 @@ public class EmailKonto
 	}
 
 	public void setNachname(String nachname) {
-		if (nachname != null) this.nachname = nachname;
-		else this.nachname = "";
+		if (nachname != null)
+			this.nachname = nachname;
+		else
+			this.nachname = "";
 	}
 
 	public String getVorname() {
@@ -127,8 +113,10 @@ public class EmailKonto
 	}
 
 	public void setVorname(String vorname) {
-		if (vorname != null) this.vorname = vorname;
-		else this.vorname = "";
+		if (vorname != null)
+			this.vorname = vorname;
+		else
+			this.vorname = "";
 	}
 
 	/**
@@ -139,7 +127,8 @@ public class EmailKonto
 	}
 
 	/**
-	 * @param pop3port the pop3port to set
+	 * @param pop3port
+	 *            the pop3port to set
 	 */
 	public void setPop3port(String pop3port) {
 		this.pop3port = pop3port;
@@ -153,7 +142,8 @@ public class EmailKonto
 	}
 
 	/**
-	 * @param pop3server the pop3server to set
+	 * @param pop3server
+	 *            the pop3server to set
 	 */
 	public void setPop3server(String pop3server) {
 		this.pop3server = pop3server;
@@ -167,7 +157,8 @@ public class EmailKonto
 	}
 
 	/**
-	 * @param smtpport the smtpport to set
+	 * @param smtpport
+	 *            the smtpport to set
 	 */
 	public void setSmtpport(String smtpport) {
 		this.smtpport = smtpport;
@@ -181,7 +172,8 @@ public class EmailKonto
 	}
 
 	/**
-	 * @param smtpserver the smtpserver to set
+	 * @param smtpserver
+	 *            the smtpserver to set
 	 */
 	public void setSmtpserver(String smtpserver) {
 		this.smtpserver = smtpserver;
@@ -195,7 +187,8 @@ public class EmailKonto
 	}
 
 	/**
-	 * @param emailAdresse the emailAdresse to set
+	 * @param emailAdresse
+	 *            the emailAdresse to set
 	 */
 	public void setEmailAdresse(String emailAdresse) {
 		this.emailAdresse = emailAdresse;

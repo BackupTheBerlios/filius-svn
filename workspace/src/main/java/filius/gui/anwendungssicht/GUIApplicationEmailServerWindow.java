@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.anwendungssicht;
 
 import java.awt.BorderLayout;
@@ -68,9 +68,9 @@ import filius.software.email.EmailServer;
 /**
  * Diese Klasse stellt das Konfigurationsfenster fr den E-Mail Server dar. Damit
  * knnen Konten auf dem Server angelegt und entfernt werden.
- *
+ * 
  * @author Thomas Gerding & Johannes Bade
- *
+ * 
  */
 public class GUIApplicationEmailServerWindow extends GUIApplicationWindow {
 
@@ -99,8 +99,7 @@ public class GUIApplicationEmailServerWindow extends GUIApplicationWindow {
 
 	private JPasswordField passwortField;
 
-	public GUIApplicationEmailServerWindow(final GUIDesktopPanel desktop,
-			String appName) {
+	public GUIApplicationEmailServerWindow(final GUIDesktopPanel desktop, String appName) {
 		super(desktop, appName);
 		((EmailServer) holeAnwendung()).kontenLaden();
 
@@ -114,8 +113,7 @@ public class GUIApplicationEmailServerWindow extends GUIApplicationWindow {
 				if (startStopButton.getText().equals(messages.getString("emailserver_msg1"))) {
 					((EmailServer) holeAnwendung()).setAktiv(true);
 					updateLog(messages.getString("emailserver_msg2"));
-				}
-				else {
+				} else {
 					((EmailServer) holeAnwendung()).setAktiv(false);
 					updateLog(messages.getString("emailserver_msg3"));
 				}
@@ -127,21 +125,19 @@ public class GUIApplicationEmailServerWindow extends GUIApplicationWindow {
 		domainField = new JTextField();
 		domainField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				((EmailServer) holeAnwendung()).setMailDomain(domainField
-						.getText());
+				((EmailServer) holeAnwendung()).setMailDomain(domainField.getText());
 				aktualisiere();
 			}
 		});
 		domainField.addFocusListener(new FocusListener() {
 			public void focusLost(FocusEvent arg0) {
-				((EmailServer) holeAnwendung()).setMailDomain(domainField
-						.getText());
+				((EmailServer) holeAnwendung()).setMailDomain(domainField.getText());
 				aktualisiere();
 			}
 
-			public void focusGained(FocusEvent arg0) {}
+			public void focusGained(FocusEvent arg0) {
+			}
 		});
-
 
 		Box obenBox = Box.createHorizontalBox();
 		obenBox.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -165,37 +161,30 @@ public class GUIApplicationEmailServerWindow extends GUIApplicationWindow {
 			public void mousePressed(MouseEvent e) {
 				{
 
-					int Auswahl = showOptionDialog(messages.getString("emailserver_msg11")
-							+ ((EmailKonto) ((EmailServer) holeAnwendung())
-									.getListeBenutzerkonten().get(
-											markierteZeile)).getBenutzername()
-									.toString() + messages.getString("emailserver_msg12"),
-							messages.getString("emailserver_msg13"),
-							JOptionPane.YES_NO_CANCEL_OPTION,
-							JOptionPane.QUESTION_MESSAGE, null,
-							null, null);
+					int Auswahl = showOptionDialog(
+					        messages.getString("emailserver_msg11")
+					                + ((EmailKonto) ((EmailServer) holeAnwendung()).getListeBenutzerkonten().get(
+					                        markierteZeile)).getBenutzername().toString()
+					                + messages.getString("emailserver_msg12"), messages.getString("emailserver_msg13"),
+					        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
 					if (Auswahl == JOptionPane.YES_OPTION) {
-						((EmailServer) holeAnwendung())
-								.getListeBenutzerkonten()
-								.remove(markierteZeile);
+						((EmailServer) holeAnwendung()).getListeBenutzerkonten().remove(markierteZeile);
 						updatekontenListenTabelle();
 					}
 				}
 			}
 		});
 
-		DefaultTableModel kontenListenTabelleModell = new DefaultTableModel(0,
-				2);
+		DefaultTableModel kontenListenTabelleModell = new DefaultTableModel(0, 2);
 		kontenListenTabelle = new JTableEditable(kontenListenTabelleModell, false);
 		kontenListenTabelle.setDragEnabled(false);
-		kontenListenTabelle.setIntercellSpacing(new Dimension(5,5));
+		kontenListenTabelle.setIntercellSpacing(new Dimension(5, 5));
 		kontenListenTabelle.setRowHeight(30);
 		kontenListenTabelle.setShowGrid(false);
 		kontenListenTabelle.setFillsViewportHeight(true);
 		kontenListenTabelle.setBackground(Color.WHITE);
 		kontenListenTabelle.setShowHorizontalLines(true);
-
 
 		TableColumnModel tcm = kontenListenTabelle.getColumnModel();
 		tcm = kontenListenTabelle.getColumnModel();
@@ -227,8 +216,7 @@ public class GUIApplicationEmailServerWindow extends GUIApplicationWindow {
 		benutzernameField = new JTextField();
 		benutzernameField.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
-				gueltigkeitPruefen(benutzernameField,
-						EingabenUeberpruefung.musterEmailBenutzername);
+				gueltigkeitPruefen(benutzernameField, EingabenUeberpruefung.musterEmailBenutzername);
 			}
 
 		});
@@ -256,33 +244,26 @@ public class GUIApplicationEmailServerWindow extends GUIApplicationWindow {
 				{
 
 					if (!benutzernameField.getText().equals("")
-							&& !(new String(passwortField.getPassword()))
-									.equals("")) {
-						if (EingabenUeberpruefung.isGueltig(benutzernameField
-								.getText(),
-								EingabenUeberpruefung.musterKeineLeerzeichen)) {
+					        && !(new String(passwortField.getPassword())).equals("")) {
+						if (EingabenUeberpruefung.isGueltig(benutzernameField.getText(),
+						        EingabenUeberpruefung.musterKeineLeerzeichen)) {
 							try {
-								((EmailServer) holeAnwendung())
-										.benutzerHinzufuegen(benutzernameField
-												.getText(), (new String(
-												passwortField.getPassword())),
-												messages.getString("emailserver_msg20"), messages.getString("emailserver_msg21"));
-								showMessageDialog(messages.getString("emailserver_msg22")
-										+" "+ benutzernameField.getText()
-										+" "+ messages.getString("emailserver_msg23"));
+								((EmailServer) holeAnwendung()).benutzerHinzufuegen(benutzernameField.getText(),
+								        (new String(passwortField.getPassword())),
+								        messages.getString("emailserver_msg20"),
+								        messages.getString("emailserver_msg21"));
+								showMessageDialog(messages.getString("emailserver_msg22") + " "
+								        + benutzernameField.getText() + " " + messages.getString("emailserver_msg23"));
 								benutzernameField.setText("");
 								passwortField.setText("");
-							}
-							catch (CreateAccountException e1) {
+							} catch (CreateAccountException e1) {
 								e1.printStackTrace(Main.debug);
 							}
-						}
-						else {
+						} else {
 							showMessageDialog(messages.getString("emailserver_msg24"));
 						}
 
-					}
-					else {
+					} else {
 						showMessageDialog(messages.getString("emailserver_msg25"));
 					}
 				}
@@ -335,8 +316,7 @@ public class GUIApplicationEmailServerWindow extends GUIApplicationWindow {
 		if (server.isAktiv()) {
 			startStopButton.setText(messages.getString("emailserver_msg29"));
 			domainField.setEnabled(false);
-		}
-		else {
+		} else {
 			startStopButton.setText(messages.getString("emailserver_msg1"));
 			domainField.setEnabled(true);
 		}
@@ -349,39 +329,36 @@ public class GUIApplicationEmailServerWindow extends GUIApplicationWindow {
 	/**
 	 * Durch Beobachterprinzip ausgeloeste Funktion, die die Tabelle mit den
 	 * Email Konten des Servers aktualisiert.
-	 *
+	 * 
 	 * @author Thomas Gerding & Johannes Bade
-	 *
+	 * 
 	 */
 	private void updatekontenListenTabelle() {
 
-		DefaultTableModel tabellenModell = (DefaultTableModel) kontenListenTabelle
-				.getModel();
+		DefaultTableModel tabellenModell = (DefaultTableModel) kontenListenTabelle.getModel();
 		tabellenModell.setRowCount(0);
 
-		LinkedList tempListe = ((EmailServer) holeAnwendung())
-				.getListeBenutzerkonten();
+		LinkedList tempListe = ((EmailServer) holeAnwendung()).getListeBenutzerkonten();
 
 		ListIterator it = tempListe.listIterator();
 		while (it.hasNext()) {
 			EmailKonto tmpKonto = (EmailKonto) it.next();
 			Vector<Comparable> v = new Vector<Comparable>();
-			v.add(tmpKonto.getBenutzername() + "@" + ((EmailServer)holeAnwendung()).getMailDomain());
+			v.add(tmpKonto.getBenutzername() + "@" + ((EmailServer) holeAnwendung()).getMailDomain());
 			v.add(tmpKonto.getNachrichten().size());
 			tabellenModell.addRow(v);
 		}
-		kontenListenTabelle.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
-					public void valueChanged(ListSelectionEvent lse) {
-						markierteZeile = kontenListenTabelle.getSelectedRow();
+		kontenListenTabelle.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent lse) {
+				markierteZeile = kontenListenTabelle.getSelectedRow();
 
-					}
-				});
+			}
+		});
 	}
 
 	/**
 	 * Ueberprueft Eingabefelder auf Richtigkeit
-	 *
+	 * 
 	 * @author Johannes Bade & Thomas Gerding
 	 * @param pruefRegel
 	 * @param feld
@@ -391,24 +368,22 @@ public class GUIApplicationEmailServerWindow extends GUIApplicationWindow {
 			feld.setForeground(EingabenUeberpruefung.farbeRichtig);
 			JTextField temp = new JTextField();
 			feld.setBorder(temp.getBorder());
-		}
-		else {
+		} else {
 			feld.setForeground(EingabenUeberpruefung.farbeFalsch);
-			feld.setBorder(BorderFactory.createLineBorder(
-					EingabenUeberpruefung.farbeFalsch, 1));
+			feld.setBorder(BorderFactory.createLineBorder(EingabenUeberpruefung.farbeFalsch, 1));
 		}
 	}
 
 	public void update(Observable arg0, Object arg1) {
 		updatekontenListenTabelle();
 
-		if (arg1 instanceof String) updateLog(arg1);
+		if (arg1 instanceof String)
+			updateLog(arg1);
 	}
 
 	private void updateLog(Object arg1) {
 		this.logArea.append(arg1.toString() + "\n");
 
-		Main.debug
-				.println("GUIApplicationWebServerWindow: update() aufgerufen.");
+		Main.debug.println("GUIApplicationWebServerWindow: update() aufgerufen.");
 	}
 }

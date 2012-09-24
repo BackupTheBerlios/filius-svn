@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.nachrichtensicht;
 
 import java.awt.Color;
@@ -55,7 +55,7 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 
 	private static final long serialVersionUID = 1L;
 
-	/** Index der Spalte, in der die Schicht des Protokollschichtenmodells steht  */
+	/** Index der Spalte, in der die Schicht des Protokollschichtenmodells steht */
 	public static final int SCHICHT_SPALTE = 5;
 
 	private String interfaceId;
@@ -64,7 +64,7 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 	private JCheckBox vermittlungCheckBox;
 	private JCheckBox transportCheckBox;
 	private JCheckBox anwendungCheckBox;
-	
+
 	private JCheckBoxMenuItem checkbox;
 
 	private JDialog schichtenKonfigDialog;
@@ -91,7 +91,7 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 		this.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 
 		columnModel = new DefaultTableColumnModel();
-		for (int i=0; i<spalten.length; i++) {
+		for (int i = 0; i < spalten.length; i++) {
 			col = new TableColumn();
 			col.setHeaderValue(spalten[i]);
 			col.setIdentifier(spalten[i]);
@@ -100,8 +100,7 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 
 		this.setColumnModel(columnModel);
 
-
-		this.setIntercellSpacing(new Dimension(0,5));
+		this.setIntercellSpacing(new Dimension(0, 5));
 		this.setRowHeight(25);
 		this.setEnabled(false);
 		this.setShowGrid(false);
@@ -166,7 +165,7 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 		schichtenKonfigDialog.setBounds(50, 50, 200, 150);
 		schichtenKonfigDialog.setResizable(false);
 		schichtenKonfigDialog.getContentPane().setLayout(new FlowLayout());
-		((FlowLayout)schichtenKonfigDialog.getContentPane().getLayout()).setAlignment(FlowLayout.LEFT);
+		((FlowLayout) schichtenKonfigDialog.getContentPane().getLayout()).setAlignment(FlowLayout.LEFT);
 
 		netzzugangCheckBox = new JCheckBox(messages.getString("nachrichtentabelle_msg2"), true);
 		vermittlungCheckBox = new JCheckBox(messages.getString("nachrichtentabelle_msg3"), true);
@@ -186,9 +185,10 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 
 				menu.setVisible(false);
 
-				x = getDialog().getX() + getDialog().getWidth()/2 - schichtenKonfigDialog.getWidth()/2;
-				y = getDialog().getY() + getDialog().getHeight()/2 - schichtenKonfigDialog.getHeight()/2;
-				schichtenKonfigDialog.setBounds(x, y, schichtenKonfigDialog.getWidth(), schichtenKonfigDialog.getHeight());
+				x = getDialog().getX() + getDialog().getWidth() / 2 - schichtenKonfigDialog.getWidth() / 2;
+				y = getDialog().getY() + getDialog().getHeight() / 2 - schichtenKonfigDialog.getHeight() / 2;
+				schichtenKonfigDialog.setBounds(x, y, schichtenKonfigDialog.getWidth(),
+				        schichtenKonfigDialog.getHeight());
 
 				schichtenKonfigDialog.setVisible(true);
 				update();
@@ -206,7 +206,7 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 			}
 		});
 		menu.add(menuItem);
-		
+
 		checkbox = new JCheckBoxMenuItem(messages.getString("nachrichtentabelle_msg8"), autoscroll);
 		checkbox.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
@@ -231,8 +231,7 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 	}
 
 	public void update() {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
-				+ " (NachrichtenTabelle), update()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (NachrichtenTabelle), update()");
 		Object[][] daten;
 		Vector<Object[]> gefilterteDaten;
 		int[] colWidth, colMaxWidth;
@@ -241,32 +240,27 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 		colWidth = new int[this.getColumnCount()];
 		colMaxWidth = new int[this.getColumnCount()];
 		for (int i = 0; i < colWidth.length; i++) {
-			colWidth[i] = this.getColumnModel().getColumn(i)
-					.getPreferredWidth();
+			colWidth[i] = this.getColumnModel().getColumn(i).getPreferredWidth();
 			colMaxWidth[i] = this.getColumnModel().getColumn(i).getMaxWidth();
 		}
 
 		daten = Lauscher.getLauscher().getDaten(interfaceId);
 		gefilterteDaten = new Vector<Object[]>();
 		for (int i = 0; i < daten.length; i++) {
-			if (daten[i][SCHICHT_SPALTE]
-					.equals(Lauscher.PROTOKOLL_SCHICHTEN[0])) {
+			if (daten[i][SCHICHT_SPALTE].equals(Lauscher.PROTOKOLL_SCHICHTEN[0])) {
 				if (zaehler < gefilterteDaten.size()) {
 					gefilterteDaten.addElement(new Object[daten[i].length]);
 					zaehler = gefilterteDaten.size();
 				}
 				if (netzzugangCheckBox.isSelected())
 					gefilterteDaten.addElement(daten[i]);
-			} else if (daten[i][SCHICHT_SPALTE]
-					.equals(Lauscher.PROTOKOLL_SCHICHTEN[1])) {
+			} else if (daten[i][SCHICHT_SPALTE].equals(Lauscher.PROTOKOLL_SCHICHTEN[1])) {
 				if (vermittlungCheckBox.isSelected())
 					gefilterteDaten.addElement(daten[i]);
-			} else if (daten[i][SCHICHT_SPALTE]
-					.equals(Lauscher.PROTOKOLL_SCHICHTEN[2])) {
+			} else if (daten[i][SCHICHT_SPALTE].equals(Lauscher.PROTOKOLL_SCHICHTEN[2])) {
 				if (transportCheckBox.isSelected())
 					gefilterteDaten.addElement(daten[i]);
-			} else if (daten[i][SCHICHT_SPALTE]
-					.equals(Lauscher.PROTOKOLL_SCHICHTEN[3])) {
+			} else if (daten[i][SCHICHT_SPALTE].equals(Lauscher.PROTOKOLL_SCHICHTEN[3])) {
 				if (anwendungCheckBox.isSelected())
 					gefilterteDaten.addElement(daten[i]);
 			} else {
@@ -278,15 +272,14 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 			daten[i] = (Object[]) gefilterteDaten.elementAt(i);
 		}
 
-		((DefaultTableModel) this.getModel()).setDataVector(daten,
-				Lauscher.SPALTEN);
+		((DefaultTableModel) this.getModel()).setDataVector(daten, Lauscher.SPALTEN);
 
 		for (int i = 0; i < colWidth.length; i++) {
 			this.getColumnModel().getColumn(i).setMaxWidth(colMaxWidth[i]);
 			this.getColumnModel().getColumn(i).setPreferredWidth(colWidth[i]);
 		}
 		this.getColumnModel().getColumn(6).setResizable(true);
-		
+
 		if (scrollPane != null && scrollPane.getViewport() != null && autoscroll) {
 			scrollPane.getViewport().setViewPosition(new Point(0, this.getHeight()));
 		}

@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.netzwerksicht;
 
 import java.awt.AlphaComposite;
@@ -94,7 +94,7 @@ public class JSidebarButton extends JLabel implements Observer {
 
 		return width;
 	}
-	
+
 	public Dimension getPreferredSize() {
 		return new Dimension(getWidth(), getHeight());
 	}
@@ -105,14 +105,13 @@ public class JSidebarButton extends JLabel implements Observer {
 		height = this.getFontMetrics(this.getFont()).getHeight();
 		if (this.getIcon() != null) {
 			height += this.getIcon().getIconHeight();
-		}
-		else {
-//			Main.debug.println("DEBUG ("+this.hashCode()+"), getHeight(): add 80 to height");
-//			height+=80;
+		} else {
+			// Main.debug.println("DEBUG ("+this.hashCode()+"), getHeight(): add 80 to height");
+			// height+=80;
 		}
 		height += 10;
 
-//		Main.debug.println("DEBUG ("+this.hashCode()+"), getHeight="+height);
+		// Main.debug.println("DEBUG ("+this.hashCode()+"), getHeight="+height);
 		return height;
 	}
 
@@ -124,35 +123,30 @@ public class JSidebarButton extends JLabel implements Observer {
 		if (selektiert) {
 			g.setColor(new Color(0, 0, 0));
 			Graphics2D g2 = (Graphics2D) g;
-			Stroke stroke = new BasicStroke(1, BasicStroke.CAP_BUTT,
-					BasicStroke.JOIN_BEVEL, 1, new float[] { 2 }, 0);
+			Stroke stroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 1, new float[] { 2 }, 0);
 			g2.setStroke(stroke);
 			g2.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
 			g.setColor(new Color(128, 200, 255));
-			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-					0.2f));
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
 			g2.fillRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
 		}
 
 		if (modemVerbunden) {
 			g2d.setColor(new Color(0, 255, 0));
-			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-					RenderingHints.VALUE_ANTIALIAS_ON);
-			g2d.fillOval((this.getWidth() / 2) - 6, (this.getHeight() / 2) - 6,
-					12, 12);
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.fillOval((this.getWidth() / 2) - 6, (this.getHeight() / 2) - 6, 12, 12);
 		}
 	}
 
 	public void update(Observable o, Object arg) {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (JSidebarButton), update("+o+","+arg+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (JSidebarButton), update(" + o + ","
+		        + arg + ")");
 
 		if (arg != null && arg.equals(Boolean.TRUE)) {
 			modemVerbunden = true;
-		}
-		else if (arg != null && arg.equals(Boolean.FALSE)) {
+		} else if (arg != null && arg.equals(Boolean.FALSE)) {
 			modemVerbunden = false;
-		}
-		else if (arg != null && arg instanceof String) {
+		} else if (arg != null && arg instanceof String) {
 			JOptionPane.showMessageDialog(JMainFrame.getJMainFrame(), arg);
 		}
 		this.updateUI();

@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.nachrichtensicht;
 
 import java.awt.Color;
@@ -39,41 +39,45 @@ public class LauscherTableCellRenderer extends DefaultTableCellRenderer {
 
 	private static final long serialVersionUID = 1L;
 
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)  {
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+	        int row, int column) {
 		String schichtString;
 		int schicht = 5;
 		int lfdNr = 0;
 		int tblCols = table.getColumnCount();
 		int tblRows = table.getRowCount();
 
-		if (tblRows>row && tblCols>NachrichtenTabelle.SCHICHT_SPALTE &&
-				table.getValueAt(row, NachrichtenTabelle.SCHICHT_SPALTE) != null)
+		if (tblRows > row && tblCols > NachrichtenTabelle.SCHICHT_SPALTE
+		        && table.getValueAt(row, NachrichtenTabelle.SCHICHT_SPALTE) != null)
 			schichtString = table.getValueAt(row, NachrichtenTabelle.SCHICHT_SPALTE).toString();
-		else schichtString = "";
+		else
+			schichtString = "";
 
 		if (table.getValueAt(row, 0) != null) {
 			try {
 				lfdNr = Integer.parseInt((String) table.getValueAt(row, 0));
+			} catch (Exception e) {
 			}
-			catch (Exception e) {}
 		}
 
-
-		for (int i=0; i<Lauscher.PROTOKOLL_SCHICHTEN.length; i++) {
-			if (schichtString.equals(Lauscher.PROTOKOLL_SCHICHTEN[i])) schicht = i;
+		for (int i = 0; i < Lauscher.PROTOKOLL_SCHICHTEN.length; i++) {
+			if (schichtString.equals(Lauscher.PROTOKOLL_SCHICHTEN[i]))
+				schicht = i;
 		}
 
 		switch (schicht) {
 		case 0:
 			setForeground(Color.BLACK);
-//			if (lfdNr%2==0) 
-				setBackground(new Color(0.9f, 0.9f, 0.9f));
-//			else setBackground(new Color(0.8f, 0.8f, 0.8f));
+			// if (lfdNr%2==0)
+			setBackground(new Color(0.9f, 0.9f, 0.9f));
+			// else setBackground(new Color(0.8f, 0.8f, 0.8f));
 			break;
 		case 1:
 			setForeground(Color.BLACK);
-			if (lfdNr%2==0) setBackground(new Color(0.3f, 1f, 0.3f));
-			else setBackground(new Color(0.2f, 1f, 0.2f));
+			if (lfdNr % 2 == 0)
+				setBackground(new Color(0.3f, 1f, 0.3f));
+			else
+				setBackground(new Color(0.2f, 1f, 0.2f));
 			break;
 		case 2:
 			setForeground(Color.BLACK);
@@ -113,8 +117,10 @@ public class LauscherTableCellRenderer extends DefaultTableCellRenderer {
 			setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
 		}
 
-		if (value != null) setText(value.toString());
-		else setText("");
+		if (value != null)
+			setText(value.toString());
+		else
+			setText("");
 
 		return this;
 	}

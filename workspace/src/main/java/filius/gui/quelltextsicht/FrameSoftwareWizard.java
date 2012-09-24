@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.quelltextsicht;
 
 import java.awt.BorderLayout;
@@ -48,7 +48,7 @@ public class FrameSoftwareWizard extends JDialog implements I18n {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final int VERWALTUNG=1, QUELLTEXT=2, COMPILER=3;
+	public static final int VERWALTUNG = 1, QUELLTEXT = 2, COMPILER = 3;
 
 	private int zustand;
 
@@ -66,14 +66,12 @@ public class FrameSoftwareWizard extends JDialog implements I18n {
 
 	private String[] quelltextDateien;
 
-	public FrameSoftwareWizard () {
+	public FrameSoftwareWizard() {
 		super(JMainFrame.getJMainFrame(), messages.getString("framesoftwarewizard_msg1"), true);
 
-		Dimension screenSize =
-            Toolkit.getDefaultToolkit().getScreenSize();
-        this.setSize(720, 600);
-		this.setLocation(screenSize.width/2 - (this.getWidth()/2),
-                 screenSize.height/2 - (this.getHeight()/2));
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setSize(720, 600);
+		this.setLocation(screenSize.width / 2 - (this.getWidth() / 2), screenSize.height / 2 - (this.getHeight() / 2));
 
 		initKomponenten();
 
@@ -140,13 +138,12 @@ public class FrameSoftwareWizard extends JDialog implements I18n {
 		if (pQuelltext == null) {
 			pQuelltext = new PanelQuelltext();
 			if (quelltextDateien.length == 2) {
-			pQuelltext.hinzuEditor(klassenName, quelltextDateien[0]);
-			pQuelltext.hinzuEditor("GUIApplication"+klassenName+"Window", quelltextDateien[1]);
-			}
-			else {
-				pQuelltext.hinzuEditor(klassenName+"Mitarbeiter", quelltextDateien[0]);
+				pQuelltext.hinzuEditor(klassenName, quelltextDateien[0]);
+				pQuelltext.hinzuEditor("GUIApplication" + klassenName + "Window", quelltextDateien[1]);
+			} else {
+				pQuelltext.hinzuEditor(klassenName + "Mitarbeiter", quelltextDateien[0]);
 				pQuelltext.hinzuEditor(klassenName, quelltextDateien[1]);
-				pQuelltext.hinzuEditor("GUIApplication"+klassenName+"Window", quelltextDateien[2]);
+				pQuelltext.hinzuEditor("GUIApplication" + klassenName + "Window", quelltextDateien[2]);
 
 			}
 

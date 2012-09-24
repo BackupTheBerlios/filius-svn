@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.software.transportschicht;
 
 import java.util.Hashtable;
@@ -43,7 +43,7 @@ import filius.software.vermittlungsschicht.IpPaket;
  * Der Server-Socket leitet ankommende Segmente an Hand von entfernter
  * IP-Adresse und entferntem TCP-Port an den richtigen lokalen TCP-Socket
  * weiter.
- *
+ * 
  * @author carsten
  */
 public class ServerSocket implements SocketSchnittstelle, I18n {
@@ -81,39 +81,37 @@ public class ServerSocket implements SocketSchnittstelle, I18n {
 	 * initialisiert. Ausserdem wird der lokale TCP-Port fuer diesen Socket
 	 * reserviert. Wenn das nicht moeglich ist, weil er schon belegt ist, wird
 	 * eine Exception ausgeloest.
-	 *
+	 * 
 	 * @author carsten
 	 * @param betriebssystem
-	 * @param lokalerPort -
-	 *            Lokaler Port, auf dem der Server laufen soll. Bsp.:
+	 * @param lokalerPort
+	 *            - Lokaler Port, auf dem der Server laufen soll. Bsp.:
 	 *            http-Anwendungen zumeist auf Port 80
-	 * @throws ServerSocketException -
-	 *             Diese Exception wird geworfen, wenn auf dem angeforderten
+	 * @throws ServerSocketException
+	 *             - Diese Exception wird geworfen, wenn auf dem angeforderten
 	 *             Port schon eine Anwendung laeuft.
 	 */
-	public ServerSocket(InternetKnotenBetriebssystem betriebssystem,
-			int lokalerPort, int transportProtokoll)
-			throws ServerSocketException {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ServerSocket), constr: ServerSocket("+betriebssystem+","+lokalerPort+","+transportProtokoll+")");
+	public ServerSocket(InternetKnotenBetriebssystem betriebssystem, int lokalerPort, int transportProtokoll)
+	        throws ServerSocketException {
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ServerSocket), constr: ServerSocket("
+		        + betriebssystem + "," + lokalerPort + "," + transportProtokoll + ")");
 		this.betriebssystem = betriebssystem;
 		this.lokalerPort = lokalerPort;
 
 		if (transportProtokoll == IpPaket.TCP) {
 			protokoll = betriebssystem.holeTcp();
-		}
-		else {
+		} else {
 			protokoll = betriebssystem.holeUdp();
 		}
 
 		// Falls schon eine Anwendung auf dem vorgeschlagenen Port laeuft
 		// wird eine Exception ausgeloest
 		if (!protokoll.reservierePort(lokalerPort, this)) {
-			throw new ServerSocketException(messages
-					.getString("sw_serversocket_msg1")
-					+ lokalerPort + messages.getString("sw_serversocket_msg2"));
+			throw new ServerSocketException(messages.getString("sw_serversocket_msg1") + lokalerPort
+			        + messages.getString("sw_serversocket_msg2"));
 		}
 	}
-	
+
 	public int getLocalPort() {
 		return this.lokalerPort;
 	}
@@ -122,7 +120,8 @@ public class ServerSocket implements SocketSchnittstelle, I18n {
 	 * Methode zum Eintragen eines neuen Sockets in die Socket-Liste
 	 */
 	public void eintragenSocket(Socket socket) {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ServerSocket), eintragenSocket("+socket+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ServerSocket), eintragenSocket("
+		        + socket + ")");
 		String ziel;
 
 		ziel = socket.holeZielIPAdresse() + ":" + socket.holeZielPort();
@@ -136,12 +135,13 @@ public class ServerSocket implements SocketSchnittstelle, I18n {
 	 * Der Port wird dann freigegeben.
 	 */
 	public void austragenSocket(Socket socket) {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ServerSocket), austragenSocket("+socket+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ServerSocket), austragenSocket("
+		        + socket + ")");
 		String ziel;
 
 		ziel = socket.holeZielIPAdresse() + ":" + socket.holeZielPort();
 		socketListe.remove(ziel);
-		//Main.debug.println(socketListe);
+		// Main.debug.println(socketListe);
 
 		if (socketListe.isEmpty() && aktuellerSocket == null) {
 			protokoll.gibPortFrei(lokalerPort);
@@ -153,11 +153,11 @@ public class ServerSocket implements SocketSchnittstelle, I18n {
 	 * zurueck gegeben. Diese Methode <b>blockiert</b> den Thread, bis eine
 	 * Verbindung zu dem Socket aufgebaut wurde! Der Eintrag in die Socketliste
 	 * wird vom TCP-Socket nach erfolgreichem Verbindungsaufbau initiiert.
-	 *
+	 * 
 	 * @return
 	 */
 	public synchronized Socket oeffnen() throws VerbindungsException {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ServerSocket), oeffnen()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ServerSocket), oeffnen()");
 		Socket socket = null;
 
 		if (protokoll instanceof TCP)
@@ -168,14 +168,14 @@ public class ServerSocket implements SocketSchnittstelle, I18n {
 		aktuellerSocket = socket;
 		try {
 			socket.verbinden();
-		}
-		catch (TimeOutException e) {
+		} catch (TimeOutException e) {
 			socket = null;
-			aktuellerSocket = null;   // CE: moved inside catch block; was placed after it
-			//Main.debug.println("ServerSocket: Verbindungsversuch abgebrochen.");
+			aktuellerSocket = null; // CE: moved inside catch block; was placed
+									// after it
+			// Main.debug.println("ServerSocket: Verbindungsversuch abgebrochen.");
 			e.printStackTrace(Main.debug);
 		}
-		
+
 		if (socket != null && socket.istVerbunden())
 			return socket;
 		else
@@ -190,7 +190,8 @@ public class ServerSocket implements SocketSchnittstelle, I18n {
 	 * und wartet auf eingehende Verbindungsanfragen.
 	 */
 	public void hinzufuegen(String startIp, int startPort, Object segment) {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ServerSocket), hinzufuegen("+startIp+","+startPort+","+segment+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ServerSocket), hinzufuegen("
+		        + startIp + "," + startPort + "," + segment + ")");
 		String start;
 		Socket socket;
 
@@ -198,15 +199,14 @@ public class ServerSocket implements SocketSchnittstelle, I18n {
 		if (socketListe.containsKey(start)) {
 			socket = (Socket) socketListe.get(start);
 			socket.hinzufuegen(startIp, startPort, segment);
-		}
-		else if (aktuellerSocket != null) {
+		} else if (aktuellerSocket != null) {
 			aktuellerSocket.hinzufuegen(startIp, startPort, segment);
 		}
-//		else {
-//			Main.debug
-//					.println("ServerSocket: Fehler in Methode hinzufuegen() aufgetreten."+
-//							"\n\tSegment von "+startIp+":"+startPort);
-//		}
+		// else {
+		// Main.debug
+		// .println("ServerSocket: Fehler in Methode hinzufuegen() aufgetreten."+
+		// "\n\tSegment von "+startIp+":"+startPort);
+		// }
 	}
 
 	/**
@@ -220,7 +220,7 @@ public class ServerSocket implements SocketSchnittstelle, I18n {
 	 * Zustand geschlossen wird, blockiert dieser nicht!
 	 */
 	public void schliessen() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ServerSocket), schliessen()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ServerSocket), schliessen()");
 
 		if (aktuellerSocket != null)
 			aktuellerSocket.schliessen();
@@ -234,7 +234,7 @@ public class ServerSocket implements SocketSchnittstelle, I18n {
 	 * Diese Methode ist <b>nicht blockierend</b>!
 	 */
 	public void beenden() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ServerSocket), beenden()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ServerSocket), beenden()");
 		if (aktuellerSocket != null)
 			aktuellerSocket.beenden();
 	}

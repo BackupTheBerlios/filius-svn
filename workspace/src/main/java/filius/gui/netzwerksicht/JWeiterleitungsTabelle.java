@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.netzwerksicht;
 
 import java.awt.event.ActionEvent;
@@ -62,7 +62,8 @@ public class JWeiterleitungsTabelle extends JTable implements I18n {
 
 	public JWeiterleitungsTabelle(JVermittlungsrechnerKonfiguration konfig) {
 		super(new DefaultTableModel(1, 4));
-	  	Main.debug.println("INVOKED-2 ("+this.hashCode()+") "+getClass()+", constr: JWeiterleitungsTabelle("+konfig+")");
+		Main.debug.println("INVOKED-2 (" + this.hashCode() + ") " + getClass() + ", constr: JWeiterleitungsTabelle("
+		        + konfig + ")");
 
 		this.konfig = konfig;
 
@@ -87,11 +88,9 @@ public class JWeiterleitungsTabelle extends JTable implements I18n {
 
 					ActionListener al = new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							if (e.getActionCommand().equals(
-									miZeileHinzu.getActionCommand())) {
+							if (e.getActionCommand().equals(miZeileHinzu.getActionCommand())) {
 								neuerEintrag();
-							} else if (e.getActionCommand().equals(
-									miLoeschen.getActionCommand())) {
+							} else if (e.getActionCommand().equals(miLoeschen.getActionCommand())) {
 								markiertenEintragLoeschen();
 							}
 						}
@@ -101,8 +100,7 @@ public class JWeiterleitungsTabelle extends JTable implements I18n {
 					miLoeschen.addActionListener(al);
 					pmRechteMausTaste.add(miLoeschen);
 					pmRechteMausTaste.add(miZeileHinzu);
-					pmRechteMausTaste.show(tabelle, e.getX(), e
-							.getY());
+					pmRechteMausTaste.show(tabelle, e.getX(), e.getY());
 				}
 			}
 		});
@@ -118,7 +116,7 @@ public class JWeiterleitungsTabelle extends JTable implements I18n {
 	}
 
 	public void aenderungenAnnehmen() {
-	  	Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+", aenderungenAnnehmen()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", aenderungenAnnehmen()");
 		Vector<Object> tableData, rowData;
 		Weiterleitungstabelle tabelle;
 		String[] routingEintrag;
@@ -128,52 +126,49 @@ public class JWeiterleitungsTabelle extends JTable implements I18n {
 		if (getCellEditor() != null)
 			getCellEditor().stopCellEditing();
 
-		tableData = ((DefaultTableModel)getModel()).getDataVector();
-		tabelle = ((InternetKnotenBetriebssystem)((Knoten)konfig.holeHardware()).getSystemSoftware()).getWeiterleitungstabelle();
+		tableData = ((DefaultTableModel) getModel()).getDataVector();
+		tabelle = ((InternetKnotenBetriebssystem) ((Knoten) konfig.holeHardware()).getSystemSoftware())
+		        .getWeiterleitungstabelle();
 		tabelle.reset();
-		for (int i=0; i<tableData.size(); i++) {
+		for (int i = 0; i < tableData.size(); i++) {
 			if (isCellEditable(i, 1)) {
-			rowData = (Vector)tableData.elementAt(i);
-			routingEintrag = new String[rowData.size()];
-			for (int j=0; j<routingEintrag.length; j++) {
-				tmpString = (String) rowData.elementAt(j);
-				switch (j) {
-				case 0:
-					pattern = EingabenUeberpruefung.musterIpAdresse;
-					break;
-				case 1:
-					pattern = EingabenUeberpruefung.musterSubNetz;
-					break;
-				case 2:
-					pattern = EingabenUeberpruefung.musterIpAdresse;
-					break;
-				case 3:
-					pattern = EingabenUeberpruefung.musterIpAdresse;
-					break;
+				rowData = (Vector) tableData.elementAt(i);
+				routingEintrag = new String[rowData.size()];
+				for (int j = 0; j < routingEintrag.length; j++) {
+					tmpString = (String) rowData.elementAt(j);
+					switch (j) {
+					case 0:
+						pattern = EingabenUeberpruefung.musterIpAdresse;
+						break;
+					case 1:
+						pattern = EingabenUeberpruefung.musterSubNetz;
+						break;
+					case 2:
+						pattern = EingabenUeberpruefung.musterIpAdresse;
+						break;
+					case 3:
+						pattern = EingabenUeberpruefung.musterIpAdresse;
+						break;
+					}
+					if (EingabenUeberpruefung.isGueltig(tmpString, pattern)) {
+						routingEintrag[j] = tmpString;
+					} else {
+						routingEintrag[j] = "";
+					}
 				}
-				if (EingabenUeberpruefung.isGueltig(tmpString, pattern)) {
-				routingEintrag[j] = tmpString;
-				}
-				else {
-					routingEintrag[j] = "";
-				}
-			}
-			tabelle.addManuellenEintrag(routingEintrag[0], routingEintrag[1], routingEintrag[2], routingEintrag[3]);
+				tabelle.addManuellenEintrag(routingEintrag[0], routingEintrag[1], routingEintrag[2], routingEintrag[3]);
 			}
 		}
 
 		updateAttribute();
 	}
 
-
 	public boolean isCellEditable(int row, int column) {
 		if (editableRows == null) {
 			return true;
-		}
-		else if (row >= editableRows.size()) {
+		} else if (row >= editableRows.size()) {
 			return true;
-		}
-		else {
+		} else {
 			return editableRows.get(row).booleanValue();
 		}
 	}
@@ -202,15 +197,15 @@ public class JWeiterleitungsTabelle extends JTable implements I18n {
 	}
 
 	public void neuerEintrag() {
-	  	Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+", neuerEintrag()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", neuerEintrag()");
 		Vector<String> eintrag = new Vector<String>();
 		eintrag.add("");
 		eintrag.add("");
 		eintrag.add("");
 		eintrag.add("");
 
-		((DefaultTableModel)getModel()).addRow(eintrag);
-//		Main.debug.println("JWeiterleitungsTabelle: neuer Eintrag, insgesamt "+getModel().getRowCount()+" Zeilen");
+		((DefaultTableModel) getModel()).addRow(eintrag);
+		// Main.debug.println("JWeiterleitungsTabelle: neuer Eintrag, insgesamt "+getModel().getRowCount()+" Zeilen");
 		editableRows.add(new Boolean(true));
 		aenderungenAnnehmen();
 	}
@@ -223,7 +218,7 @@ public class JWeiterleitungsTabelle extends JTable implements I18n {
 	}
 
 	private void entferneEintrag(int row) {
-		((DefaultTableModel)getModel()).removeRow(row);
+		((DefaultTableModel) getModel()).removeRow(row);
 		editableRows.remove(row);
 	}
 
@@ -253,7 +248,7 @@ public class JWeiterleitungsTabelle extends JTable implements I18n {
 	}
 
 	public void updateAttribute() {
-	  	Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+", updateAttribute()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", updateAttribute()");
 		ListIterator it, editableIt;
 		Weiterleitungstabelle tabelle;
 		LinkedList<String[]> routingTabelle;
@@ -261,7 +256,8 @@ public class JWeiterleitungsTabelle extends JTable implements I18n {
 		Vector<String[]> tmpData;
 
 		/* Weiterleitungstabelle aktualisieren */
-		tabelle = ((InternetKnotenBetriebssystem)((Knoten)konfig.holeHardware()).getSystemSoftware()).getWeiterleitungstabelle();
+		tabelle = ((InternetKnotenBetriebssystem) ((Knoten) konfig.holeHardware()).getSystemSoftware())
+		        .getWeiterleitungstabelle();
 		routingTabelle = tabelle.holeTabelle();
 
 		it = routingTabelle.listIterator();
@@ -269,32 +265,30 @@ public class JWeiterleitungsTabelle extends JTable implements I18n {
 			editableRows = tabelle.holeManuelleEintraegeFlags();
 
 			data = new String[routingTabelle.size()][4];
-			for (int i=0; it.hasNext(); i++) {
+			for (int i = 0; it.hasNext(); i++) {
 				data[i] = (String[]) it.next();
 			}
-		}
-		else {
+		} else {
 			editableIt = tabelle.holeManuelleEintraegeFlags().listIterator();
 			tmpData = new Vector<String[]>();
 
 			while (it.hasNext() && editableIt.hasNext()) {
-				if (((Boolean)editableIt.next()).booleanValue()) {
+				if (((Boolean) editableIt.next()).booleanValue()) {
 					tmpData.add((String[]) it.next());
-				}
-				else {
+				} else {
 					it.next();
 				}
 			}
 			data = new String[tmpData.size()][4];
 			editableRows = new LinkedList<Boolean>();
 
-			for (int i=0; i<data.length; i++) {
+			for (int i = 0; i < data.length; i++) {
 				data[i] = (String[]) tmpData.elementAt(i);
 				editableRows.add(Boolean.TRUE);
 			}
 		}
 
-		((DefaultTableModel)getModel()).setDataVector(data, getRoutingTabellenSpalten());
-		((DefaultTableModel)getModel()).fireTableDataChanged();
+		((DefaultTableModel) getModel()).setDataVector(data, getRoutingTabellenSpalten());
+		((DefaultTableModel) getModel()).fireTableDataChanged();
 	}
 }

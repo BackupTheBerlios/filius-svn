@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.software.clientserver;
 
 import java.util.LinkedList;
@@ -68,7 +68,8 @@ public abstract class ServerAnwendung extends Anwendung implements I18n {
 
 	/** Konstruktor zur Initialisierung des verwendeten TransportProtokolls */
 	public ServerAnwendung(int transportProtokoll) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+", constr: ServerAnwendung("+transportProtokoll+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + ", constr: ServerAnwendung(" + transportProtokoll + ")");
 		this.transportProtokoll = transportProtokoll;
 	}
 
@@ -104,14 +105,15 @@ public abstract class ServerAnwendung extends Anwendung implements I18n {
 	 * @param flag
 	 */
 	public void setAktiv(boolean flag) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (ServerAnwendung), setAktiv("+flag+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (ServerAnwendung), setAktiv(" + flag + ")");
 		aktiv = flag;
 
-		//Main.debug.println(getClass() + "\n\taktiv = " + aktiv);
+		// Main.debug.println(getClass() + "\n\taktiv = " + aktiv);
 
 		if (getState().equals(State.WAITING)) {
 			synchronized (this) {
-				//Main.debug.println("\taufgeweckt");
+				// Main.debug.println("\taufgeweckt");
 				notifyAll();
 			}
 		}
@@ -120,12 +122,9 @@ public abstract class ServerAnwendung extends Anwendung implements I18n {
 			if (socket != null)
 				socket.schliessen();
 			socket = null;
-			benachrichtigeBeobachter(messages
-					.getString("sw_serveranwendung_msg1"));
-		}
-		else {
-			benachrichtigeBeobachter(messages
-					.getString("sw_serveranwendung_msg2"));
+			benachrichtigeBeobachter(messages.getString("sw_serveranwendung_msg1"));
+		} else {
+			benachrichtigeBeobachter(messages.getString("sw_serveranwendung_msg2"));
 		}
 	}
 
@@ -136,7 +135,8 @@ public abstract class ServerAnwendung extends Anwendung implements I18n {
 	 * aufgerufen.
 	 */
 	public void starten() {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (ServerAnwendung), starten()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (ServerAnwendung), starten()");
 		super.starten();
 		mitarbeiter = new LinkedList<ServerMitarbeiter>();
 
@@ -154,7 +154,8 @@ public abstract class ServerAnwendung extends Anwendung implements I18n {
 	 * Socket-Schnittstelle werden beendet.
 	 */
 	public void beenden() {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (ServerAnwendung), beenden()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (ServerAnwendung), beenden()");
 		ListIterator it;
 
 		super.beenden();
@@ -202,17 +203,16 @@ public abstract class ServerAnwendung extends Anwendung implements I18n {
 	 * neuerMitarbeiter() erstellt, der die weitere Verarbeitung uebernimmt.
 	 */
 	public void annehmenVerbindungen() {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (ServerAnwendung), annehmenVerbindungen()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (ServerAnwendung), annehmenVerbindungen()");
 		Socket transportSocket;
 
 		while (running) {
 			if (aktiv) {
 				if (socket == null) {
 					try {
-						socket = new ServerSocket(getSystemSoftware(), port,
-								transportProtokoll);
-					}
-					catch (ServerSocketException e) {
+						socket = new ServerSocket(getSystemSoftware(), port, transportProtokoll);
+					} catch (ServerSocketException e) {
 						e.printStackTrace(Main.debug);
 						benachrichtigeBeobachter(messages.getString("sw_serveranwendung_msg3"));
 						setAktiv(false);
@@ -226,41 +226,32 @@ public abstract class ServerAnwendung extends Anwendung implements I18n {
 					try {
 						transportSocket = ((ServerSocket) socket).oeffnen();
 
-						if (transportSocket != null
-								&& transportSocket.holeZielIPAdresse() != null) {
+						if (transportSocket != null && transportSocket.holeZielIPAdresse() != null) {
 							neuerMitarbeiter(transportSocket);
-							benachrichtigeBeobachter(messages
-									.getString("sw_serveranwendung_msg4")
-									+ " "
-									+ transportSocket.holeZielIPAdresse()
-									+ ":"
-									+ transportSocket.holeZielPort()
-									+ " "
-									+ messages
-											.getString("sw_serveranwendung_msg5"));
+							benachrichtigeBeobachter(messages.getString("sw_serveranwendung_msg4") + " "
+							        + transportSocket.holeZielIPAdresse() + ":" + transportSocket.holeZielPort() + " "
+							        + messages.getString("sw_serveranwendung_msg5"));
 						}
-					}
-					catch (Exception e) {
+					} catch (Exception e) {
 						benachrichtigeBeobachter(e.getMessage());
 						e.printStackTrace(Main.debug);
 					}
 				}
-			}
-			else {
-				
+			} else {
+
 				synchronized (this) {
 					try {
 						wait();
-						//Main.debug.println(getClass()
-										//+ "\n\tThread fortgesetzt nach Aktivierung der Anwendung");
-					}
-					catch (InterruptedException e) {
+						// Main.debug.println(getClass()
+						// +
+						// "\n\tThread fortgesetzt nach Aktivierung der Anwendung");
+					} catch (InterruptedException e) {
 					}
 				}
 			}
 		}
 
-		//Main.debug.println(getClass()
-				//+ "aktiven Zustand und damit Verbindungsannahme beendet");
+		// Main.debug.println(getClass()
+		// + "aktiven Zustand und damit Verbindungsannahme beendet");
 	}
 }

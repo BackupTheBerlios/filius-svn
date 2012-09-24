@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.software.vermittlungsschicht;
 
 import java.util.LinkedList;
@@ -49,13 +49,13 @@ public class Weiterleitungstabelle implements I18n {
 	 * werden als String-Arrays in einer Liste verwaltet. Ein Eintrag besteht
 	 * aus folgenden Elementen:
 	 * <ol>
-	 * <li> Netz-ID der Zieladresse als IP-Adresse </li>
-	 * <li> Netzmaske zur Berechnung der Netz-ID aus dem ersten Wert </li>
-	 * <li> Das Standard-Gateway, ueber die die Ziel-IP-Adresse erreicht wird,
+	 * <li>Netz-ID der Zieladresse als IP-Adresse</li>
+	 * <li>Netzmaske zur Berechnung der Netz-ID aus dem ersten Wert</li>
+	 * <li>Das Standard-Gateway, ueber die die Ziel-IP-Adresse erreicht wird,
 	 * wenn sie sich nicht im gleichen Rechnernetz wie der eigene Rechner
-	 * befindet </li>
-	 * <li> Die IP-Adresse der Netzwerkkarte, ueber die die Ziel-IP-Adresse
-	 * erreicht wird </li>
+	 * befindet</li>
+	 * <li>Die IP-Adresse der Netzwerkkarte, ueber die die Ziel-IP-Adresse
+	 * erreicht wird</li>
 	 * </ol>
 	 */
 	private LinkedList<String[]> manuelleTabelle;
@@ -78,8 +78,7 @@ public class Weiterleitungstabelle implements I18n {
 	}
 
 	/** Methode fuer den Zugriff auf die Systemsoftware */
-	public void setInternetKnotenBetriebssystem(
-			InternetKnotenBetriebssystem firmware) {
+	public void setInternetKnotenBetriebssystem(InternetKnotenBetriebssystem firmware) {
 		this.firmware = firmware;
 	}
 
@@ -108,40 +107,39 @@ public class Weiterleitungstabelle implements I18n {
 	 * Methode zum hinzufuegen eines neuen Eintrags. Ein Eintrag besteht aus
 	 * folgenden Elementen:
 	 * <ol>
-	 * <li> Netz-ID der Zieladresse als IP-Adresse </li>
-	 * <li> Netzmaske zur Berechnung der Netz-ID aus dem ersten Wert </li>
-	 * <li> Das Standard-Gateway, ueber die die Ziel-IP-Adresse erreicht wird,
+	 * <li>Netz-ID der Zieladresse als IP-Adresse</li>
+	 * <li>Netzmaske zur Berechnung der Netz-ID aus dem ersten Wert</li>
+	 * <li>Das Standard-Gateway, ueber die die Ziel-IP-Adresse erreicht wird,
 	 * wenn sie sich nicht im gleichen Rechnernetz wie der eigene Rechner
-	 * befindet </li>
-	 * <li> Die IP-Adresse der Netzwerkkarte, ueber die die Ziel-IP-Adresse
-	 * erreicht wird </li>
+	 * befindet</li>
+	 * <li>Die IP-Adresse der Netzwerkkarte, ueber die die Ziel-IP-Adresse
+	 * erreicht wird</li>
 	 * </ol>
-	 *
+	 * 
 	 * @param netzwerkziel
 	 * @param netzwerkmaske
 	 * @param gateway
 	 * @param schnittstelle
 	 */
-	public void addManuellenEintrag(String netzwerkziel, String netzwerkmaske,
-			String gateway, String schnittstelle) {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (Weiterleitungstabelle), addManuellenEintrag("+netzwerkziel+","+netzwerkmaske+","+gateway+","+schnittstelle+")");
+	public void addManuellenEintrag(String netzwerkziel, String netzwerkmaske, String gateway, String schnittstelle) {
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (Weiterleitungstabelle), addManuellenEintrag(" + netzwerkziel + "," + netzwerkmaske + "," + gateway
+		        + "," + schnittstelle + ")");
 		manuelleEintraege = null;
 
-		if (netzwerkziel != null && netzwerkmaske != null && gateway != null
-				&& schnittstelle != null) {
-			String[] tmpString = { netzwerkziel, netzwerkmaske, gateway,
-					schnittstelle };
+		if (netzwerkziel != null && netzwerkmaske != null && gateway != null && schnittstelle != null) {
+			String[] tmpString = { netzwerkziel, netzwerkmaske, gateway, schnittstelle };
 			manuelleTabelle.addLast(tmpString);
 		}
 
-//		printTabelle(messages.getString("sw_weiterleitungstabelle_msg1"),
-//				manuelleTabelle);
+		// printTabelle(messages.getString("sw_weiterleitungstabelle_msg1"),
+		// manuelleTabelle);
 	}
 
 	/**
 	 * Hilfsmethode zum Debugging zur Ausgabe der Tabelleneintraege auf der
 	 * Standardausgabe
-	 *
+	 * 
 	 * @param name
 	 *            der Name, der in der Tabellenueberschrift ausgegeben werden
 	 *            soll
@@ -149,14 +147,15 @@ public class Weiterleitungstabelle implements I18n {
 	 *            die auszugebende Tabelle
 	 */
 	public void printTabelle(String name) {
-//		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (Weiterleitungstabelle), printTabelle("+name+","+tabelle+")");
+		// Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (Weiterleitungstabelle), printTabelle("+name+","+tabelle+")");
 		ListIterator it = holeTabelle().listIterator();
 		String[] eintrag;
 
-		Main.debug.println("DEBUG ("+name+") Weiterleitungstabelle (IP,mask,gw,if):");
+		Main.debug.println("DEBUG (" + name + ") Weiterleitungstabelle (IP,mask,gw,if):");
 		while (it.hasNext()) {
 			eintrag = (String[]) it.next();
-			Main.debug.printf("DEBUG (%s)  '%15s' | '%15s' | '%15s' | '%15s'\n", name, eintrag[0], eintrag[1], eintrag[2], eintrag[3]);
+			Main.debug.printf("DEBUG (%s)  '%15s' | '%15s' | '%15s' | '%15s'\n", name, eintrag[0], eintrag[1],
+			        eintrag[2], eintrag[3]);
 		}
 	}
 
@@ -179,7 +178,8 @@ public class Weiterleitungstabelle implements I18n {
 	 * automatisch erzeugten und manuellen Eintraegen
 	 */
 	public LinkedList<String[]> holeTabelle() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (Weiterleitungstabelle), holeTabelle()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (Weiterleitungstabelle), holeTabelle()");
 		InternetKnoten knoten;
 		NetzwerkInterface nic = null;
 		String gateway;
@@ -243,9 +243,7 @@ public class Weiterleitungstabelle implements I18n {
 					nic = (NetzwerkInterface) it.next();
 
 					if (nic != null
-							&& VermittlungsProtokoll
-									.gleichesRechnernetz(gateway, nic.getIp(),
-											nic.getSubnetzMaske())) {
+					        && VermittlungsProtokoll.gleichesRechnernetz(gateway, nic.getIp(), nic.getSubnetzMaske())) {
 						tmp = new String[4];
 						tmp[0] = "0.0.0.0";
 						tmp[1] = "0.0.0.0";
@@ -274,7 +272,8 @@ public class Weiterleitungstabelle implements I18n {
 	 * 255.255.255.0 wird zu 192.168.2.0
 	 */
 	private String berechneNetzkennung(String ipAdresse, String netzmaske) {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (Weiterleitungstabelle), berechneNetzkennung("+ipAdresse+","+netzmaske+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (Weiterleitungstabelle), berechneNetzkennung(" + ipAdresse + "," + netzmaske + ")");
 		int[] adresse, maske, netzkennung;
 		StringTokenizer tokenizer;
 
@@ -294,14 +293,13 @@ public class Weiterleitungstabelle implements I18n {
 			netzkennung[i] = adresse[i] & maske[i];
 		}
 
-		return netzkennung[0] + "." + netzkennung[1] + "." + netzkennung[2]
-				+ "." + netzkennung[3];
+		return netzkennung[0] + "." + netzkennung[1] + "." + netzkennung[2] + "." + netzkennung[3];
 	}
 
 	/**
 	 * Tabelle zur Abfrage der Weiterleitungstabelle nach einem passenden
 	 * Eintrag fuer eine Ziel-IP-Adresse
-	 *
+	 * 
 	 * @param zielIP
 	 *            die Ziel-IP-Adresse
 	 * @return das Ergebnis als String-Array bestehend aus der IP-Adresse des
@@ -309,25 +307,31 @@ public class Weiterleitungstabelle implements I18n {
 	 *         Schnittstelle
 	 */
 	public String[] holeWeiterleitungsZiele(String zielIP) {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (Weiterleitungstabelle), holeWeiterleitungsZiele("+zielIP+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (Weiterleitungstabelle), holeWeiterleitungsZiele(" + zielIP + ")");
 		String[] routeString = null;
 		ListIterator it = holeTabelle().listIterator();
-		
+
 		while (it.hasNext() && routeString == null) {
 			String[] tmpString = (String[]) it.next();
 			if (!tmpString[1].equals("0.0.0.0")) {
-				if (VermittlungsProtokoll.gleichesRechnernetz(zielIP,
-						tmpString[0], tmpString[1])) {
-					routeString = new String[]{ tmpString[2], tmpString[3] };
+				if (VermittlungsProtokoll.gleichesRechnernetz(zielIP, tmpString[0], tmpString[1])) {
+					routeString = new String[] { tmpString[2], tmpString[3] };
 				}
 			} else {
 				// no explicit match found --> standard gateway will be used
 				String[] tempy = { tmpString[2], tmpString[3] };
-				Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+" (Weiterleitungstabelle), holeWeiterleitungsZiele:   using standard gateway: "+tempy);
+				Main.debug.println("DEBUG (" + this.hashCode() + ") " + getClass()
+				        + " (Weiterleitungstabelle), holeWeiterleitungsZiele:   using standard gateway: " + tempy);
 				routeString = tempy;
 			}
 		}
-		if(routeString==null) { Main.debug.println("ERROR ("+this.hashCode()+"), holeWeiterleitungsZiele:  routeString is still 'null' at return point!   (is there a standard gateway for this device?)"); }
+		if (routeString == null) {
+			Main.debug
+			        .println("ERROR ("
+			                + this.hashCode()
+			                + "), holeWeiterleitungsZiele:  routeString is still 'null' at return point!   (is there a standard gateway for this device?)");
+		}
 		return routeString;
 	}
 }

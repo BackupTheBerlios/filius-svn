@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.software.vermittlungsschicht;
 
 import java.util.StringTokenizer;
@@ -37,21 +37,20 @@ public abstract class VermittlungsProtokoll extends Protokoll {
 	/** Standard-Konstruktor der Oberklasse Protokoll */
 	public VermittlungsProtokoll(SystemSoftware systemSoftware) {
 		super(systemSoftware);
-		Main.debug.println("INVOKED-2 ("+this.hashCode()+") "+getClass()+" (VermittlungsProtokoll), constr: VermittlungsProtokoll("+systemSoftware+")");
+		Main.debug.println("INVOKED-2 (" + this.hashCode() + ") " + getClass()
+		        + " (VermittlungsProtokoll), constr: VermittlungsProtokoll(" + systemSoftware + ")");
 	}
 
 	/**
 	 * Methode zum pruefen, ob sich zwei IP-Adressen im gleichen Rechnernetz
 	 * befinden. Dazu wird die Netzmaske benoetigt:
 	 * <ol>
-	 * <li> Bitweise ODER-Verknuepfung der ersten IP-Adresse und der Netzmaske
-	 * </li>
-	 * <li> Bitweise ODER-Verknuepfung der zweiten IP-Adresse und der Netzmaske
-	 * </li>
-	 * <li> Vergleich der zwei Netz-IDs, die in den vorangegangenen Schritten
-	 * berechnet wurden </li>
+	 * <li>Bitweise ODER-Verknuepfung der ersten IP-Adresse und der Netzmaske</li>
+	 * <li>Bitweise ODER-Verknuepfung der zweiten IP-Adresse und der Netzmaske</li>
+	 * <li>Vergleich der zwei Netz-IDs, die in den vorangegangenen Schritten
+	 * berechnet wurden</li>
 	 * </ol>
-	 *
+	 * 
 	 * @param adresseEins
 	 *            erste IP-Adresse als String
 	 * @param adresseZwei
@@ -60,9 +59,10 @@ public abstract class VermittlungsProtokoll extends Protokoll {
 	 *            Netzmaske als String
 	 * @return ob die Netz-IDs der zwei Adressen uebereinstimmen
 	 */
-	public static boolean gleichesRechnernetz(String adresseEins, String adresseZwei,
-			String netzmaske) {
-		Main.debug.println("INVOKED (static) filius.software.vermittlungsschicht.VermittlungsProtokoll, gleichesRechnernetz("+adresseEins+","+adresseZwei+","+netzmaske+")");
+	public static boolean gleichesRechnernetz(String adresseEins, String adresseZwei, String netzmaske) {
+		Main.debug
+		        .println("INVOKED (static) filius.software.vermittlungsschicht.VermittlungsProtokoll, gleichesRechnernetz("
+		                + adresseEins + "," + adresseZwei + "," + netzmaske + ")");
 		int[] a1, a2, m;
 		StringTokenizer tokenizer;
 		boolean gleichesRechnernetz = true;
@@ -84,8 +84,10 @@ public abstract class VermittlungsProtokoll extends Protokoll {
 		}
 
 		for (int i = 0; i < 4 && gleichesRechnernetz; i++) {
-			if ((a1[i] & m[i]) == (a2[i] & m[i])) gleichesRechnernetz = true;
-			else gleichesRechnernetz = false;
+			if ((a1[i] & m[i]) == (a2[i] & m[i]))
+				gleichesRechnernetz = true;
+			else
+				gleichesRechnernetz = false;
 		}
 
 		return gleichesRechnernetz;

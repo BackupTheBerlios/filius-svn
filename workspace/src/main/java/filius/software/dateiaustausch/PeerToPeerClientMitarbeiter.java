@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.software.dateiaustausch;
 
 import filius.Main;
@@ -33,7 +33,7 @@ import filius.software.www.HTTPNachricht;
 /**
  * In dieser Klasse werden die Mitarbeiter-Threads zum Versand von Anfragen und
  * zur Verarbeitung der Antworten implementiert.
- *
+ * 
  */
 class PeerToPeerClientMitarbeiter extends Thread {
 
@@ -41,12 +41,12 @@ class PeerToPeerClientMitarbeiter extends Thread {
 	 * Der Thread kann verschiedene Funktionalitaeten erfuellen. Dazu stehen
 	 * verschiedene Modi zur verfuegung.:
 	 * <ul>
-	 * <li> Versenden einer Ping-Nachricht und Verarbeitung eingehender
-	 * Pong-Antworten </li>
-	 * <li> Versenden einer Suchanfrage (Query) und Verarbeitung der Antworten
-	 * darauf. </li>
-	 * <li> Versenden von HTTP-GET-Anfragen und verarbeiten der Antworten mit
-	 * der angeforderten Datei. </li>
+	 * <li>Versenden einer Ping-Nachricht und Verarbeitung eingehender
+	 * Pong-Antworten</li>
+	 * <li>Versenden einer Suchanfrage (Query) und Verarbeitung der Antworten
+	 * darauf.</li>
+	 * <li>Versenden von HTTP-GET-Anfragen und verarbeiten der Antworten mit der
+	 * angeforderten Datei.</li>
 	 * </ul>
 	 */
 	private static final int PING = 1, QUERY = 3, HTTP = 4;
@@ -71,7 +71,7 @@ class PeerToPeerClientMitarbeiter extends Thread {
 
 	/**
 	 * der Modus, der die Funktionalitaet des Mitarbeiter-Threads bestimmt
-	 *
+	 * 
 	 * @see filius.software.dateiaustausch.PeerToPeerClientMitarbeiter#HTTP
 	 * @see filius.software.dateiaustausch.PeerToPeerClientMitarbeiter#QUERY
 	 * @see filius.software.dateiaustausch.PeerToPeerClientMitarbeiter#PING
@@ -81,16 +81,17 @@ class PeerToPeerClientMitarbeiter extends Thread {
 	/**
 	 * Konstruktor fuer einen Mitarbeiter-Thread zur Verarbeitung einer
 	 * Suchanfrage oder einer Ping-Nachricht
-	 *
+	 * 
 	 * @param peerToPeerAnwendung
 	 * @param ip
 	 * @param paket
 	 * @see filius.software.dateiaustausch.PeerToPeerClientMitarbeiter#QUERY
 	 * @see filius.software.dateiaustausch.PeerToPeerClientMitarbeiter#PING
 	 */
-	public PeerToPeerClientMitarbeiter(PeerToPeerAnwendung peerToPeerAnwendung,
-			String ip, PeerToPeerPaket paket) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (PeerToPeerClientMitarbeiter), constr: PeerToPeerClientMitarbeiter("+peerToPeerAnwendung+","+ip+","+paket+")");
+	public PeerToPeerClientMitarbeiter(PeerToPeerAnwendung peerToPeerAnwendung, String ip, PeerToPeerPaket paket) {
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (PeerToPeerClientMitarbeiter), constr: PeerToPeerClientMitarbeiter(" + peerToPeerAnwendung + ","
+		        + ip + "," + paket + ")");
 		this.peerToPeerAnwendung = peerToPeerAnwendung;
 		this.ip = ip;
 		this.nachricht = paket.toString();
@@ -106,15 +107,16 @@ class PeerToPeerClientMitarbeiter extends Thread {
 	/**
 	 * Konstruktor fuer einen Mitarbeiter-Thread zur Verarbeitung einer
 	 * HTTP-GET-Anfrage
-	 *
+	 * 
 	 * @param peerToPeerAnwendung
 	 * @param ip
 	 * @param paket
 	 * @see filius.software.dateiaustausch.PeerToPeerClientMitarbeiter#HTTP
 	 */
-	public PeerToPeerClientMitarbeiter(PeerToPeerAnwendung anwendung,
-			String ip, String dateiname) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (PeerToPeerClientMitarbeiter), constr: PeerToPeerClientMitarbeiter("+anwendung+","+ip+","+dateiname+")");
+	public PeerToPeerClientMitarbeiter(PeerToPeerAnwendung anwendung, String ip, String dateiname) {
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (PeerToPeerClientMitarbeiter), constr: PeerToPeerClientMitarbeiter(" + anwendung + "," + ip + ","
+		        + dateiname + ")");
 		HTTPNachricht nachricht;
 
 		this.ip = ip;
@@ -134,21 +136,22 @@ class PeerToPeerClientMitarbeiter extends Thread {
 	/**
 	 * Hier wird die Funktionalitaet des Threads implementiert.
 	 * <ol>
-	 * <li> Aufbau einer TCP/IP-Verbindung zur Ziel-IP-Adresse </li>
-	 * <li> Versenden der im Konstruktor initialisierten Nachricht </li>
-	 * <li> Verarbeiten der Antworten:
+	 * <li>Aufbau einer TCP/IP-Verbindung zur Ziel-IP-Adresse</li>
+	 * <li>Versenden der im Konstruktor initialisierten Nachricht</li>
+	 * <li>Verarbeiten der Antworten:
 	 * <ul>
-	 * <li> im HTTP-Modus: empfangen der Datei und speichern im lokalen
-	 * Dateisystem </li>
-	 * <li> im QUERY- und PING-Modus: Empfang und Verarbeitung aller eingehenden
-	 * Nachrichten bis der Thread beendet wird. </li>
+	 * <li>im HTTP-Modus: empfangen der Datei und speichern im lokalen
+	 * Dateisystem</li>
+	 * <li>im QUERY- und PING-Modus: Empfang und Verarbeitung aller eingehenden
+	 * Nachrichten bis der Thread beendet wird.</li>
 	 * </ul>
 	 * </li>
-	 * <li> schliessen des Sockets fuer die TCP/IP-Verbindung </li>
+	 * <li>schliessen des Sockets fuer die TCP/IP-Verbindung</li>
 	 * </ol>
 	 */
 	public void run() {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (PeerToPeerClientMitarbeiter), run()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (PeerToPeerClientMitarbeiter), run()");
 		String antwort;
 		HTTPNachricht http, abfrage;
 		QueryHitPaket queryHitPaket;
@@ -156,8 +159,7 @@ class PeerToPeerClientMitarbeiter extends Thread {
 		Datei datei;
 
 		try {
-			socket = new TCPSocket(
-					this.peerToPeerAnwendung.getSystemSoftware(), ip, 6346);
+			socket = new TCPSocket(this.peerToPeerAnwendung.getSystemSoftware(), ip, 6346);
 
 			socket.verbinden();
 
@@ -177,8 +179,7 @@ class PeerToPeerClientMitarbeiter extends Thread {
 					// peerToPeerAnwendung.speicherDatei(http.getDaten());
 					peerToPeerAnwendung.speicherDatei(datei);
 				}
-			}
-			else if (modus == QUERY) {
+			} else if (modus == QUERY) {
 				while (running) {
 					antwort = socket.empfangen();
 					if (antwort != null) {
@@ -187,14 +188,13 @@ class PeerToPeerClientMitarbeiter extends Thread {
 						peerToPeerAnwendung.verarbeiteQueryHit(queryHitPaket);
 					}
 				}
-			}
-			else if (modus == PING) {
+			} else if (modus == PING) {
 				while (running) {
 					antwort = socket.empfangen();
-					//Main.debug.println(getClass()
-					//		+"\n\tPong-Nachricht an "
-					//		+peerToPeerAnwendung.getSystemSoftware().getKnoten().getName()
-					//		+" angekommen: "+antwort);
+					// Main.debug.println(getClass()
+					// +"\n\tPong-Nachricht an "
+					// +peerToPeerAnwendung.getSystemSoftware().getKnoten().getName()
+					// +" angekommen: "+antwort);
 					if (antwort != null) {
 						pongPaket = new PongPaket(antwort);
 						peerToPeerAnwendung.verarbeitePong(pongPaket);
@@ -202,8 +202,7 @@ class PeerToPeerClientMitarbeiter extends Thread {
 				}
 			}
 			socket.schliessen();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace(Main.debug);
 		}
 	}

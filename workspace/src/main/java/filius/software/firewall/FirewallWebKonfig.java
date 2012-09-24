@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.software.firewall;
 
 import java.io.BufferedReader;
@@ -41,14 +41,12 @@ import filius.rahmenprogramm.Information;
 import filius.software.www.WebServer;
 import filius.software.www.WebServerPlugIn;
 
-
-public class FirewallWebKonfig extends WebServerPlugIn{
-
+public class FirewallWebKonfig extends WebServerPlugIn {
 
 	private WebServer webserver;
 	private Firewall firewall;
 
-	public void setFirewall(Firewall firewall){
+	public void setFirewall(Firewall firewall) {
 		this.firewall = firewall;
 	}
 
@@ -65,58 +63,60 @@ public class FirewallWebKonfig extends WebServerPlugIn{
 	}
 
 	/**
-	 * Wird ueber das Interface WebServerPlugIn aufgerufen.
-	 * Muss den gelieferten DatenString verarbeteiten, die Firewall bestuecken, und anschließend
-	 * eine HTML-Seite zurueckliefern
+	 * Wird ueber das Interface WebServerPlugIn aufgerufen. Muss den gelieferten
+	 * DatenString verarbeteiten, die Firewall bestuecken, und anschließend eine
+	 * HTML-Seite zurueckliefern
 	 */
-	public String holeHtmlSeite(String postDaten){
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (FirewallWebKonfig), holeHtmlSeite("+postDaten+")");
+	public String holeHtmlSeite(String postDaten) {
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (FirewallWebKonfig), holeHtmlSeite("
+		        + postDaten + ")");
 		String seite = "";
-		if(postDaten != null && !postDaten.equals("")){
-			firewallBestuecken(postDaten);  //Dort wird die Methode postStringZerlegen() ausgefuehrt
+		if (postDaten != null && !postDaten.equals("")) {
+			firewallBestuecken(postDaten); // Dort wird die Methode
+										   // postStringZerlegen() ausgefuehrt
 		}
-		//Main.debug.println("FirewallWebKonfig: Seite liefern= \n"+seite);
+		// Main.debug.println("FirewallWebKonfig: Seite liefern= \n"+seite);
 		seite = konfigSeiteErstellen();
 		return seite;
 	}
 
 	/*
-	 * @author weyer
-	 * liefert zu einem ausgeführten Submit-Befehl die einzelnen Stücke zurück
-	 *
+	 * @author weyer liefert zu einem ausgeführten Submit-Befehl die einzelnen
+	 * Stücke zurück
 	 */
-	private String[][] postStringZerlegen(String post){
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (FirewallWebKonfig), postStringZerlegen("+post+")");
+	private String[][] postStringZerlegen(String post) {
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (FirewallWebKonfig), postStringZerlegen(" + post + ")");
 
-		String [] submitTeile;
+		String[] submitTeile;
 		String[] element, tmp;
 		String[][] tupel;
 
-			//Main.debug.println("String mit submit in FirewallWebKonfig angekommen: "+post);
-			//String zerlegen und überprüfen:
-			try {
-	            submitTeile = URLDecoder.decode(post, "UTF-8").split("&");
-            } catch (UnsupportedEncodingException e) {
-            	submitTeile = post.split("&");
-            }
+		// Main.debug.println("String mit submit in FirewallWebKonfig angekommen: "+post);
+		// String zerlegen und überprüfen:
+		try {
+			submitTeile = URLDecoder.decode(post, "UTF-8").split("&");
+		} catch (UnsupportedEncodingException e) {
+			submitTeile = post.split("&");
+		}
 
-			//Die ersten 5 Einträge des Arrays sind immer gleich
+		// Die ersten 5 Einträge des Arrays sind immer gleich
 
-			tupel = new String[submitTeile.length][2];
-			for(int i=0; i<submitTeile.length; i++){
-				tmp = submitTeile[i].split("=");
-				element = new String[]{"",""};
-				for (int j=0; j<tmp.length && j<element.length; j++) {
-					element[j] = tmp[j].trim();
-				}
-				tupel[i] = element;
+		tupel = new String[submitTeile.length][2];
+		for (int i = 0; i < submitTeile.length; i++) {
+			tmp = submitTeile[i].split("=");
+			element = new String[] { "", "" };
+			for (int j = 0; j < tmp.length && j < element.length; j++) {
+				element[j] = tmp[j].trim();
 			}
+			tupel[i] = element;
+		}
 
-			return tupel;
+		return tupel;
 	}
 
 	/**
-	 *
+	 * 
 	 * @param zeilen
 	 */
 	private void firewallBestuecken(String postTeil) {
@@ -216,131 +216,130 @@ public class FirewallWebKonfig extends WebServerPlugIn{
 	}
 
 	private String erstelleZeilenEmpfaengerRegeln() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (FirewallWebKonfig), erstelleZeilenEmpfaengerRegeln()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (FirewallWebKonfig), erstelleZeilenEmpfaengerRegeln()");
 		LinkedList<String> regeln;
 		String tmp;
-		String [] ipArray;
+		String[] ipArray;
 		StringBuffer zeilen = new StringBuffer();
 
-		try{
+		try {
 			regeln = firewall.getEmpfaengerFilterList();
 
-			for(int i=0; i<regeln.size(); i++){
-				tmp = (String)regeln.get(i);
+			for (int i = 0; i < regeln.size(); i++) {
+				tmp = (String) regeln.get(i);
 				ipArray = tmp.split("#");
 
-					zeilen.append("<tr><td>"+(i+1)+"</td><td>"
-							+ipArray[0]+"</td><td>"+ipArray[1]+"</td></tr>");
+				zeilen.append("<tr><td>" + (i + 1) + "</td><td>" + ipArray[0] + "</td><td>" + ipArray[1] + "</td></tr>");
 			}
-		}
-		catch(Exception f){
+		} catch (Exception f) {
 			f.printStackTrace(Main.debug);
 		}
 		return zeilen.toString();
 	}
 
 	private String erstelleZeilenAbsenderRegeln() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (FirewallWebKonfig), erstelleZeilenAbsenderRegeln()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (FirewallWebKonfig), erstelleZeilenAbsenderRegeln()");
 		LinkedList<String> regeln;
 		String tmp;
-		String [] ipArray;
+		String[] ipArray;
 		StringBuffer zeilen = new StringBuffer();
 
-		try{
+		try {
 			regeln = firewall.getAbsenderFilterList();
 
-			for(int i=0; i<regeln.size(); i++){
-				tmp = (String)regeln.get(i);
+			for (int i = 0; i < regeln.size(); i++) {
+				tmp = (String) regeln.get(i);
 				ipArray = tmp.split("#");
 
-					zeilen.append("<tr><td>"+(i+1)+"</td><td>"
-							+ipArray[0]+"</td><td>"+ipArray[1]+"</td></tr>");
+				zeilen.append("<tr><td>" + (i + 1) + "</td><td>" + ipArray[0] + "</td><td>" + ipArray[1] + "</td></tr>");
 			}
-		}
-		catch(Exception f){
+		} catch (Exception f) {
 			f.printStackTrace(Main.debug);
 		}
 		return zeilen.toString();
 	}
 
 	private String erstelleZeilenPortRegeln() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (FirewallWebKonfig), erstelleZeilenPortRegeln()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (FirewallWebKonfig), erstelleZeilenPortRegeln()");
 		LinkedList<Object[]> regeln;
 		String tmp;
 		StringBuffer zeilen = new StringBuffer();
 
-		try{
+		try {
 			regeln = firewall.getPortList();
 
-			for(int i=0; i<regeln.size(); i++){
-				tmp = (String)((Object[])regeln.get(i))[0];
+			for (int i = 0; i < regeln.size(); i++) {
+				tmp = (String) ((Object[]) regeln.get(i))[0];
 
-					zeilen.append("<tr><td>"+(i+1)+"</td><td>"+tmp+"</td></tr>");
+				zeilen.append("<tr><td>" + (i + 1) + "</td><td>" + tmp + "</td></tr>");
 			}
-		}
-		catch(Exception f){
+		} catch (Exception f) {
 			f.printStackTrace(Main.debug);
 		}
 		return zeilen.toString();
 	}
 
-
 	/*
 	 * diese Seite erstellt den kompletten Quelltext für die konfig.html
 	 */
-	private String konfigSeiteErstellen(){
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (FirewallWebKonfig), konfigSeiteErstellen()");
+	private String konfigSeiteErstellen() {
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (FirewallWebKonfig), konfigSeiteErstellen()");
 		String html;
 
-		//Main.debug.println("FirewallWebKonfig: dynamische Generierung der HTML-konfig-Seite!");
+		// Main.debug.println("FirewallWebKonfig: dynamische Generierung der HTML-konfig-Seite!");
 
-		if(firewall != null){
+		if (firewall != null) {
 
-			try{
+			try {
 
-			html = textDateiEinlesen("tmpl/firewall_konfig_webseite_"+Information.getInformation().getLocale().toString()+".txt");
+				html = textDateiEinlesen("tmpl/firewall_konfig_webseite_"
+				        + Information.getInformation().getLocale().toString() + ".txt");
 
-			html = html.replaceAll(":action_pfad:", getPfad());
+				html = html.replaceAll(":action_pfad:", getPfad());
 
-			LinkedList<NetzwerkInterface> allNics = ((InternetKnoten)this.getFirewall().getSystemSoftware().getKnoten()).getNetzwerkInterfaces();
-			LinkedList<NetzwerkInterface> activeNics = firewall.holeNetzwerkInterfaces();
-			StringBuffer nicSelectionHtml = new StringBuffer();
-			int idx = 0;
-			for (NetzwerkInterface nic : allNics) {
-				nicSelectionHtml.append("\t\t<tr><td><input name=\"nic\" type=\"checkbox\" value=\""+(idx++)+"\" size=\"30\" maxlength=\"40\"");
-				if (activeNics.contains(nic)) {
-					nicSelectionHtml.append(" checked=\"checked\"");
+				LinkedList<NetzwerkInterface> allNics = ((InternetKnoten) this.getFirewall().getSystemSoftware()
+				        .getKnoten()).getNetzwerkInterfaces();
+				LinkedList<NetzwerkInterface> activeNics = firewall.holeNetzwerkInterfaces();
+				StringBuffer nicSelectionHtml = new StringBuffer();
+				int idx = 0;
+				for (NetzwerkInterface nic : allNics) {
+					nicSelectionHtml.append("\t\t<tr><td><input name=\"nic\" type=\"checkbox\" value=\"" + (idx++)
+					        + "\" size=\"30\" maxlength=\"40\"");
+					if (activeNics.contains(nic)) {
+						nicSelectionHtml.append(" checked=\"checked\"");
+					}
+					nicSelectionHtml.append(" /></td><td>" + nic.getIp() + "</td></tr>");
+					if (allNics.indexOf(nic) < allNics.size() - 1) {
+						nicSelectionHtml.append(" \n");
+					}
 				}
-				nicSelectionHtml.append(" /></td><td>" + nic.getIp() + "</td></tr>");
-				if (allNics.indexOf(nic) < allNics.size()-1) {
-					nicSelectionHtml.append(" \n");
-				}
+				html = html.replaceAll(":nic_activation:", nicSelectionHtml.toString());
+
+				html = html.replaceAll(":empfaenger_regeln:", erstelleZeilenEmpfaengerRegeln());
+				html = html.replaceAll(":absender_regeln:", erstelleZeilenAbsenderRegeln());
+				html = html.replaceAll(":port_regeln:", erstelleZeilenPortRegeln());
+			} catch (Exception f) {
+				f.printStackTrace(Main.debug);
+				return null;
 			}
-			html = html.replaceAll(":nic_activation:", nicSelectionHtml.toString());
 
-			html = html.replaceAll(":empfaenger_regeln:", erstelleZeilenEmpfaengerRegeln());
-			html = html.replaceAll(":absender_regeln:", erstelleZeilenAbsenderRegeln());
-			html = html.replaceAll(":port_regeln:", erstelleZeilenPortRegeln());
-		}
-		catch(Exception f){
-			f.printStackTrace(Main.debug);
-			return null;
-		}
-
-		return html;
-		}
-		else {
+			return html;
+		} else {
 			return null;
 		}
 	}
 
 	/**
 	 * liest eine reale Textdatei vom Format .txt ein. Diese befinden sich im
-	 * Ordner  /config
+	 * Ordner /config
 	 */
-	private String textDateiEinlesen(String datei) throws FileNotFoundException,
-			IOException {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (FirewallWebKonfig), textDateiEinlesen("+datei+")");
+	private String textDateiEinlesen(String datei) throws FileNotFoundException, IOException {
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (FirewallWebKonfig), textDateiEinlesen(" + datei + ")");
 		BufferedReader test = new BufferedReader(new FileReader(datei));
 		String fullFile = "";
 		String input = "";

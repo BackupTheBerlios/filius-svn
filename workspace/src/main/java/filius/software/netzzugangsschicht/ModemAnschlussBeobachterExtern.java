@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.software.netzzugangsschicht;
 
 import java.io.IOException;
@@ -57,11 +57,12 @@ public class ModemAnschlussBeobachterExtern extends ProtokollThread {
 	 * Konstruktor der Oberklasse wird <b>nicht</b> aufgerufen.
 	 */
 	public ModemAnschlussBeobachterExtern(ModemFirmware firmware, InputStream in) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (ModemAnschlussBeobachterExtern), constr: ModemAnschlussBeobachterExtern("+firmware+","+in+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (ModemAnschlussBeobachterExtern), constr: ModemAnschlussBeobachterExtern(" + firmware + "," + in
+		        + ")");
 		this.firmware = firmware;
 		this.in = in;
 	}
-
 
 	/**
 	 * Die run()-Methode der Oberklasse muss ueberschrieben werden, weil hier
@@ -69,14 +70,14 @@ public class ModemAnschlussBeobachterExtern extends ProtokollThread {
 	 * wird.
 	 */
 	public void run() {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (ModemAnschlussBeobachterExtern), run()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (ModemAnschlussBeobachterExtern), run()");
 		Object object;
 		ObjectInputStream in = null;
 
 		try {
 			in = new ObjectInputStream(this.in);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace(Main.debug);
 		}
 
@@ -84,8 +85,7 @@ public class ModemAnschlussBeobachterExtern extends ProtokollThread {
 			try {
 				object = in.readObject();
 				verarbeiteDatenEinheit(object);
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace(Main.debug);
 				running = false;
 				firmware.trennen();
@@ -98,7 +98,8 @@ public class ModemAnschlussBeobachterExtern extends ProtokollThread {
 	 * virtuelle Rechnernetz weitergegeben.
 	 */
 	protected void verarbeiteDatenEinheit(Object datenEinheit) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (ModemAnschlussBeobachterExtern), verarbeiteDatenEinheit("+datenEinheit.toString()+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (ModemAnschlussBeobachterExtern), verarbeiteDatenEinheit(" + datenEinheit.toString() + ")");
 		EthernetFrame frame;
 
 		if (firmware.istGestartet()) {

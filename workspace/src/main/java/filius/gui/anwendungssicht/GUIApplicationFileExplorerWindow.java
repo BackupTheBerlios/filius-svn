@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.anwendungssicht;
 
 import java.awt.BorderLayout;
@@ -94,12 +94,10 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 
 	private JInternalFrame fileImportFrame;
 
-	public GUIApplicationFileExplorerWindow(final GUIDesktopPanel desktop,
-			String appName) {
+	public GUIApplicationFileExplorerWindow(final GUIDesktopPanel desktop, String appName) {
 		super(desktop, appName);
 		this.dies = this;
-		aktuellerOrdner = holeAnwendung().getSystemSoftware().getDateisystem()
-				.getRoot();
+		aktuellerOrdner = holeAnwendung().getSystemSoftware().getDateisystem().getRoot();
 
 		initialisiereKomponenten();
 	}
@@ -111,8 +109,7 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 
 		tv.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tv
-						.getLastSelectedPathComponent();
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tv.getLastSelectedPathComponent();
 
 				if (node == null)
 					return;
@@ -131,14 +128,12 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 		final Box box = Box.createVerticalBox();
 		box.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-		final JButton aktualisieren = new JButton(messages
-				.getString("fileexplorer_msg1"));
+		final JButton aktualisieren = new JButton(messages.getString("fileexplorer_msg1"));
 		aktualisieren.setActionCommand("aktualisieren");
 		aktualisieren.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				if (e.getActionCommand().equals(
-						aktualisieren.getActionCommand())) {
+				if (e.getActionCommand().equals(aktualisieren.getActionCommand())) {
 					aktualisieren();
 				}
 			}
@@ -157,7 +152,6 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 
 		JScrollPane scrollpane = new JScrollPane(tv);
 
-
 		Box horBox = Box.createHorizontalBox();
 		horBox.add(scrollpane);
 		horBox.setPreferredSize(new Dimension(180, 240));
@@ -172,59 +166,40 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 				/* Rechte Maustaste (Einmal geklickt) */
 				if (e.getButton() == 3) {
 					if (aktuellerOrdner != null) {
-						int index = ((JList) e.getSource()).locationToIndex(e
-								.getPoint());
+						int index = ((JList) e.getSource()).locationToIndex(e.getPoint());
 
-						DefaultListModel lm = (DefaultListModel) dateiListe
-								.getModel();
+						DefaultListModel lm = (DefaultListModel) dateiListe.getModel();
 						int selektiert = selektierteZelle(index, e.getPoint());
 						JPopupMenu popmen = new JPopupMenu();
-						final JMenuItem miNeuerOrdner = new JMenuItem(messages
-								.getString("fileexplorer_msg3"));
+						final JMenuItem miNeuerOrdner = new JMenuItem(messages.getString("fileexplorer_msg3"));
 						miNeuerOrdner.setActionCommand("neuerordner");
-						final JMenuItem miLoeschen = new JMenuItem(messages
-								.getString("fileexplorer_msg4"));
+						final JMenuItem miLoeschen = new JMenuItem(messages.getString("fileexplorer_msg4"));
 						miLoeschen.setActionCommand("loeschen");
-						final JMenuItem miAusschneiden = new JMenuItem(messages
-								.getString("fileexplorer_msg5"));
+						final JMenuItem miAusschneiden = new JMenuItem(messages.getString("fileexplorer_msg5"));
 						miAusschneiden.setActionCommand("ausschneiden");
-						final JMenuItem miKopieren = new JMenuItem(messages
-								.getString("fileexplorer_msg6"));
+						final JMenuItem miKopieren = new JMenuItem(messages.getString("fileexplorer_msg6"));
 						miKopieren.setActionCommand("kopieren");
-						final JMenuItem miEinfuegen = new JMenuItem(messages
-								.getString("fileexplorer_msg7"));
+						final JMenuItem miEinfuegen = new JMenuItem(messages.getString("fileexplorer_msg7"));
 						miEinfuegen.setActionCommand("einfuegen");
-						final JMenuItem miUmbenennen = new JMenuItem(messages
-								.getString("fileexplorer_msg8"));
+						final JMenuItem miUmbenennen = new JMenuItem(messages.getString("fileexplorer_msg8"));
 						miUmbenennen.setActionCommand("umbenennen");
 
 						ActionListener al = new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
 								/* Neuer Ordner */
-								if (e.getActionCommand().equals(
-										miNeuerOrdner.getActionCommand())) {
-									String ordnerName = JOptionPane
-											.showInputDialog("");
+								if (e.getActionCommand().equals(miNeuerOrdner.getActionCommand())) {
+									String ordnerName = JOptionPane.showInputDialog("");
 									if (!ordnerName.equals("")) {
-										holeAnwendung().getSystemSoftware()
-												.getDateisystem()
-												.erstelleVerzeichnis(
-														aktuellerOrdner,
-														ordnerName);
+										holeAnwendung().getSystemSoftware().getDateisystem()
+										        .erstelleVerzeichnis(aktuellerOrdner, ordnerName);
 										aktualisieren();
 									}
 								}
 								/* Loeschen */
-								if (e.getActionCommand().equals(
-										miLoeschen.getActionCommand())) {
-									int loeschAbfrage = JOptionPane
-											.showConfirmDialog(
-													dies,
-													messages
-															.getString("fileexplorer_msg18"),
-													messages
-															.getString("fileexplorer_msg18"),
-													JOptionPane.YES_NO_OPTION);
+								if (e.getActionCommand().equals(miLoeschen.getActionCommand())) {
+									int loeschAbfrage = JOptionPane.showConfirmDialog(dies,
+									        messages.getString("fileexplorer_msg18"),
+									        messages.getString("fileexplorer_msg18"), JOptionPane.YES_NO_OPTION);
 
 									if (loeschAbfrage == JOptionPane.YES_OPTION) {
 										aktuellerOrdner.remove(selektierteNode);
@@ -232,67 +207,47 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 									}
 								}
 								/* Ausschneiden */
-								if (e.getActionCommand().equals(
-										miAusschneiden.getActionCommand())) {
+								if (e.getActionCommand().equals(miAusschneiden.getActionCommand())) {
 									try {
 										zwischenAblageNode = tiefesKopieren(selektierteNode);
-									}
-									catch (IOException e1) {
+									} catch (IOException e1) {
 										e1.printStackTrace(Main.debug);
-									}
-									catch (ClassNotFoundException e1) {
+									} catch (ClassNotFoundException e1) {
 										e1.printStackTrace(Main.debug);
 									}
 									aktuellerOrdner.remove(selektierteNode);
 									aktualisieren();
 								}
 								/* Kopieren */
-								if (e.getActionCommand().equals(
-										miKopieren.getActionCommand())) {
+								if (e.getActionCommand().equals(miKopieren.getActionCommand())) {
 									try {
 										zwischenAblageNode = tiefesKopieren(selektierteNode);
-									}
-									catch (IOException e1) {
+									} catch (IOException e1) {
 										e1.printStackTrace(Main.debug);
-									}
-									catch (ClassNotFoundException e1) {
+									} catch (ClassNotFoundException e1) {
 										e1.printStackTrace(Main.debug);
 									}
 									aktualisieren();
 								}
 								/* Einfuegen */
-								if (e.getActionCommand().equals(
-										miEinfuegen.getActionCommand())) {
+								if (e.getActionCommand().equals(miEinfuegen.getActionCommand())) {
 									aktuellerOrdner.add(zwischenAblageNode);
 									aktualisieren();
 								}
 								/* Umbenennen */
-								if (e.getActionCommand().equals(
-										miUmbenennen.getActionCommand())) {
-									String neuerName = JOptionPane
-											.showInputDialog(
-													dies,
-													messages
-															.getString("fileexplorer_msg9"));
+								if (e.getActionCommand().equals(miUmbenennen.getActionCommand())) {
+									String neuerName = JOptionPane.showInputDialog(dies,
+									        messages.getString("fileexplorer_msg9"));
 									if (neuerName != "" && neuerName != null) {
-										if (!holeAnwendung()
-												.getSystemSoftware()
-												.getDateisystem()
-												.dateiVorhanden(
-														aktuellerOrdner,
-														neuerName)) {
-											if (selektierteNode.getUserObject()
-													.getClass().equals(
-															Datei.class)) {
+										if (!holeAnwendung().getSystemSoftware().getDateisystem()
+										        .dateiVorhanden(aktuellerOrdner, neuerName)) {
+											if (selektierteNode.getUserObject().getClass().equals(Datei.class)) {
 												/* Datei umbenennen */
-												Datei dat = (Datei) selektierteNode
-														.getUserObject();
+												Datei dat = (Datei) selektierteNode.getUserObject();
 												dat.setName(neuerName);
-											}
-											else {
+											} else {
 												/* Ordner umbenennen */
-												selektierteNode
-														.setUserObject(neuerName);
+												selektierteNode.setUserObject(neuerName);
 											}
 											aktualisieren();
 										}
@@ -317,14 +272,10 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 								popmen.add(miEinfuegen);
 							}
 							;
-						}
-						else {
-							String[] teile = lm.getElementAt(index).toString()
-									.split(";");
+						} else {
+							String[] teile = lm.getElementAt(index).toString().split(";");
 							if (teile.length > 0) {
-								selektierteNode = Dateisystem
-										.verzeichnisKnoten(aktuellerOrdner,
-												teile[1]);
+								selektierteNode = Dateisystem.verzeichnisKnoten(aktuellerOrdner, teile[1]);
 							}
 							popmen.add(miLoeschen);
 							popmen.add(miAusschneiden);
@@ -335,11 +286,8 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 
 						dies.add(popmen);
 
-						popmen.show(dies.getRootPane().getLayeredPane(), e
-								.getX()
-								+ tv.getWidth(), e.getY()
-								+ btImportieren.getY()
-								+ btImportieren.getHeight());
+						popmen.show(dies.getRootPane().getLayeredPane(), e.getX() + tv.getWidth(), e.getY()
+						        + btImportieren.getY() + btImportieren.getHeight());
 					}
 
 				}
@@ -359,7 +307,7 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 	 * ein. Um im CellRenderer zwischen Dateien und Ordnern unterscheiden zu
 	 * koennen, wird der Typ (Datei/Ordner) gefolgt von einem Semicolon
 	 * angegeben.
-	 *
+	 * 
 	 * @param node
 	 *            Die DefaultMutableTreeNode deren Inhalt angezeigt werden soll.
 	 */
@@ -368,16 +316,12 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 		lm.clear();
 		dateiListe.setCellRenderer(new OrdnerInhaltListRenderer());
 		for (Enumeration e = node.children(); e.hasMoreElements();) {
-			DefaultMutableTreeNode enode = (DefaultMutableTreeNode) e
-					.nextElement();
+			DefaultMutableTreeNode enode = (DefaultMutableTreeNode) e.nextElement();
 			if (enode.getUserObject().getClass().equals(Datei.class)) {
 				Datei dat = (Datei) enode.getUserObject();
-				lm.addElement(messages.getString("fileexplorer_msg10")
-						+ dat.getName());
-			}
-			else {
-				lm.addElement(messages.getString("fileexplorer_msg11")
-						+ enode.toString());
+				lm.addElement(messages.getString("fileexplorer_msg10") + dat.getName());
+			} else {
+				lm.addElement(messages.getString("fileexplorer_msg11") + enode.toString());
 			}
 		}
 	}
@@ -390,8 +334,7 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 	public int selektierteZelle(int index, Point punkt) {
 		int ergebnis = -1;
 		if (dateiListe.indexToLocation(index) != null) {
-			if (dateiListe.indexToLocation(index).getY()
-					+ dateiListe.getFixedCellHeight() > punkt.getY()) {
+			if (dateiListe.indexToLocation(index).getY() + dateiListe.getFixedCellHeight() > punkt.getY()) {
 				ergebnis = index;
 			}
 		}
@@ -408,8 +351,8 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 	 * wird fuer DefaultMutableTreeNode Tiefes Kopieren gebraucht, um z.B. bei
 	 * einem Ordner die komplette eingeschlossene Struktur zu erhalten
 	 */
-	public DefaultMutableTreeNode tiefesKopieren(DefaultMutableTreeNode original)
-			throws IOException, ClassNotFoundException {
+	public DefaultMutableTreeNode tiefesKopieren(DefaultMutableTreeNode original) throws IOException,
+	        ClassNotFoundException {
 		DefaultMutableTreeNode ergebnis = null;
 
 		// ObjectOutputStream erzeugen
@@ -432,12 +375,11 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 	}
 
 	public void fileImport() {
-		fileImportFrame = new JInternalFrame(messages
-				.getString("fileexplorer_msg12"));
+		fileImportFrame = new JInternalFrame(messages.getString("fileexplorer_msg12"));
 
 		ImageIcon image = new ImageIcon(getClass().getResource("/gfx/desktop/icon_fileimporter.png"));
 		image.setImage(image.getImage().getScaledInstance(16, 16, Image.SCALE_AREA_AVERAGING));
-	    setFrameIcon(image);
+		setFrameIcon(image);
 
 		backPanel = new JPanel(new BorderLayout());
 
@@ -454,8 +396,7 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 		renameField.setSize(new Dimension(150, 30));
 		JLabel renameLabel = new JLabel(messages.getString("fileexplorer_msg9"));
 
-		JButton fileButton = new JButton(messages
-				.getString("fileexplorer_msg14"));
+		JButton fileButton = new JButton(messages.getString("fileexplorer_msg14"));
 		fileButton.setSize(new Dimension(100, 30));
 		fileButton.addMouseListener(new MouseInputAdapter() {
 
@@ -477,8 +418,7 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 
 				try {
 					fileImportFrame.setSelected(true);
-				}
-				catch (PropertyVetoException e1) {
+				} catch (PropertyVetoException e1) {
 					e1.printStackTrace(Main.debug);
 				}
 			}
@@ -505,39 +445,32 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 
 		backPanel.add(upperBox, BorderLayout.NORTH);
 
-		JButton importButton = new JButton(messages
-				.getString("fileexplorer_msg15"));
+		JButton importButton = new JButton(messages.getString("fileexplorer_msg15"));
 		importButton.setSize(new Dimension(100, 30));
 		importButton.addMouseListener(new MouseInputAdapter() {
 			public void mousePressed(MouseEvent z) {
-				if (inputField.getText().equals("")
-						|| renameField.getText().equals("")) {
-					outputField.setText(messages
-							.getString("fileexplorer_msg16"));
-				}
-				else {
+				if (inputField.getText().equals("") || renameField.getText().equals("")) {
+					outputField.setText(messages.getString("fileexplorer_msg16"));
+				} else {
 
 					if (aktuellerOrdner == null) {
-						outputField.setText(messages
-								.getString("fileexplorer_msg17"));
-					}
-					else {
-//						if (inputField.getText().equals(pfad + datei)
-//								&& datei.equals(renameField.getText())) {
-							outputField.setText(((FileExplorer) holeAnwendung()).addFile(pfad, datei,
-													aktuellerOrdner,
-													renameField.getText()));
-							aktualisieren();
-//						}
-//						else if (inputField.getText().equals(pfad + datei)
-//								&& !renameField.getText().equals("")) {
-//							outputField
-//									.setText(((FileExplorer) holeAnwendung())
-//											.addFile(outputField.getText(), "",
-//													aktuellerOrdner,
-//													renameField.getText()));
-//							aktualisieren();
-//						}
+						outputField.setText(messages.getString("fileexplorer_msg17"));
+					} else {
+						// if (inputField.getText().equals(pfad + datei)
+						// && datei.equals(renameField.getText())) {
+						outputField.setText(((FileExplorer) holeAnwendung()).addFile(pfad, datei, aktuellerOrdner,
+						        renameField.getText()));
+						aktualisieren();
+						// }
+						// else if (inputField.getText().equals(pfad + datei)
+						// && !renameField.getText().equals("")) {
+						// outputField
+						// .setText(((FileExplorer) holeAnwendung())
+						// .addFile(outputField.getText(), "",
+						// aktuellerOrdner,
+						// renameField.getText()));
+						// aktualisieren();
+						// }
 					}
 				}
 			}
@@ -560,8 +493,7 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 		addFrame(fileImportFrame);
 		try {
 			fileImportFrame.setSelected(true);
-		}
-		catch (PropertyVetoException e1) {
+		} catch (PropertyVetoException e1) {
 			e1.printStackTrace(Main.debug);
 		}
 	}

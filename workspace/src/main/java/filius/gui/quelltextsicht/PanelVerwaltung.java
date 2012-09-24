@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.quelltextsicht;
 
 import java.awt.BorderLayout;
@@ -91,27 +91,21 @@ public class PanelVerwaltung extends JPanel implements I18n {
 
 			if (!array[0].equals("") && !array[1].equals("")) {
 				return array;
-			}
-			else {
+			} else {
 				return null;
 			}
-		}
-		else {
+		} else {
 			if (tabelle.getSelectedRow() == -1) {
 				return null;
-			}
-			else {
-				array[0] = (String) tabelle.getValueAt(
-						tabelle.getSelectedRow(), 0);
-				array[1] = (String) tabelle.getValueAt(
-						tabelle.getSelectedRow(), 1);
+			} else {
+				array[0] = (String) tabelle.getValueAt(tabelle.getSelectedRow(), 0);
+				array[1] = (String) tabelle.getValueAt(tabelle.getSelectedRow(), 1);
 			}
 
 			if (!array[0].equals("") && !array[1].equals("")) {
-				array[1] = array[1].substring(array[1].lastIndexOf(".")+1);
+				array[1] = array[1].substring(array[1].lastIndexOf(".") + 1);
 				return array;
-			}
-			else {
+			} else {
 				return null;
 			}
 		}
@@ -129,99 +123,71 @@ public class PanelVerwaltung extends JPanel implements I18n {
 		if (buttonGroupModus.getSelection().getActionCommand().equals("neu")) {
 			klasse = klassenName.getText();
 
-			if (buttonGroupAnwendungstyp.getSelection().getActionCommand()
-					.equals("client")) {
+			if (buttonGroupAnwendungstyp.getSelection().getActionCommand().equals("client")) {
 				dateien = new String[2];
 
-				dateien[0] = Information.getInformation()
-				.getAnwendungenPfad()
-				+ "filius"+fs+"software"+fs+"clientserver"+fs+""
-				+ klasse + ".java";
-				quelltext = ladeQuelltext(Information.getInformation().getProgrammPfad()
-						+ "tmpl"+fs+"quelltext_vorlagen"+fs+"client.txt");
+				dateien[0] = Information.getInformation().getAnwendungenPfad() + "filius" + fs + "software" + fs
+				        + "clientserver" + fs + "" + klasse + ".java";
+				quelltext = ladeQuelltext(Information.getInformation().getProgrammPfad() + "tmpl" + fs
+				        + "quelltext_vorlagen" + fs + "client.txt");
 				quelltext = quelltext.replaceAll("ClientBaustein", klasse);
 				speicherQuelltext(quelltext, dateien[0]);
 
-				dateien[1] = Information.getInformation()
-				.getAnwendungenPfad()
-				+ "filius"+fs+"gui"+fs+"anwendungssicht"+fs+"GUIApplication"
-				+ klasse + "Window.java";
-				quelltext = ladeQuelltext(Information.getInformation().getProgrammPfad()
-						+ "tmpl"+fs+"quelltext_vorlagen"+fs+"client_gui.txt");
+				dateien[1] = Information.getInformation().getAnwendungenPfad() + "filius" + fs + "gui" + fs
+				        + "anwendungssicht" + fs + "GUIApplication" + klasse + "Window.java";
+				quelltext = ladeQuelltext(Information.getInformation().getProgrammPfad() + "tmpl" + fs
+				        + "quelltext_vorlagen" + fs + "client_gui.txt");
 				quelltext = quelltext.replaceAll("ClientBaustein", klasse);
 				speicherQuelltext(quelltext, dateien[1]);
-			}
-			else {
+			} else {
 				dateien = new String[3];
 
-				dateien[0] = Information.getInformation()
-				.getAnwendungenPfad()
-				+ "filius"+fs+"software"+fs+"clientserver"+fs+""
-				+ klasse + "Mitarbeiter.java";
-				quelltext = ladeQuelltext(Information.getInformation().getProgrammPfad()
-						+ "tmpl"+fs+"quelltext_vorlagen"+fs+"server_mitarbeiter.txt");
+				dateien[0] = Information.getInformation().getAnwendungenPfad() + "filius" + fs + "software" + fs
+				        + "clientserver" + fs + "" + klasse + "Mitarbeiter.java";
+				quelltext = ladeQuelltext(Information.getInformation().getProgrammPfad() + "tmpl" + fs
+				        + "quelltext_vorlagen" + fs + "server_mitarbeiter.txt");
 				quelltext = quelltext.replaceAll("ServerBaustein", klasse);
 				speicherQuelltext(quelltext, dateien[0]);
 
-				dateien[1] = Information.getInformation()
-				.getAnwendungenPfad()
-				+ "filius"+fs+"software"+fs+"clientserver"+fs+""
-				+ klasse + ".java";
-				quelltext = ladeQuelltext(Information.getInformation().getProgrammPfad()
-						+ "tmpl"+fs+"quelltext_vorlagen"+fs+"server.txt");
+				dateien[1] = Information.getInformation().getAnwendungenPfad() + "filius" + fs + "software" + fs
+				        + "clientserver" + fs + "" + klasse + ".java";
+				quelltext = ladeQuelltext(Information.getInformation().getProgrammPfad() + "tmpl" + fs
+				        + "quelltext_vorlagen" + fs + "server.txt");
 				quelltext = quelltext.replaceAll("ServerBaustein", klasse);
 				speicherQuelltext(quelltext, dateien[1]);
 
-				dateien[2] = Information.getInformation()
-				.getAnwendungenPfad()
-				+ "filius"+fs+"gui"+fs+"anwendungssicht"+fs+"GUIApplication"
-				+ klasse + "Window.java";
-				quelltext = ladeQuelltext(Information.getInformation().getProgrammPfad()
-						+ "tmpl"+fs+"quelltext_vorlagen"+fs+"server_gui.txt");
+				dateien[2] = Information.getInformation().getAnwendungenPfad() + "filius" + fs + "gui" + fs
+				        + "anwendungssicht" + fs + "GUIApplication" + klasse + "Window.java";
+				quelltext = ladeQuelltext(Information.getInformation().getProgrammPfad() + "tmpl" + fs
+				        + "quelltext_vorlagen" + fs + "server_gui.txt");
 				quelltext = quelltext.replaceAll("ServerBaustein", klasse);
 				speicherQuelltext(quelltext, dateien[2]);
 			}
-		}
-		else if (tabelle.getSelectedRow() != -1) {
-			klasse = (String) tabelle.getValueAt(
-					tabelle.getSelectedRow(), 1);
-		klasse = klasse.substring(klasse.lastIndexOf(".")+1);
+		} else if (tabelle.getSelectedRow() != -1) {
+			klasse = (String) tabelle.getValueAt(tabelle.getSelectedRow(), 1);
+			klasse = klasse.substring(klasse.lastIndexOf(".") + 1);
 
-
-			file = new File(Information.getInformation()
-				.getAnwendungenPfad()
-				+ "filius"+fs+"software"+fs+"clientserver"+fs+""
-				+ klasse + "Mitarbeiter.java");
+			file = new File(Information.getInformation().getAnwendungenPfad() + "filius" + fs + "software" + fs
+			        + "clientserver" + fs + "" + klasse + "Mitarbeiter.java");
 
 			if (file.exists()) {
 				dateien = new String[3];
-				dateien[0] = Information.getInformation()
-				.getAnwendungenPfad()
-				+ "filius"+fs+"software"+fs+"clientserver"+fs+""
-				+ klasse + "Mitarbeiter.java";
+				dateien[0] = Information.getInformation().getAnwendungenPfad() + "filius" + fs + "software" + fs
+				        + "clientserver" + fs + "" + klasse + "Mitarbeiter.java";
 
-				dateien[1] = Information.getInformation()
-				.getAnwendungenPfad()
-				+ "filius"+fs+"software"+fs+"clientserver"+fs+""
-				+ klasse + ".java";
+				dateien[1] = Information.getInformation().getAnwendungenPfad() + "filius" + fs + "software" + fs
+				        + "clientserver" + fs + "" + klasse + ".java";
 
-				dateien[2] = Information.getInformation()
-				.getAnwendungenPfad()
-				+ "filius"+fs+"gui"+fs+"anwendungssicht"+fs+"GUIApplication"
-				+ klasse + "Window.java";
-			}
-			else {
+				dateien[2] = Information.getInformation().getAnwendungenPfad() + "filius" + fs + "gui" + fs
+				        + "anwendungssicht" + fs + "GUIApplication" + klasse + "Window.java";
+			} else {
 				dateien = new String[2];
 
-				dateien[0] = Information.getInformation()
-				.getAnwendungenPfad()
-				+ "filius"+fs+"software"+fs+"clientserver"+fs+""
-				+ klasse + ".java";
+				dateien[0] = Information.getInformation().getAnwendungenPfad() + "filius" + fs + "software" + fs
+				        + "clientserver" + fs + "" + klasse + ".java";
 
-				dateien[1] = Information.getInformation()
-				.getAnwendungenPfad()
-				+ "filius"+fs+"gui"+fs+"anwendungssicht"+fs+"GUIApplication"
-				+ klasse + "Window.java";
+				dateien[1] = Information.getInformation().getAnwendungenPfad() + "filius" + fs + "gui" + fs
+				        + "anwendungssicht" + fs + "GUIApplication" + klasse + "Window.java";
 			}
 		}
 
@@ -237,15 +203,12 @@ public class PanelVerwaltung extends JPanel implements I18n {
 			for (String line; (line = quellDatei.readLine()) != null;) {
 				quellText += line + "\n";
 			}
-		}
-		catch (Exception e1) {
+		} catch (Exception e1) {
 			e1.printStackTrace(Main.debug);
-		}
-		finally {
+		} finally {
 			try {
 				quellDatei.close();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace(Main.debug);
 			}
 		}
@@ -268,8 +231,7 @@ public class PanelVerwaltung extends JPanel implements I18n {
 			writer = new FileWriter(datei, false);
 			writer.write(quelltext);
 			writer.close();
-		}
-		catch (IOException e2) {
+		} catch (IOException e2) {
 			e2.printStackTrace(Main.debug);
 		}
 	}
@@ -306,18 +268,18 @@ public class PanelVerwaltung extends JPanel implements I18n {
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.gridwidth = 2;
-		gbc.insets = new Insets(5,5,5,5);
+		gbc.insets = new Insets(5, 5, 5, 5);
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 
 		gridBag.setConstraints(radioButton, gbc);
 		panel.add(radioButton);
 
 		label = new JLabel();
-		label.setPreferredSize(new Dimension(10,0));
+		label.setPreferredSize(new Dimension(10, 0));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		gbc.insets = new Insets(5,5,5,5);
+		gbc.insets = new Insets(5, 5, 5, 5);
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 
 		gridBag.setConstraints(label, gbc);
@@ -332,7 +294,7 @@ public class PanelVerwaltung extends JPanel implements I18n {
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 1;
-		gbc.insets = new Insets(5,5,5,5);
+		gbc.insets = new Insets(5, 5, 5, 5);
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 
 		gridBag.setConstraints(radioButton, gbc);
@@ -348,7 +310,7 @@ public class PanelVerwaltung extends JPanel implements I18n {
 		gbc.gridx = 2;
 		gbc.gridwidth = 2;
 		gbc.gridy = 1;
-		gbc.insets = new Insets(5,5,5,5);
+		gbc.insets = new Insets(5, 5, 5, 5);
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 
 		gridBag.setConstraints(radioButton, gbc);
@@ -360,7 +322,7 @@ public class PanelVerwaltung extends JPanel implements I18n {
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 2;
-		gbc.insets = new Insets(5,5,5,5);
+		gbc.insets = new Insets(5, 5, 5, 5);
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 
 		gridBag.setConstraints(label, gbc);
@@ -373,7 +335,7 @@ public class PanelVerwaltung extends JPanel implements I18n {
 		gbc.gridx = 2;
 		gbc.gridwidth = 2;
 		gbc.gridy = 2;
-		gbc.insets = new Insets(5,5,5,5);
+		gbc.insets = new Insets(5, 5, 5, 5);
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 
 		gridBag.setConstraints(anwendungsName, gbc);
@@ -385,7 +347,7 @@ public class PanelVerwaltung extends JPanel implements I18n {
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 3;
-		gbc.insets = new Insets(5,5,5,5);
+		gbc.insets = new Insets(5, 5, 5, 5);
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 
 		gridBag.setConstraints(label, gbc);
@@ -396,7 +358,7 @@ public class PanelVerwaltung extends JPanel implements I18n {
 		gbc = new GridBagConstraints();
 		gbc.gridx = 2;
 		gbc.gridy = 3;
-		gbc.insets = new Insets(5,5,5,0);
+		gbc.insets = new Insets(5, 5, 5, 0);
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 
 		gridBag.setConstraints(text, gbc);
@@ -408,7 +370,7 @@ public class PanelVerwaltung extends JPanel implements I18n {
 		gbc = new GridBagConstraints();
 		gbc.gridx = 3;
 		gbc.gridy = 3;
-		gbc.insets = new Insets(5,5,0,5);
+		gbc.insets = new Insets(5, 5, 0, 5);
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 
 		gridBag.setConstraints(klassenName, gbc);
@@ -417,7 +379,7 @@ public class PanelVerwaltung extends JPanel implements I18n {
 		this.add(panel, BorderLayout.NORTH);
 
 		label = new JLabel();
-		label.setPreferredSize(new Dimension(680,0));
+		label.setPreferredSize(new Dimension(680, 0));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 7;
@@ -445,18 +407,18 @@ public class PanelVerwaltung extends JPanel implements I18n {
 		gbc.gridx = 0;
 		gbc.gridwidth = 2;
 		gbc.gridy = 4;
-		gbc.insets = new Insets(5,5,5,5);
+		gbc.insets = new Insets(5, 5, 5, 5);
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 
 		gridBag.setConstraints(radioButton, gbc);
 		panel.add(radioButton);
 
 		label = new JLabel();
-		label.setPreferredSize(new Dimension(10,0));
+		label.setPreferredSize(new Dimension(10, 0));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		gbc.insets = new Insets(5,5,5,5);
+		gbc.insets = new Insets(5, 5, 5, 5);
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 
 		gridBag.setConstraints(label, gbc);
@@ -471,7 +433,7 @@ public class PanelVerwaltung extends JPanel implements I18n {
 		gbc.gridx = 1;
 		gbc.gridwidth = 3;
 		gbc.gridy = 5;
-		gbc.insets = new Insets(5,5,5,5);
+		gbc.insets = new Insets(5, 5, 5, 5);
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 
 		gridBag.setConstraints(scrollPane, gbc);
@@ -485,8 +447,7 @@ public class PanelVerwaltung extends JPanel implements I18n {
 		buttonLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				if (tabelle.getSelectedRow() != -1) {
-					((DefaultTableModel) tabelle.getModel()).removeRow(tabelle
-							.getSelectedRow());
+					((DefaultTableModel) tabelle.getModel()).removeRow(tabelle.getSelectedRow());
 					tabelleSpeichern();
 					updateTabelle();
 				}
@@ -508,14 +469,14 @@ public class PanelVerwaltung extends JPanel implements I18n {
 		gbc.gridx = 0;
 		gbc.gridwidth = 4;
 		gbc.gridy = 6;
-		gbc.insets = new Insets(5,5,5,5);
+		gbc.insets = new Insets(5, 5, 5, 5);
 		gbc.anchor = GridBagConstraints.CENTER;
 
 		gridBag.setConstraints(tmp, gbc);
 		panel.add(tmp);
 
 		label = new JLabel();
-		label.setPreferredSize(new Dimension(680,0));
+		label.setPreferredSize(new Dimension(680, 0));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 7;
@@ -537,8 +498,7 @@ public class PanelVerwaltung extends JPanel implements I18n {
 
 		dtm = (DefaultTableModel) tabelle.getModel();
 
-		dateiname = Information.getInformation().getAnwendungenPfad()
-				+ "EigeneAnwendungen.txt";
+		dateiname = Information.getInformation().getAnwendungenPfad() + "EigeneAnwendungen.txt";
 
 		try {
 			fw = new FileWriter(dateiname, false);
@@ -549,19 +509,17 @@ public class PanelVerwaltung extends JPanel implements I18n {
 					zeile[j] = (String) dtm.getValueAt(i, j);
 				}
 
-				fw.write(zeile[0] + ";" + zeile[1] + ";" + zeile[2] + ";"
-						+ zeile[3] + "\n");
+				fw.write(zeile[0] + ";" + zeile[1] + ";" + zeile[2] + ";" + zeile[3] + "\n");
 			}
 
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace(Main.debug);
-		}
-		finally {
-			if (fw != null) try {
-				fw.close();
-			}
-			catch (IOException e) {}
+		} finally {
+			if (fw != null)
+				try {
+					fw.close();
+				} catch (IOException e) {
+				}
 		}
 	}
 
@@ -606,15 +564,14 @@ public class PanelVerwaltung extends JPanel implements I18n {
 				map = (HashMap) it.next();
 
 				zeile = new Vector<String>();
-				zeile.addElement((String)map.get("Anwendung"));
-				zeile.addElement((String)map.get("Klasse"));
-				zeile.addElement((String)map.get("GUI-Klasse"));
-				zeile.addElement((String)map.get("gfxFile"));
+				zeile.addElement((String) map.get("Anwendung"));
+				zeile.addElement((String) map.get("Klasse"));
+				zeile.addElement((String) map.get("GUI-Klasse"));
+				zeile.addElement((String) map.get("gfxFile"));
 
 				dtm.addRow(zeile);
 			}
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace(Main.debug);
 		}
 

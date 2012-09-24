@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.software.dateiaustausch;
 
 import java.util.LinkedList;
@@ -36,7 +36,7 @@ import filius.software.Anwendung;
  * Peer-To-Peer-Netzwerk verschickt bzw. weitergeleitet und dafuer gesorgt, dass
  * die dazu gehoerigen eingehenden Antworten verarbeitet werden. Dazu wird ein
  * neuer Thread mit einem PeerToPeerClientMitarbeiter gestartet.
- *
+ * 
  */
 class PeerToPeerClient extends Anwendung {
 
@@ -61,19 +61,21 @@ class PeerToPeerClient extends Anwendung {
 	/**
 	 * Konstruktor, in dem die zugehoerige PeerToPeerAnwendung initialisiert und
 	 * der Konstruktor der Oberklasse aufgerufen wird.
-	 *
+	 * 
 	 * @param peerToPeerAnwendung
 	 */
 	PeerToPeerClient(PeerToPeerAnwendung peerToPeerAnwendung) {
 		super();
-		Main.debug.println("INVOKED-2 ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (PeerToPeerClient), constr: PeerToPeerClient("+peerToPeerAnwendung+")");
+		Main.debug.println("INVOKED-2 (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (PeerToPeerClient), constr: PeerToPeerClient(" + peerToPeerAnwendung + ")");
 
 		this.peerToPeerAnwendung = peerToPeerAnwendung;
 	}
 
 	/** Zum beenden der Threads, die durch diesen Client gestartet wurden. */
 	public void beenden() {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (PeerToPeerClient), beenden()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (PeerToPeerClient), beenden()");
 		ListIterator<?> it;
 		PeerToPeerClientMitarbeiter m;
 
@@ -98,7 +100,7 @@ class PeerToPeerClient extends Anwendung {
 	 * Nachricht verschickt werden soll, wird die Ping-Nachricht als eigene
 	 * Anfrage behandelt. Eine Ping-Nachricht wird zum Beitreten zu einem
 	 * Peer-To-Peer-Netzwerk verschickt.
-	 *
+	 * 
 	 * @param wohinZuerst
 	 *            die IP-Adresse des Servents, mit welchem man sich zuerst
 	 *            verbinden moechte
@@ -112,12 +114,13 @@ class PeerToPeerClient extends Anwendung {
 	 *            (weil es daher kommt)
 	 */
 	void sendePing(String wohinZuerst, PingPaket pingPaket, String nichtIP) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (PeerToPeerClient), sendePing("+wohinZuerst+","+pingPaket+","+nichtIP+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (PeerToPeerClient), sendePing(" + wohinZuerst + "," + pingPaket + "," + nichtIP + ")");
 		// der erste Schritt => nur an den senden, den man angegeben hat, der
 		// kuemmert sich um das weitere fluten
 		if (!wohinZuerst.equals("")) {
-			PeerToPeerClientMitarbeiter lauscher = new PeerToPeerClientMitarbeiter(
-					peerToPeerAnwendung, wohinZuerst, pingPaket);
+			PeerToPeerClientMitarbeiter lauscher = new PeerToPeerClientMitarbeiter(peerToPeerAnwendung, wohinZuerst,
+			        pingPaket);
 			mitarbeiterEigeneAnfragen.add(lauscher);
 			lauscher.start();
 		}
@@ -125,14 +128,11 @@ class PeerToPeerClient extends Anwendung {
 		// von dem es aktuell kam und
 		// den, wo es urspruenglich her kam
 		else {
-			for (int i = 0; i < peerToPeerAnwendung
-					.holeBekanntePeerToPeerTeilnehmer().size(); i++) {
-				String aktuelle = (String) peerToPeerAnwendung
-						.holeBekanntePeerToPeerTeilnehmer().get(i);
-				if (aktuelle.equals(nichtIP) == false
-						&& aktuelle.equals(pingPaket.getIp()) == false) {
-					PeerToPeerClientMitarbeiter lauscher = new PeerToPeerClientMitarbeiter(
-							peerToPeerAnwendung, aktuelle, pingPaket);
+			for (int i = 0; i < peerToPeerAnwendung.holeBekanntePeerToPeerTeilnehmer().size(); i++) {
+				String aktuelle = (String) peerToPeerAnwendung.holeBekanntePeerToPeerTeilnehmer().get(i);
+				if (aktuelle.equals(nichtIP) == false && aktuelle.equals(pingPaket.getIp()) == false) {
+					PeerToPeerClientMitarbeiter lauscher = new PeerToPeerClientMitarbeiter(peerToPeerAnwendung,
+					        aktuelle, pingPaket);
 					mitarbeiterFremdeAnfragen.add(lauscher);
 					lauscher.start();
 				}
@@ -146,7 +146,8 @@ class PeerToPeerClient extends Anwendung {
 	 * beendet werden.
 	 */
 	void abbrechenSuche() {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (PeerToPeerClient), abbrechenSuche()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (PeerToPeerClient), abbrechenSuche()");
 		ListIterator<?> it;
 		PeerToPeerClientMitarbeiter mitarbeiter;
 
@@ -163,18 +164,18 @@ class PeerToPeerClient extends Anwendung {
 	 * welchem die entsprechende Datei liegt. Auch dazu wird ein
 	 * Mitarbeiter-Thread gestartet und dieser in die Liste der Threads fuer
 	 * eigene Anfragen eingefuegt.
-	 *
+	 * 
 	 * @param teilnehmerIp
 	 *            der Teilnehmer, auf welchem die Datei liegt
 	 * @param dateiName
 	 *            der Name der gesuchten Datei
 	 */
 	void dateiVomTeilnehmerAnfordern(String teilnehmerIp, String dateiName) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (PeerToPeerClient), dateiVomTeilnehmerAnfordern("+teilnehmerIp+","+dateiName+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (PeerToPeerClient), dateiVomTeilnehmerAnfordern(" + teilnehmerIp + "," + dateiName + ")");
 		PeerToPeerClientMitarbeiter m;
 
-		m = new PeerToPeerClientMitarbeiter(peerToPeerAnwendung, teilnehmerIp,
-				dateiName);
+		m = new PeerToPeerClientMitarbeiter(peerToPeerAnwendung, teilnehmerIp, dateiName);
 		m.start();
 		mitarbeiterEigeneAnfragen.add(m);
 	}
@@ -186,7 +187,7 @@ class PeerToPeerClient extends Anwendung {
 	 * der eigenen Anfragen der PeerToPeerAnwendung vorhanden ist. Die Anfrage
 	 * wird immer an alle bekannten Teilnehmer im Peer-To-Peer-Netzwerk
 	 * verschickt.
-	 *
+	 * 
 	 * @param anfragePaket
 	 *            das weiterzusendende Paket
 	 * @param absenderIP
@@ -196,7 +197,8 @@ class PeerToPeerClient extends Anwendung {
 	 *            zurueck uebergeben werden muessen
 	 */
 	void sendeAnfrage(QueryPaket anfragePaket, String absenderIP) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (PeerToPeerClient), sendeAnfrage("+anfragePaket+","+absenderIP+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (PeerToPeerClient), sendeAnfrage(" + anfragePaket + "," + absenderIP + ")");
 		LinkedList<String> dieNachbarn;
 		PeerToPeerClientMitarbeiter lauscher;
 		String nachbar;
@@ -206,13 +208,10 @@ class PeerToPeerClient extends Anwendung {
 		for (int i = 0; i < dieNachbarn.size(); i++) {
 			nachbar = (String) dieNachbarn.get(i);
 			if (!nachbar.equals(absenderIP)) {
-				lauscher = new PeerToPeerClientMitarbeiter(
-						peerToPeerAnwendung, nachbar, anfragePaket);
-				if (peerToPeerAnwendung.holeEigeneAnfragen().contains(
-						anfragePaket.getGuid())) {
+				lauscher = new PeerToPeerClientMitarbeiter(peerToPeerAnwendung, nachbar, anfragePaket);
+				if (peerToPeerAnwendung.holeEigeneAnfragen().contains(anfragePaket.getGuid())) {
 					mitarbeiterEigeneAnfragen.add(lauscher);
-				}
-				else {
+				} else {
 					mitarbeiterFremdeAnfragen.add(lauscher);
 				}
 				lauscher.start();

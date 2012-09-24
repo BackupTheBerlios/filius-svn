@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.anwendungssicht;
 
 import java.awt.BorderLayout;
@@ -48,12 +48,11 @@ import filius.Main;
 import filius.software.lokal.Terminal;
 import filius.software.system.Dateisystem;
 
-
 /**
  * Applikationsfenster fuer ein Terminal
- *
+ * 
  * @author Johannes Bade & Thomas Gerding
- *
+ * 
  */
 public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 
@@ -66,15 +65,14 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 	private JTextField inputField;
 	private JLabel inputLabel;
 	private JScrollPane tpPane;
-	
+
 	private boolean jobRunning;
 	private String enteredCommand;
 	private String[] enteredParameters;
-	
+
 	private boolean multipleObserverEvents;
 
-
-	public GUIApplicationTerminalWindow(GUIDesktopPanel desktop, String appName){
+	public GUIApplicationTerminalWindow(GUIDesktopPanel desktop, String appName) {
 		super(desktop, appName);
 		this.setMaximizable(false);
 		this.setResizable(false);
@@ -83,78 +81,88 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 
 		terminalField = new JTextArea("");
 		terminalField.setEditable(false);
-		terminalField.setCaretColor(new Color(222,222,222));
-		terminalField.setForeground(new Color(222,222,222));
-		terminalField.setBackground(new Color(0,0,0));
-		terminalField.setFont(new Font("Courier New",Font.PLAIN,11));
+		terminalField.setCaretColor(new Color(222, 222, 222));
+		terminalField.setForeground(new Color(222, 222, 222));
+		terminalField.setBackground(new Color(0, 0, 0));
+		terminalField.setFont(new Font("Courier New", Font.PLAIN, 11));
 		terminalField.setFocusable(false);
 		terminalField.setBorder(null);
 
-		tpPane = new JScrollPane(terminalField);  // make textfield scrollable
+		tpPane = new JScrollPane(terminalField); // make textfield scrollable
 		tpPane.setBorder(null);
-		tpPane.setBackground(new Color(0,0,0));
-		tpPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER); // do not show vert. scrollbar
-		tpPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); // do not show hor. scrollbar
-		
+		tpPane.setBackground(new Color(0, 0, 0));
+		tpPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER); // do
+																						 // not
+																						 // show
+																						 // vert.
+																						 // scrollbar
+		tpPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); // do
+																							 // not
+																							 // show
+																							 // hor.
+																							 // scrollbar
+
 		inputField = new JTextField("");
 		inputField.setEditable(true);
-		inputField.setBackground(new Color(0,0,0));
-		inputField.setForeground(new Color(222,222,222));
-		inputField.setCaretColor(new Color(222,222,222));
+		inputField.setBackground(new Color(0, 0, 0));
+		inputField.setForeground(new Color(222, 222, 222));
+		inputField.setCaretColor(new Color(222, 222, 222));
 		inputField.setBorder(null);
-		inputField.setFont(new Font("Courier New",Font.PLAIN,11));
+		inputField.setFont(new Font("Courier New", Font.PLAIN, 11));
 		inputField.setOpaque(false);
 
 		inputField.addKeyListener(new KeyListener() {
-            public void keyPressed(KeyEvent e) {
-			    if(e.getKeyCode() == KeyEvent.VK_ENTER)
-			    {
-					if(!(inputField.getText().isEmpty() || inputField.getText().replaceAll(" ", "").isEmpty())) {  // only process non-empty input
-						//Main.debug.println("DEBUG: "+getClass()+", keyPressed ('"+inputField.getText()+" + ENTER') event started");
-						terminalField.append("\n"+inputLabel.getText()+inputField.getText()+"\n");
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					if (!(inputField.getText().isEmpty() || inputField.getText().replaceAll(" ", "").isEmpty())) { // only
+																												   // process
+																												   // non-empty
+																												   // input
+						// Main.debug.println("DEBUG: "+getClass()+", keyPressed ('"+inputField.getText()+" + ENTER') event started");
+						terminalField.append("\n" + inputLabel.getText() + inputField.getText() + "\n");
 						StringTokenizer tk = new StringTokenizer(inputField.getText(), " ");
-	
-						/* Erstes Token enthaelt den Befehl*/
+
+						/* Erstes Token enthaelt den Befehl */
 						enteredCommand = tk.nextToken();
-	
-						/* restliche Tokens werden in String Array geschrieben.
-						 * Array wird sicherheitshalber mit mindestens 3 leeren Strings gefüllt! */
-						enteredParameters = new String[3+tk.countTokens()];
-						for (int i =0; i< 3+tk.countTokens(); i++)
-						{
+
+						/*
+						 * restliche Tokens werden in String Array geschrieben.
+						 * Array wird sicherheitshalber mit mindestens 3 leeren
+						 * Strings gefüllt!
+						 */
+						enteredParameters = new String[3 + tk.countTokens()];
+						for (int i = 0; i < 3 + tk.countTokens(); i++) {
 							enteredParameters[i] = new String();
 						}
 						int iti = 0;
-						while (tk.hasMoreTokens())
-						{
-							enteredParameters[iti] =tk.nextToken();
+						while (tk.hasMoreTokens()) {
+							enteredParameters[iti] = tk.nextToken();
 							iti++;
 						}
-	
-						if (enteredCommand.equals("exit"))
-						{
+
+						if (enteredCommand.equals("exit")) {
 							doDefaultCloseAction();
-						}
-						else if (enteredCommand.equals("reset")) {
-							terminalField.setText( "" );
-							for (int i=0; i<15; i++) { terminalField.append(" \n"); } // padding with new lines for bottom alignment of new output
-							terminalField.append(  "================================================================\n"  );
+						} else if (enteredCommand.equals("reset")) {
+							terminalField.setText("");
+							for (int i = 0; i < 15; i++) {
+								terminalField.append(" \n");
+							} // padding with new lines for bottom alignment of
+							  // new output
+							terminalField.append("================================================================\n");
 							terminalField.append(messages.getString("sw_terminal_msg25")
-									     + "================================================================"
-									     + "\n");
-						}
-						else
-						{
+							        + "================================================================" + "\n");
+						} else {
 							inputLabel.setVisible(false);
 							jobRunning = true;
-							((Terminal) holeAnwendung()).terminalEingabeAuswerten(enteredCommand,enteredParameters);
+							((Terminal) holeAnwendung()).terminalEingabeAuswerten(enteredCommand, enteredParameters);
 						}
+					} else {
+						terminalField.append("\n");
 					}
-					else { terminalField.append("\n"); }
-					//Main.debug.println("DEBUG: "+getClass()+", keyPressed ('"+inputField.getText()+" + ENTER') event finished");
+					// Main.debug.println("DEBUG: "+getClass()+", keyPressed ('"+inputField.getText()+" + ENTER') event finished");
 					inputField.setText("");
-			    }
-            }
+				}
+			}
 
 			public void keyReleased(KeyEvent arg0) {
 
@@ -164,52 +172,54 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 
 			}
 
-         });
-
+		});
 
 		inputLabel = new JLabel(">");
-		inputLabel.setBackground(new Color(0,0,0));
-		inputLabel.setForeground(new Color(222,222,222));
-		inputLabel.setFont(new Font("Courier New",Font.PLAIN,11));
+		inputLabel.setBackground(new Color(0, 0, 0));
+		inputLabel.setForeground(new Color(222, 222, 222));
+		inputLabel.setFont(new Font("Courier New", Font.PLAIN, 11));
 
 		Box terminalBox = Box.createHorizontalBox();
-		terminalBox.setBackground(new Color(0,0,0));
-		terminalBox.add(tpPane);  // terminalField embedded in ScrollPane
-		terminalBox.setBorder(BorderFactory.createEmptyBorder(5,5,1,5));
+		terminalBox.setBackground(new Color(0, 0, 0));
+		terminalBox.add(tpPane); // terminalField embedded in ScrollPane
+		terminalBox.setBorder(BorderFactory.createEmptyBorder(5, 5, 1, 5));
 
 		Box inputBox = Box.createHorizontalBox();
-		inputBox.setBackground(new Color(0,0,0));
+		inputBox.setBackground(new Color(0, 0, 0));
 		inputBox.add(inputLabel);
 		inputBox.add(Box.createHorizontalStrut(1));
 		inputBox.add(inputField);
-		inputBox.setBorder(BorderFactory.createEmptyBorder(0,5,5,5));
+		inputBox.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 
 		backPanel = new JPanel(new BorderLayout());
-		backPanel.setBackground(new Color(0,0,0));
+		backPanel.setBackground(new Color(0, 0, 0));
 		backPanel.add(terminalBox, BorderLayout.CENTER);
 		backPanel.add(inputBox, BorderLayout.SOUTH);
 		this.getContentPane().add(backPanel);
 
-		terminalField.setText( "" );
-		for (int i=0; i<15; i++) { terminalField.append(" \n"); } // padding with new lines for bottom alignment of new output
-		terminalField.append(  "================================================================\n"  );
+		terminalField.setText("");
+		for (int i = 0; i < 15; i++) {
+			terminalField.append(" \n");
+		} // padding with new lines for bottom alignment of new output
+		terminalField.append("================================================================\n");
 		terminalField.append(messages.getString("sw_terminal_msg25")
-				     + "================================================================"
-				     + "\n");
+		        + "================================================================" + "\n");
 		try {
 			Thread.sleep(100);
-		} catch (InterruptedException e) {}
+		} catch (InterruptedException e) {
+		}
 		this.tpPane.getVerticalScrollBar().setValue(this.tpPane.getVerticalScrollBar().getMaximum());
-		
+
 		pack();
 
 		inputField.requestFocus();
-		this.inputLabel.setText("root "+Dateisystem.absoluterPfad(((Terminal)holeAnwendung()).getAktuellerOrdner())+"> ");
+		this.inputLabel.setText("root " + Dateisystem.absoluterPfad(((Terminal) holeAnwendung()).getAktuellerOrdner())
+		        + "> ");
 	}
 
 	public void setMultipleObserverEvents(boolean flag) {
 	}
-	
+
 	public void windowActivated(WindowEvent e) {
 
 	}
@@ -242,54 +252,56 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 	}
 
 	public void internalFrameClosing(InternalFrameEvent e) {
-		
 
 	}
 
 	public void internalFrameDeactivated(InternalFrameEvent e) {
-		
 
 	}
 
 	public void internalFrameDeiconified(InternalFrameEvent e) {
-		
 
 	}
 
 	public void internalFrameIconified(InternalFrameEvent e) {
-		
 
 	}
 
 	public void internalFrameOpened(InternalFrameEvent e) {
-		
+
 	}
 
 	public void update(Observable arg0, Object arg1) {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (GUIApplicationTerminalWindow), update("+arg0+","+arg1+")");
-		if (arg1 == null) return;
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (GUIApplicationTerminalWindow), update(" + arg0 + "," + arg1 + ")");
+		if (arg1 == null)
+			return;
 		if (jobRunning) {
-			//Main.debug.println("DEBUG:  terminalField.height="+terminalField.getHeight()+", tpPane.height="+tpPane.getHeight());
-			if (arg1 instanceof Boolean) { 
-				multipleObserverEvents=((Boolean) arg1).booleanValue(); 
-			}
-			else {   // expect String
+			// Main.debug.println("DEBUG:  terminalField.height="+terminalField.getHeight()+", tpPane.height="+tpPane.getHeight());
+			if (arg1 instanceof Boolean) {
+				multipleObserverEvents = ((Boolean) arg1).booleanValue();
+			} else { // expect String
 				this.terminalField.append(arg1.toString());
-				//this.terminalField.updateUI();
+				// this.terminalField.updateUI();
 				try {
-					// mini delay to let the terminalField reliably update its new height
+					// mini delay to let the terminalField reliably update its
+					// new height
 					Thread.sleep(200);
-				} catch (InterruptedException e) {}
+				} catch (InterruptedException e) {
+				}
 				this.tpPane.repaint();
 				this.tpPane.getVerticalScrollBar().setValue(this.tpPane.getVerticalScrollBar().getMaximum());
-				if(!multipleObserverEvents) {  // is this observer call expected to be the last one for the current command, i.e., multipleOverserverEvents=false?
-					this.inputLabel.setText("root "+Dateisystem.absoluterPfad(((Terminal)holeAnwendung()).getAktuellerOrdner())+"> ");
-			    	this.inputLabel.setVisible(true);
-			    	jobRunning=false;
+				if (!multipleObserverEvents) { // is this observer call expected
+											   // to be the last one for the
+											   // current command, i.e.,
+											   // multipleOverserverEvents=false?
+					this.inputLabel.setText("root "
+					        + Dateisystem.absoluterPfad(((Terminal) holeAnwendung()).getAktuellerOrdner()) + "> ");
+					this.inputLabel.setVisible(true);
+					jobRunning = false;
 				}
 			}
 		}
 	}
-
 
 }

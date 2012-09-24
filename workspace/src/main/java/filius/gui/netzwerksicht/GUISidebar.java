@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.netzwerksicht;
 
 import java.awt.Component;
@@ -52,9 +52,9 @@ import filius.hardware.knoten.Vermittlungsrechner;
  * Klasse für das linke Panel in der Entwurfsansicht. Darin werden alle
  * nutzbaren Elemente für den Netzwerkentwurf angezeigt und können per Drag&Drop
  * in den Entwurfsbildschirm gezogen werden.
- *
+ * 
  * @author Johannes Bade & Thomas Gerding
- *
+ * 
  */
 public class GUISidebar implements Serializable {
 
@@ -92,17 +92,19 @@ public class GUISidebar implements Serializable {
 
 		leistenpanel = new JBackgroundPanel() {
 			private static final long serialVersionUID = 1L;
+
 			public Dimension getPreferredSize() {
-				int height=0, width=0;
+				int height = 0, width = 0;
 				for (Component component : this.getComponents()) {
-					if (component.getWidth() > width) width = component.getWidth();
+					if (component.getWidth() > width)
+						width = component.getWidth();
 					height += component.getHeight();
 				}
 				height += 30;
 				return new Dimension(width, height);
 			}
 		};
-		
+
 		leistenpanel.setBackgroundImage("gfx/allgemein/leisten_hg.png");
 		leistenpanel.setEnabled(false);
 		kabelvorschau = GUIContainer.getGUIContainer().getKabelvorschau();
@@ -122,7 +124,7 @@ public class GUISidebar implements Serializable {
 	}
 
 	public void addCableItemToSidebar() {
-		kabel_neu = new JLabel(new ImageIcon(getClass().getResource("/"+KABEL)));
+		kabel_neu = new JLabel(new ImageIcon(getClass().getResource("/" + KABEL)));
 		kabel_neu.setText(Kabel.holeHardwareTyp());
 		kabel_neu.setVerticalTextPosition(SwingConstants.BOTTOM);
 		kabel_neu.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -135,13 +137,9 @@ public class GUISidebar implements Serializable {
 		kabel_neu.addMouseListener(new MouseInputAdapter() {
 			public void mousePressed(MouseEvent e) {
 				/* Wechselt bla */
-				kabelvorschau.setBounds(
-						e.getX() - kabelvorschau.getWidth() / 2, e.getY()
-								- kabelvorschau.getHeight()
-								/ 2
-								+ GUIContainer.getGUIContainer().getMenu()
-										.getMenupanel().getHeight(),
-						kabelvorschau.getWidth(), kabelvorschau.getHeight());
+				kabelvorschau.setBounds(e.getX() - kabelvorschau.getWidth() / 2, e.getY() - kabelvorschau.getHeight()
+				        / 2 + GUIContainer.getGUIContainer().getMenu().getMenupanel().getHeight(),
+				        kabelvorschau.getWidth(), kabelvorschau.getHeight());
 				kabelvorschau.setVisible(true);
 
 			}
@@ -150,7 +148,7 @@ public class GUISidebar implements Serializable {
 
 	/**
 	 * Füllt das Sidebar Panel mit Items fuer die Knoten.
-	 *
+	 * 
 	 * @author Johannes Bade & Thomas Gerding
 	 * @param llist
 	 */
@@ -173,20 +171,19 @@ public class GUISidebar implements Serializable {
 		bildDateien[4] = MODEM;
 		hardwareTypen[4] = Modem.holeHardwareTyp();
 
-		//kabel_neu.setBorder(javax.swing.BorderFactory.createLineBorder(Color.red));
+		// kabel_neu.setBorder(javax.swing.BorderFactory.createLineBorder(Color.red));
 
 		for (int i = 0; i < bildDateien.length && i < hardwareTypen.length; i++) {
-			icon = new ImageIcon(getClass().getResource("/"+bildDateien[i]));
-			newLabel = new JSidebarButton(hardwareTypen[i], icon,
-					hardwareTypen[i]);
-			//newLabel.setBorder(javax.swing.BorderFactory.createLineBorder(Color.red));
-			
+			icon = new ImageIcon(getClass().getResource("/" + bildDateien[i]));
+			newLabel = new JSidebarButton(hardwareTypen[i], icon, hardwareTypen[i]);
+			// newLabel.setBorder(javax.swing.BorderFactory.createLineBorder(Color.red));
+
 			/* Label wird liste und Leiste hinzugefuegt */
 			buttonList.add(newLabel);
 			leistenpanel.add(newLabel);
 		}
 
-		//leistenpanel.setBorder(javax.swing.BorderFactory.createLineBorder(Color.red));
+		// leistenpanel.setBorder(javax.swing.BorderFactory.createLineBorder(Color.red));
 	}
 
 	public JBackgroundPanel getLeistenpanel() {
@@ -195,12 +192,10 @@ public class GUISidebar implements Serializable {
 
 	public JSidebarButton aufButton(int x, int y) {
 		JSidebarButton klickLabel = null;
-		y += GUIContainer.getGUIContainer().getSidebarScrollpane()
-				.getVerticalScrollBar().getValue();
+		y += GUIContainer.getGUIContainer().getSidebarScrollpane().getVerticalScrollBar().getValue();
 		for (JSidebarButton tmpLbl : buttonList) {
-			if (x >= tmpLbl.getX() && y >= tmpLbl.getY()
-					&& x <= tmpLbl.getX() + tmpLbl.getWidth()
-					&& y <= tmpLbl.getY() + tmpLbl.getHeight()) {
+			if (x >= tmpLbl.getX() && y >= tmpLbl.getY() && x <= tmpLbl.getX() + tmpLbl.getWidth()
+			        && y <= tmpLbl.getY() + tmpLbl.getHeight()) {
 				klickLabel = tmpLbl;
 			}
 

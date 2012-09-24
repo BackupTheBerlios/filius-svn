@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.netzwerksicht;
 
 import java.awt.BorderLayout;
@@ -57,7 +57,7 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 	private static final long serialVersionUID = 1L;
 
 	private JTextField name; // Name,Name,20,String,editable,Neuer
-								// Rechner,null
+	                         // Rechner,null
 
 	private JTextField macAdresse; // MAC-Adresse,15,String,not editable
 
@@ -71,9 +71,8 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 
 	// Anzahl der Anschlüsse,AnzahlAnschluesse,1,int,neditable,1,null
 	private JCheckBox dhcp; // Adresse per DHCP
-							// beziehen,Dhcp,1,boolean,editable,false,null
+	                        // beziehen,Dhcp,1,boolean,editable,false,null
 	private JButton btDhcp;
-
 
 	protected JHostKonfiguration(Hardware hardware) {
 		super(hardware);
@@ -89,13 +88,14 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 			host.setName(name.getText());
 
 			bs = (Betriebssystem) host.getSystemSoftware();
-				bs.setzeIPAdresse(ipAdresse.getText());
-				bs.setzeNetzmaske(netzmaske.getText());
-				bs.setStandardGateway(gateway.getText());
-				bs.setDNSServer(dns.getText());
+			bs.setzeIPAdresse(ipAdresse.getText());
+			bs.setzeNetzmaske(netzmaske.getText());
+			bs.setStandardGateway(gateway.getText());
+			bs.setDNSServer(dns.getText());
 			bs.setDHCPKonfiguration(dhcp.isSelected());
 
-			if (dhcp.isSelected()) bs.getDHCPServer().setAktiv(false);
+			if (dhcp.isSelected())
+				bs.getDHCPServer().setAktiv(false);
 		} else {
 			Main.debug.println("GUIRechnerKonfiguration: Aenderungen konnten nicht uebernommen werden.");
 		}
@@ -110,7 +110,6 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		FocusListener focusListener;
 		ActionListener actionListener;
 
-
 		actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				aenderungenAnnehmen();
@@ -118,14 +117,14 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		};
 		focusListener = new FocusListener() {
 
-			public void focusGained(FocusEvent arg0) {	}
+			public void focusGained(FocusEvent arg0) {
+			}
 
 			public void focusLost(FocusEvent arg0) {
 				aenderungenAnnehmen();
 			}
 
 		};
-
 
 		// =======================================================
 		// Attribut Name
@@ -184,7 +183,6 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		ipAdresse.addActionListener(actionListener);
 		ipAdresse.addFocusListener(focusListener);
 
-
 		tempBox = Box.createHorizontalBox();
 		tempBox.setOpaque(true);
 		tempBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
@@ -206,12 +204,11 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		netzmaske.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
 				ueberpruefen(EingabenUeberpruefung.musterSubNetz, netzmaske);
-				//setMessage("\u00C4nderungen werden erst durch die Schaltflaeche \u00C4ndern \u00FCbernommen!");
+				// setMessage("\u00C4nderungen werden erst durch die Schaltflaeche \u00C4ndern \u00FCbernommen!");
 			}
 		});
 		netzmaske.addActionListener(actionListener);
 		netzmaske.addFocusListener(focusListener);
-
 
 		tempBox = Box.createHorizontalBox();
 		tempBox.setOpaque(true);
@@ -239,7 +236,6 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		gateway.addActionListener(actionListener);
 		gateway.addFocusListener(focusListener);
 
-
 		tempBox = Box.createHorizontalBox();
 		tempBox.setOpaque(true);
 		tempBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
@@ -265,7 +261,6 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		});
 		dns.addActionListener(actionListener);
 		dns.addFocusListener(focusListener);
-
 
 		tempBox = Box.createHorizontalBox();
 		tempBox.setOpaque(true);
@@ -307,9 +302,12 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		btDhcp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				JDHCPKonfiguration dhcpKonfig = new JDHCPKonfiguration(JMainFrame.getJMainFrame(), messages.getString("jhostkonfiguration_msg8"), (Betriebssystem)((Host)holeHardware()).getSystemSoftware());
+				JDHCPKonfiguration dhcpKonfig = new JDHCPKonfiguration(JMainFrame.getJMainFrame(), messages
+				        .getString("jhostkonfiguration_msg8"), (Betriebssystem) ((Host) holeHardware())
+				        .getSystemSoftware());
 				dhcpKonfig.setVisible(true);
-			}});
+			}
+		});
 		tempBox.add(btDhcp);
 		box.add(tempBox);
 
@@ -339,10 +337,8 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 			netzmaske.setEnabled(!bs.isDHCPKonfiguration());
 			gateway.setEnabled(!bs.isDHCPKonfiguration());
 			dns.setEnabled(!bs.isDHCPKonfiguration());
-		}
-		else {
-			Main.debug
-					.println("GUIRechnerKonfiguration: keine Hardware-Komponente vorhanden");
+		} else {
+			Main.debug.println("GUIRechnerKonfiguration: keine Hardware-Komponente vorhanden");
 		}
 	}
 

@@ -166,8 +166,7 @@ public class ResourceRecord {
 	 * @return the rdata
 	 */
 	public String getRdata() {
-		if ((this.type.equals(NAME_SERVER) || this.type.equals(MAIL_EXCHANGE)) 
-				&& !rdata.matches(".*\\.")) {
+		if ((this.type.equals(NAME_SERVER) || this.type.equals(MAIL_EXCHANGE)) && !rdata.matches(".*\\.")) {
 			return rdata + ".";
 		}
 		return rdata;

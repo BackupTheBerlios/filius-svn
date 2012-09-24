@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.anwendungssicht;
 
 import java.awt.BorderLayout;
@@ -91,8 +91,7 @@ public class DMTNFileChooser implements I18n {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals(btEbeneHoch.getActionCommand())) {
 					if (aktuellerOrdner.getParent() != null) {
-						aktuellerOrdner = (DefaultMutableTreeNode) aktuellerOrdner
-								.getParent();
+						aktuellerOrdner = (DefaultMutableTreeNode) aktuellerOrdner.getParent();
 
 						ordnerInhaltAnzeigen(aktuellerOrdner);
 
@@ -117,26 +116,21 @@ public class DMTNFileChooser implements I18n {
 			public void mouseClicked(MouseEvent e) {
 				/* Doppelklick (Linke Maustaste) */
 				if (e.getClickCount() == 2 && e.getButton() == 1) {
-					int index = ((JList) e.getSource()).locationToIndex(e
-							.getPoint());
+					int index = ((JList) e.getSource()).locationToIndex(e.getPoint());
 
-					DefaultListModel lm = (DefaultListModel) lVerzeichnisse
-							.getModel();
+					DefaultListModel lm = (DefaultListModel) lVerzeichnisse.getModel();
 					int selektiert = selektierteZelle(index, e.getPoint());
 					if (selektiert > -1) {
-						String[] teile = lm.getElementAt(index).toString()
-								.split(";");
+						String[] teile = lm.getElementAt(index).toString().split(";");
 						if (teile.length > 0) {
 							if (teile[0].equals("Ordner")) {
-								DefaultMutableTreeNode ordnerNode = Dateisystem
-										.verzeichnisKnoten(aktuellerOrdner,
-												teile[1]);
+								DefaultMutableTreeNode ordnerNode = Dateisystem.verzeichnisKnoten(aktuellerOrdner,
+								        teile[1]);
 								aktuellerOrdner = ordnerNode;
 								ordnerInhaltAnzeigen(ordnerNode);
 							}
 							if (teile[0].equals("Datei")) {
-								Datei datei = betriebssystem.getDateisystem()
-										.holeDatei(aktuellerOrdner, teile[1]);
+								Datei datei = betriebssystem.getDateisystem().holeDatei(aktuellerOrdner, teile[1]);
 								tfDateiname.setText(datei.getName());
 							}
 
@@ -235,7 +229,7 @@ public class DMTNFileChooser implements I18n {
 	 * ein. Um im CellRenderer zwischen Dateien und Ordnern unterscheiden zu
 	 * koennen, wird der Typ (Datei/Ordner) gefolgt von einem Semicolon
 	 * angegeben.
-	 *
+	 * 
 	 * @param node
 	 *            Die DefaultMutableTreeNode deren Inhalt angezeigt werden soll.
 	 */
@@ -245,18 +239,15 @@ public class DMTNFileChooser implements I18n {
 
 		lVerzeichnisse.setCellRenderer(new OrdnerInhaltListRenderer());
 		for (Enumeration e = node.children(); e.hasMoreElements();) {
-			DefaultMutableTreeNode enode = (DefaultMutableTreeNode) e
-					.nextElement();
+			DefaultMutableTreeNode enode = (DefaultMutableTreeNode) e.nextElement();
 			if (enode.getUserObject().getClass().equals(Datei.class)) {
 				Datei dat = (Datei) enode.getUserObject();
 				lm.addElement("Datei;" + dat.getName());
-			}
-			else {
+			} else {
 				lm.addElement("Ordner;" + enode.toString());
 			}
 		}
-		lbAktuellerOrdner.setText(messages.getString("dmtnfilechooser_msg11")
-				+ " " + aktuellerOrdner.toString());
+		lbAktuellerOrdner.setText(messages.getString("dmtnfilechooser_msg11") + " " + aktuellerOrdner.toString());
 	}
 
 	/**
@@ -267,8 +258,7 @@ public class DMTNFileChooser implements I18n {
 	public int selektierteZelle(int index, Point punkt) {
 		int ergebnis = -1;
 		if (lVerzeichnisse.indexToLocation(index) != null) {
-			if (lVerzeichnisse.indexToLocation(index).getY()
-					+ lVerzeichnisse.getFixedCellHeight() > punkt.getY()) {
+			if (lVerzeichnisse.indexToLocation(index).getY() + lVerzeichnisse.getFixedCellHeight() > punkt.getY()) {
 				ergebnis = index;
 			}
 		}

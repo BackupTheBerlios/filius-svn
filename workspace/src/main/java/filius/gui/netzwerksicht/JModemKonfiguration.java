@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.netzwerksicht;
 
 import java.awt.BorderLayout;
@@ -66,40 +66,40 @@ public class JModemKonfiguration extends JKonfiguration implements I18n, Observe
 	protected JModemKonfiguration(Hardware hardware) {
 		super(hardware);
 
-		((Modem)holeHardware()).getSystemSoftware().addObserver(this);
+		((Modem) holeHardware()).getSystemSoftware().addObserver(this);
 	}
 
 	public void aenderungenAnnehmen() {
-	  	Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (JModemKonfiguration), aenderungenAnnehmen()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (JModemKonfiguration), aenderungenAnnehmen()");
 		Modem modem;
 		ModemFirmware firmware;
 
-		modem = (Modem)holeHardware();
-		firmware = (ModemFirmware)modem.getSystemSoftware();
+		modem = (Modem) holeHardware();
+		firmware = (ModemFirmware) modem.getSystemSoftware();
 
 		modem.setName(name.getText());
 		firmware.setIpAdresse(tfIpAdresse.getText());
 		try {
-		firmware.setPort(Integer.parseInt(tfPort.getText()));
+			firmware.setPort(Integer.parseInt(tfPort.getText()));
+		} catch (Exception e) {
 		}
-		catch (Exception e) {}
 
 		if (cbServerModus.isSelected()) {
-			((ModemFirmware)modem.getSystemSoftware()).setMode(ModemFirmware.SERVER);
-		}
-		else {
-			((ModemFirmware)modem.getSystemSoftware()).setMode(ModemFirmware.CLIENT);
+			((ModemFirmware) modem.getSystemSoftware()).setMode(ModemFirmware.SERVER);
+		} else {
+			((ModemFirmware) modem.getSystemSoftware()).setMode(ModemFirmware.CLIENT);
 		}
 
 	}
 
 	protected void initAttributEingabeBox(Box box) {
-	  	Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (JModemKonfiguration), initAttributEingabeBox("+box+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (JModemKonfiguration), initAttributEingabeBox(" + box + ")");
 		JLabel tempLabel;
 		Box tempBox;
 		FocusListener focusListener;
 		ActionListener actionListener;
-
 
 		actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
@@ -108,7 +108,8 @@ public class JModemKonfiguration extends JKonfiguration implements I18n, Observe
 		};
 		focusListener = new FocusListener() {
 
-			public void focusGained(FocusEvent arg0) {	}
+			public void focusGained(FocusEvent arg0) {
+			}
 
 			public void focusLost(FocusEvent arg0) {
 				aenderungenAnnehmen();
@@ -156,8 +157,8 @@ public class JModemKonfiguration extends JKonfiguration implements I18n, Observe
 
 		tfIpAdresse = new JTextField("192.168.0.21");
 		tfIpAdresse.setEnabled(false);
-		tfIpAdresse.setPreferredSize(new Dimension(100,18));
-		tfIpAdresse.setText(((ModemFirmware)((Modem)holeHardware()).getSystemSoftware()).getIpAdresse());
+		tfIpAdresse.setPreferredSize(new Dimension(100, 18));
+		tfIpAdresse.setText(((ModemFirmware) ((Modem) holeHardware()).getSystemSoftware()).getIpAdresse());
 		tempBox.add(tfIpAdresse);
 
 		box.add(tempBox);
@@ -172,12 +173,11 @@ public class JModemKonfiguration extends JKonfiguration implements I18n, Observe
 		tempBox.add(tempLabel);
 
 		tfPort = new JTextField("1234");
-		tfPort.setPreferredSize(new Dimension(100,18));
-		tfPort.setText(""+((ModemFirmware)((Modem)holeHardware()).getSystemSoftware()).getPort());
+		tfPort.setPreferredSize(new Dimension(100, 18));
+		tfPort.setText("" + ((ModemFirmware) ((Modem) holeHardware()).getSystemSoftware()).getPort());
 		tempBox.add(tfPort);
 
 		box.add(tempBox);
-
 
 		tempBox = Box.createHorizontalBox();
 		tempBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
@@ -189,17 +189,15 @@ public class JModemKonfiguration extends JKonfiguration implements I18n, Observe
 		btStartStop.setActionCommand("ServerStarten");
 		btStartStop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ModemFirmware firmware = (ModemFirmware)((Modem)holeHardware()).getSystemSoftware();
+				ModemFirmware firmware = (ModemFirmware) ((Modem) holeHardware()).getSystemSoftware();
 
 				aenderungenAnnehmen();
 
 				if (e.getActionCommand().equals("ClientStarten")) {
 					firmware.starteClient();
-				}
-				else if (e.getActionCommand().equals("ServerStarten"))	{
+				} else if (e.getActionCommand().equals("ServerStarten")) {
 					firmware.starteServer();
-				}
-				else if (e.getActionCommand().equals("Trennen")) {
+				} else if (e.getActionCommand().equals("Trennen")) {
 					firmware.trennen();
 				}
 
@@ -211,10 +209,10 @@ public class JModemKonfiguration extends JKonfiguration implements I18n, Observe
 		box.add(tempBox);
 
 		ActionListener al = new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					aenderungenAnnehmen();
-					updateAttribute();
-				}
+			public void actionPerformed(ActionEvent e) {
+				aenderungenAnnehmen();
+				updateAttribute();
+			}
 		};
 
 		cbServerModus.addActionListener(al);
@@ -226,30 +224,27 @@ public class JModemKonfiguration extends JKonfiguration implements I18n, Observe
 	}
 
 	public void updateAttribute() {
-	  	Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (JModemKonfiguration), updateAttribute()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (JModemKonfiguration), updateAttribute()");
 		Modem modem;
 		ModemFirmware firmware;
 		boolean aktiv;
 
-		modem = (Modem)holeHardware();
-		firmware = (ModemFirmware)modem.getSystemSoftware();
+		modem = (Modem) holeHardware();
+		firmware = (ModemFirmware) modem.getSystemSoftware();
 		name.setText(modem.getName());
 
 		tfIpAdresse.setText(firmware.getIpAdresse());
-		tfPort.setText(""+firmware.getPort());
+		tfPort.setText("" + firmware.getPort());
 
-
-		if (firmware.getMode() == ModemFirmware.CLIENT)
-		{
+		if (firmware.getMode() == ModemFirmware.CLIENT) {
 			cbServerModus.setSelected(false);
 			tfIpAdresse.setEnabled(true);
 			btStartStop.setText(messages.getString("jmodemkonfiguration_msg5"));
 			btStartStop.setPreferredSize(new Dimension(300, 30));
 			btStartStop.setActionCommand("ClientStarten");
 			aktiv = modem.istVerbindungAktiv();
-		}
-		else
-		{
+		} else {
 			cbServerModus.setSelected(true);
 			tfIpAdresse.setEnabled(false);
 			btStartStop.setText(messages.getString("jmodemkonfiguration_msg2"));
@@ -264,8 +259,7 @@ public class JModemKonfiguration extends JKonfiguration implements I18n, Observe
 			tfIpAdresse.setEnabled(false);
 			tfPort.setEnabled(false);
 			cbServerModus.setEnabled(false);
-		}
-		else {
+		} else {
 			tfPort.setEnabled(true);
 			cbServerModus.setEnabled(true);
 		}
@@ -273,11 +267,12 @@ public class JModemKonfiguration extends JKonfiguration implements I18n, Observe
 	}
 
 	public void update(Observable arg0, Object arg1) {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (JModemKonfiguration), update("+arg0+","+arg1+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (JModemKonfiguration), update(" + arg0
+		        + "," + arg1 + ")");
 		updateAttribute();
 
-//		if (arg1 != null) {
-//			JOptionPane.showMessageDialog(this, arg1);
-//		}
+		// if (arg1 != null) {
+		// JOptionPane.showMessageDialog(this, arg1);
+		// }
 	}
 }

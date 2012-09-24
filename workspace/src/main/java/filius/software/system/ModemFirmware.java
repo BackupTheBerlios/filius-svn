@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.software.system;
 
 import java.io.IOException;
@@ -112,8 +112,9 @@ public class ModemFirmware extends SystemSoftware implements Runnable, I18n {
 
 	/** Ob ein zuvor verschickter Teststring erfolgreich empfangen wurde */
 
-	/** Ob das Modem bereits gestartet wurde und damit eingehende Daten
-	 * auch verarbeitet werden.
+	/**
+	 * Ob das Modem bereits gestartet wurde und damit eingehende Daten auch
+	 * verarbeitet werden.
 	 */
 	private boolean gestartet = false;
 
@@ -125,7 +126,7 @@ public class ModemFirmware extends SystemSoftware implements Runnable, I18n {
 	 * einem neuen Thread!
 	 */
 	public void starteServer() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ModemFirmware), starteServer()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ModemFirmware), starteServer()");
 		(new Thread(this)).start();
 	}
 
@@ -136,7 +137,7 @@ public class ModemFirmware extends SystemSoftware implements Runnable, I18n {
 	 * Socket-Status gestartet.
 	 */
 	public void starteClient() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ModemFirmware), starteClient()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ModemFirmware), starteClient()");
 		try {
 			socket = new Socket(ipAdresse, port);
 			if (socket.isConnected()) {
@@ -147,13 +148,11 @@ public class ModemFirmware extends SystemSoftware implements Runnable, I18n {
 
 				((Modem) getKnoten()).setzeVerbindungAktiv(true);
 			}
-		}
-		catch (UnknownHostException e) {
+		} catch (UnknownHostException e) {
 			e.printStackTrace(Main.debug);
 			benachrichtigeBeobacher(messages.getString("modemfirmware_msg1"));
 			((Modem) getKnoten()).setzeVerbindungAktiv(false);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace(Main.debug);
 			benachrichtigeBeobacher(messages.getString("modemfirmware_msg2"));
 			((Modem) getKnoten()).setzeVerbindungAktiv(false);
@@ -172,7 +171,7 @@ public class ModemFirmware extends SystemSoftware implements Runnable, I18n {
 	 * Mit dieser Methode wird der Modus bestimmt, in dem das Modem laeuft. Wenn
 	 * der Modus gewaechselt wird, werden eventuell bestehende Verbindungen
 	 * abgebrochen.
-	 *
+	 * 
 	 * @param mode
 	 *            der neue Modus (SERVER oder CLIENT)
 	 */
@@ -219,13 +218,12 @@ public class ModemFirmware extends SystemSoftware implements Runnable, I18n {
 	 * Wenn noch Verbindungen bestehen werden diese abgebaut.
 	 */
 	public void trennen() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ModemFirmware), trennen()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ModemFirmware), trennen()");
 
 		if (mode == SERVER && serverSocket != null) {
 			try {
 				serverSocket.close();
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 			}
 		}
 		serverSocket = null;
@@ -241,8 +239,7 @@ public class ModemFirmware extends SystemSoftware implements Runnable, I18n {
 		if (socket != null) {
 			try {
 				socket.close();
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace(Main.debug);
 			}
 		}
@@ -256,47 +253,43 @@ public class ModemFirmware extends SystemSoftware implements Runnable, I18n {
 	 * Modemanschluesse vor dem Start der Datenweiterleitung geleert.
 	 */
 	private void leerePortPuffer() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ModemFirmware), leerePortPuffer()");
-		synchronized (((Modem) getKnoten()).getErstenAnschluss()
-				.holeEingangsPuffer()) {
-			((Modem) getKnoten()).getErstenAnschluss().holeEingangsPuffer()
-					.clear();
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ModemFirmware), leerePortPuffer()");
+		synchronized (((Modem) getKnoten()).getErstenAnschluss().holeEingangsPuffer()) {
+			((Modem) getKnoten()).getErstenAnschluss().holeEingangsPuffer().clear();
 		}
 	}
 
 	/**
 	 * <p>
 	 * Dieser Thread wird ausschliesslich fuer den Verbindungsaufbau im
-	 * Server-Modus genutzt! Das Modem im
-	 * Server-Modus wartet auf eingehende Verbindungen. Es wird aber nur eine
-	 * Verbindungsanfrage angenommen. Um nicht den gesamten
-	 * Programmablauf zu unterbrechen, erfolgt das Warten in einem eigenen
-	 * Thread.
+	 * Server-Modus genutzt! Das Modem im Server-Modus wartet auf eingehende
+	 * Verbindungen. Es wird aber nur eine Verbindungsanfrage angenommen. Um
+	 * nicht den gesamten Programmablauf zu unterbrechen, erfolgt das Warten in
+	 * einem eigenen Thread.
 	 * </p>
 	 */
 	public void run() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ModemFirmware), run()");
-			try {
-				serverSocket = new ServerSocket(port);
-				benachrichtigeBeobacher(null);
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ModemFirmware), run()");
+		try {
+			serverSocket = new ServerSocket(port);
+			benachrichtigeBeobacher(null);
 
-				socket = serverSocket.accept();
+			socket = serverSocket.accept();
 
-				if (socket != null && socket.isConnected()) {
-					in = socket.getInputStream();
-					out = socket.getOutputStream();
-					((Modem) getKnoten()).setzeVerbindungAktiv(true);
-				}
-
-				serverSocket.close();
-			}
-			catch (Exception e) {
-				Main.debug.println("EXCEPTION ("+this.hashCode()+"): Modemverbindung beendet.");
-				((Modem) getKnoten()).setzeVerbindungAktiv(false);
-				benachrichtigeBeobacher(null);
+			if (socket != null && socket.isConnected()) {
+				in = socket.getInputStream();
+				out = socket.getOutputStream();
+				((Modem) getKnoten()).setzeVerbindungAktiv(true);
 			}
 
-			if (in != null && out != null) {
+			serverSocket.close();
+		} catch (Exception e) {
+			Main.debug.println("EXCEPTION (" + this.hashCode() + "): Modemverbindung beendet.");
+			((Modem) getKnoten()).setzeVerbindungAktiv(false);
+			benachrichtigeBeobacher(null);
+		}
+
+		if (in != null && out != null) {
 			extern = new ModemAnschlussBeobachterExtern(this, in);
 			intern = new ModemAnschlussBeobachterIntern(this, out);
 			leerePortPuffer();
@@ -304,9 +297,9 @@ public class ModemFirmware extends SystemSoftware implements Runnable, I18n {
 			intern.starten();
 		}
 
-//		Main.debug.println(getClass() + " run():" + "\n\tSocket im "
-//				+ ((mode == SERVER) ? "Server" : "Client")
-//				+ "-Modus wird ueberwacht.");
+		// Main.debug.println(getClass() + " run():" + "\n\tSocket im "
+		// + ((mode == SERVER) ? "Server" : "Client")
+		// + "-Modus wird ueberwacht.");
 	}
 
 	public String getIpAdresse() {

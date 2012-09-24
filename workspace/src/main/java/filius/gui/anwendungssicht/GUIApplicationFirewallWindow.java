@@ -1,30 +1,29 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.anwendungssicht;
-
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -83,14 +82,11 @@ import filius.software.firewall.FirewallWebLog;
 import filius.software.www.WebServer;
 import filius.software.www.WebServerPlugIn;
 
-
-
-
 /**
  * Applikationsfenster für den Datei-Importer
- *
+ * 
  * @author Johannes Bade & Thomas Gerding
- *
+ * 
  */
 public class GUIApplicationFirewallWindow extends GUIApplicationWindow {
 
@@ -105,9 +101,9 @@ public class GUIApplicationFirewallWindow extends GUIApplicationWindow {
 
 	private JComboBox cbAlleAbsender;
 
-	private JTextArea log; //Log-Fenster
+	private JTextArea log; // Log-Fenster
 
-	private JCheckBox cbEinAus = new JCheckBox(); //Initial an oder ausgehakt?
+	private JCheckBox cbEinAus = new JCheckBox(); // Initial an oder ausgehakt?
 
 	private void initKomponenten() {
 		Box box;
@@ -123,10 +119,14 @@ public class GUIApplicationFirewallWindow extends GUIApplicationWindow {
 		boxFirewall = Box.createVerticalBox();
 		boxFirewall.add(Box.createVerticalStrut(10));
 
-		cbEinAus = new JCheckBox(messages.getString("firewall_msg1"));//Bei true nur mit 1 durchlassen
-		cbEinAus.addActionListener(new ActionListener()	{
+		cbEinAus = new JCheckBox(messages.getString("firewall_msg1"));// Bei
+																	  // true
+																	  // nur mit
+																	  // 1
+																	  // durchlassen
+		cbEinAus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				((Firewall)holeAnwendung()).setAktiviert(cbEinAus.isSelected());
+				((Firewall) holeAnwendung()).setAktiviert(cbEinAus.isSelected());
 				updateAttribute();
 
 			}
@@ -190,7 +190,7 @@ public class GUIApplicationFirewallWindow extends GUIApplicationWindow {
 		DefaultTableModel tabellenModell = new DefaultTableModel(0, 2);
 		tTabellePort = new JTable(tabellenModell);
 		tTabellePort.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tTabellePort.setIntercellSpacing(new Dimension(10,5));
+		tTabellePort.setIntercellSpacing(new Dimension(10, 5));
 		tTabellePort.setRowHeight(30);
 		tTabellePort.setShowGrid(false);
 		tTabellePort.setFillsViewportHeight(true);
@@ -204,14 +204,13 @@ public class GUIApplicationFirewallWindow extends GUIApplicationWindow {
 		columnModel.getColumn(1).setWidth(300);
 
 		scrollPane = new JScrollPane(tTabellePort);
-		scrollPane.setPreferredSize(new Dimension(90,250));
+		scrollPane.setPreferredSize(new Dimension(90, 250));
 
 		boxFirewall.add(scrollPane);
 		boxFirewall.add(Box.createVerticalStrut(10));
 
 		tp = new JTabbedPane();
-		tp.addChangeListener(new ChangeListener()
-		{
+		tp.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				updateAttribute();
 			}
@@ -237,73 +236,68 @@ public class GUIApplicationFirewallWindow extends GUIApplicationWindow {
 			port = Integer.parseInt(tfPort.getText());
 			unterscheideNetzwerk = (cbAlleAbsender.getSelectedIndex() == 1);
 
-			((Firewall)holeAnwendung()).eintragHinzufuegenPort(""+port, unterscheideNetzwerk);
+			((Firewall) holeAnwendung()).eintragHinzufuegenPort("" + port, unterscheideNetzwerk);
 			tfPort.setText("");
+		} catch (Exception e) {
 		}
-		catch (Exception e) { }
 		updateAttribute();
 	}
 
 	private void loescheRegel() {
 		if (tTabellePort.getSelectedRow() != -1) {
-			((Firewall)holeAnwendung()).entferneRegelPort(tTabellePort.getSelectedRow());
+			((Firewall) holeAnwendung()).entferneRegelPort(tTabellePort.getSelectedRow());
 		}
 		updateAttribute();
 	}
 
 	/*
-	 * @author Weyer
-	 * Im Konstruktor werden alle Dinge erzeugt, die in der GUI angezeigt werden muessen
+	 * @author Weyer Im Konstruktor werden alle Dinge erzeugt, die in der GUI
+	 * angezeigt werden muessen
 	 */
-	public GUIApplicationFirewallWindow(final GUIDesktopPanel desktop, String appName){
+	public GUIApplicationFirewallWindow(final GUIDesktopPanel desktop, String appName) {
 
 		super(desktop, appName);
 
-		//setAnwendungsIcon("gfx/desktop/icon_firewall.png");
+		// setAnwendungsIcon("gfx/desktop/icon_firewall.png");
 		initKomponenten();
 		updateAttribute();
 	}
 
 	/*
-	 * @author Weyer
-	 * bringt das aktuell angezeigte Fenster immer auf den neuesten Stand mit aktuellen Daten
+	 * @author Weyer bringt das aktuell angezeigte Fenster immer auf den
+	 * neuesten Stand mit aktuellen Daten
 	 */
 	public void updateAttribute() {
 		LinkedList portList;
 		Vector<String> vector;
 		DefaultTableModel model;
 
-		portList = ((Firewall)holeAnwendung()).getPortList();
+		portList = ((Firewall) holeAnwendung()).getPortList();
 
-		model = (DefaultTableModel)tTabellePort.getModel();
+		model = (DefaultTableModel) tTabellePort.getModel();
 		model.setRowCount(0);
 
-//		Main.debug.println("Portliste mit "+portList.size()+" Eintraegen");
-		for (int i=0; i<portList.size(); i++) {
+		// Main.debug.println("Portliste mit "+portList.size()+" Eintraegen");
+		for (int i = 0; i < portList.size(); i++) {
 			vector = new Vector<String>();
-			vector.addElement((String)((Object[])portList.get(i))[0]);
-			if ((Boolean)((Object[])portList.get(i))[1]) {
+			vector.addElement((String) ((Object[]) portList.get(i))[0]);
+			if ((Boolean) ((Object[]) portList.get(i))[1]) {
 				vector.addElement(messages.getString("firewall_msg12"));
-			}
-			else {
+			} else {
 				vector.addElement(messages.getString("firewall_msg4"));
 			}
 			model.addRow(vector);
 		}
 
-		if(((Firewall)holeAnwendung()).isAktiviert()){
+		if (((Firewall) holeAnwendung()).isAktiviert()) {
 			cbEinAus.setSelected(true);
-		}
-		else{
+		} else {
 			cbEinAus.setSelected(false);
 		}
 	}
 
 	public void update(Observable arg0, Object nachricht) {
-		log.append(nachricht+"\n");
+		log.append(nachricht + "\n");
 	}
-
-
-
 
 }

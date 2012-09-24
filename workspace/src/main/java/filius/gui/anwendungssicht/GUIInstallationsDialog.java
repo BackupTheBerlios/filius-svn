@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.anwendungssicht;
 
 import java.awt.BorderLayout;
@@ -103,15 +103,14 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 		Box listenBox = Box.createHorizontalBox();
 		listenBox.add(Box.createHorizontalStrut(10));
 
-		JScrollPane scrollAnwendungInstallieren = new JScrollPane(
-				softwareInstalliert);
+		JScrollPane scrollAnwendungInstallieren = new JScrollPane(softwareInstalliert);
 		scrollAnwendungInstallieren.setPreferredSize(new Dimension(170, 200));
 		wrapperInstBox.add(scrollAnwendungInstallieren);
 
 		listenBox.add(wrapperInstBox);
 
 		listenBox.add(Box.createHorizontalGlue());
-		
+
 		Box topButtonBox = Box.createVerticalBox();
 		topButtonBox.add(addButton);
 		topButtonBox.add(Box.createVerticalStrut(10));
@@ -121,8 +120,7 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 		wrapperAvailBox.add(titleAvailable);
 		wrapperAvailBox.add(Box.createVerticalStrut(10));
 
-		JScrollPane scrollAnwendungVerfuegbar = new JScrollPane(
-				softwareVerfuegbar);
+		JScrollPane scrollAnwendungVerfuegbar = new JScrollPane(softwareVerfuegbar);
 		scrollAnwendungVerfuegbar.setPreferredSize(new Dimension(170, 200));
 		wrapperAvailBox.add(scrollAnwendungVerfuegbar);
 		listenBox.add(wrapperAvailBox);
@@ -164,7 +162,8 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 			vLoeschen.add(lmVerfuegbar.get(i));
 		}
 
-		// umständlich, aber wegen der Möglichkeit von Mehrfachselektion lassen sich nicht einzelne Anwendungen sofort entfernen
+		// umständlich, aber wegen der Möglichkeit von Mehrfachselektion lassen
+		// sich nicht einzelne Anwendungen sofort entfernen
 		for (Enumeration e = vLoeschen.elements(); e.hasMoreElements();) {
 			Object oZuLoeschen = e.nextElement();
 			lmVerfuegbar.removeElement(oZuLoeschen);
@@ -180,7 +179,8 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 			hinzu.add(lmInstalliert.getElementAt(i));
 		}
 
-		// umständlich, aber wegen der Möglichkeit von Mehrfachselektion lassen sich nicht einzelne Anwendungen sofort entfernen
+		// umständlich, aber wegen der Möglichkeit von Mehrfachselektion lassen
+		// sich nicht einzelne Anwendungen sofort entfernen
 		for (Enumeration e = hinzu.elements(); e.hasMoreElements();) {
 			Object hinzuObjekt = e.nextElement();
 			lmInstalliert.removeElement(hinzuObjekt);
@@ -198,7 +198,7 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 			map = (HashMap) it.next();
 			for (int i = 0; i < lmInstalliert.getSize(); i++) {
 				if (lmInstalliert.getElementAt(i).equals(map.get("Anwendung"))
-						&& bs.holeSoftware(map.get("Klasse").toString()) == null) {
+				        && bs.holeSoftware(map.get("Klasse").toString()) == null) {
 					bs.installiereSoftware(map.get("Klasse").toString());
 
 					anwendung = bs.holeSoftware(map.get("Klasse").toString());
@@ -225,11 +225,9 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 		ActionListener al = new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
-				if (arg0.getActionCommand()
-						.equals(addButton.getActionCommand())) {
+				if (arg0.getActionCommand().equals(addButton.getActionCommand())) {
 					hinzufuegen();
-				} else if (arg0.getActionCommand().equals(
-						removeButton.getActionCommand())) {
+				} else if (arg0.getActionCommand().equals(removeButton.getActionCommand())) {
 					entfernen();
 				} else if (arg0.getActionCommand() == confirmButton.getText()) {
 					aenderungenSpeichern();
@@ -241,17 +239,16 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 
 		/* Buttons */
 		removeButton = new JButton(new ImageIcon(getClass().getResource("/gfx/allgemein/pfeil_rechts.png")));
-		removeButton.setMargin(new Insets(2,2,2,2));
+		removeButton.setMargin(new Insets(2, 2, 2, 2));
 		removeButton.setActionCommand("remove");
 		removeButton.addActionListener(al);
 
 		addButton = new JButton(new ImageIcon(getClass().getResource("/gfx/allgemein/pfeil_links.png")));
-		addButton.setMargin(new Insets(2,2,2,2));
+		addButton.setMargin(new Insets(2, 2, 2, 2));
 		addButton.setActionCommand("add");
 		addButton.addActionListener(al);
 
-		confirmButton = new JButton(messages
-				.getString("installationsdialog_msg2"));
+		confirmButton = new JButton(messages.getString("installationsdialog_msg2"));
 		confirmButton.addActionListener(al);
 	}
 
@@ -293,9 +290,8 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 	}
 
 	public void setAnwendungsIcon(String datei) {
-		ImageIcon image = new ImageIcon(getClass().getResource("/"+datei));
-		image.setImage(image.getImage().getScaledInstance(16, 16,
-				Image.SCALE_AREA_AVERAGING));
+		ImageIcon image = new ImageIcon(getClass().getResource("/" + datei));
+		image.setImage(image.getImage().getScaledInstance(16, 16, Image.SCALE_AREA_AVERAGING));
 		this.setFrameIcon(image);
 	}
 }

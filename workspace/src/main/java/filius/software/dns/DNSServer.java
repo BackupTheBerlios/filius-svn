@@ -198,8 +198,7 @@ public class DNSServer extends UDPServerAnwendung {
 		for (int i = 0; i < parts.length; i++) {
 			domain = this.implodeDomain(parts, i);
 			for (ResourceRecord rr : records) {
-				if (rr.getDomainname().equalsIgnoreCase(domain) 
-						&& rr.getType().equals(ResourceRecord.NAME_SERVER)) {
+				if (rr.getDomainname().equalsIgnoreCase(domain) && rr.getType().equals(ResourceRecord.NAME_SERVER)) {
 					return rr;
 				}
 			}

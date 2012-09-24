@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.software.vermittlungsschicht;
 
 import java.util.Date;
@@ -61,16 +61,17 @@ public class ARP extends VermittlungsProtokoll {
 
 	/**
 	 * Standard-Konstruktor zur Initialisierung der zugehoerigen Systemsoftware
-	 *
+	 * 
 	 * @param systemAnwendung
 	 */
 	public ARP(SystemSoftware systemAnwendung) {
 		super(systemAnwendung);
-		Main.debug.println("INVOKED-2 ("+this.hashCode()+") "+getClass()+" (ARP), constr: ARP("+systemAnwendung+")");
+		Main.debug.println("INVOKED-2 (" + this.hashCode() + ") " + getClass() + " (ARP), constr: ARP("
+		        + systemAnwendung + ")");
 	}
 
 	public void starten() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ARP), starten()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ARP), starten()");
 		arpTabelle = new HashMap<String, String[]>();
 		hinzuARPTabellenEintrag("255.255.255.255", "FF:FF:FF:FF:FF:FF");
 		thread = new ARPThread(this);
@@ -78,21 +79,23 @@ public class ARP extends VermittlungsProtokoll {
 	}
 
 	public void beenden() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ARP), beenden()");
-		if (thread != null) thread.beenden();
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ARP), beenden()");
+		if (thread != null)
+			thread.beenden();
 	}
 
 	/**
 	 * Fuegt eine Zeile zur ARP Tabelle hinzu. Dabei werden IP Adresse und
 	 * MAC-Adresse uebergeben
-	 *
+	 * 
 	 * @author Thomas Gerding
-	 *
+	 * 
 	 * @param ipAdresse
 	 * @param macAdresse
 	 */
 	public void hinzuARPTabellenEintrag(String ipAdresse, String macAdresse) {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ARP), hinzuARPTabellenEintrag("+ipAdresse+","+macAdresse+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ARP), hinzuARPTabellenEintrag("
+		        + ipAdresse + "," + macAdresse + ")");
 		Date tmpDate = new Date();
 		String tmpTime = "" + tmpDate.getTime();
 		String[] tmpString = { macAdresse, tmpTime };
@@ -102,7 +105,7 @@ public class ARP extends VermittlungsProtokoll {
 			arpTabelle.notify();
 		}
 
-//		printARPTabelle();
+		// printARPTabelle();
 	}
 
 	/**
@@ -110,15 +113,14 @@ public class ARP extends VermittlungsProtokoll {
 	 * Standardausgabe
 	 */
 	private void printARPTabelle() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ARP), printARPTabelle()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ARP), printARPTabelle()");
 		Iterator it = arpTabelle.entrySet().iterator();
 		Entry entry;
 
 		Main.debug.println("ARP: ARP-Tabelle wurde aktualisiert.");
 		while (it.hasNext()) {
 			entry = (Entry) it.next();
-			Main.debug.println("\t" + entry.getKey() + " \t "
-					+ ((String[]) entry.getValue())[0]);
+			Main.debug.println("\t" + entry.getKey() + " \t " + ((String[]) entry.getValue())[0]);
 		}
 	}
 
@@ -128,38 +130,37 @@ public class ARP extends VermittlungsProtokoll {
 	 * verschickt und auf eingehende Antworten gewartet. Wenn nach einem Timeout
 	 * ein passender Eintrag vorliegt, wird dieser zurueck gegeben. Andernfalls
 	 * wird null zurueck gegeben.
-	 *
+	 * 
 	 * @author Thomas Gerding
-	 *
+	 * 
 	 * @param ipAdresse
 	 * @return MAC Adresse, zu der die IP Adresse gehoert, oder null, wenn keine
 	 *         MAC-Adresse bestimmt werden konnte
 	 */
 	public String holeARPTabellenEintrag(String zielIp) {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ARP), holeARPTabellenEintrag("+zielIp+")");
-		if(zielIp.equals("127.0.0.1")) { 
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ARP), holeARPTabellenEintrag("
+		        + zielIp + ")");
+		if (zielIp.equals("127.0.0.1")) {
 			return ((InternetKnotenBetriebssystem) holeSystemSoftware()).holeMACAdresse();
 		}
-		if(holeSystemSoftware() instanceof InternetKnotenBetriebssystem) {
-			if(zielIp.equals(((InternetKnotenBetriebssystem) holeSystemSoftware()).holeIPAdresse())) {
+		if (holeSystemSoftware() instanceof InternetKnotenBetriebssystem) {
+			if (zielIp.equals(((InternetKnotenBetriebssystem) holeSystemSoftware()).holeIPAdresse())) {
 				return ((InternetKnotenBetriebssystem) holeSystemSoftware()).holeMACAdresse();
 			}
 		}
 		// Eintrag in ARP-Tabelle fuer gesuchte IP-Adresse?
 		if (arpTabelle.get(zielIp) != null) {
 			return ((String[]) arpTabelle.get(zielIp))[0];
-		}
-		else {
+		} else {
 			// ARP-Broadcast und warte auf Antwort
 			for (int i = 0; arpTabelle.get(zielIp) == null && i < 3; i++) {
 				sendeARPBroadcast(zielIp);
 				synchronized (arpTabelle) {
 					try {
-						arpTabelle.wait(Verbindung.holeRTT()/10);
-					}
-					catch (InterruptedException e) {
-						Main.debug.println("EXCEPTION ("+this.hashCode()+"): keine Anwort auf ARP-Broadcast fuer IP-Adresse "
-										+ zielIp + " eingegangen!");
+						arpTabelle.wait(Verbindung.holeRTT() / 10);
+					} catch (InterruptedException e) {
+						Main.debug.println("EXCEPTION (" + this.hashCode()
+						        + "): keine Anwort auf ARP-Broadcast fuer IP-Adresse " + zielIp + " eingegangen!");
 						e.printStackTrace(Main.debug);
 					}
 				}
@@ -171,13 +172,14 @@ public class ARP extends VermittlungsProtokoll {
 			}
 		}
 
-		Main.debug.println("ERROR ("+this.hashCode()+"): kein ARP-Tabellen-Eintrag fuer " + zielIp);
+		Main.debug.println("ERROR (" + this.hashCode() + "): kein ARP-Tabellen-Eintrag fuer " + zielIp);
 		return null;
 	}
 
 	/** Hilfsmethode zum Versenden einer ARP-Anfrage */
 	private void sendeARPBroadcast(String suchIp) {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (ARP), sendeARPBroadcast("+suchIp+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ARP), sendeARPBroadcast(" + suchIp
+		        + ")");
 		ListIterator it;
 		ArpPaket arpPaket;
 		String ipAdresse, netzmaske, mac;
@@ -188,8 +190,7 @@ public class ARP extends VermittlungsProtokoll {
 		arpPaket.setZielIp(suchIp);
 		arpPaket.setZielMacAdresse("FF:FF:FF:FF:FF:FF");
 
-		it = ((InternetKnoten) holeSystemSoftware().getKnoten())
-				.getNetzwerkInterfaces().listIterator();
+		it = ((InternetKnoten) holeSystemSoftware().getKnoten()).getNetzwerkInterfaces().listIterator();
 
 		while (it.hasNext()) {
 			nic = (NetzwerkInterface) it.next();
@@ -201,13 +202,12 @@ public class ARP extends VermittlungsProtokoll {
 				arpPaket.setQuellIp(ipAdresse);
 				arpPaket.setQuellMacAdresse(mac);
 
-				((InternetKnotenBetriebssystem) holeSystemSoftware())
-						.holeEthernet().senden(arpPaket, mac,
-								"FF:FF:FF:FF:FF:FF", EthernetFrame.ARP);
+				((InternetKnotenBetriebssystem) holeSystemSoftware()).holeEthernet().senden(arpPaket, mac,
+				        "FF:FF:FF:FF:FF:FF", EthernetFrame.ARP);
 			}
 		}
 	}
-	
+
 	public ARPThread getARPThread() {
 		return thread;
 	}

@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.software.netzzugangsschicht;
 
 import java.util.LinkedList;
@@ -59,7 +59,8 @@ public class Ethernet extends Protokoll {
 	/** Konstruktor zur Initialisierung der Systemsoftware */
 	public Ethernet(SystemSoftware systemSoftware) {
 		super(systemSoftware);
-		Main.debug.println("INVOKED-2 ("+this.hashCode()+") "+getClass()+" (Ethernet), constr: Ethernet("+systemSoftware+")");
+		Main.debug.println("INVOKED-2 (" + this.hashCode() + ") " + getClass() + " (Ethernet), constr: Ethernet("
+		        + systemSoftware + ")");
 	}
 
 	/** Methode fuer den Zugriff auf den Puffer mit ARP-Paketen */
@@ -90,21 +91,20 @@ public class Ethernet extends Protokoll {
 	 * wird.
 	 */
 	public void senden(Object daten, String startMAC, String zielMAC, String typ) {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (Ethernet), senden("+daten+","+startMAC+","+zielMAC+","+typ+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Ethernet), senden(" + daten + ","
+		        + startMAC + "," + zielMAC + "," + typ + ")");
 		EthernetFrame ethernetFrame;
 		ListIterator it;
 		NetzwerkInterface nic;
 		boolean gesendet = false;
 
-		if(daten instanceof IcmpPaket) {
+		if (daten instanceof IcmpPaket) {
 			ethernetFrame = new EthernetFrame(daten, startMAC, zielMAC, typ, true);
-		}
-		else {
+		} else {
 			ethernetFrame = new EthernetFrame(daten, startMAC, zielMAC, typ);
 		}
 
-		it = ((InternetKnoten) holeSystemSoftware().getKnoten())
-				.getNetzwerkInterfaces().listIterator();
+		it = ((InternetKnoten) holeSystemSoftware().getKnoten()).getNetzwerkInterfaces().listIterator();
 		while (it.hasNext()) {
 			nic = (NetzwerkInterface) it.next();
 
@@ -118,21 +118,19 @@ public class Ethernet extends Protokoll {
 		}
 
 		if (!gesendet) {
-			it = ((InternetKnoten) holeSystemSoftware().getKnoten())
-					.getNetzwerkInterfaces().listIterator();
+			it = ((InternetKnoten) holeSystemSoftware().getKnoten()).getNetzwerkInterfaces().listIterator();
 			while (it.hasNext()) {
 				nic = (NetzwerkInterface) it.next();
 
 				if (nic.getMac().equalsIgnoreCase(startMAC)) {
 					synchronized (nic.getPort().holeAusgangsPuffer()) {
-						//Main.debug
-								//.println("EthernetThread: Paket wird in Ausgangspuffer geschrieben "
-										//+ nic.getPort());
+						// Main.debug
+						// .println("EthernetThread: Paket wird in Ausgangspuffer geschrieben "
+						// + nic.getPort());
 						nic.getPort().holeAusgangsPuffer().add(ethernetFrame);
 						nic.getPort().holeAusgangsPuffer().notify();
 					}
-					Lauscher.getLauscher().addDatenEinheit(nic.getMac(),
-							ethernetFrame);
+					Lauscher.getLauscher().addDatenEinheit(nic.getMac(), ethernetFrame);
 				}
 			}
 		}
@@ -141,13 +139,13 @@ public class Ethernet extends Protokoll {
 	public LinkedList<EthernetThread> getEthernetThreads() {
 		return threads;
 	}
-	
+
 	/**
 	 * Hier wird zu jeder Netzwerkkarte ein Thread zur Ueberwachung des
 	 * Eingangspuffers gestartet.
 	 */
 	public void starten() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (Ethernet), starten()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Ethernet), starten()");
 		InternetKnoten knoten;
 		EthernetThread interfaceBeobachter;
 
@@ -156,17 +154,14 @@ public class Ethernet extends Protokoll {
 
 			ListIterator iter = knoten.getNetzwerkInterfaces().listIterator();
 			while (iter.hasNext()) {
-				NetzwerkInterface netzwerkInterface = (NetzwerkInterface) iter
-						.next();
+				NetzwerkInterface netzwerkInterface = (NetzwerkInterface) iter.next();
 
-				interfaceBeobachter = new EthernetThread(this,
-						netzwerkInterface);
+				interfaceBeobachter = new EthernetThread(this, netzwerkInterface);
 
 				interfaceBeobachter.starten();
 				try {
 					threads.add(interfaceBeobachter);
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					e.printStackTrace(Main.debug);
 				}
 			}
@@ -178,7 +173,7 @@ public class Ethernet extends Protokoll {
 	 * Eingangspuffer der Netzwerkkarten
 	 */
 	public void beenden() {
-		Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (Ethernet), beenden()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Ethernet), beenden()");
 		EthernetThread interfaceBeobachter;
 
 		for (int x = 0; x < threads.size(); x++) {

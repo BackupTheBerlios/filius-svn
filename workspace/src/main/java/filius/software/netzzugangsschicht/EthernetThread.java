@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.software.netzzugangsschicht;
 
 import java.util.ListIterator;
@@ -55,7 +55,8 @@ public class EthernetThread extends ProtokollThread {
 	 */
 	public EthernetThread(Ethernet ethernet, NetzwerkInterface nic) {
 		super(nic.getPort().holeEingangsPuffer());
-		Main.debug.println("INVOKED-2 ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (EthernetThread), constr: EthernetThread("+ethernet+","+nic+")");
+		Main.debug.println("INVOKED-2 (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (EthernetThread), constr: EthernetThread(" + ethernet + "," + nic + ")");
 
 		this.ethernet = ethernet;
 		this.netzwerkInterface = nic;
@@ -66,52 +67,60 @@ public class EthernetThread extends ProtokollThread {
 	 * fuer IP-Pakete oder fuer ARP-Pakete geschrieben.
 	 */
 	protected void verarbeiteDatenEinheit(Object datenEinheit) {
-		Main.debug.println("INVOKED ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (EthernetThread), verarbeiteDateneinheit("+datenEinheit.toString()+")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+		        + " (EthernetThread), verarbeiteDateneinheit(" + datenEinheit.toString() + ")");
 		EthernetFrame etp;
 
 		etp = (EthernetFrame) datenEinheit;
-		
-		// record receipt (independent of further processing)
-		Lauscher.getLauscher().addDatenEinheit(netzwerkInterface.getMac(),etp);
 
-		// only process in case of correct MAC address, i.e., this packet is addressed for this NIC (or broadcast)
+		// record receipt (independent of further processing)
+		Lauscher.getLauscher().addDatenEinheit(netzwerkInterface.getMac(), etp);
+
+		// only process in case of correct MAC address, i.e., this packet is
+		// addressed for this NIC (or broadcast)
 		// otherwise stop processing:
-		if (! etp.getZielMacAdresse().equalsIgnoreCase("FF:FF:FF:FF:FF:FF")   				// broadcast
-			&& ! etp.getZielMacAdresse().equals(this.netzwerkInterface.getMac())) 
-			return;  
-		////
-		
-//		Main.debug.println(getClass().toString()
-//				+"\n\tverareiteDatenEinheit() wurde aufgerufen"
-//				+"\n\t"+etp.getQuellMacAdresse()+" -> "+etp.getZielMacAdresse()
-//				+", Protokoll: "+etp.getTyp()
-//				+", ICMP? "+(etp.isICMP()));
-		
+		if (!etp.getZielMacAdresse().equalsIgnoreCase("FF:FF:FF:FF:FF:FF") // broadcast
+		        && !etp.getZielMacAdresse().equals(this.netzwerkInterface.getMac()))
+			return;
+		// //
+
+		// Main.debug.println(getClass().toString()
+		// +"\n\tverareiteDatenEinheit() wurde aufgerufen"
+		// +"\n\t"+etp.getQuellMacAdresse()+" -> "+etp.getZielMacAdresse()
+		// +", Protokoll: "+etp.getTyp()
+		// +", ICMP? "+(etp.isICMP()));
+
 		if (etp.getTyp().equals(EthernetFrame.IP)) {
-			if(etp.isICMP()) {
+			if (etp.isICMP()) {
 				synchronized (ethernet.holeICMPPuffer()) {
 					ethernet.holeICMPPuffer().add((IcmpPaket) etp.getDaten());
-//					Main.debug.println("DEBUG ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (EthernetThread), verarbeiteDateneinheit, ICMPPuffer="+ethernet.holeICMPPuffer().getFirst().toString());
-					ethernet.holeICMPPuffer().notifyAll();   // 'all' means: Terminal ping command (if any in this instance) and default network packet processing
+					// Main.debug.println("DEBUG ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (EthernetThread), verarbeiteDateneinheit, ICMPPuffer="+ethernet.holeICMPPuffer().getFirst().toString());
+					ethernet.holeICMPPuffer().notifyAll(); // 'all' means:
+														   // Terminal ping
+														   // command (if any in
+														   // this instance) and
+														   // default network
+														   // packet processing
 				}
-			}
-			else {
+			} else {
 				synchronized (ethernet.holeIPPuffer()) {
 					ethernet.holeIPPuffer().add((IpPaket) etp.getDaten());
 					ethernet.holeIPPuffer().notify();
 				}
 			}
-		}
-		else if (etp.getTyp().equals(EthernetFrame.ARP)) {
-			// if ARP packet is not addressed to this specific NIC, but possibly another NIC of this node, then return
-			// (this is meant to prevent routers from responding to all ARP packets meant for some of their NICs
-			//  without even having received the packet on this specific NIC, i.e., without physical connection)
-			if(!((ArpPaket)etp.getDaten()).getZielIp().equals(netzwerkInterface.getIp())) {
-				Main.debug.println("ERROR ("+this.hashCode()+"):  ARP packet seems to be sent from a NIC ("+
-						((ArpPaket)etp.getDaten()).getQuellIp()+","+((ArpPaket)etp.getDaten()).getQuellMacAdresse()+
-						") not connected to the currently considered NIC ("+
-						netzwerkInterface.getIp()+","+netzwerkInterface.getMac()+")"
-						);
+		} else if (etp.getTyp().equals(EthernetFrame.ARP)) {
+			// if ARP packet is not addressed to this specific NIC, but possibly
+			// another NIC of this node, then return
+			// (this is meant to prevent routers from responding to all ARP
+			// packets meant for some of their NICs
+			// without even having received the packet on this specific NIC,
+			// i.e., without physical connection)
+			if (!((ArpPaket) etp.getDaten()).getZielIp().equals(netzwerkInterface.getIp())) {
+				Main.debug.println("ERROR (" + this.hashCode() + "):  ARP packet seems to be sent from a NIC ("
+				        + ((ArpPaket) etp.getDaten()).getQuellIp() + ","
+				        + ((ArpPaket) etp.getDaten()).getQuellMacAdresse()
+				        + ") not connected to the currently considered NIC (" + netzwerkInterface.getIp() + ","
+				        + netzwerkInterface.getMac() + ")");
 				return;
 			}
 			// otherwise process ARP packet
@@ -119,9 +128,8 @@ public class EthernetThread extends ProtokollThread {
 				ethernet.holeARPPuffer().add((ArpPaket) etp.getDaten());
 				ethernet.holeARPPuffer().notify();
 			}
-		}
-		else {
-			Main.debug.println("ERROR ("+this.hashCode()+"): Paket konnte nicht zugeordnet werden");
+		} else {
+			Main.debug.println("ERROR (" + this.hashCode() + "): Paket konnte nicht zugeordnet werden");
 		}
 	}
 

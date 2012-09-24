@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.quelltextsicht;
 
 import java.awt.BorderLayout;
@@ -65,10 +65,10 @@ public class PanelCompiler extends JPanel implements I18n, Runnable {
 
 	private boolean fehlerfreiKompiliert = false;
 
-	public PanelCompiler(String[] quelltextDateien, String anwendungsName,
-			String anwendungsKlasse) {
+	public PanelCompiler(String[] quelltextDateien, String anwendungsName, String anwendungsKlasse) {
 		super();
-	  	Main.debug.println("INVOKED-2 ("+this.hashCode()+") "+getClass()+", constr: PanelCompiler("+quelltextDateien+","+anwendungsName+","+anwendungsKlasse+")");
+		Main.debug.println("INVOKED-2 (" + this.hashCode() + ") " + getClass() + ", constr: PanelCompiler("
+		        + quelltextDateien + "," + anwendungsName + "," + anwendungsKlasse + ")");
 		this.quelltextDateien = quelltextDateien;
 		this.anwendungsKlasse = anwendungsKlasse;
 		this.anwendungsName = anwendungsName;
@@ -80,7 +80,7 @@ public class PanelCompiler extends JPanel implements I18n, Runnable {
 	}
 
 	private void initKomponenten() {
-	  	Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+", initKomponenten()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", initKomponenten()");
 		JScrollPane scrollPane;
 
 		this.setBorder(new EtchedBorder());
@@ -100,19 +100,15 @@ public class PanelCompiler extends JPanel implements I18n, Runnable {
 		add(progressBar, BorderLayout.SOUTH);
 	}
 
-
 	public void run() {
-	  	Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+", run()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", run()");
 
-		progressBar.setString(messages.getString("panelcompiler_msg1")
-				+" "+ anwendungsName);
+		progressBar.setString(messages.getString("panelcompiler_msg1") + " " + anwendungsName);
 
 		if (!kompilieren(quelltextDateien)) {
 			ausgabe.setContentType("text/html");
-			ausgabe
-					.setText(messages.getString("panelcompiler_msg2"));
-		}
-		else if (fehlerfreiKompiliert) {
+			ausgabe.setText(messages.getString("panelcompiler_msg2"));
+		} else if (fehlerfreiKompiliert) {
 			ausgabe.setContentType("text/html");
 			ausgabe.setText(messages.getString("panelcompiler_msg3"));
 		}
@@ -122,7 +118,7 @@ public class PanelCompiler extends JPanel implements I18n, Runnable {
 	}
 
 	public void speichern() {
-	  	Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+", speichern()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", speichern()");
 		boolean vorhanden = false;
 		FileWriter fw = null;
 		ListIterator it;
@@ -133,49 +129,40 @@ public class PanelCompiler extends JPanel implements I18n, Runnable {
 				it = Information.getInformation().ladeProgrammListe().listIterator();
 				while (it.hasNext() && !vorhanden) {
 					map = (HashMap) it.next();
-					if (map.get("Klasse").equals(
-							"filius.software.clientserver." + anwendungsKlasse)) {
+					if (map.get("Klasse").equals("filius.software.clientserver." + anwendungsKlasse)) {
 						vorhanden = true;
 					}
 				}
-			}
-			catch (IOException e1) {
+			} catch (IOException e1) {
 				e1.printStackTrace(Main.debug);
 			}
 
 			if (!vorhanden) {
 				try {
-					fw = new FileWriter(Information.getInformation().getAnwendungenPfad()
-							+ "EigeneAnwendungen.txt", true);
-					fw.write("\n" + anwendungsName
-							+ ";filius.software.clientserver."
-							+ anwendungsKlasse
-							+ ";filius.gui.anwendungssicht.GUIApplication"
-							+ anwendungsKlasse
-							+ "Window;gfx/desktop/icon_clientbaustein.png");
-				}
-				catch (IOException e) {
-					Main.debug.println("EXCEPTION ("+this.hashCode()+"): Konnte Datei nicht erstellen");
+					fw = new FileWriter(Information.getInformation().getAnwendungenPfad() + "EigeneAnwendungen.txt",
+					        true);
+					fw.write("\n" + anwendungsName + ";filius.software.clientserver." + anwendungsKlasse
+					        + ";filius.gui.anwendungssicht.GUIApplication" + anwendungsKlasse
+					        + "Window;gfx/desktop/icon_clientbaustein.png");
+				} catch (IOException e) {
+					Main.debug.println("EXCEPTION (" + this.hashCode() + "): Konnte Datei nicht erstellen");
 					ausgabe.setContentType("text/html");
-					ausgabe
-							.setText(ausgabe.getText()
-									+ messages.getString("panelcompiler_msg4"));
-				}
-				finally {
-					if (fw != null) try {
-						fw.close();
-					}
-					catch (IOException e) {}
+					ausgabe.setText(ausgabe.getText() + messages.getString("panelcompiler_msg4"));
+				} finally {
+					if (fw != null)
+						try {
+							fw.close();
+						} catch (IOException e) {
+						}
 				}
 			}
-		}
-		else {
+		} else {
 
 		}
 	}
 
 	private boolean kompilieren(String[] quelltextDateien) {
-	  	Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+", kompilieren()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", kompilieren()");
 		StringWriter strWriter = new StringWriter();
 		StandardJavaFileManager fileManager;
 		JavaCompiler jc;
@@ -185,12 +172,11 @@ public class PanelCompiler extends JPanel implements I18n, Runnable {
 		jc = ToolProvider.getSystemJavaCompiler();
 
 		if (jc == null) {
-			Main.debug.println("ERROR ("+this.hashCode()+"): Kein Java-Compiler erzeugt!");
+			Main.debug.println("ERROR (" + this.hashCode() + "): Kein Java-Compiler erzeugt!");
 			fehlerfreiKompiliert = false;
 
 			return false;
-		}
-		else {
+		} else {
 			fileManager = jc.getStandardFileManager(null, null, null);
 
 			dateien = new File[quelltextDateien.length];
@@ -198,10 +184,8 @@ public class PanelCompiler extends JPanel implements I18n, Runnable {
 				dateien[i] = new File(quelltextDateien[i]);
 			}
 
-			kompilierEinheiten = fileManager.getJavaFileObjectsFromFiles(Arrays
-					.asList(dateien));
-			fehlerfreiKompiliert = jc.getTask(strWriter, fileManager, null, null, null,
-					kompilierEinheiten).call();
+			kompilierEinheiten = fileManager.getJavaFileObjectsFromFiles(Arrays.asList(dateien));
+			fehlerfreiKompiliert = jc.getTask(strWriter, fileManager, null, null, null, kompilierEinheiten).call();
 			if (!fehlerfreiKompiliert) {
 				ausgabe.setContentType("text/plain");
 				ausgabe.setText(strWriter.toString());

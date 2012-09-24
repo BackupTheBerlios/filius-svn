@@ -77,8 +77,7 @@ public class GUIApplicationTextEditorWindow extends GUIApplicationWindow {
 	private DefaultMutableTreeNode arbeitsVerzeichnis;
 	private JTabbedPane tpTabs;
 
-	public GUIApplicationTextEditorWindow(GUIDesktopPanel desktop,
-			String appName) {
+	public GUIApplicationTextEditorWindow(GUIDesktopPanel desktop, String appName) {
 		super(desktop, appName);
 		this.diesesFenster = this;
 
@@ -87,20 +86,17 @@ public class GUIApplicationTextEditorWindow extends GUIApplicationWindow {
 		editorField.setEditable(true);
 		editorField.setFont(new Font("Courier New", Font.PLAIN, 11));
 
-		this.arbeitsVerzeichnis = holeAnwendung().getSystemSoftware()
-				.getDateisystem().getArbeitsVerzeichnis();
+		this.arbeitsVerzeichnis = holeAnwendung().getSystemSoftware().getDateisystem().getArbeitsVerzeichnis();
 
 		String dateiName = holeParameter()[0];
 		if (!dateiName.equals("")) {
 
 			if (this.arbeitsVerzeichnis == null) {
 
-				this.arbeitsVerzeichnis = holeAnwendung().getSystemSoftware()
-						.getDateisystem().getRoot();
+				this.arbeitsVerzeichnis = holeAnwendung().getSystemSoftware().getDateisystem().getRoot();
 
 			}
-			Datei datei = holeAnwendung().getSystemSoftware().getDateisystem()
-					.holeDatei(arbeitsVerzeichnis, dateiName);
+			Datei datei = holeAnwendung().getSystemSoftware().getDateisystem().holeDatei(arbeitsVerzeichnis, dateiName);
 			if (datei != null) {
 				this.setTitle(dateiName);
 				editorField.setText(datei.getDateiInhalt());
@@ -132,49 +128,44 @@ public class GUIApplicationTextEditorWindow extends GUIApplicationWindow {
 
 		JMenu menuDatei = new JMenu(messages.getString("texteditor_msg2"));
 
-		menuDatei
-				.add(new AbstractAction(messages.getString("texteditor_msg3")) {
-					private static final long serialVersionUID = 4307765243000198382L;
+		menuDatei.add(new AbstractAction(messages.getString("texteditor_msg3")) {
+			private static final long serialVersionUID = 4307765243000198382L;
 
-					public void actionPerformed(ActionEvent arg0) {
-						neu();
-					}
-				});
+			public void actionPerformed(ActionEvent arg0) {
+				neu();
+			}
+		});
 
-		menuDatei
-				.add(new AbstractAction(messages.getString("texteditor_msg4")) {
-					private static final long serialVersionUID = 1L;
+		menuDatei.add(new AbstractAction(messages.getString("texteditor_msg4")) {
+			private static final long serialVersionUID = 1L;
 
-					public void actionPerformed(ActionEvent arg0) {
-						oeffnen();
-					}
-				});
+			public void actionPerformed(ActionEvent arg0) {
+				oeffnen();
+			}
+		});
 
-		menuDatei
-				.add(new AbstractAction(messages.getString("texteditor_msg5")) {
-					private static final long serialVersionUID = 1L;
+		menuDatei.add(new AbstractAction(messages.getString("texteditor_msg5")) {
+			private static final long serialVersionUID = 1L;
 
-					public void actionPerformed(ActionEvent arg0) {
-						speichern();
-					}
-				});
-		menuDatei
-				.add(new AbstractAction(messages.getString("texteditor_msg6")) {
-					private static final long serialVersionUID = 1L;
+			public void actionPerformed(ActionEvent arg0) {
+				speichern();
+			}
+		});
+		menuDatei.add(new AbstractAction(messages.getString("texteditor_msg6")) {
+			private static final long serialVersionUID = 1L;
 
-					public void actionPerformed(ActionEvent arg0) {
-						speichernUnter();
-					}
-				});
+			public void actionPerformed(ActionEvent arg0) {
+				speichernUnter();
+			}
+		});
 		menuDatei.addSeparator();
-		menuDatei
-				.add(new AbstractAction(messages.getString("texteditor_msg7")) {
-					private static final long serialVersionUID = 1L;
+		menuDatei.add(new AbstractAction(messages.getString("texteditor_msg7")) {
+			private static final long serialVersionUID = 1L;
 
-					public void actionPerformed(ActionEvent arg0) {
-						beenden();
-					}
-				});
+			public void actionPerformed(ActionEvent arg0) {
+				beenden();
+			}
+		});
 
 		mb.add(menuDatei);
 
@@ -192,33 +183,28 @@ public class GUIApplicationTextEditorWindow extends GUIApplicationWindow {
 	}
 
 	public void speichernUnter() {
-		DMTNFileChooser fc = new DMTNFileChooser(
-				(Betriebssystem) holeAnwendung().getSystemSoftware());
+		DMTNFileChooser fc = new DMTNFileChooser((Betriebssystem) holeAnwendung().getSystemSoftware());
 		int rueckgabe = fc.saveDialog();
 
 		if (rueckgabe == DMTNFileChooser.OK) {
 			String dateiNameNeu = fc.getAktuellerDateiname();
-			aktuelleDatei = new Datei(dateiNameNeu, messages
-					.getString("texteditor_msg8"), editorField.getText());
+			aktuelleDatei = new Datei(dateiNameNeu, messages.getString("texteditor_msg8"), editorField.getText());
 			this.holeAnwendung().getSystemSoftware().getDateisystem()
-					.speicherDatei(fc.getAktuellerOrdner(), aktuelleDatei);
+			        .speicherDatei(fc.getAktuellerOrdner(), aktuelleDatei);
 			this.setTitle(aktuelleDatei.getName());
 		}
 	}
 
 	public void oeffnen() {
-		DMTNFileChooser fc = new DMTNFileChooser(
-				(Betriebssystem) holeAnwendung().getSystemSoftware());
+		DMTNFileChooser fc = new DMTNFileChooser((Betriebssystem) holeAnwendung().getSystemSoftware());
 		int rueckgabe = fc.openDialog();
 
 		if (rueckgabe == DMTNFileChooser.OK) {
-			aktuelleDatei = holeAnwendung().getSystemSoftware()
-					.getDateisystem().holeDatei(fc.getAktuellerOrdner(),
-							fc.getAktuellerDateiname());
+			aktuelleDatei = holeAnwendung().getSystemSoftware().getDateisystem()
+			        .holeDatei(fc.getAktuellerOrdner(), fc.getAktuellerDateiname());
 			this.aktualisiereDateiInhalt();
 		} else {
-			Main.debug.println("ERROR (" + this.hashCode()
-					+ "): Fehler beim oeffnen einer Datei");
+			Main.debug.println("ERROR (" + this.hashCode() + "): Fehler beim oeffnen einer Datei");
 		}
 	}
 
@@ -228,18 +214,15 @@ public class GUIApplicationTextEditorWindow extends GUIApplicationWindow {
 			editorField.setText(aktuelleDatei.getDateiInhalt());
 			original = aktuelleDatei.getDateiInhalt();
 		} else {
-			Main.debug
-					.println("ERROR ("
-							+ this.hashCode()
-							+ "): Fehler beim oeffnen einer Datei: keine Datei ausgewaehlt");
+			Main.debug.println("ERROR (" + this.hashCode()
+			        + "): Fehler beim oeffnen einer Datei: keine Datei ausgewaehlt");
 		}
 	}
 
 	public void beenden() {
 		if (original != editorField.getText()) {
-			if (JOptionPane.showConfirmDialog(this, messages
-					.getString("texteditor_msg9"), messages
-					.getString("texteditor_msg10"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+			if (JOptionPane.showConfirmDialog(this, messages.getString("texteditor_msg9"),
+			        messages.getString("texteditor_msg10"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				speichern();
 			}
 
@@ -250,14 +233,12 @@ public class GUIApplicationTextEditorWindow extends GUIApplicationWindow {
 	public void starten(String[] param) {
 		String dateiName = holeParameter()[0];
 		if (!dateiName.equals("")) {
-			this.arbeitsVerzeichnis = this.holeAnwendung().getSystemSoftware()
-					.getDateisystem().getArbeitsVerzeichnis();
+			this.arbeitsVerzeichnis = this.holeAnwendung().getSystemSoftware().getDateisystem().getArbeitsVerzeichnis();
 			if (this.arbeitsVerzeichnis == null) {
-				this.arbeitsVerzeichnis = this.holeAnwendung()
-						.getSystemSoftware().getDateisystem().getRoot();
+				this.arbeitsVerzeichnis = this.holeAnwendung().getSystemSoftware().getDateisystem().getRoot();
 			}
-			Datei datei = this.holeAnwendung().getSystemSoftware()
-					.getDateisystem().holeDatei(arbeitsVerzeichnis, dateiName);
+			Datei datei = this.holeAnwendung().getSystemSoftware().getDateisystem()
+			        .holeDatei(arbeitsVerzeichnis, dateiName);
 			if (datei != null) {
 				editorField = new JTextArea();
 				editorField.setFont(new Font("Courier New", Font.PLAIN, 11));
@@ -285,28 +266,21 @@ public class GUIApplicationTextEditorWindow extends GUIApplicationWindow {
 				if (me.getButton() == 3) {
 
 					JPopupMenu popmen = new JPopupMenu();
-					final JMenuItem miTabsSchliessen = new JMenuItem(messages
-							.getString("texteditor_msg11"));
+					final JMenuItem miTabsSchliessen = new JMenuItem(messages.getString("texteditor_msg11"));
 					miTabsSchliessen.setActionCommand("tabsschliessen");
-					final JMenuItem miAndereTabsSchliessen = new JMenuItem(
-							messages.getString("texteditor_msg12"));
-					miAndereTabsSchliessen
-							.setActionCommand("anderetabsschliessen");
+					final JMenuItem miAndereTabsSchliessen = new JMenuItem(messages.getString("texteditor_msg12"));
+					miAndereTabsSchliessen.setActionCommand("anderetabsschliessen");
 
 					ActionListener al = new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							if (e.getActionCommand().equals(
-									miTabsSchliessen.getActionCommand())) {
+							if (e.getActionCommand().equals(miTabsSchliessen.getActionCommand())) {
 								while (tpTabs.getTabCount() > 0) {
 									tpTabs.remove(tpTabs.getTabCount() - 1);
 								}
 							}
-							if (e.getActionCommand().equals(
-									miAndereTabsSchliessen.getActionCommand())) {
-								Component komponente = tpTabs
-										.getSelectedComponent();
-								String tmpTitel = tpTabs.getTitleAt(tpTabs
-										.getSelectedIndex());
+							if (e.getActionCommand().equals(miAndereTabsSchliessen.getActionCommand())) {
+								Component komponente = tpTabs.getSelectedComponent();
+								String tmpTitel = tpTabs.getTitleAt(tpTabs.getSelectedIndex());
 
 								while (tpTabs.getTabCount() > 0) {
 									tpTabs.remove(tpTabs.getTabCount() - 1);
@@ -334,23 +308,19 @@ public class GUIApplicationTextEditorWindow extends GUIApplicationWindow {
 				if (me.getButton() == 1) {
 					boolean treffer = false;
 					Rectangle aktuellesRect = null;
-					CloseableBrowserTabbedPaneUI tpui = (CloseableBrowserTabbedPaneUI) tpTabs
-							.getUI();
+					CloseableBrowserTabbedPaneUI tpui = (CloseableBrowserTabbedPaneUI) tpTabs.getUI();
 
-					ListIterator it = tpui.getButton_positionen()
-							.listIterator();
+					ListIterator it = tpui.getButton_positionen().listIterator();
 					while (it.hasNext()) {
 						Rectangle rect = (Rectangle) it.next();
-						if (rect.intersects(new Rectangle(me.getX(), me.getY(),
-								1, 1))) {
+						if (rect.intersects(new Rectangle(me.getX(), me.getY(), 1, 1))) {
 							treffer = true;
 							aktuellesRect = rect;
 						}
 					}
 
 					if (treffer) {
-						int abfrage = showConfirmDialog(messages
-								.getString("texteditor_msg13"));
+						int abfrage = showConfirmDialog(messages.getString("texteditor_msg13"));
 
 						if (abfrage == JOptionPane.YES_OPTION) {
 							tpui.getButton_positionen().remove(aktuellesRect);
@@ -375,67 +345,58 @@ public class GUIApplicationTextEditorWindow extends GUIApplicationWindow {
 	}
 
 	public void windowActivated(WindowEvent e) {
-		
+
 	}
 
 	public void windowClosing(WindowEvent e) {
-		
 
 	}
 
 	public void windowDeactivated(WindowEvent e) {
-		
 
 	}
 
 	public void windowDeiconified(WindowEvent e) {
-		
+
 	}
 
 	public void windowIconified(WindowEvent e) {
-		
 
 	}
 
 	public void windowOpened(WindowEvent e) {
-		
 
 	}
 
 	public void internalFrameActivated(InternalFrameEvent e) {
-		
+
 	}
 
 	public void internalFrameClosed(InternalFrameEvent e) {
-		
 
 	}
 
 	public void internalFrameClosing(InternalFrameEvent e) {
-		
 
 	}
 
 	public void internalFrameDeactivated(InternalFrameEvent e) {
-		
 
 	}
 
 	public void internalFrameDeiconified(InternalFrameEvent e) {
-		
 
 	}
 
 	public void internalFrameIconified(InternalFrameEvent e) {
-		
 
 	}
 
 	public void internalFrameOpened(InternalFrameEvent e) {
-		
+
 	}
 
 	public void update(Observable arg0, Object arg1) {
-		
+
 	}
 }

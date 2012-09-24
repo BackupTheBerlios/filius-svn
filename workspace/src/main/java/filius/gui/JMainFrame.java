@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 /*
  * NewJFrame.java
  *
@@ -55,10 +55,10 @@ import filius.rahmenprogramm.SzenarioVerwaltung;
 public class JMainFrame extends javax.swing.JFrame implements WindowListener, Observer {
 
 	private static final long serialVersionUID = 1L;
-    private static JMainFrame frame = null;
+	private static JMainFrame frame = null;
 
-    /** Creates new form NewJFrame */
-    private JMainFrame() {
+	/** Creates new form NewJFrame */
+	private JMainFrame() {
 		this.addWindowListener(this);
 		SzenarioVerwaltung.getInstance().addObserver(this);
 		initComponents();
@@ -75,15 +75,15 @@ public class JMainFrame extends javax.swing.JFrame implements WindowListener, Ob
 					if ((e.getKeyChar() == KeyEvent.VK_SPACE)
 					        && (e.getSource().getClass().getSimpleName() == "JButton")) {
 						return true; // no further action by 'clicking'
-									 // involuntarily via the space bar;
+						             // involuntarily via the space bar;
 						             // other shortcuts will be given for this
 					}
 					/* delete item on deletion key press */
 					if ((e.getKeyChar() == KeyEvent.VK_DELETE) && (frame.isFocused())) {
 						if (GUIContainer.getMarkierung().isVisible()) { // several
-																						  // items
-																						  // are
-																						  // selected
+							                                            // items
+							                                            // are
+							                                            // selected
 							LinkedList<GUIKnotenItem> itemlist = GUIContainer.getGUIContainer().getGUIKnotenItemList();
 							JMarkerPanel auswahl = GUIContainer.getAuswahl();
 							JScrollPane scrollPane = GUIContainer.getGUIContainer().getScrollPane();
@@ -122,12 +122,12 @@ public class JMainFrame extends javax.swing.JFrame implements WindowListener, Ob
 							GUIContainer.getMarkierung().setVisible(false);
 							return true;
 						} else if (GUIEvents.getGUIEvents().getActiveItem() != null) { // single
-																					   // item
-																					   // active
-						// Main.debug.println("KeyDispatcher:  delete item '"+(GUIEvents.getGUIEvents().getActiveItem()!=null
-						// ?
-						// GUIEvents.getGUIEvents().getActiveItem().getKnoten().getName()
-						// : "<null>"));
+							                                                           // item
+							                                                           // active
+							// Main.debug.println("KeyDispatcher:  delete item '"+(GUIEvents.getGUIEvents().getActiveItem()!=null
+							// ?
+							// GUIEvents.getGUIEvents().getActiveItem().getKnoten().getName()
+							// : "<null>"));
 							GUIEvents.getGUIEvents().itemLoeschen(
 							        GUIEvents.getGUIEvents().getActiveItem().getImageLabel(),
 							        GUIEvents.getGUIEvents().getActiveItem());
@@ -137,7 +137,7 @@ public class JMainFrame extends javax.swing.JFrame implements WindowListener, Ob
 						// Main.debug.println("DEL pressed, but nothing selected");
 					} // del key
 					if (e.getModifiers() == 2) { // CTRL key pressed
-					// Main.debug.println("KeyDispatcher:   CTRL-Key pressed, waiting for additional key!");
+						// Main.debug.println("KeyDispatcher:   CTRL-Key pressed, waiting for additional key!");
 						switch (e.getKeyCode()) {
 						case 78: // N (new)
 							// Main.debug.println("KeyDispatcher:    CTRL+N recognised");
@@ -182,9 +182,9 @@ public class JMainFrame extends javax.swing.JFrame implements WindowListener, Ob
 						}
 					} // CTRL key pressed, i.e., menu command
 					if (e.getModifiers() == 8) { // ALT key pressed; only makes
-												 // sense for cables!
+						                         // sense for cables!
 						if (e.getKeyCode() == 49) { // key '1' (cable)
-						// Main.debug.println("KeyDispatcher:    ALT+1 recognised");
+							// Main.debug.println("KeyDispatcher:    ALT+1 recognised");
 							GUIContainer
 							        .getGUIContainer()
 							        .getKabelvorschau()
@@ -196,7 +196,7 @@ public class JMainFrame extends javax.swing.JFrame implements WindowListener, Ob
 							                        .getY())
 							                        - (GUIContainer.getGUIContainer().getKabelvorschau().getHeight() / 2)
 							                        - 32, // subtract titlebar
-														  // (approx. 32px)
+							                              // (approx. 32px)
 							                GUIContainer.getGUIContainer().getKabelvorschau().getWidth(),
 							                GUIContainer.getGUIContainer().getKabelvorschau().getHeight());
 							// GUIContainer.getGUIContainer()
@@ -209,28 +209,26 @@ public class JMainFrame extends javax.swing.JFrame implements WindowListener, Ob
 			}
 		});
 		aktualisiere();
-    }
+	}
 
-    public static JMainFrame getJMainFrame() {
-    	if (frame == null) {
-    		frame = new JMainFrame();
-    	}
+	public static JMainFrame getJMainFrame() {
+		if (frame == null) {
+			frame = new JMainFrame();
+		}
 
-    	return frame;
-    }
+		return frame;
+	}
 
-    private void initComponents() {
+	private void initComponents() {
 
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        setSize(1000,700);
-        Dimension screenSize =
-            Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(screenSize.width/2 - (getWidth()/2),
-                         screenSize.height/2 - (getHeight()/2));
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setSize(1000, 700);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(screenSize.width / 2 - (getWidth() / 2), screenSize.height / 2 - (getHeight() / 2));
 
-    }
+	}
 
-    public void windowActivated(WindowEvent e) {
+	public void windowActivated(WindowEvent e) {
 		// TODO Auto-generated method stub
 
 	}
@@ -240,9 +238,10 @@ public class JMainFrame extends javax.swing.JFrame implements WindowListener, Ob
 	}
 
 	/**
-	 *
-	 * Fragt ab, ob wirklich beendet werden soll, ausserdem wird der temp-Ordner geleert
-	 *
+	 * 
+	 * Fragt ab, ob wirklich beendet werden soll, ausserdem wird der temp-Ordner
+	 * geleert
+	 * 
 	 */
 	public void windowClosing(WindowEvent e) {
 		Main.beenden();
@@ -274,20 +273,19 @@ public class JMainFrame extends javax.swing.JFrame implements WindowListener, Ob
 
 		dateipfad = SzenarioVerwaltung.getInstance().holePfad();
 		if (dateipfad != null) {
-			startIndex = dateipfad.length()-80;
-			if (startIndex > 0) dateipfad = dateipfad.substring(startIndex);
-		if (SzenarioVerwaltung.getInstance().istGeaendert())
-			dateipfad = dateipfad + "*";
-		setTitle("FILIUS - "+dateipfad);
-		}
-		else {
-		setTitle("FILIUS");
+			startIndex = dateipfad.length() - 80;
+			if (startIndex > 0)
+				dateipfad = dateipfad.substring(startIndex);
+			if (SzenarioVerwaltung.getInstance().istGeaendert())
+				dateipfad = dateipfad + "*";
+			setTitle("FILIUS - " + dateipfad);
+		} else {
+			setTitle("FILIUS");
 		}
 	}
 
 	public void update(Observable arg0, Object arg1) {
 		aktualisiere();
 	}
-
 
 }

@@ -1,29 +1,30 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.netzwerksicht;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -61,9 +62,9 @@ import filius.software.firewall.Firewall;
 public class JFirewallDialog extends JDialog implements I18n {
 
 	private static final long serialVersionUID = 1L;
-	
-	private static final Color TAB_COLOR = new Color(240,240,240);
-	
+
+	private static final Color TAB_COLOR = new Color(240, 240, 240);
+
 	JFirewallDialog jfd = null;
 	Firewall firewall;
 	private LinkedList<NetzwerkInterface> nics;
@@ -83,21 +84,22 @@ public class JFirewallDialog extends JDialog implements I18n {
 	private JTextField tfPort;
 
 	private JCheckBox[] nicSelection;
-	
-	public JFirewallDialog(Firewall firewall, JFrame dummyFrame){
+
+	public JFirewallDialog(Firewall firewall, JFrame dummyFrame) {
 		super(dummyFrame, messages.getString("jfirewalldialog_msg1"), true);
-	  	Main.debug.println("INVOKED-2 ("+this.hashCode()+") "+getClass()+", constr: JFirewallDialog("+firewall+","+dummyFrame+")");
+		Main.debug.println("INVOKED-2 (" + this.hashCode() + ") " + getClass() + ", constr: JFirewallDialog("
+		        + firewall + "," + dummyFrame + ")");
 		this.firewall = firewall;
-		this.nics = ((InternetKnoten)firewall.getSystemSoftware().getKnoten()).getNetzwerkInterfaces();
-		
+		this.nics = ((InternetKnoten) firewall.getSystemSoftware().getKnoten()).getNetzwerkInterfaces();
+
 		jfd = this;
 
-		this.setSize(1000,200);
+		this.setSize(1000, 200);
 		erzeugeFenster();
 	}
 
 	private Box erzeugeAbsenderBox() {
-	  	Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+", erzeugeAbsenderBox()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", erzeugeAbsenderBox()");
 		JScrollPane scrollPane;
 		Box vBox, hBox;
 		DefaultTableModel model;
@@ -155,10 +157,12 @@ public class JFirewallDialog extends JDialog implements I18n {
 			public void actionPerformed(ActionEvent e) {
 				if (EingabenUeberpruefung.isGueltig(tfAbsenderVon.getText(), EingabenUeberpruefung.musterIpAdresse)) {
 					if (tfAbsenderBis.getText().trim().equals("")) {
-						firewall.eintragHinzufuegen(tfAbsenderVon.getText(), tfAbsenderVon.getText(), Firewall.ABSENDER_FILTER);
-					}
-					else if (EingabenUeberpruefung.isGueltig(tfAbsenderBis.getText(), EingabenUeberpruefung.musterIpAdresse)) {
-						firewall.eintragHinzufuegen(tfAbsenderVon.getText(), tfAbsenderBis.getText(), Firewall.ABSENDER_FILTER);
+						firewall.eintragHinzufuegen(tfAbsenderVon.getText(), tfAbsenderVon.getText(),
+						        Firewall.ABSENDER_FILTER);
+					} else if (EingabenUeberpruefung.isGueltig(tfAbsenderBis.getText(),
+					        EingabenUeberpruefung.musterIpAdresse)) {
+						firewall.eintragHinzufuegen(tfAbsenderVon.getText(), tfAbsenderBis.getText(),
+						        Firewall.ABSENDER_FILTER);
 					}
 				}
 				tfAbsenderVon.setText("");
@@ -187,7 +191,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		model = new DefaultTableModel(0, 2);
 		tTabelleAbsender = new JTable(model);
 		tTabelleAbsender.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tTabelleAbsender.setIntercellSpacing(new Dimension(10,5));
+		tTabelleAbsender.setIntercellSpacing(new Dimension(10, 5));
 		tTabelleAbsender.setRowHeight(30);
 		tTabelleAbsender.setShowGrid(false);
 		tTabelleAbsender.setFillsViewportHeight(true);
@@ -199,21 +203,20 @@ public class JFirewallDialog extends JDialog implements I18n {
 		columnModel.getColumn(1).setHeaderValue(messages.getString("jfirewalldialog_msg7"));
 
 		scrollPane = new JScrollPane(tTabelleAbsender);
-		scrollPane.setPreferredSize(new Dimension(555,300));
+		scrollPane.setPreferredSize(new Dimension(555, 300));
 
 		vBox.add(scrollPane);
 		vBox.add(Box.createVerticalStrut(10));
 
 		return vBox;
 	}
-	
+
 	private Box erzeugeNicBox() {
 		Box vBox, hBox;
 		JTextArea textArea;
 
 		vBox = Box.createVerticalBox();
 		vBox.add(Box.createVerticalStrut(10));
-
 
 		hBox = Box.createHorizontalBox();
 		hBox.add(Box.createHorizontalStrut(10));
@@ -237,32 +240,32 @@ public class JFirewallDialog extends JDialog implements I18n {
 		for (NetzwerkInterface nic : this.nics) {
 			this.nicSelection[i] = new JCheckBox(nic.getIp(), activeNics.contains(nic));
 			this.nicSelection[i].setOpaque(false);
-			this.nicSelection[i].addActionListener(new ActionListener()	{
+			this.nicSelection[i].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent evt) {
-					JCheckBox cb = (JCheckBox)evt.getSource();
+					JCheckBox cb = (JCheckBox) evt.getSource();
 					String ip = cb.getText();
 					NetzwerkInterface nic = null;
-					
+
 					for (NetzwerkInterface tmp : JFirewallDialog.this.nics) {
 						if (tmp.getIp() == ip) {
 							nic = tmp;
 							break;
 						}
 					}
-					if (nic == null) return;
+					if (nic == null)
+						return;
 					else if (cb.isSelected()) {
 						JFirewallDialog.this.firewall.hinzuNetzwerkInterface(nic);
-					}
-					else {
+					} else {
 						JFirewallDialog.this.firewall.entferneNetzwerkInterface(nic);
 					}
 				}
 			});
-			
+
 			hBox = Box.createHorizontalBox();
 			hBox.add(Box.createHorizontalStrut(10));
 			hBox.add(this.nicSelection[i]);
-			hBox.setPreferredSize(new Dimension(555,20));
+			hBox.setPreferredSize(new Dimension(555, 20));
 			vBox.add(hBox);
 			i++;
 		}
@@ -272,7 +275,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 	}
 
 	private Box erzeugeEmpfaengerBox() {
-	  	Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+", erzeugeEmpfaengerBox()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", erzeugeEmpfaengerBox()");
 		JScrollPane scrollPane;
 		Box vBox, hBox;
 		DefaultTableModel model;
@@ -283,7 +286,6 @@ public class JFirewallDialog extends JDialog implements I18n {
 
 		vBox = Box.createVerticalBox();
 		vBox.add(Box.createVerticalStrut(10));
-
 
 		hBox = Box.createHorizontalBox();
 		hBox.add(Box.createHorizontalStrut(10));
@@ -332,10 +334,12 @@ public class JFirewallDialog extends JDialog implements I18n {
 			public void actionPerformed(ActionEvent e) {
 				if (EingabenUeberpruefung.isGueltig(tfZielVon.getText(), EingabenUeberpruefung.musterIpAdresse)) {
 					if (tfZielBis.getText().trim().equals("")) {
-						firewall.eintragHinzufuegen(tfZielVon.getText(), tfZielVon.getText(), Firewall.EMPFAENGER_FILTER);
-					}
-					else if (EingabenUeberpruefung.isGueltig(tfZielBis.getText(), EingabenUeberpruefung.musterIpAdresse)) {
-						firewall.eintragHinzufuegen(tfZielVon.getText(), tfZielBis.getText(), Firewall.EMPFAENGER_FILTER);
+						firewall.eintragHinzufuegen(tfZielVon.getText(), tfZielVon.getText(),
+						        Firewall.EMPFAENGER_FILTER);
+					} else if (EingabenUeberpruefung.isGueltig(tfZielBis.getText(),
+					        EingabenUeberpruefung.musterIpAdresse)) {
+						firewall.eintragHinzufuegen(tfZielVon.getText(), tfZielBis.getText(),
+						        Firewall.EMPFAENGER_FILTER);
 					}
 				}
 				tfZielVon.setText("");
@@ -364,7 +368,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		model = new DefaultTableModel(0, 2);
 		tTabelleZiel = new JTable(model);
 		tTabelleZiel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tTabelleZiel.setIntercellSpacing(new Dimension(10,5));
+		tTabelleZiel.setIntercellSpacing(new Dimension(10, 5));
 		tTabelleZiel.setRowHeight(30);
 		tTabelleZiel.setShowGrid(false);
 		tTabelleZiel.setFillsViewportHeight(true);
@@ -376,7 +380,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		columnModel.getColumn(1).setHeaderValue(messages.getString("jfirewalldialog_msg7"));
 
 		scrollPane = new JScrollPane(tTabelleZiel);
-		scrollPane.setPreferredSize(new Dimension(555,300));
+		scrollPane.setPreferredSize(new Dimension(555, 300));
 
 		vBox.add(scrollPane);
 		vBox.add(Box.createVerticalStrut(10));
@@ -385,7 +389,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 	}
 
 	private Box erzeugePortBox() {
-	  	Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+", erzeugePortBox()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", erzeugePortBox()");
 		JScrollPane scrollPane;
 		Box vBox, hBox;
 		DefaultTableModel model;
@@ -396,7 +400,6 @@ public class JFirewallDialog extends JDialog implements I18n {
 
 		vBox = Box.createVerticalBox();
 		vBox.add(Box.createVerticalStrut(10));
-
 
 		hBox = Box.createHorizontalBox();
 		hBox.add(Box.createHorizontalStrut(10));
@@ -438,8 +441,8 @@ public class JFirewallDialog extends JDialog implements I18n {
 				try {
 					Integer.parseInt(tfPort.getText());
 					firewall.eintragHinzufuegenPort(tfPort.getText());
+				} catch (Exception ex) {
 				}
-				catch (Exception ex) {}
 				tfPort.setText("");
 				updateAttribute();
 			}
@@ -465,7 +468,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		model = new DefaultTableModel(0, 1);
 		tTabellePort = new JTable(model);
 		tTabellePort.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tTabellePort.setIntercellSpacing(new Dimension(10,5));
+		tTabellePort.setIntercellSpacing(new Dimension(10, 5));
 		tTabellePort.setRowHeight(30);
 		tTabellePort.setShowGrid(false);
 		tTabellePort.setFillsViewportHeight(true);
@@ -476,7 +479,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		columnModel.getColumn(0).setHeaderValue(messages.getString("jfirewalldialog_msg12"));
 
 		scrollPane = new JScrollPane(tTabellePort);
-		scrollPane.setPreferredSize(new Dimension(555,300));
+		scrollPane.setPreferredSize(new Dimension(555, 300));
 
 		vBox.add(scrollPane);
 		vBox.add(Box.createVerticalStrut(10));
@@ -484,13 +487,11 @@ public class JFirewallDialog extends JDialog implements I18n {
 		return vBox;
 	}
 
-
 	/*
-	 * @author Weyer
-	 * hier wird das ganze Fenster bestückt
+	 * @author Weyer hier wird das ganze Fenster bestückt
 	 */
-	private void erzeugeFenster(){
-	  	Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+", erzeugeFenster()");
+	private void erzeugeFenster() {
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", erzeugeFenster()");
 		JTabbedPane tp;
 		JPanel hauptPanel;
 
@@ -506,8 +507,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		tp.add(messages.getString("jfirewalldialog_msg16"), erzeugePortBox());
 		tp.setBackgroundAt(3, TAB_COLOR);
 
-		tp.addChangeListener(new ChangeListener()
-		{
+		tp.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				updateAttribute();
 			}
@@ -520,10 +520,10 @@ public class JFirewallDialog extends JDialog implements I18n {
 	}
 
 	/*
-	 * @author  Weyer
+	 * @author Weyer
 	 */
 	public void updateAttribute() {
-	  	Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+", updateAttribute()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", updateAttribute()");
 
 		LinkedList<?> liste;
 		Vector<String> vector;
@@ -531,21 +531,21 @@ public class JFirewallDialog extends JDialog implements I18n {
 		String[] array;
 
 		liste = firewall.getPortList();
-		model = (DefaultTableModel)tTabellePort.getModel();
+		model = (DefaultTableModel) tTabellePort.getModel();
 		model.setRowCount(0);
-		//Main.debug.println("Portliste mit "+liste.size()+" Eintraegen");
-		for (int i=0; i<liste.size(); i++) {
+		// Main.debug.println("Portliste mit "+liste.size()+" Eintraegen");
+		for (int i = 0; i < liste.size(); i++) {
 			vector = new Vector<String>();
-			vector.addElement((String)((Object[])liste.get(i))[0]);
+			vector.addElement((String) ((Object[]) liste.get(i))[0]);
 			model.addRow(vector);
 		}
 
 		liste = firewall.getAbsenderFilterList();
-		model = (DefaultTableModel)tTabelleAbsender.getModel();
+		model = (DefaultTableModel) tTabelleAbsender.getModel();
 		model.setRowCount(0);
-		//Main.debug.println("Absenderliste mit "+liste.size()+" Eintraegen");
-		for (int i=0; i<liste.size(); i++) {
-			array = ((String)liste.get(i)).split("#");
+		// Main.debug.println("Absenderliste mit "+liste.size()+" Eintraegen");
+		for (int i = 0; i < liste.size(); i++) {
+			array = ((String) liste.get(i)).split("#");
 			vector = new Vector<String>();
 			vector.addElement(array[0]);
 			vector.addElement(array[1]);
@@ -553,11 +553,11 @@ public class JFirewallDialog extends JDialog implements I18n {
 		}
 
 		liste = firewall.getEmpfaengerFilterList();
-		model = (DefaultTableModel)tTabelleZiel.getModel();
+		model = (DefaultTableModel) tTabelleZiel.getModel();
 		model.setRowCount(0);
-		//Main.debug.println("Empfaengerliste mit "+liste.size()+" Eintraegen");
-		for (int i=0; i<liste.size(); i++) {
-			array = ((String)liste.get(i)).split("#");
+		// Main.debug.println("Empfaengerliste mit "+liste.size()+" Eintraegen");
+		for (int i = 0; i < liste.size(); i++) {
+			array = ((String) liste.get(i)).split("#");
 			vector = new Vector<String>();
 			vector.addElement(array[0]);
 			vector.addElement(array[1]);

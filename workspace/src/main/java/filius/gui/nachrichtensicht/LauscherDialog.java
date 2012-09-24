@@ -1,28 +1,28 @@
 /*
-** This file is part of Filius, a network construction and simulation software.
-** 
-** Originally created at the University of Siegen, Institute "Didactics of
-** Informatics and E-Learning" by a students' project group:
-**     members (2006-2007): 
-**         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
-**         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
-**     supervisors:
-**         Stefan Freischlad (maintainer until 2009), Peer Stechert
-** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
+ ** This file is part of Filius, a network construction and simulation software.
+ ** 
+ ** Originally created at the University of Siegen, Institute "Didactics of
+ ** Informatics and E-Learning" by a students' project group:
+ **     members (2006-2007): 
+ **         André Asschoff, Johannes Bade, Carsten Dittich, Thomas Gerding,
+ **         Nadja Haßler, Ernst Johannes Klebert, Michell Weyer
+ **     supervisors:
+ **         Stefan Freischlad (maintainer until 2009), Peer Stechert
+ ** Project is maintained since 2010 by Christian Eibl <filius@c.fameibl.de>
  **         and Stefan Freischlad
-** Filius is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 2 of the License, or
-** (at your option) version 3.
-** 
-** Filius is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied
-** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-** PURPOSE. See the GNU General Public License for more details.
-** 
-** You should have received a copy of the GNU General Public License
-** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ ** Filius is free software: you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation, either version 2 of the License, or
+ ** (at your option) version 3.
+ ** 
+ ** Filius is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied
+ ** warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ ** PURPOSE. See the GNU General Public License for more details.
+ ** 
+ ** You should have received a copy of the GNU General Public License
+ ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package filius.gui.nachrichtensicht;
 
 import java.awt.BorderLayout;
@@ -53,7 +53,7 @@ public class LauscherDialog extends JDialog implements I18n {
 	private Hashtable<SystemSoftware, JPanel> openedTabs = new Hashtable<SystemSoftware, JPanel>();
 
 	private Hashtable<SystemSoftware, NachrichtenTabelle> tabellen = new Hashtable<SystemSoftware, NachrichtenTabelle>();
-	
+
 	public static LauscherDialog getLauscherDialog(Frame owner) {
 		if (lauscherDialog == null) {
 			lauscherDialog = new LauscherDialog(owner);
@@ -77,10 +77,10 @@ public class LauscherDialog extends JDialog implements I18n {
 		Image image;
 
 		setTitle(messages.getString("lauscherdialog_msg1"));
-		setBounds(20, (int) Toolkit.getDefaultToolkit().getScreenSize()
-				.getHeight() - 300, ((int) Toolkit.getDefaultToolkit()
-				.getScreenSize().getWidth()) - 40, 300);
-		image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/gfx/allgemein/nachrichtenfenster_icon.png"));
+		setBounds(20, (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 300, ((int) Toolkit
+		        .getDefaultToolkit().getScreenSize().getWidth()) - 40, 300);
+		image = Toolkit.getDefaultToolkit().getImage(
+		        getClass().getResource("/gfx/allgemein/nachrichtenfenster_icon.png"));
 		setIconImage(image);
 
 		this.setModal(false);
@@ -109,7 +109,6 @@ public class LauscherDialog extends JDialog implements I18n {
 			tabelle.setScrollPane(scrollPane);
 			panel.add(scrollPane, BorderLayout.CENTER);
 
-
 			tabbedPane.add(system.getKnoten().getName(), panel);
 
 			tabbedPane.setSelectedComponent(panel);
@@ -123,7 +122,7 @@ public class LauscherDialog extends JDialog implements I18n {
 			tabellen.get(system).update();
 		}
 	}
-	
+
 	public void removeTabelle(SystemSoftware system, JPanel panel) {
 		if (system != null) {
 			openedTabs.remove(system);

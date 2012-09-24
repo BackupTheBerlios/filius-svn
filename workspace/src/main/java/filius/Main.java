@@ -400,19 +400,19 @@ public class Main implements I18n {
 	}
 
 	public static void activateNativeLookAndFeel() {
-	    try {
-	    	// Set System L&F
-	    	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-	    } catch (UnsupportedLookAndFeelException e) {
-	    	// handle exception
-	    } catch (ClassNotFoundException e) {
-	    	// handle exception
-	    } catch (InstantiationException e) {
-	    	// handle exception
-	    } catch (IllegalAccessException e) {
-	    	// handle exception
-	    }
-    }
+		try {
+			// Set System L&F
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (UnsupportedLookAndFeelException e) {
+			// handle exception
+		} catch (ClassNotFoundException e) {
+			// handle exception
+		} catch (InstantiationException e) {
+			// handle exception
+		} catch (IllegalAccessException e) {
+			// handle exception
+		}
+	}
 
 	private static void showUsageInformation() {
 		StringBuffer usage = new StringBuffer();
