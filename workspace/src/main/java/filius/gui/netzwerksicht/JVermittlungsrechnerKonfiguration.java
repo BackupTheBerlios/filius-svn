@@ -82,7 +82,6 @@ import filius.hardware.knoten.Vermittlungsrechner;
 import filius.rahmenprogramm.EingabenUeberpruefung;
 import filius.rahmenprogramm.I18n;
 import filius.software.firewall.Firewall;
-import filius.software.system.InternetKnotenBetriebssystem;
 import filius.software.system.SwitchFirmware;
 import filius.software.system.VermittlungsrechnerBetriebssystem;
 
@@ -99,6 +98,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 	private JTextField[] macAdressen;
 
 	private JTextField gateway;
+	private JCheckBox rip;
 
 	private JLabel[] verbundeneKomponente;
 
@@ -174,13 +174,14 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		ListIterator it;
 		Vermittlungsrechner vRechner;
 		NetzwerkInterface nic;
-		InternetKnotenBetriebssystem bs;
+		VermittlungsrechnerBetriebssystem bs;
 
 		vRechner = (Vermittlungsrechner) holeHardware();
-		bs = (InternetKnotenBetriebssystem) vRechner.getSystemSoftware();
+		bs = (VermittlungsrechnerBetriebssystem) vRechner.getSystemSoftware();
 
 		vRechner.setName(name.getText());
 		bs.setStandardGateway(gateway.getText());
+		bs.setRip(rip.isSelected());
 
 		it = vRechner.getNetzwerkInterfaces().listIterator();
 		for (int i = 0; it.hasNext(); i++) {
@@ -329,6 +330,25 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		gateway.addFocusListener(focusListener);
 		gateway.addKeyListener(ipAdresseKeyAdapter);
 		tempBox.add(gateway);
+
+		vBox.add(tempBox);
+		vBox.add(Box.createVerticalStrut(5));
+
+		// Attribut rip
+		tempBox = Box.createHorizontalBox();
+		tempBox.setMaximumSize(new Dimension(400, 20));
+
+		tempLabel = new JLabel("Enable RIP?");
+		tempLabel.setPreferredSize(new Dimension(140, 10));
+		tempLabel.setVisible(true);
+		tempLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		tempBox.add(tempLabel);
+		tempBox.add(Box.createHorizontalStrut(10));
+
+		rip = new JCheckBox();
+		rip.addActionListener(actionListener);
+		rip.addFocusListener(focusListener);
+		tempBox.add(rip);
 
 		vBox.add(tempBox);
 		vBox.add(Box.createVerticalStrut(5));
@@ -649,11 +669,11 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				foreignPanel.add(lblRemote[nicNr - 1]);
 				cables.add(new LinePanel());
 				cables.getLast().setName((nicNr - 1) + "-" + (nicNr - 1)); // encode
-				                                                           // index
-				                                                           // information
-				                                                           // in
-				                                                           // name
-				                                                           // field
+																		   // index
+																		   // information
+																		   // in
+																		   // name
+																		   // field
 			} else {
 				btnLocal[nicNr - 1].setBackground(Color.RED);
 				btnLocal[nicNr - 1].setEnabled(true);
@@ -886,7 +906,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		cablePanel.setLayout(cableLayout);
 		for (int i = 0; i < cables.size(); i++) {
 			int l, r; // indices for foreign component (l; left area) and local
-			          // component (r; right area)
+					  // component (r; right area)
 			LinePanel tmp = cables.get(i);
 			Main.debug.println("DEBUG: JVermittlungsrechnerkonfiguration, showBasicSettingsDialog, tmp LinePanel: ("
 			        + tmp.hashCode() + ")");
@@ -1091,7 +1111,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 			anschluss2 = vrOut.getErstenAnschluss();
 		} else if (tmpCable.getKabelpanel().getZiel2().getKnoten() instanceof Vermittlungsrechner) {
 			anschluss2 = remotePort; // only in this case use pre-determined
-			                         // port; otherwise use internal methods
+									 // port; otherwise use internal methods
 		} else if (tmpCable.getKabelpanel().getZiel2().getKnoten() instanceof Switch) {
 			Switch sw = (Switch) tmpCable.getKabelpanel().getZiel2().getKnoten();
 			anschluss2 = ((SwitchFirmware) sw.getSystemSoftware()).getKnoten().holeFreienPort();
@@ -1134,9 +1154,9 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				if (btnLocal[i] == source) // found current source button
 					currIdx = i;
 				if (btnLocal[i].getBackground().equals(Color.YELLOW)) // some
-				                                                      // button
-				                                                      // marked
-				                                                      // yellow
+																	  // button
+																	  // marked
+																	  // yellow
 					formerIdx = i;
 			}
 		}
@@ -1150,26 +1170,26 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				currLine = null;
 				for (int i = 0; i < cables.size(); i++) {
 					if (cables.get(i).getName().substring(2).equals(String.valueOf(formerIdx))) { // found
-						                                                                          // corresponding
-						                                                                          // cable
-						                                                                          // (i.e.,
-						                                                                          // it
-						                                                                          // exists!)
+																								  // corresponding
+																								  // cable
+																								  // (i.e.,
+																								  // it
+																								  // exists!)
 						formerLine = cables.get(i);
 						// Main.debug.println("DEBUG: interfaceButtonClicked;  formerLine="+formerLine.toString()+", index="+i);
 					}
 					if (cables.get(i).getName().substring(2).equals(String.valueOf(currIdx))) { // found
-						                                                                        // corresponding
-						                                                                        // cable
-						                                                                        // (i.e.,
-						                                                                        // it
-						                                                                        // exists!)
+																								// corresponding
+																								// cable
+																								// (i.e.,
+																								// it
+																								// exists!)
 						currLine = cables.get(i);
 						// Main.debug.println("DEBUG: interfaceButtonClicked;  currLine="+currLine.toString()+", index="+i);
 					}
 				}
 				if (formerLine != null) { // found corresponding cable (i.e., it
-					                      // exists!)
+										  // exists!)
 					formerLine.lineColor = new Color(64, 64, 64);
 					formerLine.lineEnd = new Point(282, source.getY() + (source.getHeight() / 2));
 					formerLine.setName(formerLine.getName().substring(0, 2) + currIdx);
@@ -1177,7 +1197,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 					// Main.debug.println("DEBUG: interfaceButtonClicked;  formerLine != null ("+formerLine.toString()+")");
 				}
 				if (currLine != null) { // found corresponding cable (i.e., it
-					                    // exists!)
+										// exists!)
 					currLine.lineEnd = new Point(282, btnLocal[formerIdx].getY()
 					        + (btnLocal[formerIdx].getHeight() / 2));
 					currLine.setName(currLine.getName().substring(0, 2) + formerIdx);
@@ -1252,11 +1272,11 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 			} else {
 				for (int i = 0; i < cables.size(); i++) {
 					if (cables.get(i).getName().substring(2).equals(String.valueOf(formerIdx))) { // found
-						                                                                          // corresponding
-						                                                                          // cable
-						                                                                          // (i.e.,
-						                                                                          // it
-						                                                                          // exists!)
+																								  // corresponding
+																								  // cable
+																								  // (i.e.,
+																								  // it
+																								  // exists!)
 						// Main.debug.println("DEBUG: interfaceButtonClicked;  formerIdx=currIdx (cables="+cables.get(i).toString()+", index="+i+")");
 						cables.get(i).lineColor = new Color(64, 64, 64);
 						source.setBackground(Color.GREEN);
@@ -1266,11 +1286,11 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		} else { // else mark current source button
 			for (int i = 0; i < cables.size(); i++) {
 				if (cables.get(i).getName().substring(2).equals(String.valueOf(currIdx))) { // found
-					                                                                        // corresponding
-					                                                                        // cable
-					                                                                        // (i.e.,
-					                                                                        // it
-					                                                                        // exists!)
+																							// corresponding
+																							// cable
+																							// (i.e.,
+																							// it
+																							// exists!)
 					source.setBackground(Color.YELLOW);
 					cables.get(i).lineColor = Color.MAGENTA;
 				}
@@ -1284,15 +1304,16 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		        + " (JVermittlungsrechnerKonfiguration), updateAttribute()");
 		ListIterator it;
 		Vermittlungsrechner vRechner;
-		InternetKnotenBetriebssystem bs;
+		VermittlungsrechnerBetriebssystem bs;
 		NetzwerkInterface nic;
 		Knoten tempKnoten;
 
 		vRechner = (Vermittlungsrechner) holeHardware();
-		bs = (InternetKnotenBetriebssystem) vRechner.getSystemSoftware();
+		bs = (VermittlungsrechnerBetriebssystem) vRechner.getSystemSoftware();
 
 		name.setText(vRechner.getName());
 		gateway.setText(bs.getStandardGateway());
+		rip.setSelected(bs.getRip());
 
 		it = vRechner.getNetzwerkInterfaces().listIterator();
 		for (int i = 0; it.hasNext() && i < ipAdressen.length; i++) {

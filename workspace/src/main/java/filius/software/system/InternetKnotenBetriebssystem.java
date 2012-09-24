@@ -40,6 +40,7 @@ import filius.rahmenprogramm.Information;
 import filius.software.Anwendung;
 import filius.software.dns.Resolver;
 import filius.software.netzzugangsschicht.Ethernet;
+import filius.software.rip.RIPTable;
 import filius.software.transportschicht.TCP;
 import filius.software.transportschicht.UDP;
 import filius.software.vermittlungsschicht.ARP;
@@ -150,11 +151,10 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 
 		// print IDs for all network layers and the according node --> for
 		// providing debug support in log file
-		Main.debug.println("DEBUG: InternetKnotenBetriebssystem ("
-		        + this.hashCode()
+		Main.debug.println("DEBUG: InternetKnotenBetriebssystem (" + this.hashCode()
 		        + ")\n"
 		        // +
-		        // "\tKnoten: "+this.getKnoten().hashCode()+" ("+this.getKnoten().getName()+", "+this.getKnoten().holeHardwareTyp()+")\n"
+				// "\tKnoten: "+this.getKnoten().hashCode()+" ("+this.getKnoten().getName()+", "+this.getKnoten().holeHardwareTyp()+")\n"
 		        + "\tEthernet: " + ethernet.hashCode() + "\n" + "\tARP: " + arpVermittlung.hashCode() + "\n" + "\tIP: "
 		        + vermittlung.hashCode() + "\n" + "\tICMP: " + icmpVermittlung.hashCode() + "\n" + "\tTCP: "
 		        + tcp.hashCode() + "\n" + "\tUDP: " + udp.hashCode());
@@ -283,7 +283,7 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 		udp.starten();
 
 		printDebugInfo(); // print all relevant debug information in log file to
-		                  // follow these data
+						  // follow these data
 
 		it = installierteAnwendung.entrySet().iterator();
 		while (it.hasNext()) {
@@ -357,6 +357,10 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 	 */
 	public void setDateisystem(Dateisystem dateisystem) {
 		this.dateisystem = dateisystem;
+	}
+
+	public RIPTable getRIPTable() {
+		return null;
 	}
 
 	/**
@@ -622,20 +626,25 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 	 * Das ist eine Methode des Entwurfsmusters Fassade
 	 */
 	public String holeIPAdresse() {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
-		        + " (InternetKnotenBetriebssystem), holeIPAdresse()");
-		InternetKnoten knoten;
+		if (!(getKnoten() instanceof InternetKnoten)) {
+			return null;
+		}
+		InternetKnoten knoten = (InternetKnoten) getKnoten();
 
-		if (getKnoten() instanceof InternetKnoten) {
-			knoten = (InternetKnoten) getKnoten();
+		String ip = null;
+		NetzwerkInterface nic;
+		ListIterator it = knoten.getNetzwerkInterfaces().listIterator();
+		while (it.hasNext()) {
+			nic = (NetzwerkInterface) it.next();
+			ip = nic.getIp();
 
-			if (knoten.getNetzwerkInterfaces().size() > 0) {
-				NetzwerkInterface nic = (NetzwerkInterface) knoten.getNetzwerkInterfaces().getFirst();
-				return nic.getIp();
+			// search for a public IP
+			if (!(ip.startsWith("10.") || ip.startsWith("192.168.") || ip.startsWith("0.") || ip.startsWith("127."))) {
+				break;
 			}
 		}
 
-		return null;
+		return ip;
 	}
 
 	/**

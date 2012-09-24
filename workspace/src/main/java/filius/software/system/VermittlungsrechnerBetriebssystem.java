@@ -27,11 +27,16 @@ package filius.software.system;
 
 //Netzwerkziel, Netzwerkmaske, ZielIp(Gateway), Schnittstelle
 import filius.Main;
+import filius.hardware.knoten.InternetKnoten;
 import filius.hardware.knoten.Knoten;
 import filius.rahmenprogramm.Information;
 import filius.software.firewall.Firewall;
 import filius.software.firewall.FirewallWebKonfig;
 import filius.software.firewall.FirewallWebLog;
+import filius.software.rip.RIPBeacon;
+import filius.software.rip.RIPServer;
+import filius.software.rip.RIPTable;
+import filius.software.rip.RIPWeb;
 import filius.software.www.WebServer;
 
 /**
@@ -45,13 +50,19 @@ public class VermittlungsrechnerBetriebssystem extends InternetKnotenBetriebssys
 
 	private static final long serialVersionUID = 1L;
 
+	private boolean ripEnabled;
+
+	private RIPTable riptable;
+	private RIPBeacon ripbeacon;
+	private RIPServer ripserver;
+
 	/** Konstruktor mit Initialisierung von Firewall und Webserver */
 	public VermittlungsrechnerBetriebssystem() {
 		super();
 		Main.debug.println("INVOKED-2 (" + this.hashCode() + ") " + getClass()
 		        + " (VermittlungsrechnerBetriebssystem), constr: VermittlungsrechnerBetriebssystem()");
 
-		initialisiereFirewallUndWebserver();
+		initialisiereAnwendungen();
 	}
 
 	public void setKnoten(Knoten vermittlungsrechner) {
@@ -63,7 +74,7 @@ public class VermittlungsrechnerBetriebssystem extends InternetKnotenBetriebssys
 	 * Erweiterungen fuer den Zugriff auf die Firewall ueber eine
 	 * Web-Schnittstelle
 	 */
-	private void initialisiereFirewallUndWebserver() {
+	private void initialisiereAnwendungen() {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
 		        + " (VermittlungsrechnerBetriebssystem), initialisiereFirewallUndWebserver()");
 		FirewallWebLog weblog;
@@ -99,6 +110,17 @@ public class VermittlungsrechnerBetriebssystem extends InternetKnotenBetriebssys
 
 		server.erzeugeIndexDatei(Information.getInformation().getProgrammPfad() + "tmpl/firewall_index_"
 		        + Information.getInformation().getLocale() + ".txt");
+
+		// ------------- RIP ------------------
+		riptable = new RIPTable(this);
+		ripserver = new RIPServer();
+		ripserver.setSystemSoftware(this);
+		ripbeacon = new RIPBeacon();
+		ripbeacon.setSystemSoftware(this);
+
+		RIPWeb ripweb = new RIPWeb(riptable);
+		ripweb.setPfad("routes.html");
+		server.setzePlugIn(ripweb);
 	}
 
 	/**
@@ -114,6 +136,38 @@ public class VermittlungsrechnerBetriebssystem extends InternetKnotenBetriebssys
 
 		// Startet den Web-Server
 		holeWebServer().setAktiv(true);
+
+		if (ripEnabled) {
+			riptable.reset();
+			riptable.addLocalRoutes((InternetKnoten) this.getKnoten());
+			ripserver.starten();
+			ripserver.setAktiv(true);
+			ripbeacon.starten();
+		}
+	}
+
+	public void beenden() {
+		super.beenden();
+		if (ripEnabled) {
+			ripbeacon.beenden();
+			ripserver.beenden();
+		}
+	}
+
+	public RIPTable getRIPTable() {
+		if (ripEnabled) {
+			return riptable;
+		} else {
+			return null;
+		}
+	}
+
+	public boolean getRip() {
+		return ripEnabled;
+	}
+
+	public void setRip(boolean state) {
+		ripEnabled = state;
 	}
 
 	/**

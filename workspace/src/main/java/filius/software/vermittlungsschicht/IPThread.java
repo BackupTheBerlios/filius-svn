@@ -26,7 +26,6 @@
 package filius.software.vermittlungsschicht;
 
 import filius.Main;
-import filius.exception.VerbindungsException;
 import filius.software.ProtokollThread;
 import filius.software.system.InternetKnotenBetriebssystem;
 
@@ -59,16 +58,10 @@ public class IPThread extends ProtokollThread {
 	 * Pakete an andere Rechner weitergeleitet.
 	 */
 	protected void verarbeiteDatenEinheit(Object datenEinheit) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
-		        + " (IPThread), verarbeiteDatenEinheit(" + datenEinheit.toString() + ")");
-		// String zielIPAdresse;
 		IpPaket ipPaket = (IpPaket) datenEinheit;
 
 		ipPaket.setTtl(ipPaket.getTtl() - 1);
-		try {
-			vermittlung.weiterleitenPaket(ipPaket);
-		} catch (VerbindungsException e) {
-			e.printStackTrace(Main.debug);
-		}
+
+		vermittlung.weiterleitenPaket(ipPaket);
 	}
 }

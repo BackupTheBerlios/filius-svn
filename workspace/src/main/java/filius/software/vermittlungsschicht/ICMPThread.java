@@ -29,7 +29,6 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 import filius.Main;
-import filius.exception.VerbindungsException;
 import filius.hardware.NetzwerkInterface;
 import filius.hardware.Verbindung;
 import filius.hardware.knoten.InternetKnoten;
@@ -49,13 +48,13 @@ public class ICMPThread extends ProtokollThread {
 
 	public ICMPThread(ICMP vermittlung) {
 		super(((InternetKnotenBetriebssystem) vermittlung.holeSystemSoftware()).holeEthernet().holeICMPPuffer()); // zu
-		                                                                                                          // überwachender
-		                                                                                                          // Puffer
-		                                                                                                          // als
-		                                                                                                          // Parameter
-		                                                                                                          // nötig
-		                                                                                                          // für
-		                                                                                                          // Thread-Steuerung
+																												  // überwachender
+																												  // Puffer
+																												  // als
+																												  // Parameter
+																												  // nötig
+																												  // für
+																												  // Thread-Steuerung
 		Main.debug.println("INVOKED-2 (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + " (ICMPThread), constr: ICMPThread(" + vermittlung + ")");
 		this.rcvdPackets = new LinkedList<IcmpPaket>();
@@ -92,26 +91,25 @@ public class ICMPThread extends ProtokollThread {
 	 * Methode zur Verarbeitung eingehender ICMP-Pakete <br />
 	 */
 	protected void verarbeiteDatenEinheit(Object datenEinheit) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
-		        + " (ICMPThread), verarbeiteDateneinheit(" + datenEinheit.toString() + ")");
-		// String zielIPAdresse;
 		IcmpPaket icmpPaket = (IcmpPaket) datenEinheit;
 
+		// TTL dekrementieren
 		icmpPaket.setTtl(icmpPaket.getTtl() - 1);
-		if (icmpPaket.getIcmpType() == 0 && // it's an ICMP echo reply packet
-		        (icmpPaket.getZielIp().equals(IP.LOCALHOST) || icmpPaket.getZielIp().equals(
-		                ((InternetKnotenBetriebssystem) vermittlung.holeSystemSoftware()).holeIPAdresse()))) {
-			synchronized (rcvdPackets) {
-				rcvdPackets.add(icmpPaket);
-				rcvdPackets.notify();
+
+		if (vermittlung.isLocal(icmpPaket.getZielIp())) {
+			// Paket wurde an diesen Rechner gesendet
+			if (icmpPaket.getIcmpType() == 8 && icmpPaket.getIcmpCode() == 0) {
+				vermittlung.sendEchoReply(icmpPaket);
+			} else {
+				synchronized (rcvdPackets) {
+					rcvdPackets.add(icmpPaket);
+					rcvdPackets.notify();
+				}
 			}
-			return;
-		}
-		// not a reply packet or at least not for this host:
-		try {
+		} else {
+			// Paket wurde an anderen Rechner gesendet und
+			// muss weitergeleitet werden
 			vermittlung.weiterleitenPaket(icmpPaket);
-		} catch (VerbindungsException e) {
-			e.printStackTrace(Main.debug);
 		}
 	}
 
@@ -122,7 +120,7 @@ public class ICMPThread extends ProtokollThread {
 		        + " (ICMPThread), startSinglePing(" + destIp + "," + seqNr + ")");
 		int resultTTL = -20; // return ttl field of received echo reply packet
 
-		IcmpPaket sentIcmpPaket = vermittlung.sendEchoRequest(destIp, seqNr);
+		vermittlung.sendEchoRequest(destIp, seqNr);
 		synchronized (rcvdPackets) {
 			try {
 				rcvdPackets.wait(Verbindung.holeRTT());
@@ -132,24 +130,24 @@ public class ICMPThread extends ProtokollThread {
 				Main.debug.println("DEBUG (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 				        + " (ICMPThread), startSinglePing, NO reply in queue");
 				throw new java.util.concurrent.TimeoutException("Destination Host Unreachable"); // not
-				                                                                                 // absolutely
-				                                                                                 // correct,
-				                                                                                 // but
-				                                                                                 // who
-				                                                                                 // cares...
+																								 // absolutely
+																								 // correct,
+																								 // but
+																								 // who
+																								 // cares...
 			} else {
 				Main.debug.println("DEBUG (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 				        + " (ICMPThread), startSinglePing, reply in queue");
 				IcmpPaket rcvdIcmpPaket = rcvdPackets.removeFirst();
 				if (rcvdIcmpPaket != null
-				        && !(sentIcmpPaket.getZielIp().equals(rcvdIcmpPaket.getQuellIp()) && sentIcmpPaket.getSeqNr() == rcvdIcmpPaket
-				                .getSeqNr())) {
+				        && !(destIp.equals(rcvdIcmpPaket.getQuellIp()) && seqNr == rcvdIcmpPaket.getSeqNr() && rcvdIcmpPaket
+				                .getIcmpType() == 0)) {
 					throw new java.util.concurrent.TimeoutException("Destination Host Unreachable"); // not
-					                                                                                 // absolutely
-					                                                                                 // correct,
-					                                                                                 // but
-					                                                                                 // who
-					                                                                                 // cares...
+																									 // absolutely
+																									 // correct,
+																									 // but
+																									 // who
+																									 // cares...
 				}
 				resultTTL = rcvdIcmpPaket.getTtl();
 			}
@@ -159,4 +157,19 @@ public class ICMPThread extends ProtokollThread {
 		return resultTTL;
 	}
 
+	public IcmpPaket sendProbe(String destIp, int ttl, int seqNr) {
+		vermittlung.sendeICMP(8, 0, ttl, seqNr, destIp);
+
+		synchronized (rcvdPackets) {
+			try {
+				rcvdPackets.wait(Verbindung.holeRTT());
+			} catch (InterruptedException e) {
+			}
+
+			if (rcvdPackets.size() > 0) {
+				return rcvdPackets.removeFirst();
+			}
+		}
+		return null;
+	}
 }

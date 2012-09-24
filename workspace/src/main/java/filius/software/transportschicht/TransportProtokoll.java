@@ -32,7 +32,6 @@ import java.util.Random;
 
 import filius.Main;
 import filius.exception.SocketException;
-import filius.exception.VerbindungsException;
 import filius.rahmenprogramm.I18n;
 import filius.software.Protokoll;
 import filius.software.system.InternetKnotenBetriebssystem;
@@ -164,6 +163,10 @@ public abstract class TransportProtokoll extends Protokoll implements I18n, Runn
 	 *            - Segment mit Daten zur IP-Schicht
 	 */
 	protected void senden(String zielIp, Object segment) {
+		senden(zielIp, null, segment);
+	}
+
+	protected void senden(String zielIp, String quellIp, Object segment) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (TransportProtokoll), senden("
 		        + zielIp + "," + segment + ")");
 		// Main.debug.println(getClass().toString()
@@ -171,8 +174,8 @@ public abstract class TransportProtokoll extends Protokoll implements I18n, Runn
 		// + zielIp + ":" + ((Segment) segment).getZielPort()
 		// + "\n\tDaten: " + ((Segment) segment).getDaten());
 
-		segmentListe.addLast((new Object[] { zielIp, segment }));
 		synchronized (segmentListe) {
+			segmentListe.addLast((new Object[] { zielIp, quellIp, segment }));
 			segmentListe.notifyAll();
 		}
 	}
@@ -192,14 +195,9 @@ public abstract class TransportProtokoll extends Protokoll implements I18n, Runn
 					}
 				}
 				if (segmentListe.size() > 0) {
-
 					temp = (Object[]) segmentListe.removeFirst();
 					bs = (InternetKnotenBetriebssystem) holeSystemSoftware();
-					try {
-						bs.holeIP().senden((String) temp[0], holeTyp(), TTL, temp[1]);
-					} catch (VerbindungsException e) {
-						e.printStackTrace(Main.debug);
-					}
+					bs.holeIP().senden((String) temp[0], (String) temp[1], holeTyp(), TTL, temp[2]);
 				}
 			}
 		}
