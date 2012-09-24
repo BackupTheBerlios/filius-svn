@@ -149,7 +149,7 @@ public class JDHCPKonfiguration extends JDialog implements I18n, ItemListener {
 		jpDhcp.add(lbNetzmaske);
 
 		JPanel borderPanel = new JPanel(); // Panel used to paint border around
-										   // gateway/DNS form field
+		                                   // gateway/DNS form field
 		borderPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
 		borderPanel.setOpaque(false);
 		jpDhcp.add(borderPanel);

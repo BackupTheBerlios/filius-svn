@@ -29,7 +29,6 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 import filius.Main;
-import filius.hardware.NetzwerkInterface;
 import filius.hardware.Port;
 
 public abstract class LokalerKnoten extends Knoten {

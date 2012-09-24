@@ -111,8 +111,8 @@ public class GUIApplicationWebServerWindow extends GUIApplicationWindow {
 		vHostTable = new JTableEditable(tablemodel, true, "WWW");
 		vHostTable.setParentGUI(this);
 		JScrollPane tableScrollPane = new JScrollPane(vHostTable); // necessary
-																   // for table
-																   // headers...
+		                                                           // for table
+		                                                           // headers...
 		Main.debug.println("DEBUG message webserver_msg4='" + messages.getString("webserver_msg4") + "'");
 		vHostTable.getColumnModel().getColumn(0).setHeaderValue(messages.getString("webserver_msg4"));
 		vHostTable.getColumnModel().getColumn(1).setHeaderValue(messages.getString("webserver_msg5"));

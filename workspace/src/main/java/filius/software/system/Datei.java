@@ -106,13 +106,13 @@ public class Datei implements Serializable {
 			try {
 				if (decodedSize < 0)
 					setSize(Base64.decode(this.getDateiInhalt()).length); // set
-																		  // current
-																		  // size
-																		  // to
-																		  // be
-																		  // sure
-																		  // it's
-																		  // correct
+					                                                      // current
+					                                                      // size
+					                                                      // to
+					                                                      // be
+					                                                      // sure
+					                                                      // it's
+					                                                      // correct
 				return decodedSize;
 			} catch (Exception e) {
 				// current file does not seem to be Base64 encoded (that's why

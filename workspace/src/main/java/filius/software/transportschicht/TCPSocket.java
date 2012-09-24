@@ -484,10 +484,10 @@ public class TCPSocket extends Socket implements Runnable {
 		long rtt;
 
 		if (zustand != ESTABLISHED) { // if I understand it correctly, then the
-									  // thrown exception is needed for
+			                          // thrown exception is needed for
 			                          // properly resetting the connection! (no
-									  // harmful exception, but part of the
-									  // concept)
+			                          // harmful exception, but part of the
+			                          // concept)
 			Main.debug.println("EXCEPTION: " + getClass() + " (" + this.hashCode() + "); zustand=" + zustand);
 			zustand = CLOSED;
 			throw new VerbindungsException(messages.getString("sw_tcpsocket_msg6"));

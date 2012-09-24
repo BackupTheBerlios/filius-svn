@@ -31,20 +31,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.Toolkit;
-import java.awt.event.MouseEvent;
 import java.awt.geom.QuadCurve2D;
-import java.util.ListIterator;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.DebugGraphics;
-
 import filius.Main;
-import filius.gui.GUIContainer;
-import filius.hardware.NetzwerkInterface;
-import filius.hardware.Port;
-import filius.hardware.knoten.InternetKnoten;
 
 /**
  * 
@@ -118,9 +109,9 @@ public class JCablePanel extends javax.swing.JPanel implements Observer {
 			y2 = t1;
 		}
 		setBounds(x1 - 2, y1 - 2, x2 - x1 + 4, y2 - y1 + 4); // add 2 for each
-															 // direction to
-															 // take care of
-															 // linewidth
+		                                                     // direction to
+		                                                     // take care of
+		                                                     // linewidth
 		Main.debug.println("JCablePanel (" + this.hashCode() + "), bounds: " + x1 + "/" + y1 + ", " + x2 + "/" + y2
 		        + "  (W:" + (x2 - x1) + ", H:" + (y2 - y1) + ")");
 	}
@@ -148,12 +139,12 @@ public class JCablePanel extends javax.swing.JPanel implements Observer {
 			int kp1 = (x1 - this.getX() + x2 - this.getX()) / 4;
 			if ((x1 > x2 && y1 > y2) || (x1 < x2 && y1 < y2))
 				kp1 = 3 * kp1; // correct X value of control point for falling
-							   // lines (upper left to lower right corner)
+				               // lines (upper left to lower right corner)
 			int kp2 = (y1 - this.getY() + y2 - this.getY()) / 4;
 			// Main.debug.println("\trect: ("+x1+"/"+y1+") -> ("+kp1+"/"+kp2+") -> ("+x2+"/"+y2+"), thisXY: ("+this.getX()+"/"+this.getY()+"), color: "+kabelFarbe);
 
 			QuadCurve2D myCurve = new QuadCurve2D.Double(x1 - this.getX(), y1 - this.getY(), // Punkt
-																							 // 1
+			                                                                                 // 1
 			        kp1, kp2, // Kontrollpunkt k
 			        x2 - this.getX(), y2 - this.getY() // Punkt 2
 			);
@@ -180,12 +171,12 @@ public class JCablePanel extends javax.swing.JPanel implements Observer {
 		        + ")");
 		if (this.getHeight() < 20 || this.getWidth() < 20)
 			return true; // very slim panel --> always within collision area
-						 // (incl. tolerance)
+			             // (incl. tolerance)
 
 		int deltaX = 0;
 		int deltaY = 0;
 		int xFactor = 1; // factor for adjusting the deltaX sign according to
-						 // orientation of line
+		                 // orientation of line
 		double tmpX = 0;
 		double tmpY = 0;
 		boolean invers = false;
@@ -195,8 +186,8 @@ public class JCablePanel extends javax.swing.JPanel implements Observer {
 			tmpX = this.currCurve.getCtrlX();
 			tmpY = this.currCurve.getCtrlY() - 2;
 			if (!this.currCurve.contains(tmpX, tmpY)) { // unexpected behaviour:
-														// bound is considered
-														// to be above curve
+				                                        // bound is considered
+				                                        // to be above curve
 				invers = true;
 			}
 			if (this.getWidth() < this.getHeight()) {

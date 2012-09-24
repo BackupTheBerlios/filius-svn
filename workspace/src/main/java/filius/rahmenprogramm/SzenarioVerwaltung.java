@@ -36,48 +36,19 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
-import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Observable;
-import java.util.StringTokenizer;
-import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
-import filius.exception.VerbindungsException;
-import filius.gui.GUIContainer;
+import filius.Main;
 import filius.gui.GUIErrorHandler;
-import filius.gui.JMainFrame;
 import filius.gui.netzwerksicht.GUIKabelItem;
 import filius.gui.netzwerksicht.GUIKnotenItem;
-import filius.gui.netzwerksicht.GUISidebar;
-import filius.gui.netzwerksicht.JSidebarButton;
-import filius.hardware.Kabel;
-import filius.hardware.NetzwerkInterface;
-import filius.hardware.Port;
-import filius.hardware.knoten.Knoten;
-import filius.hardware.knoten.Modem;
-import filius.hardware.knoten.Rechner;
-import filius.hardware.knoten.Switch;
-import filius.hardware.knoten.Vermittlungsrechner;
-import filius.software.system.Betriebssystem;
-import filius.software.system.SystemSoftware;
-import filius.software.system.VermittlungsrechnerBetriebssystem;
-import filius.Main;
 
 public class SzenarioVerwaltung extends Observable implements I18n {
 

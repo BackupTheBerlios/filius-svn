@@ -25,18 +25,13 @@
  */
 package filius.software.netzzugangsschicht;
 
-import java.util.ListIterator;
-
 import filius.Main;
-import filius.gui.GUIContainer;
-import filius.gui.netzwerksicht.GUIKabelItem;
 import filius.hardware.NetzwerkInterface;
-import filius.hardware.Port;
 import filius.rahmenprogramm.nachrichten.Lauscher;
 import filius.software.ProtokollThread;
 import filius.software.vermittlungsschicht.ArpPaket;
-import filius.software.vermittlungsschicht.IpPaket;
 import filius.software.vermittlungsschicht.IcmpPaket;
+import filius.software.vermittlungsschicht.IpPaket;
 
 /**
  * Diese Klasse ueberwacht die Eingangspuffer von Netzwerkkarten.
@@ -96,11 +91,11 @@ public class EthernetThread extends ProtokollThread {
 					ethernet.holeICMPPuffer().add((IcmpPaket) etp.getDaten());
 					// Main.debug.println("DEBUG ("+this.hashCode()+", T"+this.getId()+") "+getClass()+" (EthernetThread), verarbeiteDateneinheit, ICMPPuffer="+ethernet.holeICMPPuffer().getFirst().toString());
 					ethernet.holeICMPPuffer().notifyAll(); // 'all' means:
-														   // Terminal ping
-														   // command (if any in
-														   // this instance) and
-														   // default network
-														   // packet processing
+					                                       // Terminal ping
+					                                       // command (if any in
+					                                       // this instance) and
+					                                       // default network
+					                                       // packet processing
 				}
 			} else {
 				synchronized (ethernet.holeIPPuffer()) {

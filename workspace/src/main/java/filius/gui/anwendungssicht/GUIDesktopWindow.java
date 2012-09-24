@@ -28,7 +28,6 @@ package filius.gui.anwendungssicht;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
-import filius.Main;
 import filius.gui.netzwerksicht.GUISidebar;
 import filius.hardware.Hardware;
 import filius.hardware.knoten.Notebook;

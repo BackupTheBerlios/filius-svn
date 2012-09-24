@@ -25,14 +25,11 @@
  */
 package filius.hardware;
 
-import filius.exception.VerbindungsException;
-import filius.rahmenprogramm.Information;
-import filius.software.netzzugangsschicht.EthernetFrame;
+import java.util.LinkedList;
 
 import filius.Main;
-
-import java.io.Serializable;
-import java.util.LinkedList;
+import filius.exception.VerbindungsException;
+import filius.software.netzzugangsschicht.EthernetFrame;
 
 public class SimplexVerbindung implements Runnable {
 

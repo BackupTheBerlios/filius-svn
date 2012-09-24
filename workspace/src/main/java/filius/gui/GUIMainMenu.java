@@ -46,17 +46,17 @@ import javax.swing.filechooser.FileFilter;
 
 import filius.Main;
 import filius.gui.nachrichtensicht.LauscherDialog;
-import filius.gui.netzwerksicht.GUIKnotenItem;
 import filius.gui.netzwerksicht.GUIKabelItem;
+import filius.gui.netzwerksicht.GUIKnotenItem;
 import filius.gui.netzwerksicht.JVermittlungsrechnerKonfiguration;
 import filius.gui.quelltextsicht.FrameSoftwareWizard;
 import filius.hardware.Verbindung;
 import filius.rahmenprogramm.I18n;
 import filius.rahmenprogramm.Information;
 import filius.rahmenprogramm.SzenarioVerwaltung;
-import filius.software.system.SystemSoftware;
-import filius.software.system.Betriebssystem;
 import filius.software.dhcp.DHCPServer;
+import filius.software.system.Betriebssystem;
+import filius.software.system.SystemSoftware;
 
 public class GUIMainMenu implements Serializable, I18n {
 
@@ -346,7 +346,7 @@ public class GUIMainMenu implements Serializable, I18n {
 	}
 
 	public boolean doClick(String button) { // manually perform click event on a
-											// registered button
+		                                    // registered button
 		if (button.equals("btAktionsmodus"))
 			btAktionsmodus.doClick();
 		else if (button.equals("btEntwurfsmodus"))
@@ -375,12 +375,12 @@ public class GUIMainMenu implements Serializable, I18n {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (GUIMainMenu), resetCableHL(" + mode
 		        + ")");
 		if (mode == MODUS_AKTION) { // change to simulation view: de-highlight
-									// all cables
+			                        // all cables
 			for (GUIKabelItem cableItem : GUIContainer.getGUIContainer().getCablelist()) {
 				cableItem.getDasKabel().setAktiv(false);
 			}
 		} else { // change to development view: possibly highlight a cable (only
-				 // for 'Vermittlungsrechner' configuration
+			     // for 'Vermittlungsrechner' configuration
 			if (GUIContainer.getGUIContainer().getProperty() instanceof JVermittlungsrechnerKonfiguration) {
 				((JVermittlungsrechnerKonfiguration) GUIContainer.getGUIContainer().getProperty()).highlightConnCable();
 			}

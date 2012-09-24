@@ -150,10 +150,11 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 
 		// print IDs for all network layers and the according node --> for
 		// providing debug support in log file
-		Main.debug.println("DEBUG: InternetKnotenBetriebssystem (" + this.hashCode()
+		Main.debug.println("DEBUG: InternetKnotenBetriebssystem ("
+		        + this.hashCode()
 		        + ")\n"
 		        // +
-				// "\tKnoten: "+this.getKnoten().hashCode()+" ("+this.getKnoten().getName()+", "+this.getKnoten().holeHardwareTyp()+")\n"
+		        // "\tKnoten: "+this.getKnoten().hashCode()+" ("+this.getKnoten().getName()+", "+this.getKnoten().holeHardwareTyp()+")\n"
 		        + "\tEthernet: " + ethernet.hashCode() + "\n" + "\tARP: " + arpVermittlung.hashCode() + "\n" + "\tIP: "
 		        + vermittlung.hashCode() + "\n" + "\tICMP: " + icmpVermittlung.hashCode() + "\n" + "\tTCP: "
 		        + tcp.hashCode() + "\n" + "\tUDP: " + udp.hashCode());
@@ -282,7 +283,7 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 		udp.starten();
 
 		printDebugInfo(); // print all relevant debug information in log file to
-						  // follow these data
+		                  // follow these data
 
 		it = installierteAnwendung.entrySet().iterator();
 		while (it.hasNext()) {

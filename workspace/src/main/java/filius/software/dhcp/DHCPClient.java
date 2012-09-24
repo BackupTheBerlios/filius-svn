@@ -25,8 +25,8 @@
  */
 package filius.software.dhcp;
 
-import java.util.StringTokenizer;
 import java.util.ListIterator;
+import java.util.StringTokenizer;
 
 import filius.Main;
 import filius.exception.VerbindungsException;
@@ -202,7 +202,7 @@ public class DHCPClient extends ClientAnwendung {
 								getSystemSoftware().setzeNetzmaske(st.nextToken());
 								if (st.hasMoreTokens()) { // set DNS server
 									getSystemSoftware().setStandardGateway(st.nextToken()); // set
-																							// Gateway
+									                                                        // Gateway
 									if (st.hasMoreTokens()) { // set DNS server
 										getSystemSoftware().setDNSServer(st.nextToken());
 									}

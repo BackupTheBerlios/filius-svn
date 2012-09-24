@@ -25,14 +25,14 @@
  */
 package filius.software.system;
 
-import filius.Main;
-
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import filius.Main;
 
 /**
  * Die Klasse Dateisystem dient dazu, die Funktionalitaet des Dateisystems eines
@@ -233,9 +233,9 @@ public class Dateisystem implements Serializable {
 		String absolutePath;
 
 		if (pfad.length() > 0 && pfad.substring(0, 1).equals(FILE_SEPARATOR)) { // 'pfad'
-																				// is
-																				// absolute
-																				// path!
+			                                                                    // is
+			                                                                    // absolute
+			                                                                    // path!
 			absolutePath = evaluatePathString(pfad);
 		} else {
 			absolutePath = evaluatePathString(absoluterPfad(verzeichnis) + FILE_SEPARATOR + pfad);
@@ -435,9 +435,9 @@ public class Dateisystem implements Serializable {
 		DefaultMutableTreeNode neuerNode = null;
 		String absPath;
 		if (neuesVerzeichnis.length() > 0 && neuesVerzeichnis.substring(0, 1).equals(FILE_SEPARATOR)) { // 'pfad'
-																										// is
-																										// absolute
-																										// path!
+			                                                                                            // is
+			                                                                                            // absolute
+			                                                                                            // path!
 			absPath = evaluatePathString(neuesVerzeichnis);
 		} else {
 			absPath = evaluatePathString(verzeichnisPfad + FILE_SEPARATOR + neuesVerzeichnis);
@@ -582,16 +582,16 @@ public class Dateisystem implements Serializable {
 			}
 		}
 		for (int i = 0; i <= currIndex; i++) { // NOTE: if currIndex<0, e.g.
-											   // because of multiple '..'
-											   // elements, then empty path will
-											   // be returned!
+			                                   // because of multiple '..'
+			                                   // elements, then empty path will
+			                                   // be returned!
 			result += pathElements[i];
 			if (i < currIndex)
 				result += Dateisystem.FILE_SEPARATOR;
 		}
 		if (currIndex >= 0 && path.substring(0, 1).equals(FILE_SEPARATOR))
 			result = FILE_SEPARATOR + result; // add leading slash if it was
-											  // present before
+			                                  // present before
 		// Main.debug.println("	\tevaluatePathString, result="+result);
 		return result;
 	}

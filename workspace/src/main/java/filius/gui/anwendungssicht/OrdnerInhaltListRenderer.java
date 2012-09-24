@@ -27,14 +27,12 @@ package filius.gui.anwendungssicht;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-import javax.swing.border.Border;
 
 // import sun.misc.JavaLangAccess;
 /**

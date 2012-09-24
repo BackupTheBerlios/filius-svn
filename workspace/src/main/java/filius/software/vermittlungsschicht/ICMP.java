@@ -25,23 +25,17 @@
  */
 package filius.software.vermittlungsschicht;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
-import java.util.Map.Entry;
 
 import filius.Main;
 import filius.exception.VerbindungsException;
 import filius.hardware.NetzwerkInterface;
-import filius.hardware.Verbindung;
 import filius.hardware.knoten.InternetKnoten;
+import filius.rahmenprogramm.I18n;
 import filius.software.netzzugangsschicht.EthernetFrame;
 import filius.software.system.InternetKnotenBetriebssystem;
 import filius.software.system.SystemSoftware;
-import filius.rahmenprogramm.I18n;
 
 /**
  * This class implements the ICMP protocol -- at least for echo
@@ -100,8 +94,8 @@ public class ICMP extends VermittlungsProtokoll implements I18n {
 
 		icmpPaket = new IcmpPaket();
 		icmpPaket.setProtokollTyp(EthernetFrame.IP); // ICMP type is equal to
-													 // IP, since ICMP actually
-													 // is part of IP!
+		                                             // IP, since ICMP actually
+		                                             // is part of IP!
 		icmpPaket.setQuellIp(((InternetKnotenBetriebssystem) holeSystemSoftware()).holeIPAdresse());
 		icmpPaket.setQuellMacAdresse(((InternetKnotenBetriebssystem) holeSystemSoftware()).holeMACAdresse());
 		icmpPaket.setZielIp(destIp);
@@ -154,8 +148,8 @@ public class ICMP extends VermittlungsProtokoll implements I18n {
 
 		icmpPaket = new IcmpPaket();
 		icmpPaket.setProtokollTyp(EthernetFrame.IP); // ICMP type is equal to
-													 // IP, since ICMP actually
-													 // is part of IP!
+		                                             // IP, since ICMP actually
+		                                             // is part of IP!
 		icmpPaket.setQuellIp(rcvPacket.getZielIp());
 		icmpPaket.setQuellMacAdresse(rcvPacket.getZielMacAdresse());
 		icmpPaket.setZielIp(rcvPacket.getQuellIp());

@@ -42,27 +42,27 @@
 			</includes>
 		</fileSet>
 		<fileSet>
-            <directory>src/main/assembly/config</directory>
-            <outputDirectory>/config</outputDirectory>
-            <includes>
-                <include>*</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>src/main/assembly/tmpl</directory>
-            <outputDirectory>/tmpl</outputDirectory>
-            <includes>
-                <include>*</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>src/main/assembly/img</directory>
-            <outputDirectory>/img</outputDirectory>
-            <includes>
-                <include>*</include>
-            </includes>
-        </fileSet>
-        <fileSet>
+			<directory>src/main/assembly/config</directory>
+			<outputDirectory>/config</outputDirectory>
+			<includes>
+				<include>*</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/assembly/tmpl</directory>
+			<outputDirectory>/tmpl</outputDirectory>
+			<includes>
+				<include>*</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/assembly/img</directory>
+			<outputDirectory>/img</outputDirectory>
+			<includes>
+				<include>*</include>
+			</includes>
+		</fileSet>
+		<fileSet>
 			<directory>src/main/assembly/hilfe</directory>
 			<outputDirectory>/hilfe</outputDirectory>
 			<includes>

@@ -25,11 +25,11 @@
  */
 package filius.rahmenprogramm;
 
-import filius.Main;
-import filius.gui.netzwerksicht.GUIKnotenItem;
-
 import java.util.Calendar;
 import java.util.Date;
+
+import filius.Main;
+import filius.gui.netzwerksicht.GUIKnotenItem;
 
 /**
  * Klasse für LogEinträge. Diese wird benötigt um Einträge sortierbar und
@@ -42,16 +42,16 @@ public class LogEintrag {
 
 	private String logNachricht; // Text des LogEintrags
 	private Calendar timestamp; // Zeitpunkt der Aktion in Form eines Calendar
-								// Objekts zur besseren Konvertierbarkeit (gibts
-								// das Wort?)
+	                            // Objekts zur besseren Konvertierbarkeit (gibts
+	                            // das Wort?)
 	private int schicht; // Netzwerkschicht zu der die Meldung gehört
 	/*
 	 * Schichten: 1 - Vermittlungsschicht 2 - Transportschicht 3 -
 	 * Anwendungsschicht
 	 */
 	private GUIKnotenItem ausloesendesItem; // GUIItem zu dem der LogEintrag
-											// gehört (auslösende Stelle, wenn
-											// möglich?!)
+	                                        // gehört (auslösende Stelle, wenn
+	                                        // möglich?!)
 
 	// FIXME: Diese GUIItem Geschichte erscheint noch nicht wirklich ideal, da
 	// muss nochmal richtig drüber nachgedacht werden!

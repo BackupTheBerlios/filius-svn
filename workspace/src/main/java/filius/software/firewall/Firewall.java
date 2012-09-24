@@ -450,9 +450,9 @@ public class Firewall extends Anwendung implements I18n {
 		        + " (Firewall), entferneAbsenderRegel(" + nummer + ")");
 
 		if (nummer >= 0 && nummer < absenderFilter.size()) { // damit keine zu
-															 // große Zahl in
-															 // GUI eingegeben
-															 // werden kann
+			                                                 // große Zahl in
+			                                                 // GUI eingegeben
+			                                                 // werden kann
 			benachrichtigeBeobachter(messages.getString("sw_firewall_msg6") + absenderFilter.get(nummer)); // Log
 
 			// Main.debug.println("Entfernt aus Liste:" + nummer);
@@ -470,9 +470,9 @@ public class Firewall extends Anwendung implements I18n {
 		        + " (Firewall), entferneEmpfaengerRegel(" + nummer + ")");
 
 		if (nummer >= 0 && nummer < empfaengerFilter.size()) { // damit keine zu
-															   // große Zahl in
-															   // GUI eingegeben
-															   // werden kann
+			                                                   // große Zahl in
+			                                                   // GUI eingegeben
+			                                                   // werden kann
 			benachrichtigeBeobachter(messages.getString("sw_firewall_msg6") + empfaengerFilter.get(nummer)); // Log
 
 			// Main.debug.println("Entfernt aus Liste:" + nummer);
@@ -492,8 +492,8 @@ public class Firewall extends Anwendung implements I18n {
 		benachrichtigeBeobachter(messages.getString("sw_firewall_msg7") + ((Object[]) portList.get(nummer))[0]); // Log
 
 		if (nummer >= 0 && nummer < portList.size()) { // damit keine zu große
-													   // Zahl in GUI eingegeben
-													   // werden kann
+			                                           // Zahl in GUI eingegeben
+			                                           // werden kann
 			portList.remove(nummer);
 		}
 

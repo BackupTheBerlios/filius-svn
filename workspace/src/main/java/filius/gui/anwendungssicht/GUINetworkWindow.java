@@ -151,7 +151,7 @@ public class GUINetworkWindow extends JInternalFrame implements I18n {
 		changeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				istGueltig = true; // Um den nächsten Testdurchlauf zu
-								   // ermöglichen
+				                   // ermöglichen
 
 				if (!EingabenUeberpruefung.isGueltig(ipField.getText(), EingabenUeberpruefung.musterIpAdresse)
 				        || istGueltig == false)

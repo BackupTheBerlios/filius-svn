@@ -25,14 +25,7 @@
  */
 package filius.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Insets;
-
-import javax.swing.*;
-
-import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 
 public class GUIErrorHandler {
 

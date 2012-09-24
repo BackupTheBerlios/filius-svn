@@ -28,7 +28,6 @@ package filius.hardware.knoten;
 
 import filius.Main;
 import filius.rahmenprogramm.I18n;
-
 import filius.software.system.VermittlungsrechnerBetriebssystem;
 
 public class Vermittlungsrechner extends InternetKnoten implements I18n {

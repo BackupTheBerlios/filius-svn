@@ -33,11 +33,10 @@ import filius.hardware.NetzwerkInterface;
 import filius.hardware.knoten.InternetKnoten;
 import filius.rahmenprogramm.nachrichten.Lauscher;
 import filius.software.Protokoll;
-import filius.software.system.InternetKnotenBetriebssystem;
 import filius.software.system.SystemSoftware;
 import filius.software.vermittlungsschicht.ArpPaket;
-import filius.software.vermittlungsschicht.IpPaket;
 import filius.software.vermittlungsschicht.IcmpPaket;
+import filius.software.vermittlungsschicht.IpPaket;
 
 /** Diese Klasse implementiert die Netzzugangsschicht */
 public class Ethernet extends Protokoll {

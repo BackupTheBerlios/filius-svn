@@ -30,7 +30,6 @@ import java.awt.Component;
 import java.awt.Font;
 
 import javax.swing.JTable;
-import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import filius.rahmenprogramm.nachrichten.Lauscher;

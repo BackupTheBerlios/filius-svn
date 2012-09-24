@@ -29,7 +29,8 @@ import java.awt.Component;
 
 import javax.swing.Icon;
 import javax.swing.JTree;
-import javax.swing.tree.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 
 import filius.software.system.Datei;
 

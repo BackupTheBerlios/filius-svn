@@ -34,8 +34,8 @@ public abstract class Knoten extends Hardware {
 	private String name; // name der Hardware
 
 	private SystemSoftware systemAnwendung; // je nach Art der Hardware ist dies
-											// ein Betriebssystem oder eine
-											// Firmware
+	                                        // ein Betriebssystem oder eine
+	                                        // Firmware
 
 	public abstract Port holeFreienPort();
 

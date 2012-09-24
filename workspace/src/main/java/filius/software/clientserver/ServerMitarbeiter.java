@@ -26,10 +26,9 @@
 package filius.software.clientserver;
 
 import filius.Main;
+import filius.exception.VerbindungsException;
 import filius.rahmenprogramm.I18n;
 import filius.software.transportschicht.Socket;
-import filius.software.transportschicht.TCPSocket;
-import filius.exception.VerbindungsException;
 
 /**
  * Diese Klasse implementiert einen Thread, der von einem Server fuer eine

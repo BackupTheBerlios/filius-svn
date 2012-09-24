@@ -29,8 +29,6 @@ import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import filius.Main;
-
 /**
  * 
  * Dient dazu Eingaben auf Richtigkeit zu Pruefen. Dazu stehen verschiedene
@@ -72,13 +70,13 @@ public class EingabenUeberpruefung implements I18n {
 	        // "(, "+ // boundary for multiple mails
 	        // "("+ // start choice
 	        // "[a-z A-Z0-9\\-_\\.]* <"+ // address with name, beginning; Name
-			// part
+	        // part
 	        // "[a-zA-Z0-9\\-_][a-zA-Z0-9\\-_\\.]*[a-zA-Z0-9\\-_]@[a-zA-Z0-9][a-zA-Z0-9\\-_]*(\\.[a-zA-Z0-9][a-zA-Z0-9\\-_]*)*"+
-			// // standard mail address
+	        // // standard mail address
 	        // ">"+ // address with name, end
 	        // "|"+ // choice select
 	        // "[a-zA-Z0-9\\-_][a-zA-Z0-9\\-_\\.]*[a-zA-Z0-9\\-_]@[a-zA-Z0-9][a-zA-Z0-9\\-_]*(\\.[a-zA-Z0-9][a-zA-Z0-9\\-_]*)*"+
-			// // standard mail address
+	        // // standard mail address
 	        // ")"+ // end choice
 	        // ")"+ // end boundary
 	        "$");

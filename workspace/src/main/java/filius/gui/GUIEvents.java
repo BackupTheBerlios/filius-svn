@@ -178,7 +178,7 @@ public class GUIEvents implements I18n {
 		JScrollPane scrollPane = c.getScrollPane();
 		int neuX, neuY, neuWidth, neuHeight;
 		int tmpX, tmpY; // for calculating the actual position (only within
-						// working panel)
+		                // working panel)
 
 		JSidebarButton dragVorschau = c.getDragVorschau();
 
@@ -353,9 +353,9 @@ public class GUIEvents implements I18n {
 				if (GUIContainer.getGUIContainer().getActiveSite() == GUIMainMenu.MODUS_ENTWURF) {
 					// Main.debug.println("\tmausPressed: IF-1.1");
 					GUIContainer.getGUIContainer().getProperty().minimieren(); // hide
-																			   // property
-																			   // panel
-																			   // (JKonfiguration)
+					                                                           // property
+					                                                           // panel
+					                                                           // (JKonfiguration)
 					GUIContainer.getGUIContainer().setProperty(null);
 
 					if (!kabelvorschau.isVisible()) {
@@ -420,9 +420,9 @@ public class GUIEvents implements I18n {
 					if (kabelvorschau.isVisible() && aktivesItem != null && aktiveslabel != null) {
 						// Main.debug.println("\tmausPressed: IF-2.2.1");
 						GUIContainer.getGUIContainer().getProperty().minimieren(); // hide
-																				   // property
-																				   // panel
-																				   // (JKonfiguration)
+						                                                           // property
+						                                                           // panel
+						                                                           // (JKonfiguration)
 						GUIContainer.getGUIContainer().setProperty(null);
 
 						if (aktivesItem.getKnoten() instanceof Knoten) {
@@ -480,7 +480,7 @@ public class GUIEvents implements I18n {
 						if (kabelvorschau.isVisible()) {
 							kabelvorschau.setVisible(false);
 							if (kabelPanelVorschau != null) { // abort cable
-															  // assignment
+								                              // assignment
 								GUIContainer.getGUIContainer().getDraftpanel().remove(kabelPanelVorschau);
 								kabelPanelVorschau = null;
 								c.setKabelPanelVorschau(null);
@@ -528,14 +528,14 @@ public class GUIEvents implements I18n {
 			tempitem = it.next();
 
 			if (c.aufObjekt(tempitem.getKabelpanel(), mouseX, mouseY)) { // item
-																		 // clicked,
-																		 // i.e.,
-																		 // mouse
-																		 // pointer
-																		 // within
-																		 // item
-																		 // bounds
-			// Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+", clickedCable:  mouse pointer hit tempitem area ("+tempitem.hashCode()+")");
+				                                                         // clicked,
+				                                                         // i.e.,
+				                                                         // mouse
+				                                                         // pointer
+				                                                         // within
+				                                                         // item
+				                                                         // bounds
+				// Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+", clickedCable:  mouse pointer hit tempitem area ("+tempitem.hashCode()+")");
 				if (tempitem.getKabelpanel().clicked(mouseX, mouseY)) {
 					// mouse pointer really close to the drawn line, too
 					// Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+", clickedCable:  mouse pointer hit line of tempitem ("+tempitem.hashCode()+")");
@@ -852,7 +852,7 @@ public class GUIEvents implements I18n {
 	private void removeSingleCable(GUIKabelItem cable) {
 		if (cable == null)
 			return; // no cable to be removed (this variable should be set in
-					// contextMenuCable)
+			        // contextMenuCable)
 		try {
 			cable.getDasKabel().anschluesseTrennen();
 		} catch (VerbindungsException e) {

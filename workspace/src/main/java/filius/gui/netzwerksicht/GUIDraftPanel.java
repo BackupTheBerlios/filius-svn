@@ -26,12 +26,8 @@
 package filius.gui.netzwerksicht;
 
 import java.awt.Dimension;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
-import filius.Main;
 import filius.gui.GUIContainer;
-import filius.gui.JBackgroundPanel;
 
 public class GUIDraftPanel extends GUIMainArea {
 

@@ -80,7 +80,7 @@ public class GUIMainArea extends JBackgroundPanel implements Serializable {
 
 			if (tempKnoten == null || templabel == null)
 				continue; // continue in case some elements are not yet created
-						  // correctly
+				          // correctly
 
 			tempKnoten.addObserver(templabel);
 			tempKnoten.getSystemSoftware().addObserver(templabel);

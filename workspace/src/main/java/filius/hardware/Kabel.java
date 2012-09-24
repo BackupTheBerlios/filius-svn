@@ -25,9 +25,6 @@
  */
 package filius.hardware;
 
-import java.io.Serializable;
-
-import filius.exception.VerbindungsException;
 
 /**
  * @author weyer

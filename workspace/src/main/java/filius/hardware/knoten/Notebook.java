@@ -26,9 +26,7 @@
 package filius.hardware.knoten;
 
 import filius.Main;
-import filius.hardware.NetzwerkInterface;
 import filius.rahmenprogramm.I18n;
-import filius.software.system.Betriebssystem;
 
 public class Notebook extends Host implements I18n {
 

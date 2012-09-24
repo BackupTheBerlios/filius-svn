@@ -25,7 +25,6 @@
  */
 package filius.exception;
 
-import filius.gui.GUIErrorHandler;
 
 public abstract class HauptException extends Exception {
 

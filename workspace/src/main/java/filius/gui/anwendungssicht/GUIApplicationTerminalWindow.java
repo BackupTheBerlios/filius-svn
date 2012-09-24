@@ -92,15 +92,15 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 		tpPane.setBorder(null);
 		tpPane.setBackground(new Color(0, 0, 0));
 		tpPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER); // do
-																						 // not
-																						 // show
-																						 // vert.
-																						 // scrollbar
+		                                                                                 // not
+		                                                                                 // show
+		                                                                                 // vert.
+		                                                                                 // scrollbar
 		tpPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); // do
-																							 // not
-																							 // show
-																							 // hor.
-																							 // scrollbar
+		                                                                                     // not
+		                                                                                     // show
+		                                                                                     // hor.
+		                                                                                     // scrollbar
 
 		inputField = new JTextField("");
 		inputField.setEditable(true);
@@ -115,9 +115,9 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					if (!(inputField.getText().isEmpty() || inputField.getText().replaceAll(" ", "").isEmpty())) { // only
-																												   // process
-																												   // non-empty
-																												   // input
+						                                                                                           // process
+						                                                                                           // non-empty
+						                                                                                           // input
 						// Main.debug.println("DEBUG: "+getClass()+", keyPressed ('"+inputField.getText()+" + ENTER') event started");
 						terminalField.append("\n" + inputLabel.getText() + inputField.getText() + "\n");
 						StringTokenizer tk = new StringTokenizer(inputField.getText(), " ");
@@ -292,9 +292,9 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 				this.tpPane.repaint();
 				this.tpPane.getVerticalScrollBar().setValue(this.tpPane.getVerticalScrollBar().getMaximum());
 				if (!multipleObserverEvents) { // is this observer call expected
-											   // to be the last one for the
-											   // current command, i.e.,
-											   // multipleOverserverEvents=false?
+					                           // to be the last one for the
+					                           // current command, i.e.,
+					                           // multipleOverserverEvents=false?
 					this.inputLabel.setText("root "
 					        + Dateisystem.absoluterPfad(((Terminal) holeAnwendung()).getAktuellerOrdner()) + "> ");
 					this.inputLabel.setVisible(true);

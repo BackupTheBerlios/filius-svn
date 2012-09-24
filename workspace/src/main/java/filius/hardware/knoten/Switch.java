@@ -25,10 +25,6 @@
  */
 package filius.hardware.knoten;
 
-import java.util.LinkedList;
-import java.util.ListIterator;
-import java.util.Vector;
-
 import filius.Main;
 import filius.rahmenprogramm.I18n;
 import filius.software.system.SwitchFirmware;

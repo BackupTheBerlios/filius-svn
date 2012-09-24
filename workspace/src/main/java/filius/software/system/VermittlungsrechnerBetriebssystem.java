@@ -27,15 +27,12 @@ package filius.software.system;
 
 //Netzwerkziel, Netzwerkmaske, ZielIp(Gateway), Schnittstelle
 import filius.Main;
+import filius.hardware.knoten.Knoten;
 import filius.rahmenprogramm.Information;
 import filius.software.firewall.Firewall;
 import filius.software.firewall.FirewallWebKonfig;
 import filius.software.firewall.FirewallWebLog;
 import filius.software.www.WebServer;
-import filius.hardware.NetzwerkInterface;
-import filius.hardware.knoten.InternetKnoten;
-import filius.hardware.knoten.Knoten;
-import filius.hardware.knoten.Vermittlungsrechner;
 
 /**
  * Diese Klasse stellt die Funktionalitaet eines Betriebssystems fuer

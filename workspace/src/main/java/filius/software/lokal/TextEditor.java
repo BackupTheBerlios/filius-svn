@@ -27,7 +27,6 @@ package filius.software.lokal;
 
 import filius.Main;
 import filius.software.Anwendung;
-import filius.software.system.Betriebssystem;
 
 /**
  * 

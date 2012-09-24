@@ -27,9 +27,15 @@
 
 package filius.rahmenprogramm;
 
-import com.sun.jna.*;
-import com.sun.jna.win32.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.sun.jna.Library;
+import com.sun.jna.Native;
+import com.sun.jna.NativeMapped;
+import com.sun.jna.PointerType;
+import com.sun.jna.win32.W32APIFunctionMapper;
+import com.sun.jna.win32.W32APITypeMapper;
 
 /* Note:
  * This class is based on a forum post by McDowell:

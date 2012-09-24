@@ -28,7 +28,6 @@ package filius.software.email;
 import java.util.LinkedList;
 
 import filius.Main;
-import filius.rahmenprogramm.*;
 
 /**
  * 

@@ -228,9 +228,9 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		tabellenModell = new DefaultTableModel(0, 2);
 		aRecordsTable = new JTableEditable(tabellenModell, false, "A");
 		aRecordsTable.setParentGUI(this); // tell the table who presents its
-										  // values, such that the back-end DNS
+		                                  // values, such that the back-end DNS
 		                                  // server can be found for adapting
-										  // resource entries
+		                                  // resource entries
 		aRecordsTable.setIntercellSpacing(new Dimension(5, 5));
 		aRecordsTable.setRowHeight(30);
 		aRecordsTable.setShowGrid(false);
@@ -328,9 +328,9 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		tabellenModell = new DefaultTableModel(0, 2);
 		mxRecordsTable = new JTableEditable(tabellenModell, false, "MX");
 		mxRecordsTable.setParentGUI(this); // tell the table who presents its
-										   // values, such that the back-end DNS
+		                                   // values, such that the back-end DNS
 		                                   // server can be found for adapting
-										   // resource entries
+		                                   // resource entries
 		mxRecordsTable.setIntercellSpacing(new Dimension(5, 5));
 		mxRecordsTable.setRowHeight(30);
 		mxRecordsTable.setShowGrid(false);
@@ -433,9 +433,9 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		tabellenModell = new DefaultTableModel(0, 2);
 		nsRecordsTable = new JTableEditable(tabellenModell, false, "NS");
 		nsRecordsTable.setParentGUI(this); // tell the table who presents its
-										   // values, such that the back-end DNS
+		                                   // values, such that the back-end DNS
 		                                   // server can be found for adapting
-										   // resource entries
+		                                   // resource entries
 		nsRecordsTable.setIntercellSpacing(new Dimension(5, 5));
 		nsRecordsTable.setRowHeight(30);
 		nsRecordsTable.setShowGrid(false);

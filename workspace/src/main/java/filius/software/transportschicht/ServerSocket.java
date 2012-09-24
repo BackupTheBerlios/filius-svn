@@ -171,7 +171,7 @@ public class ServerSocket implements SocketSchnittstelle, I18n {
 		} catch (TimeOutException e) {
 			socket = null;
 			aktuellerSocket = null; // CE: moved inside catch block; was placed
-									// after it
+			                        // after it
 			// Main.debug.println("ServerSocket: Verbindungsversuch abgebrochen.");
 			e.printStackTrace(Main.debug);
 		}

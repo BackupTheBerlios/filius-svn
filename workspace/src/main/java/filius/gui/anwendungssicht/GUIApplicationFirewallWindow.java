@@ -28,59 +28,31 @@ package filius.gui.anwendungssicht;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
-import java.beans.PropertyVetoException;
-import java.io.FileNotFoundException;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.DefaultCellEditor;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.JTree;
-import javax.swing.ListSelectionModel;
-
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.InternalFrameEvent;
-import javax.swing.event.MouseInputAdapter;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import javax.swing.tree.DefaultMutableTreeNode;
 
-import filius.Main;
-import filius.rahmenprogramm.EingabenUeberpruefung;
 import filius.software.firewall.Firewall;
-import filius.software.firewall.FirewallWebLog;
-import filius.software.www.WebServer;
-import filius.software.www.WebServerPlugIn;
 
 /**
  * Applikationsfenster für den Datei-Importer
@@ -120,10 +92,10 @@ public class GUIApplicationFirewallWindow extends GUIApplicationWindow {
 		boxFirewall.add(Box.createVerticalStrut(10));
 
 		cbEinAus = new JCheckBox(messages.getString("firewall_msg1"));// Bei
-																	  // true
-																	  // nur mit
-																	  // 1
-																	  // durchlassen
+		                                                              // true
+		                                                              // nur mit
+		                                                              // 1
+		                                                              // durchlassen
 		cbEinAus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				((Firewall) holeAnwendung()).setAktiviert(cbEinAus.isSelected());

@@ -35,7 +35,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,7 +42,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.geom.QuadCurve2D;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -57,10 +55,10 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.event.ChangeEvent;
@@ -71,10 +69,10 @@ import filius.exception.VerbindungsException;
 import filius.gui.GUIContainer;
 import filius.gui.JMainFrame;
 import filius.hardware.Hardware;
+import filius.hardware.Kabel;
 import filius.hardware.NetzwerkInterface;
 import filius.hardware.Port;
 import filius.hardware.Verbindung;
-import filius.hardware.Kabel;
 import filius.hardware.knoten.InternetKnoten;
 import filius.hardware.knoten.Knoten;
 import filius.hardware.knoten.LokalerKnoten;
@@ -651,11 +649,11 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				foreignPanel.add(lblRemote[nicNr - 1]);
 				cables.add(new LinePanel());
 				cables.getLast().setName((nicNr - 1) + "-" + (nicNr - 1)); // encode
-																		   // index
-																		   // information
-																		   // in
-																		   // name
-																		   // field
+				                                                           // index
+				                                                           // information
+				                                                           // in
+				                                                           // name
+				                                                           // field
 			} else {
 				btnLocal[nicNr - 1].setBackground(Color.RED);
 				btnLocal[nicNr - 1].setEnabled(true);
@@ -888,7 +886,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		cablePanel.setLayout(cableLayout);
 		for (int i = 0; i < cables.size(); i++) {
 			int l, r; // indices for foreign component (l; left area) and local
-					  // component (r; right area)
+			          // component (r; right area)
 			LinePanel tmp = cables.get(i);
 			Main.debug.println("DEBUG: JVermittlungsrechnerkonfiguration, showBasicSettingsDialog, tmp LinePanel: ("
 			        + tmp.hashCode() + ")");
@@ -1093,7 +1091,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 			anschluss2 = vrOut.getErstenAnschluss();
 		} else if (tmpCable.getKabelpanel().getZiel2().getKnoten() instanceof Vermittlungsrechner) {
 			anschluss2 = remotePort; // only in this case use pre-determined
-									 // port; otherwise use internal methods
+			                         // port; otherwise use internal methods
 		} else if (tmpCable.getKabelpanel().getZiel2().getKnoten() instanceof Switch) {
 			Switch sw = (Switch) tmpCable.getKabelpanel().getZiel2().getKnoten();
 			anschluss2 = ((SwitchFirmware) sw.getSystemSoftware()).getKnoten().holeFreienPort();
@@ -1136,9 +1134,9 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				if (btnLocal[i] == source) // found current source button
 					currIdx = i;
 				if (btnLocal[i].getBackground().equals(Color.YELLOW)) // some
-																	  // button
-																	  // marked
-																	  // yellow
+				                                                      // button
+				                                                      // marked
+				                                                      // yellow
 					formerIdx = i;
 			}
 		}
@@ -1152,26 +1150,26 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				currLine = null;
 				for (int i = 0; i < cables.size(); i++) {
 					if (cables.get(i).getName().substring(2).equals(String.valueOf(formerIdx))) { // found
-																								  // corresponding
-																								  // cable
-																								  // (i.e.,
-																								  // it
-																								  // exists!)
+						                                                                          // corresponding
+						                                                                          // cable
+						                                                                          // (i.e.,
+						                                                                          // it
+						                                                                          // exists!)
 						formerLine = cables.get(i);
 						// Main.debug.println("DEBUG: interfaceButtonClicked;  formerLine="+formerLine.toString()+", index="+i);
 					}
 					if (cables.get(i).getName().substring(2).equals(String.valueOf(currIdx))) { // found
-																								// corresponding
-																								// cable
-																								// (i.e.,
-																								// it
-																								// exists!)
+						                                                                        // corresponding
+						                                                                        // cable
+						                                                                        // (i.e.,
+						                                                                        // it
+						                                                                        // exists!)
 						currLine = cables.get(i);
 						// Main.debug.println("DEBUG: interfaceButtonClicked;  currLine="+currLine.toString()+", index="+i);
 					}
 				}
 				if (formerLine != null) { // found corresponding cable (i.e., it
-										  // exists!)
+					                      // exists!)
 					formerLine.lineColor = new Color(64, 64, 64);
 					formerLine.lineEnd = new Point(282, source.getY() + (source.getHeight() / 2));
 					formerLine.setName(formerLine.getName().substring(0, 2) + currIdx);
@@ -1179,7 +1177,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 					// Main.debug.println("DEBUG: interfaceButtonClicked;  formerLine != null ("+formerLine.toString()+")");
 				}
 				if (currLine != null) { // found corresponding cable (i.e., it
-										// exists!)
+					                    // exists!)
 					currLine.lineEnd = new Point(282, btnLocal[formerIdx].getY()
 					        + (btnLocal[formerIdx].getHeight() / 2));
 					currLine.setName(currLine.getName().substring(0, 2) + formerIdx);
@@ -1254,11 +1252,11 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 			} else {
 				for (int i = 0; i < cables.size(); i++) {
 					if (cables.get(i).getName().substring(2).equals(String.valueOf(formerIdx))) { // found
-																								  // corresponding
-																								  // cable
-																								  // (i.e.,
-																								  // it
-																								  // exists!)
+						                                                                          // corresponding
+						                                                                          // cable
+						                                                                          // (i.e.,
+						                                                                          // it
+						                                                                          // exists!)
 						// Main.debug.println("DEBUG: interfaceButtonClicked;  formerIdx=currIdx (cables="+cables.get(i).toString()+", index="+i+")");
 						cables.get(i).lineColor = new Color(64, 64, 64);
 						source.setBackground(Color.GREEN);
@@ -1268,11 +1266,11 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		} else { // else mark current source button
 			for (int i = 0; i < cables.size(); i++) {
 				if (cables.get(i).getName().substring(2).equals(String.valueOf(currIdx))) { // found
-																							// corresponding
-																							// cable
-																							// (i.e.,
-																							// it
-																							// exists!)
+					                                                                        // corresponding
+					                                                                        // cable
+					                                                                        // (i.e.,
+					                                                                        // it
+					                                                                        // exists!)
 					source.setBackground(Color.YELLOW);
 					cables.get(i).lineColor = Color.MAGENTA;
 				}

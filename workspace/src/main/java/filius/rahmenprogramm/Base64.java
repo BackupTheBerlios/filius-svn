@@ -124,9 +124,9 @@ public class Base64 {
 	// private final static byte BAD_ENCODING = -9; // Indicates error in
 	// encoding
 	private final static byte WHITE_SPACE_ENC = -5; // Indicates white space in
-													// encoding
+	                                                // encoding
 	private final static byte EQUALS_SIGN_ENC = -1; // Indicates equals sign in
-													// encoding
+	                                                // encoding
 
 	/* ******** S T A N D A R D B A S E 6 4 A L P H A B E T ******** */
 
@@ -150,14 +150,14 @@ public class Base64 {
 	 * negative number indicating some other meaning.
 	 **/
 	private final static byte[] _STANDARD_DECODABET = { -9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal
-																							// 0
-																							// -
-																							// 8
+	                                                                                        // 0
+	                                                                                        // -
+	                                                                                        // 8
 	        -5, -5, // Whitespace: Tab and Linefeed
 	        -9, -9, // Decimal 11 - 12
 	        -5, // Whitespace: Carriage Return
 	        -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal 14 -
-																// 26
+	                                                            // 26
 	        -9, -9, -9, -9, -9, // Decimal 27 - 31
 	        -5, // Whitespace: Space
 	        -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal 33 - 42
@@ -169,14 +169,14 @@ public class Base64 {
 	        -1, // Equals sign at decimal 61
 	        -9, -9, -9, // Decimal 62 - 64
 	        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, // Letters 'A' through
-														  // 'N'
+	                                                      // 'N'
 	        14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, // Letters 'O'
-															// through 'Z'
+	                                                        // through 'Z'
 	        -9, -9, -9, -9, -9, -9, // Decimal 91 - 96
 	        26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, // Letters 'a'
-																// through 'm'
+	                                                            // through 'm'
 	        39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, // Letters 'n'
-																// through 'z'
+	                                                            // through 'z'
 	        -9, -9, -9, -9 // Decimal 123 - 126
 	/*
 	 * ,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 127 - 139
@@ -214,14 +214,14 @@ public class Base64 {
 	 * Used in decoding URL- and Filename-safe dialects of Base64.
 	 */
 	private final static byte[] _URL_SAFE_DECODABET = { -9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal
-																							// 0
-																							// -
-																							// 8
+	                                                                                        // 0
+	                                                                                        // -
+	                                                                                        // 8
 	        -5, -5, // Whitespace: Tab and Linefeed
 	        -9, -9, // Decimal 11 - 12
 	        -5, // Whitespace: Carriage Return
 	        -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal 14 -
-																// 26
+	                                                            // 26
 	        -9, -9, -9, -9, -9, // Decimal 27 - 31
 	        -5, // Whitespace: Space
 	        -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal 33 - 42
@@ -235,16 +235,16 @@ public class Base64 {
 	        -1, // Equals sign at decimal 61
 	        -9, -9, -9, // Decimal 62 - 64
 	        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, // Letters 'A' through
-														  // 'N'
+	                                                      // 'N'
 	        14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, // Letters 'O'
-															// through 'Z'
+	                                                        // through 'Z'
 	        -9, -9, -9, -9, // Decimal 91 - 94
 	        63, // Underscore at decimal 95
 	        -9, // Decimal 96
 	        26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, // Letters 'a'
-																// through 'm'
+	                                                            // through 'm'
 	        39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, // Letters 'n'
-																// through 'z'
+	                                                            // through 'z'
 	        -9, -9, -9, -9 // Decimal 123 - 126
 	/*
 	 * ,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 127 - 139
@@ -280,14 +280,14 @@ public class Base64 {
 	 * Used in decoding the "ordered" dialect of Base64.
 	 */
 	private final static byte[] _ORDERED_DECODABET = { -9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal
-																						   // 0
-																						   // -
-																						   // 8
+	                                                                                       // 0
+	                                                                                       // -
+	                                                                                       // 8
 	        -5, -5, // Whitespace: Tab and Linefeed
 	        -9, -9, // Decimal 11 - 12
 	        -5, // Whitespace: Carriage Return
 	        -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal 14 -
-																// 26
+	                                                            // 26
 	        -9, -9, -9, -9, -9, // Decimal 27 - 31
 	        -5, // Whitespace: Space
 	        -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal 33 - 42
@@ -301,16 +301,16 @@ public class Base64 {
 	        -1, // Equals sign at decimal 61
 	        -9, -9, -9, // Decimal 62 - 64
 	        11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, // Letters 'A'
-																// through 'M'
+	                                                            // through 'M'
 	        24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, // Letters 'N'
-																// through 'Z'
+	                                                            // through 'Z'
 	        -9, -9, -9, -9, // Decimal 91 - 94
 	        37, // Underscore at decimal 95
 	        -9, // Decimal 96
 	        38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, // Letters 'a'
-																// through 'm'
+	                                                            // through 'm'
 	        51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, // Letters 'n'
-																// through 'z'
+	                                                            // through 'z'
 	        -9, -9, -9, -9 // Decimal 123 - 126
 	/*
 	 * ,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 127 - 139
@@ -721,7 +721,7 @@ public class Base64 {
 			byte[] outBuff = new byte[(len43) // Main 4:3
 			        + ((len % 3) > 0 ? 4 : 0) // Account for padding
 			        + (breakLines ? (len43 / MAX_LINE_LENGTH) : 0)]; // New
-																	 // lines
+			                                                         // lines
 			int d = 0;
 			int e = 0;
 			int len2 = len - 2;
@@ -880,7 +880,7 @@ public class Base64 {
 			sbiDecode = DECODABET[sbiCrop];
 
 			if (sbiDecode >= WHITE_SPACE_ENC) // White space, Equals sign or
-											  // better
+			                                  // better
 			{
 				if (sbiDecode >= EQUALS_SIGN_ENC) {
 					b4[b4Posn++] = sbiCrop;
@@ -940,7 +940,7 @@ public class Base64 {
 		catch (java.io.UnsupportedEncodingException uee) {
 			bytes = s.getBytes();
 		} // end catch
-		// </change>
+		  // </change>
 
 		// Decode
 		bytes = decode(bytes, 0, bytes.length, options);
@@ -1174,13 +1174,13 @@ public class Base64 {
 			// Set up some useful variables
 			java.io.File file = new java.io.File(filename);
 			byte[] buffer = new byte[Math.max((int) (file.length() * 1.4), 40)]; // Need
-																				 // max()
-																				 // for
-																				 // math
-																				 // on
-																				 // small
-																				 // files
-																				 // (v2.2.1)
+			                                                                     // max()
+			                                                                     // for
+			                                                                     // math
+			                                                                     // on
+			                                                                     // small
+			                                                                     // files
+			                                                                     // (v2.2.1)
 			int length = 0;
 			int numBytes = 0;
 
@@ -1339,7 +1339,7 @@ public class Base64 {
 			this.position = -1;
 			this.lineLength = 0;
 			this.options = options; // Record for later, mostly to determine
-									// which alphabet to use
+			                        // which alphabet to use
 			this.alphabet = getAlphabet(options);
 			this.decodabet = getDecodabet(options);
 		} // end constructor

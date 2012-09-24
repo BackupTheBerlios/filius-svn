@@ -28,8 +28,6 @@ package filius.software.vermittlungsschicht;
 import java.util.ListIterator;
 
 import filius.Main;
-import filius.gui.GUIContainer;
-import filius.hardware.Port;
 import filius.hardware.NetzwerkInterface;
 import filius.hardware.knoten.InternetKnoten;
 import filius.software.ProtokollThread;

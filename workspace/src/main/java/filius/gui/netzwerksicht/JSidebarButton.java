@@ -43,7 +43,6 @@ import javax.swing.SwingConstants;
 
 import filius.Main;
 import filius.gui.JMainFrame;
-import filius.hardware.knoten.*;
 
 public class JSidebarButton extends JLabel implements Observer {
 

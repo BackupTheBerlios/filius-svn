@@ -28,15 +28,9 @@ package filius.gui.anwendungssicht;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Observable;
@@ -53,26 +47,18 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameEvent;
-import javax.swing.event.InternalFrameListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-import filius.software.email.Email;
-import filius.software.system.Betriebssystem;
-import filius.software.system.Datei;
-
 import filius.rahmenprogramm.EingabenUeberpruefung;
-
 import filius.software.dateiaustausch.PeerToPeerAnwendung;
+import filius.software.system.Datei;
 
 /**
  * Diese Klasse ist die grafische Benutzungsoberflaeche fuer die Peer2Peer

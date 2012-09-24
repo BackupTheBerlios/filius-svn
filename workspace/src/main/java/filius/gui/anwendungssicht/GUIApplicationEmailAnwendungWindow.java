@@ -33,14 +33,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
 import java.beans.PropertyVetoException;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Observable;
 import java.util.Vector;
@@ -56,7 +50,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
@@ -65,22 +58,16 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import javax.swing.tree.DefaultMutableTreeNode;
 
-import filius.rahmenprogramm.EingabenUeberpruefung;
 import filius.Main;
-
-import filius.software.email.EmailAnwendung;
+import filius.rahmenprogramm.EingabenUeberpruefung;
 import filius.software.email.Email;
+import filius.software.email.EmailAnwendung;
 import filius.software.email.EmailKonto;
-import filius.software.email.SMTPClient;
-import filius.software.email.POP3Client;
-import filius.software.system.Datei;
 
 /**
  * Applikationsfenster fr den Email-Client

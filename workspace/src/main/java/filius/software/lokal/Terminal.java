@@ -93,9 +93,9 @@ public class Terminal extends ClientAnwendung implements I18n {
 		if (!numParams(args, 2)) {
 			benachrichtigeBeobachter(messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg40"));
 			return messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg40"); // wrong
-																									  // number
-																									  // of
-																									  // parameters
+			                                                                                          // number
+			                                                                                          // of
+			                                                                                          // parameters
 		}
 		if (pureCopy(args)) { // positive case, everything worked fine
 			this.getSystemSoftware()
@@ -128,9 +128,9 @@ public class Terminal extends ClientAnwendung implements I18n {
 		if (!numParams(args, 1)) {
 			benachrichtigeBeobachter(messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg41"));
 			return messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg41"); // wrong
-																									  // number
-																									  // of
-																									  // parameters
+			                                                                                          // number
+			                                                                                          // of
+			                                                                                          // parameters
 		}
 		if (this.getSystemSoftware()
 		        .getDateisystem()
@@ -163,9 +163,9 @@ public class Terminal extends ClientAnwendung implements I18n {
 		this.getSystemSoftware().getDateisystem().printTree();
 		String srcString = args[0];
 		if (srcString.length() > 0 && srcString.substring(0, 1).equals(Dateisystem.FILE_SEPARATOR)) { // 'pfad'
-																									  // is
-																									  // absolute
-																									  // path!
+			                                                                                          // is
+			                                                                                          // absolute
+			                                                                                          // path!
 			srcString = Dateisystem.evaluatePathString(srcString);
 		} else {
 			srcString = Dateisystem.evaluatePathString(filius.software.system.Dateisystem
@@ -173,9 +173,9 @@ public class Terminal extends ClientAnwendung implements I18n {
 		}
 		String destString = args[1];
 		if (destString.length() > 0 && destString.substring(0, 1).equals(Dateisystem.FILE_SEPARATOR)) { // 'pfad'
-																										// is
-																										// absolute
-																										// path!
+			                                                                                            // is
+			                                                                                            // absolute
+			                                                                                            // path!
 			destString = Dateisystem.evaluatePathString(destString);
 		} else {
 			destString = Dateisystem.evaluatePathString(filius.software.system.Dateisystem
@@ -206,9 +206,9 @@ public class Terminal extends ClientAnwendung implements I18n {
 		if (!numParams(args, 2)) {
 			benachrichtigeBeobachter(messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg40"));
 			return messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg40"); // wrong
-																									  // number
-																									  // of
-																									  // parameters
+			                                                                                          // number
+			                                                                                          // of
+			                                                                                          // parameters
 		}
 		if (pureCopy(args)) {
 			benachrichtigeBeobachter(messages.getString("sw_terminal_msg33"));
@@ -231,9 +231,9 @@ public class Terminal extends ClientAnwendung implements I18n {
 		if (!numParams(args, 0)) {
 			benachrichtigeBeobachter(messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg42"));
 			return messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg42"); // wrong
-																									  // number
-																									  // of
-																									  // parameters
+			                                                                                          // number
+			                                                                                          // of
+			                                                                                          // parameters
 		}
 		Betriebssystem bs = (Betriebssystem) getSystemSoftware();
 		String ausgabe = "";
@@ -259,9 +259,9 @@ public class Terminal extends ClientAnwendung implements I18n {
 		if (!numParams(args, 0)) {
 			benachrichtigeBeobachter(messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg42"));
 			return messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg42"); // wrong
-																									  // number
-																									  // of
-																									  // parameters
+			                                                                                          // number
+			                                                                                          // of
+			                                                                                          // parameters
 		}
 		String ausgabe = messages.getString("sw_terminal_msg7");
 
@@ -307,9 +307,9 @@ public class Terminal extends ClientAnwendung implements I18n {
 		if (!numParams(args, 0, 1)) {
 			benachrichtigeBeobachter(messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg43"));
 			return messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg43"); // wrong
-																									  // number
-																									  // of
-																									  // parameters
+			                                                                                          // number
+			                                                                                          // of
+			                                                                                          // parameters
 		}
 		LinkedList<Object> liste;
 		StringBuffer inhalt;
@@ -324,10 +324,10 @@ public class Terminal extends ClientAnwendung implements I18n {
 			currPath = Dateisystem.absoluterPfad(aktuellerOrdner);
 		} else {
 			if (args[0].length() > 0 && args[0].substring(0, 1).equals(Dateisystem.FILE_SEPARATOR)) { // argument
-																									  // given
-																									  // as
-																									  // absolute
-																									  // path!
+				                                                                                      // given
+				                                                                                      // as
+				                                                                                      // absolute
+				                                                                                      // path!
 				liste = getSystemSoftware().getDateisystem().listeVerzeichnis(
 				        getSystemSoftware().getDateisystem().verzeichnisKnoten(args[0]));
 				currPath = Dateisystem.evaluatePathString(args[0]);
@@ -385,16 +385,16 @@ public class Terminal extends ClientAnwendung implements I18n {
 		if (!numParams(args, 1)) {
 			benachrichtigeBeobachter(messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg41"));
 			return messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg41"); // wrong
-																									  // number
-																									  // of
-																									  // parameters
+			                                                                                          // number
+			                                                                                          // of
+			                                                                                          // parameters
 		}
 		String ergebnis = messages.getString("sw_terminal_msg12");
 		String absPath;
 		if (args[0].length() > 0 && args[0].substring(0, 1).equals(Dateisystem.FILE_SEPARATOR)) { // 'pfad'
-																								  // is
-																								  // absolute
-																								  // path!
+			                                                                                      // is
+			                                                                                      // absolute
+			                                                                                      // path!
 			absPath = Dateisystem.evaluatePathString(args[0]);
 		} else {
 			absPath = Dateisystem.evaluatePathString(Dateisystem.absoluterPfad(aktuellerOrdner)
@@ -431,16 +431,16 @@ public class Terminal extends ClientAnwendung implements I18n {
 		if (!numParams(args, 1)) {
 			benachrichtigeBeobachter(messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg41"));
 			return messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg41"); // wrong
-																									  // number
-																									  // of
-																									  // parameters
+			                                                                                          // number
+			                                                                                          // of
+			                                                                                          // parameters
 		}
 		String ergebnis = messages.getString("sw_terminal_msg16");
 		String absPath;
 		if (args[0].length() > 0 && args[0].substring(0, 1).equals(Dateisystem.FILE_SEPARATOR)) { // 'pfad'
-																								  // is
-																								  // absolute
-																								  // path!
+			                                                                                      // is
+			                                                                                      // absolute
+			                                                                                      // path!
 			absPath = Dateisystem.evaluatePathString(args[0]);
 		} else {
 			absPath = Dateisystem.evaluatePathString(Dateisystem.absoluterPfad(aktuellerOrdner)
@@ -477,9 +477,9 @@ public class Terminal extends ClientAnwendung implements I18n {
 		if (!numParams(args, 0, 1)) {
 			benachrichtigeBeobachter(messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg43"));
 			return messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg43"); // wrong
-																									  // number
-																									  // of
-																									  // parameters
+			                                                                                          // number
+			                                                                                          // of
+			                                                                                          // parameters
 		}
 		if (numParams(args, 1)) {
 			DefaultMutableTreeNode newDir;
@@ -490,8 +490,8 @@ public class Terminal extends ClientAnwendung implements I18n {
 				newDir = getSystemSoftware().getDateisystem().changeDirectory(
 				        Dateisystem.absoluterPfad(aktuellerOrdner), args[0]);
 			if (newDir != null) { // first, check whether directory change was
-								  // successful; otherwise stay in current
-								  // directory
+				                  // successful; otherwise stay in current
+				                  // directory
 				aktuellerOrdner = newDir;
 			} else {
 				ergebnis = messages.getString("sw_terminal_msg20");
@@ -514,9 +514,9 @@ public class Terminal extends ClientAnwendung implements I18n {
 		if (!numParams(args, 0)) {
 			benachrichtigeBeobachter(messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg42"));
 			return messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg42"); // wrong
-																									  // number
-																									  // of
-																									  // parameters
+			                                                                                          // number
+			                                                                                          // of
+			                                                                                          // parameters
 		}
 		String ergebnis = Dateisystem.absoluterPfad(aktuellerOrdner);
 		benachrichtigeBeobachter(ergebnis);
@@ -633,9 +633,9 @@ public class Terminal extends ClientAnwendung implements I18n {
 		if (!numParams(args, 1)) {
 			benachrichtigeBeobachter(messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg44"));
 			return messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg44"); // wrong
-																									  // number
-																									  // of
-																									  // parameters
+			                                                                                          // number
+			                                                                                          // of
+			                                                                                          // parameters
 		}
 		Betriebssystem bs = (Betriebssystem) getSystemSoftware();
 		filius.software.dns.Resolver res = bs.holeDNSClient();
@@ -681,9 +681,9 @@ public class Terminal extends ClientAnwendung implements I18n {
 		if (!numParams(args, 1)) {
 			benachrichtigeBeobachter(messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg44"));
 			return messages.getString("sw_terminal_msg32") + messages.getString("sw_terminal_msg44"); // wrong
-																									  // number
-																									  // of
-																									  // parameters
+			                                                                                          // number
+			                                                                                          // of
+			                                                                                          // parameters
 		}
 		filius.software.dns.Resolver res = getSystemSoftware().holeDNSClient();
 		if (res == null) {
@@ -716,11 +716,11 @@ public class Terminal extends ClientAnwendung implements I18n {
 		// second: send several (=4) ICMP echo requests
 		long timeStart, timeDiff;
 		benachrichtigeBeobachter(new Boolean(true)); // inform about a multiple
-													 // data transmission to the
-													 // observer
+		                                             // data transmission to the
+		                                             // observer
 		benachrichtigeBeobachter("PING " + args[0] + " (" + destIp + ")");
 		int sendNumPackets = 4; // how many ping requests to be sent; adjust
-								// here!
+		                        // here!
 
 		int receivedReplies = 0;
 		for (int num = 0; num < sendNumPackets; num++) {
@@ -731,11 +731,11 @@ public class Terminal extends ClientAnwendung implements I18n {
 				int resTTL = getSystemSoftware().holeICMP().startSinglePing(destIp, num + 1);
 				timeDiff = 1000 // wait 1s between single ping executions
 				- (Calendar.getInstance().getTimeInMillis() - timeStart); // subtract
-																		  // needed
-																		  // time
-																		  // for
-																		  // former
-																		  // ping
+				                                                          // needed
+				                                                          // time
+				                                                          // for
+				                                                          // former
+				                                                          // ping
 				// Main.debug.println("DEBUG: Terminal, ping (num="+(num+1)+"), resTTL="+resTTL+", delay="+(1000-timeDiff)+", timeDiff="+timeDiff);
 				if (resTTL >= 0) {
 					benachrichtigeBeobachter("\nFrom " + args[0] + " (" + destIp + "): icmp_seq=" + (num + 1) + " ttl="
@@ -759,8 +759,8 @@ public class Terminal extends ClientAnwendung implements I18n {
 			}
 		}
 		benachrichtigeBeobachter(new Boolean(false)); // inform about a multiple
-													  // data transmission to
-													  // the observer
+		                                              // data transmission to
+		                                              // the observer
 		// print statistics
 		benachrichtigeBeobachter("\n--- " + args[0] + " " + messages.getString("sw_terminal_msg45") + " ---\n"
 		        + sendNumPackets + " " + messages.getString("sw_terminal_msg46") + ", " + receivedReplies + " "

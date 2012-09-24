@@ -31,7 +31,6 @@ import java.beans.PropertyVetoException;
 
 import javax.swing.Icon;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 
 import filius.Main;
 

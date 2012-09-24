@@ -73,7 +73,7 @@ public class FirewallWebKonfig extends WebServerPlugIn {
 		String seite = "";
 		if (postDaten != null && !postDaten.equals("")) {
 			firewallBestuecken(postDaten); // Dort wird die Methode
-										   // postStringZerlegen() ausgefuehrt
+			                               // postStringZerlegen() ausgefuehrt
 		}
 		// Main.debug.println("FirewallWebKonfig: Seite liefern= \n"+seite);
 		seite = konfigSeiteErstellen();

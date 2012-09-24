@@ -26,14 +26,8 @@
 package filius.gui.netzwerksicht;
 
 import java.awt.Dimension;
-import java.util.LinkedList;
-import java.util.ListIterator;
-
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 
 import filius.gui.GUIContainer;
-import filius.gui.anwendungssicht.GUIDesktopPanel;
 
 public class GUISimulationPanel extends GUIMainArea {
 

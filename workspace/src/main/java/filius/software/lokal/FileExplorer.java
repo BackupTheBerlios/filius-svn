@@ -80,7 +80,7 @@ public class FileExplorer extends Anwendung implements I18n {
 		String ergebnis = messages.getString("sw_fileexplorer_msg1");
 		java.io.File file = new java.io.File(pfadname + dateiname);
 		if (!file.exists() || file.length() > 150000) { // max filesize 150.000
-														// Bytes
+			                                            // Bytes
 			return ergebnis + "\n" + messages.getString("sw_fileexplorer_msg3");
 		}
 

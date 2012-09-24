@@ -43,18 +43,18 @@ public class PeerToPeerPaket {
 	 */
 
 	protected int guid; // 16 Byte lange zufaellige Zahl zur Identifizierung von
-						// Paketen, 128 Bit, also Zahlen zwischen 0 und
-						// 6.805647338418769*10^38, hier ist die aber nur 2^31-1
-						// gross hoechstens
+	                    // Paketen, 128 Bit, also Zahlen zwischen 0 und
+	                    // 6.805647338418769*10^38, hier ist die aber nur 2^31-1
+	                    // gross hoechstens
 
 	protected String payload; // gibt Art des Pakets an: 0x00 (Ping), 0x01
-							  // (Pong), 0x80 (Query), 0x81 (Query-Hit) oder
-							  // 0x40 (Push), Groesse 1 Byte
+	                          // (Pong), 0x80 (Query), 0x81 (Query-Hit) oder
+	                          // 0x40 (Push), Groesse 1 Byte
 
 	protected int ttl; // die Lebensdauer eines Pakets, Groesse 1 Byte
 
 	protected int hops; // die Anzahl der Hops, die das Paket schon
-						// zurueckgelegt hat, Groesse 1 Byte
+	                    // zurueckgelegt hat, Groesse 1 Byte
 
 	protected long payloadLength; // Laenge der Nutzdaten in Bits
 
