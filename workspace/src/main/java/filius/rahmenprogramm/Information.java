@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
@@ -606,11 +607,15 @@ public class Information implements Serializable {
 
 	public void loadIni() throws IOException {
 		StringBuffer pfad = new StringBuffer();
-		;
+
 		pfad.append(getProgrammPfad());
 		pfad.append("config" + File.separator + "filius.ini");
 
 		File tmpFile = new File(pfad.toString());
+		if (!tmpFile.exists()) {
+			URL configURL = ClassLoader.getSystemResource("config/filius.ini");
+			tmpFile = new File(configURL.getPath());
+		}
 		if (tmpFile.exists()) {
 			RandomAccessFile iniFile = null;
 
