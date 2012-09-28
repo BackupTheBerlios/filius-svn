@@ -36,7 +36,7 @@ import filius.software.firewall.FirewallWebLog;
 import filius.software.rip.RIPBeacon;
 import filius.software.rip.RIPServer;
 import filius.software.rip.RIPTable;
-import filius.software.rip.VermittlungWeb;
+import filius.software.vermittlungsschicht.VermittlungWeb;
 import filius.software.www.WebServer;
 
 /**
@@ -114,7 +114,7 @@ public class VermittlungsrechnerBetriebssystem extends InternetKnotenBetriebssys
 		ripbeacon = new RIPBeacon();
 		ripbeacon.setSystemSoftware(this);
 
-		VermittlungWeb ripweb = new VermittlungWeb(riptable);
+		VermittlungWeb ripweb = new VermittlungWeb(this);
 		ripweb.setPfad("routes");
 		server.setzePlugIn(ripweb);
 	}

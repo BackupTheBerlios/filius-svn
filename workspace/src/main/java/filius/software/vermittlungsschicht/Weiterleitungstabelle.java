@@ -132,9 +132,6 @@ public class Weiterleitungstabelle implements I18n {
 			String[] tmpString = { netzwerkziel, netzwerkmaske, gateway, schnittstelle };
 			manuelleTabelle.addLast(tmpString);
 		}
-
-		// printTabelle(messages.getString("sw_weiterleitungstabelle_msg1"),
-		// manuelleTabelle);
 	}
 
 	/**
