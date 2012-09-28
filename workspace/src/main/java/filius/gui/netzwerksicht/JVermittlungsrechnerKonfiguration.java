@@ -110,6 +110,8 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 	private JLabel[] lblLocal = new JLabel[8];
 	JButton btnAddInterface;
 
+	private JTabbedPane tpNetzwerkKarten;
+
 	// highlighted cable in development view
 	private Kabel highlightedCable = null;
 
@@ -231,7 +233,6 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		LinkedList nicListe;
 		ListIterator it;
 		Box boxNetzwerkKarten;
-		JTabbedPane tpNetzwerkKarten;
 		Box vBox;
 		Box boxNic;
 		Box nicWithButton;
@@ -669,11 +670,11 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				foreignPanel.add(lblRemote[nicNr - 1]);
 				cables.add(new LinePanel());
 				cables.getLast().setName((nicNr - 1) + "-" + (nicNr - 1)); // encode
-																		   // index
-																		   // information
-																		   // in
-																		   // name
-																		   // field
+				                                                           // index
+				                                                           // information
+				                                                           // in
+				                                                           // name
+				                                                           // field
 			} else {
 				btnLocal[nicNr - 1].setBackground(Color.RED);
 				btnLocal[nicNr - 1].setEnabled(true);
@@ -906,7 +907,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		cablePanel.setLayout(cableLayout);
 		for (int i = 0; i < cables.size(); i++) {
 			int l, r; // indices for foreign component (l; left area) and local
-					  // component (r; right area)
+			          // component (r; right area)
 			LinePanel tmp = cables.get(i);
 			Main.debug.println("DEBUG: JVermittlungsrechnerkonfiguration, showBasicSettingsDialog, tmp LinePanel: ("
 			        + tmp.hashCode() + ")");
@@ -928,14 +929,6 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 
 		changeBasicSettingsDialog.setVisible(true);
 	}
-
-	// update settings for all tabs (esp. icons) and specifically for currently
-	// open tab
-	// it is assumed, that this configuration panel is visible! otherwise no
-	// update would be necessary until setting visible
-	// (when setting visible, an update will be done automatically!)
-	// public void updateSettings() {
-	// }
 
 	public void doUnselectAction() {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
@@ -986,13 +979,6 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 
 		nic2 = nicList.remove(idx2);
 		nic1 = nicList.remove(idx1);
-
-		// Main.debug.println("DEBUG ("+this.hashCode()+") exchangeNICdata:  NICliste.size="+nicList.size()+"; "
-		// +
-		// "nic1.id="+nic1.hashCode()+", nic1.ip="+nic1.getIp()+", nic1.mac="+nic1.getMac()+"; "
-		// +
-		// "nic2.id="+nic2.hashCode()+", nic2.ip="+nic2.getIp()+", nic2.mac="+nic2.getMac()
-		// );
 
 		// exchange settings, i.e., store old ones in temp variables first
 		mac = nic1.getMac();
@@ -1082,36 +1068,21 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		tmpCable.getKabelpanel().setZiel1(null);
 		while (nit.hasNext()) {
 			tmpNode = (GUIKnotenItem) nit.next();
-			// Main.debug.println("DEBUG:  ("+this.hashCode()+") addCable:\n"
-			// +
-			// "\ttmpNode: "+tmpNode.getKnoten().getName()+" - "+tmpNode.hashCode()
-			// + "\t<intern>: "+((Vermittlungsrechner)
-			// holeHardware()).getSystemSoftware().getKnoten().getName()+" - "+((Vermittlungsrechner)
-			// holeHardware()).getSystemSoftware().getKnoten().hashCode());
 			if (tmpNode.getKnoten() == ((Vermittlungsrechner) holeHardware()).getSystemSoftware().getKnoten()) {
 				tmpCable.getKabelpanel().setZiel1(tmpNode);
 			}
 		}
-		// Main.debug.println("DEBUG:  ("+this.hashCode()+") addCable:   --> tmpCable Ziel1 null? "+(tmpCable.getKabelpanel().getZiel1()
-		// == null));
 		if (tmpCable.getKabelpanel().getZiel1() == null)
 			return false; // an error occurred: current node not identified
 
 		tmpCable.getKabelpanel().setZiel2(remoteNode);
-
-		// Main.debug.println("DEBUG:  ("+this.hashCode()+") addCable:   remoteNode null? "+(remoteNode
-		// == null));
-
-		if (remoteNode != null) {
-			// Main.debug.println("DEBUG:  ("+this.hashCode()+") addCable:   ziel1 ("+tmpCable.getKabelpanel().getZiel1().hashCode()+"), ziel2 ("+tmpCable.getKabelpanel().getZiel2().hashCode()+")");
-		}
 
 		if (tmpCable.getKabelpanel().getZiel2().getKnoten() instanceof Modem) {
 			Modem vrOut = (Modem) tmpCable.getKabelpanel().getZiel2().getKnoten();
 			anschluss2 = vrOut.getErstenAnschluss();
 		} else if (tmpCable.getKabelpanel().getZiel2().getKnoten() instanceof Vermittlungsrechner) {
 			anschluss2 = remotePort; // only in this case use pre-determined
-									 // port; otherwise use internal methods
+			                         // port; otherwise use internal methods
 		} else if (tmpCable.getKabelpanel().getZiel2().getKnoten() instanceof Switch) {
 			Switch sw = (Switch) tmpCable.getKabelpanel().getZiel2().getKnoten();
 			anschluss2 = ((SwitchFirmware) sw.getSystemSoftware()).getKnoten().holeFreienPort();
@@ -1154,9 +1125,9 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				if (btnLocal[i] == source) // found current source button
 					currIdx = i;
 				if (btnLocal[i].getBackground().equals(Color.YELLOW)) // some
-																	  // button
-																	  // marked
-																	  // yellow
+				                                                      // button
+				                                                      // marked
+				                                                      // yellow
 					formerIdx = i;
 			}
 		}
@@ -1169,27 +1140,19 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				formerLine = null;
 				currLine = null;
 				for (int i = 0; i < cables.size(); i++) {
-					if (cables.get(i).getName().substring(2).equals(String.valueOf(formerIdx))) { // found
-																								  // corresponding
-																								  // cable
-																								  // (i.e.,
-																								  // it
-																								  // exists!)
+					if (cables.get(i).getName().substring(2).equals(String.valueOf(formerIdx))) {
+						// found corresponding cable (i.e., it exists!)
 						formerLine = cables.get(i);
 						// Main.debug.println("DEBUG: interfaceButtonClicked;  formerLine="+formerLine.toString()+", index="+i);
 					}
-					if (cables.get(i).getName().substring(2).equals(String.valueOf(currIdx))) { // found
-																								// corresponding
-																								// cable
-																								// (i.e.,
-																								// it
-																								// exists!)
+					if (cables.get(i).getName().substring(2).equals(String.valueOf(currIdx))) {
+						// found corresponding cable (i.e., it exists!)
 						currLine = cables.get(i);
 						// Main.debug.println("DEBUG: interfaceButtonClicked;  currLine="+currLine.toString()+", index="+i);
 					}
 				}
 				if (formerLine != null) { // found corresponding cable (i.e., it
-										  // exists!)
+					                      // exists!)
 					formerLine.lineColor = new Color(64, 64, 64);
 					formerLine.lineEnd = new Point(282, source.getY() + (source.getHeight() / 2));
 					formerLine.setName(formerLine.getName().substring(0, 2) + currIdx);
@@ -1197,7 +1160,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 					// Main.debug.println("DEBUG: interfaceButtonClicked;  formerLine != null ("+formerLine.toString()+")");
 				}
 				if (currLine != null) { // found corresponding cable (i.e., it
-										// exists!)
+					                    // exists!)
 					currLine.lineEnd = new Point(282, btnLocal[formerIdx].getY()
 					        + (btnLocal[formerIdx].getHeight() / 2));
 					currLine.setName(currLine.getName().substring(0, 2) + formerIdx);
@@ -1206,91 +1169,20 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				}
 
 				exchangeNICdata(formerIdx, currIdx);
-				//
-				// actually change connected cables here:
-				//
-				// try {
-				// Port localFormer = ((NetzwerkInterface)
-				// ((Vermittlungsrechner)
-				// holeHardware()).getNetzwerkInterfaces().get(formerIdx)).getPort();
-				// Verbindung formerConn = ((NetzwerkInterface)
-				// ((Vermittlungsrechner)
-				// holeHardware()).getNetzwerkInterfaces().get(formerIdx)).getPort().getVerbindung();
-				// Port[] formerConnPorts = ((NetzwerkInterface)
-				// ((Vermittlungsrechner)
-				// holeHardware()).getNetzwerkInterfaces().get(formerIdx)).getPort().getVerbindung().getAnschluesse();
-				//
-				// Port remoteFormer = null;
-				// for(int i=0; i<formerConnPorts.length; i++) {
-				// if(formerConnPorts[i] != localFormer) { // usually only two
-				// ports are in this array!
-				// remoteFormer = formerConnPorts[i]; // hence, the first port
-				// unequal to the local one is assumed to be the remote port
-				// }
-				// }
-				// GUIKnotenItem formerRemNode = removeCable(formerConn);
-				// Port[] newFormerPortArray = new Port[2];
-				// Port[] newCurrPortArray = new Port[2];
-				// if(currLine != null) {
-				// Port localCurr = ((NetzwerkInterface) ((Vermittlungsrechner)
-				// holeHardware()).getNetzwerkInterfaces().get(currIdx)).getPort();
-				// Verbindung currConn = ((NetzwerkInterface)
-				// ((Vermittlungsrechner)
-				// holeHardware()).getNetzwerkInterfaces().get(currIdx)).getPort().getVerbindung();
-				// Port[] currConnPorts = ((NetzwerkInterface)
-				// ((Vermittlungsrechner)
-				// holeHardware()).getNetzwerkInterfaces().get(currIdx)).getPort().getVerbindung().getAnschluesse();
-				// Port remoteCurr = null;
-				// for(int i=0; i<currConnPorts.length; i++) {
-				// if(currConnPorts[i] != localCurr) { // usually only two ports
-				// are in this array!
-				// remoteCurr = currConnPorts[i]; // hence, the first port
-				// unequal to the local one is assumed to be the remote port
-				// }
-				// }
-				// // set new ports to former NIC locally and current remote one
-				// newCurrPortArray[0] = ((NetzwerkInterface)
-				// ((Vermittlungsrechner)
-				// holeHardware()).getNetzwerkInterfaces().get(formerIdx)).getPort();
-				// newCurrPortArray[1] = remoteCurr;
-				// GUIKnotenItem currRemNode = null;
-				// currRemNode = removeCable(currConn);
-				// if(currRemNode != null)
-				// addCable(currRemNode,newCurrPortArray[0],newCurrPortArray[1]);
-				// }
-				// // set new ports to current NIC locally and former remote one
-				// newFormerPortArray[0] = ((NetzwerkInterface)
-				// ((Vermittlungsrechner)
-				// holeHardware()).getNetzwerkInterfaces().get(currIdx)).getPort();
-				// newFormerPortArray[1] = remoteFormer;
-				// addCable(formerRemNode,newFormerPortArray[0],newFormerPortArray[1]);
-				// }
-				// catch (Exception ge) {
-				// ge.printStackTrace(Main.debug);
-				// }
-				// ///////
 			} else {
 				for (int i = 0; i < cables.size(); i++) {
-					if (cables.get(i).getName().substring(2).equals(String.valueOf(formerIdx))) { // found
-																								  // corresponding
-																								  // cable
-																								  // (i.e.,
-																								  // it
-																								  // exists!)
-						// Main.debug.println("DEBUG: interfaceButtonClicked;  formerIdx=currIdx (cables="+cables.get(i).toString()+", index="+i+")");
+					if (cables.get(i).getName().substring(2).equals(String.valueOf(formerIdx))) {
+						// found corresponding cable (i.e., it exists!)
 						cables.get(i).lineColor = new Color(64, 64, 64);
 						source.setBackground(Color.GREEN);
 					}
 				}
 			}
-		} else { // else mark current source button
+		} else {
+			// else mark current source button
 			for (int i = 0; i < cables.size(); i++) {
-				if (cables.get(i).getName().substring(2).equals(String.valueOf(currIdx))) { // found
-																							// corresponding
-																							// cable
-																							// (i.e.,
-																							// it
-																							// exists!)
+				if (cables.get(i).getName().substring(2).equals(String.valueOf(currIdx))) {
+					// found corresponding cable (i.e., it exists!)
 					source.setBackground(Color.YELLOW);
 					cables.get(i).lineColor = Color.MAGENTA;
 				}
@@ -1314,6 +1206,8 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		name.setText(vRechner.getName());
 		gateway.setText(bs.getStandardGateway());
 		rip.setSelected(bs.getRip());
+
+		tpNetzwerkKarten.setEnabledAt(tpNetzwerkKarten.getTabCount() - 1, !bs.getRip());
 
 		it = vRechner.getNetzwerkInterfaces().listIterator();
 		for (int i = 0; it.hasNext() && i < ipAdressen.length; i++) {

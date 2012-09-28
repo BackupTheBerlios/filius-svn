@@ -429,7 +429,7 @@ public class Main implements I18n {
 		usage.append("\t-r   Setzen eines Faktors zur Erhoehung der erlaubten\n"
 		        + "\t     Round-Trip-Time in Filius (kann erforderlich sein, um Fehler\n"
 		        + "\t     bei Ausfuehrung auf langsamer Hardware zu vermeiden)\n"
-		        + "\t     Gültige Werte sind 1 (Vorgabe) bis 5.\n");
+		        + "\t     Gueltige Werte sind 1 (Vorgabe) bis 5.\n");
 		usage.append("\t-n   Darstellung mit betriebssystemspezifischem Look & Feel\n");
 		usage.append("\t-s   Darstellung fuer niedrige Bildschirmaufloesung (kleiner\n" + "\t     1024x768) anpassen\n");
 
