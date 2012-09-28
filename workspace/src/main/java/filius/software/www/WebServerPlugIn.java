@@ -25,6 +25,13 @@
  */
 package filius.software.www;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+import filius.Main;
+
 /**
  * 
  * @author Michell wird vom den Klassen FirewallWebKonfig und FirewallWebLog
@@ -43,4 +50,20 @@ public abstract class WebServerPlugIn {
 	}
 
 	public abstract String holeHtmlSeite(String postDaten);
+
+	/**
+	 * liest eine reale Textdatei vom Format .txt ein. Diese befinden sich im
+	 * Ordner /config
+	 */
+	protected String textDateiEinlesen(String datei) throws FileNotFoundException, IOException {
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (FirewallWebKonfig), textDateiEinlesen(" + datei + ")");
+		BufferedReader test = new BufferedReader(new FileReader(datei));
+		String fullFile = "";
+		String input = "";
+		while ((input = test.readLine()) != null) {
+			fullFile += input + "\n";
+		}
+		return fullFile;
+	}
 }

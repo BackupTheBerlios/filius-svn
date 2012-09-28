@@ -36,7 +36,7 @@ import filius.software.firewall.FirewallWebLog;
 import filius.software.rip.RIPBeacon;
 import filius.software.rip.RIPServer;
 import filius.software.rip.RIPTable;
-import filius.software.rip.RIPWeb;
+import filius.software.rip.VermittlungWeb;
 import filius.software.www.WebServer;
 
 /**
@@ -85,19 +85,15 @@ public class VermittlungsrechnerBetriebssystem extends InternetKnotenBetriebssys
 		// Installation von Firewall und Webserver
 		installiereSoftware("filius.software.firewall.Firewall");
 		installiereSoftware("filius.software.www.WebServer");
-		// while(firewall==null) {
 		firewall = this.holeFirewall();
-		// }
-		// while(server==null) {
 		server = this.holeWebServer();
-		// }
 		firewall.setModus(Firewall.GATEWAY);
 
 		// Erweiterung des Webservers fuer die Anzeige der
 		// Log-Eintraege der Firewall
 		weblog = new FirewallWebLog();
 		weblog.setFirewall(firewall);
-		weblog.setPfad("log.html");
+		weblog.setPfad("log");
 		server.setzePlugIn(weblog);
 
 		// Erweiterung des Webservers fuer die Konfiguration
@@ -105,10 +101,10 @@ public class VermittlungsrechnerBetriebssystem extends InternetKnotenBetriebssys
 		webkonfig = new FirewallWebKonfig();
 		webkonfig.setWebserver(server);
 		webkonfig.setFirewall(firewall);
-		webkonfig.setPfad("konfig.html");
+		webkonfig.setPfad("konfig");
 		server.setzePlugIn(webkonfig);
 
-		server.erzeugeIndexDatei(Information.getInformation().getProgrammPfad() + "tmpl/firewall_index_"
+		server.erzeugeIndexDatei(Information.getInformation().getProgrammPfad() + "tmpl/vermittlung_index_"
 		        + Information.getInformation().getLocale() + ".txt");
 
 		// ------------- RIP ------------------
@@ -118,8 +114,8 @@ public class VermittlungsrechnerBetriebssystem extends InternetKnotenBetriebssys
 		ripbeacon = new RIPBeacon();
 		ripbeacon.setSystemSoftware(this);
 
-		RIPWeb ripweb = new RIPWeb(riptable);
-		ripweb.setPfad("routes.html");
+		VermittlungWeb ripweb = new VermittlungWeb(riptable);
+		ripweb.setPfad("routes");
 		server.setzePlugIn(ripweb);
 	}
 

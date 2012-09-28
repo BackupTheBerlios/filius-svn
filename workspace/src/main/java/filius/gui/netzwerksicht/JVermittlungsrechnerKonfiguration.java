@@ -301,7 +301,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		tempBox.setMaximumSize(new Dimension(400, 40));
 
 		tempLabel = new JLabel(messages.getString("jvermittlungsrechnerkonfiguration_msg2"));
-		tempLabel.setPreferredSize(new Dimension(140, 10));
+		tempLabel.setPreferredSize(new Dimension(140, 20));
 		tempLabel.setVisible(true);
 		tempLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		tempBox.add(tempLabel);
@@ -320,7 +320,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		tempBox.setMaximumSize(new Dimension(400, 40));
 
 		tempLabel = new JLabel(messages.getString("jvermittlungsrechnerkonfiguration_msg9"));
-		tempLabel.setPreferredSize(new Dimension(140, 10));
+		tempLabel.setPreferredSize(new Dimension(140, 20));
 		tempLabel.setVisible(true);
 		tempLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		tempBox.add(tempLabel);
@@ -337,16 +337,18 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 
 		// Attribut rip
 		tempBox = Box.createHorizontalBox();
-		tempBox.setMaximumSize(new Dimension(400, 20));
+		tempBox.setMaximumSize(new Dimension(400, 40));
 
-		tempLabel = new JLabel("Enable RIP?");
-		tempLabel.setPreferredSize(new Dimension(140, 10));
+		tempLabel = new JLabel(messages.getString("jvermittlungsrechnerkonfiguration_msg26"));
+		tempLabel.setPreferredSize(new Dimension(140, 20));
 		tempLabel.setVisible(true);
 		tempLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		tempBox.add(tempLabel);
-		tempBox.add(Box.createHorizontalStrut(10));
+
+		tempBox.add(Box.createHorizontalStrut(20));
 
 		rip = new JCheckBox();
+		rip.setPreferredSize(new Dimension(160, 20));
 		rip.addActionListener(actionListener);
 		rip.addFocusListener(focusListener);
 		tempBox.add(rip);
@@ -354,6 +356,8 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		vBox.add(tempBox);
 		vBox.add(Box.createVerticalStrut(5));
 
+		tempBox = Box.createHorizontalBox();
+		tempBox.setMaximumSize(new Dimension(400, 40));
 		btFirewall = new JButton(messages.getString("jvermittlungsrechnerkonfiguration_msg4"));
 
 		btFirewall.addActionListener(new ActionListener() {
@@ -361,8 +365,9 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				firewallDialogAnzeigen();
 			}
 		});
-		vBox.add(btFirewall);
-		vBox.add(Box.createVerticalStrut(5));
+		tempBox.add(btFirewall);
+
+		tempBox.add(Box.createHorizontalStrut(20));
 
 		changeBasicSettingsButton = new JButton(messages.getString("jvermittlungsrechnerkonfiguration_msg23"));
 		changeBasicSettingsButton.addActionListener(new ActionListener() {
@@ -370,7 +375,9 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				showBasicSettingsDialog();
 			}
 		});
-		vBox.add(changeBasicSettingsButton);
+		tempBox.add(changeBasicSettingsButton);
+
+		vBox.add(tempBox);
 
 		// NIC tabs
 		tpNetzwerkKarten.addTab(messages.getString("jvermittlungsrechnerkonfiguration_msg17"), vBox);

@@ -25,51 +25,45 @@
  */
 package filius.software.rip;
 
+import java.io.IOException;
+
+import filius.rahmenprogramm.I18n;
+import filius.rahmenprogramm.Information;
 import filius.software.www.WebServerPlugIn;
 
 /**
  * 
  * @author pyropeter
- *
+ * @author stefanf
+ * 
  */
-public class RIPWeb extends WebServerPlugIn {
+public class VermittlungWeb extends WebServerPlugIn implements I18n {
 	private RIPTable table;
 
-	public RIPWeb(RIPTable table) {
+	public VermittlungWeb(RIPTable table) {
 		super();
 
 		this.table = table;
 	}
 
 	public String holeHtmlSeite(String postDaten) {
-		String html = "<html>";
-		html += "<title>RIP Routen</title>";
-		html += "<h1>RIP Routen</h1>";
 
-		html += "<table border=1>";
-		html += "<tr>";
-		html += "<th colspan=2>Netz</th>";
-		html += "<th>Hops</th>";
-		html += "<th>Gültig</th>";
-		html += "<th colspan=2>N&auml;chster Hop</th>";
-		html += "</tr>";
-
-		html += "<tr>";
-		html += "<th>Adresse</th>";
-		html += "<th>Maske</th>";
-		html += "<th></th>";
-		html += "<th>(sec)</th>";
-		html += "<th>privat</th>";
-		html += "<th>&ouml;ffentlich</th>";
-		html += "</tr>";
-
+		StringBuffer routingEntries = new StringBuffer();
 		synchronized (table) {
 			for (RIPRoute route : table.routes) {
-				html += routeToHtml(route);
+				routingEntries.append(routeToHtml(route));
 			}
 		}
 
-		html += "</table>";
+		String html = null;
+		try {
+			html = textDateiEinlesen("tmpl/routing_" + Information.getInformation().getLocale().toString() + ".html");
+			html = html.replaceAll(":routing_entries:", routingEntries.toString());
+			html = html.replaceAll(":hint:", messages.getString("sw_vermittlungweb_msg1"));
+		} catch (IOException e) {
+			System.err.println("routing table template could not be read.");
+			e.printStackTrace();
+		}
 
 		return html;
 	}
@@ -89,7 +83,7 @@ public class RIPWeb extends WebServerPlugIn {
 		}
 
 		html += "<td>" + route.nextHop + "</td>";
-		html += "<td><a href=\"http://" + route.hopPublicIp + "/routes.html\">" + route.hopPublicIp + "</a></td>";
+		html += "<td><a href=\"http://" + route.hopPublicIp + "/routes\">" + route.hopPublicIp + "</a></td>";
 
 		if (route.hops == 0) {
 			return "<tr style='background-color:#aaffaa'>" + html + "</tr>";

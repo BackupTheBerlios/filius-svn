@@ -25,8 +25,6 @@
  */
 package filius.software.rip;
 
-import java.util.ListIterator;
-
 import filius.hardware.NetzwerkInterface;
 import filius.hardware.knoten.InternetKnoten;
 import filius.software.clientserver.ServerMitarbeiter;
@@ -37,7 +35,8 @@ import filius.software.vermittlungsschicht.IP;
 /**
  * 
  * @author pyropeter
- *
+ * @author stefanf
+ * 
  */
 public class RIPServerMitarbeiter extends ServerMitarbeiter {
 	private RIPTable table;
@@ -67,14 +66,14 @@ public class RIPServerMitarbeiter extends ServerMitarbeiter {
 
 		RIPRoute route;
 		int hops;
-		for (RIPMessageRoute entry : msg.routes) {
-			if (entry.hops >= msg.infinity || entry.hops + 1 >= RIPTable.INFINITY) {
-				hops = RIPTable.INFINITY;
-			} else {
-				hops = entry.hops + 1;
-			}
+		synchronized (table) {
+			for (RIPMessageRoute entry : msg.routes) {
+				if (entry.hops >= msg.infinity || entry.hops + 1 >= RIPTable.INFINITY) {
+					hops = RIPTable.INFINITY;
+				} else {
+					hops = entry.hops + 1;
+				}
 
-			synchronized (table) {
 				route = table.search(entry.ip, entry.mask);
 				if (route != null) {
 					// route exists, just update
@@ -89,7 +88,7 @@ public class RIPServerMitarbeiter extends ServerMitarbeiter {
 					} else if (route.hops < hops) {
 						// the old route just got worse. this has to be
 						// flushed to other routers immediately
-						table.nextBeacon = 0;
+						table.setNextBeacon(0);
 					}
 					route.hops = hops;
 					route.refresh(msg.timeout);
@@ -98,24 +97,18 @@ public class RIPServerMitarbeiter extends ServerMitarbeiter {
 					if (hops < RIPTable.INFINITY) {
 						route = new RIPRoute(msg.timeout, entry.ip, entry.mask, msg.ip, msg.publicIp, nicIp, hops);
 						table.addRoute(route);
+						table.setNextBeacon(0);
 					}
 				}
 			}
-		}
-
-		synchronized (table) {
-			// table.nextBeacon was changed, notify
-			// the beacon:
 			table.notifyAll();
 		}
 	}
 
 	String findeInterfaceIp(String ipStr) {
 		long ip = IP.inetAton(ipStr);
-		ListIterator it = knoten.getNetzwerkInterfaces().listIterator();
 
-		while (it.hasNext()) {
-			NetzwerkInterface nic = (NetzwerkInterface) it.next();
+		for (NetzwerkInterface nic : knoten.getNetzwerkInterfaces()) {
 			long netMask = IP.inetAton(nic.getSubnetzMaske());
 			long netAddr = IP.inetAton(nic.getIp()) & netMask;
 

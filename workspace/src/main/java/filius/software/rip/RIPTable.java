@@ -51,7 +51,7 @@ public class RIPTable {
 
 	public LinkedList<RIPRoute> routes;
 
-	public long nextBeacon;
+	private long nextBeacon;
 
 	private InternetKnotenBetriebssystem bs;
 
@@ -62,7 +62,7 @@ public class RIPTable {
 
 	public void reset() {
 		this.routes = new LinkedList<RIPRoute>();
-		this.nextBeacon = 0;
+		this.setNextBeacon(RIPUtil.getTime() + 1000);
 	}
 
 	public void addRoute(RIPRoute route) {
@@ -96,5 +96,13 @@ public class RIPTable {
 				route.hops = INFINITY;
 			}
 		}
+	}
+
+	public long getNextBeacon() {
+		return nextBeacon;
+	}
+
+	public void setNextBeacon(long nextBeacon) {
+		this.nextBeacon = nextBeacon;
 	}
 }

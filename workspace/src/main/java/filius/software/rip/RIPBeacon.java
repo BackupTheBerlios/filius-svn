@@ -25,7 +25,6 @@
  */
 package filius.software.rip;
 
-import java.util.ListIterator;
 import java.util.Random;
 
 import filius.exception.VerbindungsException;
@@ -38,7 +37,7 @@ import filius.software.transportschicht.UDPSocket;
 /**
  * 
  * @author pyropeter
- *
+ * @author stefanf
  */
 public class RIPBeacon extends ClientAnwendung {
 	private Random rand;
@@ -63,27 +62,19 @@ public class RIPBeacon extends ClientAnwendung {
 			return;
 		}
 
-		long remaining;
 		while (running) {
 			synchronized (table) {
-				remaining = table.nextBeacon - RIPUtil.getTime();
-				if (remaining > 0) {
+				while (table.getNextBeacon() - RIPUtil.getTime() > 0) {
 					try {
-						table.wait(remaining);
+						table.wait(table.getNextBeacon() - RIPUtil.getTime());
 					} catch (InterruptedException e) {
 					}
-					continue;
 				}
 
 				table.check();
 				broadcast(sock, bs, table);
 
-				table.nextBeacon = RIPUtil.getTime() + (int) (RIPTable.INTERVAL * (rand.nextFloat() / 3 + 0.84));
-			}
-
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
+				table.setNextBeacon(RIPUtil.getTime() + (int) (RIPTable.INTERVAL * (rand.nextFloat() / 3 + 0.84)));
 			}
 		}
 
@@ -94,12 +85,8 @@ public class RIPBeacon extends ClientAnwendung {
 		InternetKnoten knoten = (InternetKnoten) bs.getKnoten();
 
 		RIPMessage msg;
-		NetzwerkInterface nic;
 
-		ListIterator it = knoten.getNetzwerkInterfaces().listIterator();
-		while (it.hasNext()) {
-			nic = (NetzwerkInterface) it.next();
-
+		for (NetzwerkInterface nic : knoten.getNetzwerkInterfaces()) {
 			msg = new RIPMessage(nic.getIp(), bs.holeIPAdresse(), RIPTable.INFINITY, RIPTable.TIMEOUT);
 			for (RIPRoute route : table.routes) {
 				// split horizon:

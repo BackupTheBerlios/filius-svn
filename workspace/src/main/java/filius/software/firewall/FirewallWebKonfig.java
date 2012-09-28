@@ -25,10 +25,6 @@
  */
 package filius.software.firewall;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.LinkedList;
@@ -333,19 +329,4 @@ public class FirewallWebKonfig extends WebServerPlugIn {
 		}
 	}
 
-	/**
-	 * liest eine reale Textdatei vom Format .txt ein. Diese befinden sich im
-	 * Ordner /config
-	 */
-	private String textDateiEinlesen(String datei) throws FileNotFoundException, IOException {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
-		        + " (FirewallWebKonfig), textDateiEinlesen(" + datei + ")");
-		BufferedReader test = new BufferedReader(new FileReader(datei));
-		String fullFile = "";
-		String input = "";
-		while ((input = test.readLine()) != null) {
-			fullFile += input + "\n";
-		}
-		return fullFile;
-	}
 }
