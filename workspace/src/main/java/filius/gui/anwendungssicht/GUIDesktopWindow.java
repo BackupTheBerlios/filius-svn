@@ -25,16 +25,20 @@
  */
 package filius.gui.anwendungssicht;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import filius.gui.netzwerksicht.GUISidebar;
 import filius.hardware.Hardware;
+import filius.hardware.knoten.Host;
 import filius.hardware.knoten.Notebook;
 import filius.hardware.knoten.Rechner;
 import filius.software.system.Betriebssystem;
 
-public class GUIDesktopWindow extends JFrame {
+public class GUIDesktopWindow extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 1L;
 
@@ -42,6 +46,8 @@ public class GUIDesktopWindow extends JFrame {
 
 	public GUIDesktopWindow(Betriebssystem bs) {
 		super();
+
+		bs.addObserver(this);
 
 		Hardware hardware;
 		String imageFile = null;
@@ -66,19 +72,32 @@ public class GUIDesktopWindow extends JFrame {
 	public void setVisible(boolean flag) {
 		super.setVisible(flag);
 
-		String title;
-
-		title = desktopPanel.getBetriebssystem().getKnoten().getName() + " - "
-		        + desktopPanel.getBetriebssystem().holeIPAdresse();
-		// Main.debug.println("GUIDesktopWindow: Titel = " + title);
-		setTitle(title);
+		updateTitle();
 
 		if (flag) {
 			toFront();
 		}
 	}
 
+	private void updateTitle() {
+		String title;
+		Host host = (Host) desktopPanel.getBetriebssystem().getKnoten();
+		if (host.isUseIPAsName()) {
+			title = desktopPanel.getBetriebssystem().getKnoten().holeAnzeigeName();
+		} else {
+			title = desktopPanel.getBetriebssystem().getKnoten().holeAnzeigeName() + " - "
+			        + desktopPanel.getBetriebssystem().holeIPAdresse();
+		}
+		// Main.debug.println("GUIDesktopWindow: Titel = " + title);
+		setTitle(title);
+	}
+
 	public Betriebssystem getBetriebssystem() {
 		return desktopPanel.getBetriebssystem();
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		updateTitle();
 	}
 }

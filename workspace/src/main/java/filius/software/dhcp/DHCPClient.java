@@ -32,6 +32,7 @@ import filius.Main;
 import filius.exception.VerbindungsException;
 import filius.gui.GUIContainer;
 import filius.hardware.Verbindung;
+import filius.hardware.knoten.Host;
 import filius.software.clientserver.ClientAnwendung;
 import filius.software.transportschicht.UDPSocket;
 
@@ -75,7 +76,7 @@ public class DHCPClient extends ClientAnwendung {
 					if (!server.isStarted()) {
 						allDHCPserversStarted = false;
 						Main.debug.println("WARNING (" + this.hashCode() + "): DHCP server on '"
-						        + server.getSystemSoftware().getKnoten().getName()
+						        + server.getSystemSoftware().getKnoten().holeAnzeigeName()
 						        + "' has NOT been started --> waiting");
 						break;
 					} else {
@@ -239,7 +240,8 @@ public class DHCPClient extends ClientAnwendung {
 			e1.printStackTrace(Main.debug);
 		}
 
-		this.getSystemSoftware().benachrichtigeBeobacher(null);
+		Host host = ((Host) this.getSystemSoftware().getKnoten());
+		this.getSystemSoftware().benachrichtigeBeobacher(host);
 
 		beenden();
 	}

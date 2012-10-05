@@ -31,6 +31,16 @@ import filius.software.system.Betriebssystem;
 
 public abstract class Host extends InternetKnoten {
 
+	private boolean useIPAsName = false;
+
+	public boolean isUseIPAsName() {
+		return useIPAsName;
+	}
+
+	public void setUseIPAsName(boolean useIPAsName) {
+		this.useIPAsName = useIPAsName;
+	}
+
 	public Host() {
 		super();
 		Main.debug.println("INVOKED-2 (" + this.hashCode() + ") " + getClass() + " (Host), constr: Host()");
@@ -41,11 +51,14 @@ public abstract class Host extends InternetKnoten {
 		Main.debug.println("DEBUG:  Host " + this.hashCode() + " has OS " + getSystemSoftware().hashCode());
 	}
 
-	/*
-	 * Operationen
-	 * --------------------------------------------------------------
-	 * -----------------
-	 */
+	@Override
+	public String holeAnzeigeName() {
+		if (useIPAsName) {
+			return getNetzwerkInterfaces().getFirst().getIp();
+		} else {
+			return getName();
+		}
+	}
 
 	public void setIpAdresse(String ip) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Host), setIpAdresse(" + ip + ")");

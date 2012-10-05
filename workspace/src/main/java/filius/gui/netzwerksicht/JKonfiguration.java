@@ -154,7 +154,6 @@ public class JKonfiguration extends JBackgroundPanel {
 	 */
 	private void initAttributPanel() {
 		Box hauptBox;
-		Box tempBox;
 
 		attributPanel.removeAll();
 		attributPanel.updateUI();
@@ -162,17 +161,20 @@ public class JKonfiguration extends JBackgroundPanel {
 
 		hauptBox = Box.createVerticalBox();
 		hauptBox.add(Box.createHorizontalGlue());
-		hauptBox.setOpaque(true);
+		hauptBox.setOpaque(false);
 		hauptBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
 		hauptBox.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
-		initAttributEingabeBox(hauptBox);
+		Box auxBox = Box.createVerticalBox();
+		auxBox.add(Box.createHorizontalGlue());
+		auxBox.setOpaque(false);
+		auxBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+		auxBox.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
-		tempBox = Box.createHorizontalBox();
-		tempBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-		tempBox.setOpaque(true);
+		initAttributEingabeBox(hauptBox, auxBox);
 
-		attributPanel.add(hauptBox);
+		attributPanel.add(hauptBox, BorderLayout.CENTER);
+		attributPanel.add(auxBox, BorderLayout.LINE_END);
 		attributPanel.updateUI();
 		attributPanel.invalidate();
 		attributPanel.validate();
@@ -228,8 +230,11 @@ public class JKonfiguration extends JBackgroundPanel {
 	/**
 	 * Mit dieser Methode werden die hardwarespezifischen Eingabe- und
 	 * Anzeigekomponenten initialisiert.
+	 * 
+	 * @param rightBox
+	 *            TODO
 	 */
-	protected void initAttributEingabeBox(Box box) {
+	protected void initAttributEingabeBox(Box box, Box rightBox) {
 	}
 
 	/**

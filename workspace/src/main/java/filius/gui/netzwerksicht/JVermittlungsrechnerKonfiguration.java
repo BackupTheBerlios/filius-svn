@@ -224,7 +224,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		firewallDialog.setVisible(true);
 	}
 
-	protected void initAttributEingabeBox(Box box) {
+	protected void initAttributEingabeBox(Box box, Box rightBox) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
 		        + " (JVermittlungsrechnerKonfiguration), initAttributEingabeBox(" + box + ")");
 		Vermittlungsrechner vRechner;
@@ -276,8 +276,10 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		boxNetzwerkKarten = Box.createVerticalBox();
 		boxNetzwerkKarten.setPreferredSize(new Dimension(440, 150));
 		boxNetzwerkKarten.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+		boxNetzwerkKarten.setOpaque(false);
 
 		tpNetzwerkKarten = new JTabbedPane();
+		tpNetzwerkKarten.setOpaque(false);
 		boxNetzwerkKarten.add(tpNetzwerkKarten);
 
 		ipAdresseKeyAdapter = new KeyAdapter() {
@@ -351,6 +353,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		rip.setPreferredSize(new Dimension(160, 20));
 		rip.addActionListener(actionListener);
 		rip.addFocusListener(focusListener);
+		rip.setOpaque(false);
 		tempBox.add(rip);
 
 		vBox.add(tempBox);
@@ -404,7 +407,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				verbundeneKomponente[i] = new JLabel(messages.getString("jvermittlungsrechnerkonfiguration_msg5"));
 			else
 				verbundeneKomponente[i] = new JLabel(messages.getString("jvermittlungsrechnerkonfiguration_msg6") + " "
-				        + tempKnoten.getName());
+				        + tempKnoten.holeAnzeigeName());
 			verbundeneKomponente[i].setPreferredSize(new Dimension(400, 10));
 			boxKomponente.add(verbundeneKomponente[i]);
 
@@ -669,9 +672,10 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				btnRemote[nicNr - 1].setEnabled(false);
 				lblRemote[nicNr - 1] = new JLabel();
 				if (node instanceof filius.hardware.knoten.InternetKnoten) {
-					lblRemote[nicNr - 1].setText("<html>" + node.getName() + "<br>(" + remoteAddress + ")</html>");
+					lblRemote[nicNr - 1].setText("<html>" + node.holeAnzeigeName() + "<br>(" + remoteAddress
+					        + ")</html>");
 				} else {
-					lblRemote[nicNr - 1].setText(node.getName());
+					lblRemote[nicNr - 1].setText(node.holeAnzeigeName());
 				}
 				foreignPanel.add(btnRemote[nicNr - 1]);
 				foreignPanel.add(lblRemote[nicNr - 1]);
@@ -1210,7 +1214,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		vRechner = (Vermittlungsrechner) holeHardware();
 		bs = (VermittlungsrechnerBetriebssystem) vRechner.getSystemSoftware();
 
-		name.setText(vRechner.getName());
+		name.setText(vRechner.holeAnzeigeName());
 		gateway.setText(bs.getStandardGateway());
 		rip.setSelected(bs.getRip());
 
@@ -1227,7 +1231,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				verbundeneKomponente[i].setText(messages.getString("jvermittlungsrechnerkonfiguration_msg16"));
 			else
 				verbundeneKomponente[i].setText(messages.getString("jvermittlungsrechnerkonfiguration_msg6") + " "
-				        + tempKnoten.getName());
+				        + tempKnoten.holeAnzeigeName());
 
 		}
 

@@ -423,7 +423,7 @@ public class PeerToPeerAnwendung extends Anwendung {
 	void verarbeitePong(PongPaket pongPaket) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + " (PeerToPeerAnwendung), verarbeitePong(" + pongPaket + ")" + "\n\tPong-Nachricht bei '"
-		        + getSystemSoftware().getKnoten().getName() + "' eingetroffen: " + pongPaket.toString());
+		        + getSystemSoftware().getKnoten().holeAnzeigeName() + "' eingetroffen: " + pongPaket.toString());
 
 		if (eigeneAnfragen.contains(pongPaket.getGuid())) {
 			hinzuTeilnehmer(pongPaket.getIpAdresse());

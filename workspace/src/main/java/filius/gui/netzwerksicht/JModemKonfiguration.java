@@ -93,7 +93,7 @@ public class JModemKonfiguration extends JKonfiguration implements I18n, Observe
 
 	}
 
-	protected void initAttributEingabeBox(Box box) {
+	protected void initAttributEingabeBox(Box box, Box rightBox) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
 		        + " (JModemKonfiguration), initAttributEingabeBox(" + box + ")");
 		JLabel tempLabel;
@@ -126,7 +126,7 @@ public class JModemKonfiguration extends JKonfiguration implements I18n, Observe
 		name.addFocusListener(focusListener);
 
 		tempBox = Box.createHorizontalBox();
-		tempBox.setOpaque(true);
+		tempBox.setOpaque(false);
 		tempBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
 		tempBox.setMaximumSize(new Dimension(400, 40));
 		tempBox.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -142,6 +142,7 @@ public class JModemKonfiguration extends JKonfiguration implements I18n, Observe
 
 		cbServerModus = new JCheckBox();
 		cbServerModus.setText(messages.getString("jmodemkonfiguration_msg2"));
+		cbServerModus.setOpaque(false);
 		tempBox.add(cbServerModus);
 
 		box.add(tempBox);
@@ -232,7 +233,7 @@ public class JModemKonfiguration extends JKonfiguration implements I18n, Observe
 
 		modem = (Modem) holeHardware();
 		firmware = (ModemFirmware) modem.getSystemSoftware();
-		name.setText(modem.getName());
+		name.setText(modem.holeAnzeigeName());
 
 		tfIpAdresse.setText(firmware.getIpAdresse());
 		tfPort.setText("" + firmware.getPort());

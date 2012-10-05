@@ -43,6 +43,7 @@ import javax.swing.SwingConstants;
 
 import filius.Main;
 import filius.gui.JMainFrame;
+import filius.hardware.knoten.Host;
 
 public class JSidebarButton extends JLabel implements Observer {
 
@@ -104,11 +105,8 @@ public class JSidebarButton extends JLabel implements Observer {
 		height = this.getFontMetrics(this.getFont()).getHeight();
 		if (this.getIcon() != null) {
 			height += this.getIcon().getIconHeight();
-		} else {
-			// Main.debug.println("DEBUG ("+this.hashCode()+"), getHeight(): add 80 to height");
-			// height+=80;
 		}
-		height += 10;
+		// height += 10;
 
 		// Main.debug.println("DEBUG ("+this.hashCode()+"), getHeight="+height);
 		return height;
@@ -147,6 +145,8 @@ public class JSidebarButton extends JLabel implements Observer {
 			modemVerbunden = false;
 		} else if (arg != null && arg instanceof String) {
 			JOptionPane.showMessageDialog(JMainFrame.getJMainFrame(), arg);
+		} else if (arg != null && arg instanceof Host) {
+			this.setText(((Host) arg).holeAnzeigeName());
 		}
 		this.updateUI();
 	}

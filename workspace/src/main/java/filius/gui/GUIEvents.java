@@ -904,7 +904,7 @@ public class GUIEvents implements I18n {
 	private void satTabelleAnzeigen(final GUIKnotenItem aktivesItem) {
 		Switch sw = (Switch) aktivesItem.getKnoten();
 
-		JFrame jfSATTabelle = new JFrame(messages.getString("guievents_msg8") + " " + sw.getName());
+		JFrame jfSATTabelle = new JFrame(messages.getString("guievents_msg8") + " " + sw.holeAnzeigeName());
 		jfSATTabelle.setBounds(100, 100, 320, 240);
 
 		ImageIcon icon = new ImageIcon(getClass().getResource("/gfx/hardware/switch.png"));

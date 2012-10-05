@@ -78,7 +78,7 @@ public class JSwitchKonfiguration extends JKonfiguration implements I18n {
 	}
 
 	@Override
-	protected void initAttributEingabeBox(Box box) {
+	protected void initAttributEingabeBox(Box box, Box rightBox) {
 		JLabel tempLabel;
 		Box tempBox;
 		Box tempBox2;
@@ -115,6 +115,7 @@ public class JSwitchKonfiguration extends JKonfiguration implements I18n {
 		checkCloud = new JCheckBox(messages.getString("jswitchkonfiguration_msg3"));
 		checkCloud.setPreferredSize(new Dimension(160, 10));
 		checkCloud.setVisible(true);
+		checkCloud.setOpaque(false);
 		// checkCloud.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		checkCloud.addItemListener(itemListener);
 
@@ -123,7 +124,7 @@ public class JSwitchKonfiguration extends JKonfiguration implements I18n {
 		name.addFocusListener(focusListener);
 
 		tempBox = Box.createHorizontalBox();
-		tempBox.setOpaque(true);
+		tempBox.setOpaque(false);
 		tempBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
 		tempBox.setMaximumSize(new Dimension(400, 40));
 		tempBox.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -132,13 +133,14 @@ public class JSwitchKonfiguration extends JKonfiguration implements I18n {
 		tempBox.add(name);
 		tempBox2 = Box.createVerticalBox();
 		tempBox2.add(tempBox);
+		tempBox2.add(Box.createVerticalStrut(10));
 		tempBox2.add(checkCloud);
 		box.add(tempBox2, BorderLayout.NORTH);
 	}
 
 	@Override
 	public void updateAttribute() {
-		name.setText(((Switch) holeHardware()).getName());
+		name.setText(((Switch) holeHardware()).holeAnzeigeName());
 		checkCloud.setSelected(((Switch) holeHardware()).isCloud());
 	}
 

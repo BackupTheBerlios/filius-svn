@@ -74,8 +74,20 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 	                        // beziehen,Dhcp,1,boolean,editable,false,null
 	private JButton btDhcp;
 
+	private JCheckBox useIpAsName;
+
 	protected JHostKonfiguration(Hardware hardware) {
 		super(hardware);
+	}
+
+	public void aendereAnzeigeName() {
+		if (holeHardware() != null) {
+			Host host = (Host) holeHardware();
+			host.setUseIPAsName(useIpAsName.isSelected());
+		}
+
+		GUIContainer.getGUIContainer().updateViewport();
+		updateAttribute();
 	}
 
 	/** Diese Methode wird vom JAendernButton aufgerufen */
@@ -85,7 +97,9 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 
 		if (holeHardware() != null) {
 			host = (Host) holeHardware();
-			host.setName(name.getText());
+			if (!useIpAsName.isSelected()) {
+				host.setName(name.getText());
+			}
 
 			bs = (Betriebssystem) host.getSystemSoftware();
 			bs.setzeIPAdresse(ipAdresse.getText());
@@ -104,7 +118,7 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		updateAttribute();
 	}
 
-	protected void initAttributEingabeBox(Box box) {
+	protected void initAttributEingabeBox(Box box, Box rightBox) {
 		JLabel tempLabel;
 		Box tempBox;
 		FocusListener focusListener;
@@ -138,7 +152,8 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		name.addFocusListener(focusListener);
 
 		tempBox = Box.createHorizontalBox();
-		tempBox.setOpaque(true);
+		tempBox = Box.createHorizontalBox();
+		tempBox.setOpaque(false);
 		tempBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
 		tempBox.setMaximumSize(new Dimension(400, 40));
 		tempBox.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -158,7 +173,7 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		macAdresse.setEnabled(false);
 
 		tempBox = Box.createHorizontalBox();
-		tempBox.setOpaque(true);
+		tempBox.setOpaque(false);
 		tempBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
 		tempBox.setMaximumSize(new Dimension(400, 40));
 		tempBox.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -184,7 +199,7 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		ipAdresse.addFocusListener(focusListener);
 
 		tempBox = Box.createHorizontalBox();
-		tempBox.setOpaque(true);
+		tempBox.setOpaque(false);
 		tempBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
 		tempBox.setMaximumSize(new Dimension(400, 40));
 		tempBox.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -211,7 +226,7 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		netzmaske.addFocusListener(focusListener);
 
 		tempBox = Box.createHorizontalBox();
-		tempBox.setOpaque(true);
+		tempBox.setOpaque(false);
 		tempBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
 		tempBox.setMaximumSize(new Dimension(400, 40));
 		tempBox.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -237,7 +252,7 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		gateway.addFocusListener(focusListener);
 
 		tempBox = Box.createHorizontalBox();
-		tempBox.setOpaque(true);
+		tempBox.setOpaque(false);
 		tempBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
 		tempBox.setMaximumSize(new Dimension(400, 40));
 		tempBox.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -263,7 +278,7 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		dns.addFocusListener(focusListener);
 
 		tempBox = Box.createHorizontalBox();
-		tempBox.setOpaque(true);
+		tempBox.setOpaque(false);
 		tempBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
 		tempBox.setMaximumSize(new Dimension(400, 40));
 		tempBox.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -272,31 +287,60 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 		tempBox.add(dns);
 		box.add(tempBox, BorderLayout.NORTH);
 
+		tempLabel = new JLabel(messages.getString("jhostkonfiguration_msg10"));
+		tempLabel.setPreferredSize(new Dimension(140, 10));
+		tempLabel.setVisible(true);
+		tempLabel.setOpaque(false);
+		tempLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+
+		useIpAsName = new JCheckBox();
+		useIpAsName.setOpaque(false);
+		useIpAsName.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				aendereAnzeigeName();
+			}
+		});
+
+		tempBox = Box.createHorizontalBox();
+		tempBox.setOpaque(false);
+		tempBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+		tempBox.setPreferredSize(new Dimension(400, 35));
+		tempBox.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		tempBox.add(useIpAsName);
+		tempBox.add(Box.createHorizontalStrut(5)); // Platz zw. tempLabel und
+		tempBox.add(tempLabel);
+		rightBox.add(tempBox, BorderLayout.NORTH);
+
 		// =======================================================
 		// Attribut Verwendung von DHCP
 		tempLabel = new JLabel(messages.getString("jhostkonfiguration_msg7"));
 		tempLabel.setPreferredSize(new Dimension(140, 10));
 		tempLabel.setVisible(true);
+		tempLabel.setOpaque(false);
 		tempLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
 		dhcp = new JCheckBox();
 		dhcp.setSelected(false);
+		dhcp.setOpaque(false);
 		dhcp.addActionListener(actionListener);
 
 		tempBox = Box.createHorizontalBox();
-		tempBox.setOpaque(true);
+		tempBox.setOpaque(false);
 		tempBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-		tempBox.setMaximumSize(new Dimension(400, 40));
+		tempBox.setPreferredSize(new Dimension(400, 35));
 		tempBox.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-		tempBox.add(tempLabel);
-		tempBox.add(Box.createHorizontalStrut(5)); // Platz zw. tempLabel und
 		tempBox.add(dhcp);
-		box.add(tempBox, BorderLayout.NORTH);
+		tempBox.add(Box.createHorizontalStrut(5)); // Platz zw. tempLabel und
+		tempBox.add(tempLabel);
+		rightBox.add(tempBox, BorderLayout.NORTH);
+
+		rightBox.add(Box.createVerticalStrut(10));
 
 		// ===================================================
 		// DHCP-Server einrichten
 		tempBox = Box.createHorizontalBox();
 		tempBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+		tempBox.setOpaque(false);
 
 		btDhcp = new JButton(messages.getString("jhostkonfiguration_msg8"));
 		btDhcp.addActionListener(new ActionListener() {
@@ -309,7 +353,13 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 			}
 		});
 		tempBox.add(btDhcp);
-		box.add(tempBox);
+
+		rightBox.add(tempBox);
+
+		tempBox = Box.createVerticalBox();
+		tempBox.setOpaque(false);
+		tempBox.setPreferredSize(new Dimension(400, 120));
+		rightBox.add(tempBox);
 
 		updateAttribute();
 	}
@@ -320,7 +370,9 @@ public class JHostKonfiguration extends JKonfiguration implements I18n {
 
 		if (holeHardware() != null) {
 			host = (Host) holeHardware();
-			name.setText(host.getName());
+			name.setText(host.holeAnzeigeName());
+			useIpAsName.setSelected(host.isUseIPAsName());
+			name.setEnabled(!host.isUseIPAsName());
 
 			bs = (Betriebssystem) host.getSystemSoftware();
 

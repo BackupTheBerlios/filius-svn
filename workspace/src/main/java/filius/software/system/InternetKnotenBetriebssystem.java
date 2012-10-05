@@ -196,7 +196,7 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 	private void printDebugInfo() {
 		Main.debug.println("DEBUG (" + this.hashCode() + "): start InternetKnotenBetriebssystem");
 		if (this.getKnoten() != null) {
-			Main.debug.println("DEBUG (" + this.hashCode() + ") - Hostname = " + this.getKnoten().getName());
+			Main.debug.println("DEBUG (" + this.hashCode() + ") - Hostname = " + this.getKnoten().holeAnzeigeName());
 			Main.debug.print("DEBUG (" + this.hashCode() + ") - Hardwaretyp = '");
 			if (getKnoten() instanceof filius.hardware.knoten.Notebook) {
 				Main.debug.println("Notebook'");

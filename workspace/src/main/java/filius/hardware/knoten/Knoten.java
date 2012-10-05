@@ -39,6 +39,10 @@ public abstract class Knoten extends Hardware {
 
 	public abstract Port holeFreienPort();
 
+	public String holeAnzeigeName() {
+		return name;
+	}
+
 	public String getName() {
 		return name;
 	}

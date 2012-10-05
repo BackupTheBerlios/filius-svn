@@ -424,7 +424,7 @@ public class GUIContainer implements Serializable, I18n {
 		}
 
 		if (tempIcon != null && neuerKnoten != null) {
-			templabel = new JSidebarButton(neuerKnoten.getName(), tempIcon, neuerKnoten.holeHardwareTyp());
+			templabel = new JSidebarButton(neuerKnoten.holeAnzeigeName(), tempIcon, neuerKnoten.holeHardwareTyp());
 			templabel.setBounds(x - templabel.getWidth() / 2 - sidebar.getLeistenpanel().getWidth(),
 			        y - templabel.getHeight() / 2, templabel.getWidth(), templabel.getHeight());
 

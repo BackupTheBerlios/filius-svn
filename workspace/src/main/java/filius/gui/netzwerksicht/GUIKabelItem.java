@@ -77,7 +77,7 @@ public class GUIKabelItem implements Serializable {
 			if (kabelpanel.getZiel1() != null) {
 				result += "kabelpanel.ziel1 (id)" + kabelpanel.getZiel1().hashCode() + ", ";
 				if (kabelpanel.getZiel1().getKnoten() != null)
-					result += "kabelpanel.ziel1.knoten (name)" + kabelpanel.getZiel1().getKnoten().getName() + ", ";
+					result += "kabelpanel.ziel1.knoten (name)" + kabelpanel.getZiel1().getKnoten().holeAnzeigeName() + ", ";
 				else
 					result += "kabelpanel.ziel1.knoten=<null>, ";
 			} else
@@ -85,7 +85,7 @@ public class GUIKabelItem implements Serializable {
 			if (kabelpanel.getZiel2() != null) {
 				result += "kabelpanel.ziel2 (id)" + kabelpanel.getZiel2().hashCode() + ", ";
 				if (kabelpanel.getZiel2().getKnoten() != null)
-					result += "kabelpanel.ziel2.knoten (name)" + kabelpanel.getZiel2().getKnoten().getName() + ", ";
+					result += "kabelpanel.ziel2.knoten (name)" + kabelpanel.getZiel2().getKnoten().holeAnzeigeName() + ", ";
 				else
 					result += "kabelpanel.ziel2.knoten=<null>, ";
 			}
