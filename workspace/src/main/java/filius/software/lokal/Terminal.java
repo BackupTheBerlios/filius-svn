@@ -806,10 +806,11 @@ public class Terminal extends ClientAnwendung implements I18n {
 
 		benachrichtigeBeobachter(new Boolean(true));
 		if (destIP.equals(args[0])) {
-			benachrichtigeBeobachter(String.format(messages.getString("sw_terminal_trace_msg4") + "\n", args[0], maxHops));
-		} else {
-			benachrichtigeBeobachter(String.format(messages.getString("sw_terminal_trace_msg5") + "\n", args[0], destIP,
+			benachrichtigeBeobachter(String.format(messages.getString("sw_terminal_trace_msg4") + "\n", args[0],
 			        maxHops));
+		} else {
+			benachrichtigeBeobachter(String.format(messages.getString("sw_terminal_trace_msg5") + "\n", args[0],
+			        destIP, maxHops));
 		}
 
 		// 2.: Pings senden und gucken, was alles zurueckkommt

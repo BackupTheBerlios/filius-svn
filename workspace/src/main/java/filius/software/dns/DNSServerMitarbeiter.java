@@ -25,8 +25,11 @@
  */
 package filius.software.dns;
 
+import java.util.concurrent.TimeoutException;
+
 import filius.Main;
 import filius.software.clientserver.ServerMitarbeiter;
+import filius.software.system.InternetKnotenBetriebssystem;
 import filius.software.transportschicht.Socket;
 import filius.software.transportschicht.UDPSocket;
 
@@ -58,10 +61,28 @@ public class DNSServerMitarbeiter extends ServerMitarbeiter {
 				if (record.getType().equals(ResourceRecord.ADDRESS)) {
 					antwort.hinzuAntwortResourceRecord(record.toString());
 				} else if (record.getType().equals(ResourceRecord.NAME_SERVER)) {
-					antwort.hinzuAntwortResourceRecord(record.toString());
-					record = ((DNSServer) server).holeRecord(record.getRdata(), ResourceRecord.ADDRESS);
-					if (record != null) {
+					if (((DNSServer) server).isRecursiveResolutionEnabled()) {
+						Resolver resolver = ((InternetKnotenBetriebssystem) server.getSystemSoftware()).holeDNSClient();
+						record = ((DNSServer) server).holeRecord(record.getRdata(), ResourceRecord.ADDRESS);
+						if (record != null) {
+							try {
+								String ipAdresse = resolver.holeIPAdresse(query.holeDomainname(), record.getRdata());
+								record = new ResourceRecord(query.holeDomainname(), ResourceRecord.ADDRESS, ipAdresse);
+								antwort.hinzuAntwortResourceRecord(record.toString());
+							} catch (TimeoutException e) {
+								antwort.hinzuAntwortResourceRecord(record.toString());
+								record = ((DNSServer) server).holeRecord(record.getRdata(), ResourceRecord.ADDRESS);
+								if (record != null) {
+									antwort.hinzuAntwortResourceRecord(record.toString());
+								}
+							}
+						}
+					} else {
 						antwort.hinzuAntwortResourceRecord(record.toString());
+						record = ((DNSServer) server).holeRecord(record.getRdata(), ResourceRecord.ADDRESS);
+						if (record != null) {
+							antwort.hinzuAntwortResourceRecord(record.toString());
+						}
 					}
 				} else if (record.getType().equals(ResourceRecord.MAIL_EXCHANGE)) {
 					antwort.hinzuAntwortResourceRecord(record.toString());

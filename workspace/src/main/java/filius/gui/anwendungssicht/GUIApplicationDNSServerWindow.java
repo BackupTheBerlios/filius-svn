@@ -42,6 +42,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -70,6 +71,8 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 	private JLabel aDomainLabel, aIpLabel, mxURLLabel, mxMaildomainLabel, nsDomainLabel, nsDomainServerLabel;
 
 	private JTabbedPane tabbedPane;
+
+	private JCheckBox recResolution;
 
 	private JButton mxAddButton, aAddButton, buttonStart, buttonEntfernen, buttonMXEntfernen, nsAddButton,
 	        nsRemoveButton;
@@ -105,6 +108,24 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		hBox = Box.createHorizontalBox();
 		hBox.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		hBox.add(buttonStart);
+
+		recResolution = new JCheckBox();
+		recResolution.setText(messages.getString("dnsserver_msg20"));
+		DNSServer dnsServer = (DNSServer) this.holeAnwendung();
+		recResolution.setSelected(dnsServer.isRecursiveResolutionEnabled());
+		recResolution.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JCheckBox checkBox = GUIApplicationDNSServerWindow.this.recResolution;
+				boolean activated = checkBox.isSelected();
+				DNSServer dnsServer = (DNSServer) GUIApplicationDNSServerWindow.this.holeAnwendung();
+				dnsServer.setRecursiveResolutionEnabled(activated);
+				checkBox.setSelected(dnsServer.isRecursiveResolutionEnabled());
+			}
+		});
+		hBox.add(Box.createHorizontalStrut(20));
+		hBox.add(recResolution);
+
 		backPanel.add(hBox, BorderLayout.NORTH);
 
 		initAPanel();

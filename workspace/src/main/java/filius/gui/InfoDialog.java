@@ -126,9 +126,9 @@ public class InfoDialog extends JDialog implements I18n {
 			personen.setPreferredSize(new Dimension(270, 110));
 			maintainer = new JLabel();
 			maintainer.setText("<html>" + "<b>" + messages.getString("infodialog_msg5") + "</b>" + "<p>"
-			        + "Christian J. Eibl (filius&#x40;fameibl.de)<br/> " + "Stefan Freischlad <br/>&nbsp;</p>" + "<p>"
-			        + messages.getString("infodialog_msg8") + "<br/>" + "http://bugs.fameibl.de "
-			        + messages.getString("infodialog_msg9") + " http://www.lernsoftware-filius.de." + "</p></html>");
+			        + "Christian J. Eibl <br/> " + "Stefan Freischlad <br/>&nbsp;</p>" + "<p>"
+			        + messages.getString("infodialog_msg8") + "<br/>" + " http://www.lernsoftware-filius.de."
+			        + "</p></html>");
 			maintainer.setVerticalAlignment(SwingConstants.TOP);
 			maintainer.setForeground(Color.WHITE);
 			maintainer.setFont(new Font("Dialog", Font.PLAIN, 12));

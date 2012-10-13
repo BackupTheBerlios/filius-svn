@@ -139,18 +139,21 @@ public class Resolver extends ClientAnwendung {
 		return antwort;
 	}
 
+	public String holeIPAdresse(String domainname) throws TimeoutException {
+		return holeIPAdresse(domainname, getSystemSoftware().getDNSServer());
+	}
+
 	/**
 	 * Methode zur Aufloesung eines Domainnamens zu einer IP-Adresse.
 	 * 
 	 * @param domainname
 	 * @return
 	 */
-	public String holeIPAdresse(String domainname) throws TimeoutException {
+	public String holeIPAdresse(String domainname, String dnsServer) throws TimeoutException {
 		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + " (Resolver), holeIPAdresse(" + domainname + ")");
 		DNSNachricht antwort;
 		String adresse, dnsServerDomain;
-		String dnsServer = getSystemSoftware().getDNSServer();
 
 		if (domainname.equalsIgnoreCase("localhost")) {
 			return "127.0.0.1";

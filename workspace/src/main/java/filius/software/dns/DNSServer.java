@@ -37,7 +37,17 @@ import filius.software.transportschicht.Socket;
 
 public class DNSServer extends UDPServerAnwendung {
 
+	private boolean recursiveResolutionEnabled = false;
+
 	private LinkedList<ResourceRecord> records = new LinkedList<ResourceRecord>();
+
+	public boolean isRecursiveResolutionEnabled() {
+		return recursiveResolutionEnabled;
+	}
+
+	public void setRecursiveResolutionEnabled(boolean recursiveResolutionEnabled) {
+		this.recursiveResolutionEnabled = recursiveResolutionEnabled;
+	}
 
 	public DNSServer() {
 		super();
