@@ -84,6 +84,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 	private JTextField tfPort;
 
 	private JCheckBox[] nicSelection;
+	private JCheckBox rejectConnections;
 
 	public JFirewallDialog(Firewall firewall, JFrame dummyFrame) {
 		super(dummyFrame, messages.getString("jfirewalldialog_msg1"), true);
@@ -240,6 +241,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		for (NetzwerkInterface nic : this.nics) {
 			this.nicSelection[i] = new JCheckBox(nic.getIp(), activeNics.contains(nic));
 			this.nicSelection[i].setOpaque(false);
+
 			this.nicSelection[i].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent evt) {
 					JCheckBox cb = (JCheckBox) evt.getSource();
@@ -265,10 +267,41 @@ public class JFirewallDialog extends JDialog implements I18n {
 			hBox = Box.createHorizontalBox();
 			hBox.add(Box.createHorizontalStrut(10));
 			hBox.add(this.nicSelection[i]);
-			hBox.setPreferredSize(new Dimension(555, 20));
+			hBox.add(Box.createHorizontalGlue());
 			vBox.add(hBox);
 			i++;
 		}
+		vBox.add(Box.createVerticalStrut(10));
+		rejectConnections = new JCheckBox(messages.getString("jfirewalldialog_msg19"));
+		rejectConnections.setOpaque(false);
+		rejectConnections.setSelected(this.firewall.getRejectIncomingConnections());
+		rejectConnections.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFirewallDialog.this.firewall.setRejectIncomingConnections(((JCheckBox) e.getSource()).isSelected());
+			}
+		});
+
+		hBox = Box.createHorizontalBox();
+		hBox.add(Box.createHorizontalStrut(10));
+		hBox.add(rejectConnections);
+		hBox.add(Box.createHorizontalGlue());
+		vBox.add(hBox);
+
+		JTextArea label = new JTextArea();
+		label.setEditable(false);
+		label.setLineWrap(true);
+		label.setWrapStyleWord(true);
+		label.setOpaque(false);
+		label.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
+		label.setText(messages.getString("jfirewalldialog_msg20"));
+		hBox = Box.createHorizontalBox();
+		hBox.add(Box.createHorizontalStrut(10));
+		hBox.add(label);
+		hBox.add(Box.createHorizontalStrut(10));
+		vBox.add(hBox);
+
 		vBox.add(Box.createVerticalStrut(1000));
 
 		return vBox;
@@ -539,6 +572,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 			vector.addElement((String) ((Object[]) liste.get(i))[0]);
 			model.addRow(vector);
 		}
+		rejectConnections.setSelected(firewall.getRejectIncomingConnections());
 
 		liste = firewall.getAbsenderFilterList();
 		model = (DefaultTableModel) tTabelleAbsender.getModel();

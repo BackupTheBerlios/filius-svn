@@ -71,7 +71,7 @@ public class Firewall extends Anwendung implements I18n {
 	public static String ABSENDER_FILTER = "Quelle", EMPFAENGER_FILTER = "Ziel";
 
 	private boolean aktiviert = true;
-	private int bitRegel = 0;
+	private boolean verbindungsaufbauAblehnen = false;
 	private LinkedList<String> absenderFilter, empfaengerFilter;
 	/**
 	 * Liste mit Portregeln besetehen aus dem jeweiligen TCP/UDP-Port und einem
@@ -214,11 +214,11 @@ public class Firewall extends Anwendung implements I18n {
 				}
 			} else {
 				// Pruefen von Ip-Adressen:
-				if (pruefeIPEmpfaenger(ipPaket.getEmpfaenger())) {
+				if (ipPaket.getProtocol() == IpPaket.TCP && pruefeIPEmpfaenger(ipPaket.getEmpfaenger())) {
 					verwerfen = true;
-					benachrichtigeBeobachter(messages.getString("sw_firewall_msg1") + verwerfen);
+					benachrichtigeBeobachter(messages.getString("sw_firewall_msg1"));
 				}
-				if (pruefeIPSender(ipPaket.getSender())) {
+				if (ipPaket.getProtocol() == IpPaket.TCP && pruefeIPSender(ipPaket.getSender())) {
 					verwerfen = true;
 				}
 
@@ -234,7 +234,7 @@ public class Firewall extends Anwendung implements I18n {
 				}
 
 				// Syn-Ack-Bit prüfen:
-				if (getBitRegel() == 1 && segment instanceof TcpSegment) {
+				if (getRejectIncomingConnections() && segment instanceof TcpSegment) {
 					if (((TcpSegment) segment).isSyn() && !((TcpSegment) segment).isAck()) {
 						verwerfen = true;
 						benachrichtigeBeobachter(messages.getString("sw_firewall_msg3"));
@@ -570,12 +570,12 @@ public class Firewall extends Anwendung implements I18n {
 	}
 
 	// getter & setter:
-	public int getBitRegel() {
-		return bitRegel;
+	public boolean getRejectIncomingConnections() {
+		return verbindungsaufbauAblehnen;
 	}
 
-	public void setBitRegel(int bitRegel) {
-		this.bitRegel = bitRegel;
+	public void setRejectIncomingConnections(boolean active) {
+		this.verbindungsaufbauAblehnen = active;
 	}
 
 	public boolean isAktiviert() {

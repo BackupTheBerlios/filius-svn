@@ -122,6 +122,7 @@ public class FirewallWebKonfig extends WebServerPlugIn {
 		int regel;
 		String empfaengerUnten = null, empfaengerOben = null;
 		String absenderUnten = null, absenderOben = null;
+		boolean rejectConnections = false;
 
 		// Firewall bestücken:
 		if (webserver.getSystemSoftware() != null) {
@@ -181,8 +182,11 @@ public class FirewallWebKonfig extends WebServerPlugIn {
 						firewall.eintragHinzufuegenPort("" + regel);
 					} catch (Exception e) {
 					}
+				} else if (fwAttribute[i][0].equals("verbindungsaufbau_ablehnen") && fwAttribute[i][1].equals("1")) {
+					rejectConnections = true;
 				}
 			}
+			firewall.setRejectIncomingConnections(rejectConnections);
 
 			if (empfaengerUnten != null && !empfaengerUnten.trim().equals("")) {
 				if (empfaengerOben != null && !empfaengerOben.trim().equals("")) {
@@ -314,6 +318,15 @@ public class FirewallWebKonfig extends WebServerPlugIn {
 					}
 				}
 				html = html.replaceAll(":nic_activation:", nicSelectionHtml.toString());
+
+				StringBuffer rejectConnections = new StringBuffer();
+				rejectConnections.append("\t\t<input name=\"verbindungsaufbau_ablehnen\" type=\"checkbox\"");
+				rejectConnections.append(" value=\"1\" size=\"30\" maxlength=\"40\"");
+				if (firewall.getRejectIncomingConnections()) {
+					rejectConnections.append(" checked=\"checked\"");
+				}
+				rejectConnections.append(" />");
+				html = html.replaceAll(":reject_connections:", rejectConnections.toString());
 
 				html = html.replaceAll(":empfaenger_regeln:", erstelleZeilenEmpfaengerRegeln());
 				html = html.replaceAll(":absender_regeln:", erstelleZeilenAbsenderRegeln());
