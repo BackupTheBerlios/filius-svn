@@ -1,6 +1,24 @@
 FILIUS Changelog
 ================
 
+*filius-1.4.5 (4. Nov 2012)
+---------------------------
+- Domainserver unterstuetzen als Option rekursive 
+  Domainnamensaufloesung.
+- Re-Integration eines Forks (Dank an pyropeter)
+  - erweitertes ICMP
+  - im Terminal: Befehlshistorie, Traceroute, Abbruch mit <Strg>+C
+  - Vermittlungsrechner koennen jetzt automatisch konfiguriert werden 
+    (mit RIP als Routing-Protokoll)
+  - Modem: automatischer Wiederaufbau einer unterbrochenen Verbindung
+- Der Webserver des Vermittlungsrechner ermöglicht die Abfrage der
+  aktuellen Weiterleitungstabelle.
+- Vermittlungsrechner-Firewall:
+  - kann jetzt alle Versuche eines TCP-Verbindungsaufbaus ablehnen.
+  - Absender- und Empfaenger-Regeln gelten nur noch fuer
+    TCP (nicht mehr fuer UPD)
+- Als Rechnername kann jetzt die IP-Adresse verwendet werden.
+  
 *filius-1.4.4 (13. Mar 2012)
 ----------------------------
 - Domain Name System: Jetzt kann auch ein Resource Record fuer einen 
