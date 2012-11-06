@@ -48,7 +48,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>Filius</finalName>
+		<finalName>filius</finalName>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -96,7 +96,7 @@
 							<headerType>gui</headerType>
 							<outfile>target/Filius.exe</outfile>
 							<errTitle>FILIUS - Error</errTitle>
-							<jar>target/Filius.jar</jar>
+							<jar>target/filius.jar</jar>
 							<icon>src/main/resources/gfx/filius32.ico</icon>
 							<classPath>
 								<mainClass>filius.Main</mainClass>
