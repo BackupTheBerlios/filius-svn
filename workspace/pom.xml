@@ -102,6 +102,7 @@
 								<mainClass>filius.Main</mainClass>
 								<addDependencies>true</addDependencies>
 							</classPath>
+							<chdir>.</chdir>
 							<jre>
 								<minVersion>1.6.0</minVersion>
 								<jdkPreference>preferJdk</jdkPreference>
