@@ -1,5 +1,12 @@
 FILIUS Changelog
 ================
+*filius-1.4.5.1 (11. Nov 2012)
+------------------------------
+- Fehlerbehebung: Fortschrittsanzeige bei Mail-Abruf wurde nicht mehr 
+  ausgeblendet und Mails nicht vollstaendig angezeigt
+- Fehlerbehebung: Durch die rekursive DNS-Namensaufloesung muss die
+  zeitliche Begrenzung des Resolvers auf ein vielfaches der maximalen
+  Round-Trip-Time betragen
 
 *filius-1.4.5 (4. Nov 2012)
 ---------------------------
