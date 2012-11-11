@@ -631,7 +631,9 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
 			Email neueMail = (Email) mailit.next();
 			Vector v = new Vector();
 			String absender = neueMail.getAbsender();
-			if (absender.indexOf("<") >= 0 && absender.substring(0, absender.indexOf("<")).trim().isEmpty()) {
+			if (absender == null) {
+				v.add("");
+			} else if (absender.indexOf("<") >= 0 && absender.substring(0, absender.indexOf("<")).trim().isEmpty()) {
 				v.add(absender.substring(absender.indexOf("<") + 1, absender.indexOf(">")));
 			} else {
 				v.add(absender);
