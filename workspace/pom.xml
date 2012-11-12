@@ -4,9 +4,9 @@
 
 	<groupId>filius</groupId>
 	<artifactId>filius</artifactId>
-	<version>1.4.5.1</version>
+	<version>1.4.5.2</version>
 	<properties>
-		<buildDate>11.11.2012</buildDate>
+		<buildDate>12.11.2012</buildDate>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<packaging>jar</packaging>

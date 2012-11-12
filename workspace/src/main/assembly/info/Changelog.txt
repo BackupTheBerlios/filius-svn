@@ -1,5 +1,10 @@
 FILIUS Changelog
 ================
+*filius-1.4.5.2 (12. Nov 2012)
+------------------------------
+Fehlerbehebung: Ping zu Vermittlungsrechner funktionierte nicht fuer
+alle Schnittstellen
+
 *filius-1.4.5.1 (11. Nov 2012)
 ------------------------------
 - Fehlerbehebung: Fortschrittsanzeige bei Mail-Abruf wurde nicht mehr 
