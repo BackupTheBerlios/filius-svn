@@ -48,13 +48,13 @@ public class ICMPThread extends ProtokollThread {
 
 	public ICMPThread(ICMP vermittlung) {
 		super(((InternetKnotenBetriebssystem) vermittlung.holeSystemSoftware()).holeEthernet().holeICMPPuffer()); // zu
-																												  // überwachender
-																												  // Puffer
-																												  // als
-																												  // Parameter
-																												  // nötig
-																												  // für
-																												  // Thread-Steuerung
+		                                                                                                          // überwachender
+		                                                                                                          // Puffer
+		                                                                                                          // als
+		                                                                                                          // Parameter
+		                                                                                                          // nötig
+		                                                                                                          // für
+		                                                                                                          // Thread-Steuerung
 		Main.debug.println("INVOKED-2 (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + " (ICMPThread), constr: ICMPThread(" + vermittlung + ")");
 		this.rcvdPackets = new LinkedList<IcmpPaket>();
@@ -130,11 +130,11 @@ public class ICMPThread extends ProtokollThread {
 				Main.debug.println("DEBUG (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 				        + " (ICMPThread), startSinglePing, NO reply in queue");
 				throw new java.util.concurrent.TimeoutException("Destination Host Unreachable"); // not
-																								 // absolutely
-																								 // correct,
-																								 // but
-																								 // who
-																								 // cares...
+				                                                                                 // absolutely
+				                                                                                 // correct,
+				                                                                                 // but
+				                                                                                 // who
+				                                                                                 // cares...
 			} else {
 				Main.debug.println("DEBUG (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 				        + " (ICMPThread), startSinglePing, reply in queue");
@@ -142,12 +142,7 @@ public class ICMPThread extends ProtokollThread {
 				if (rcvdIcmpPaket != null
 				        && !(destIp.equals(rcvdIcmpPaket.getQuellIp()) && seqNr == rcvdIcmpPaket.getSeqNr() && rcvdIcmpPaket
 				                .getIcmpType() == 0)) {
-					throw new java.util.concurrent.TimeoutException("Destination Host Unreachable"); // not
-																									 // absolutely
-																									 // correct,
-																									 // but
-																									 // who
-																									 // cares...
+					throw new java.util.concurrent.TimeoutException("Destination Host Unreachable");
 				}
 				resultTTL = rcvdIcmpPaket.getTtl();
 			}

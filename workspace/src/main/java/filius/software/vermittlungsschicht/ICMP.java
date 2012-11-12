@@ -102,8 +102,6 @@ public class ICMP extends VermittlungsProtokoll implements I18n {
 	public void sendeICMP(int typ, int code, int ttl, int seqNr, String zielIP) {
 		IcmpPaket icmpPaket = new IcmpPaket();
 		icmpPaket.setProtokollTyp(EthernetFrame.IP);
-		icmpPaket.setQuellIp(((InternetKnotenBetriebssystem) holeSystemSoftware()).holeIPAdresse());
-		icmpPaket.setQuellMacAdresse(((InternetKnotenBetriebssystem) holeSystemSoftware()).holeMACAdresse());
 		icmpPaket.setZielIp(zielIP);
 		icmpPaket.setIcmpType(typ);
 		icmpPaket.setIcmpCode(code);
@@ -149,6 +147,8 @@ public class ICMP extends VermittlungsProtokoll implements I18n {
 		InternetKnoten knoten = (InternetKnoten) bs.getKnoten();
 		NetzwerkInterface nic = knoten.getNetzwerkInterfaceByIp(schnittstelle);
 		String netzmaske = nic.getSubnetzMaske();
+		paket.setQuellIp(schnittstelle);
+		paket.setQuellMacAdresse(nic.getMac());
 
 		if (gleichesRechnernetz(paket.getZielIp(), schnittstelle, netzmaske)) {
 			// adressierter Knoten befindet sich im lokalen Rechnernetz

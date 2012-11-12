@@ -731,13 +731,9 @@ public class Terminal extends ClientAnwendung implements I18n {
 				// / CAVE: wahrscheinlich hier Queue nötig und blockieren, bis
 				// Ergebnis da ist!!!
 				int resTTL = getSystemSoftware().holeICMP().startSinglePing(destIp, num + 1);
-				timeDiff = 1000 // wait 1s between single ping executions
-				- (Calendar.getInstance().getTimeInMillis() - timeStart); // subtract
-				                                                          // needed
-				                                                          // time
-				                                                          // for
-				                                                          // former
-				                                                          // ping
+				// wait 1s between single ping executions subtract needed time
+				// for former ping
+				timeDiff = 1000 - (Calendar.getInstance().getTimeInMillis() - timeStart);
 				// Main.debug.println("DEBUG: Terminal, ping (num="+(num+1)+"), resTTL="+resTTL+", delay="+(1000-timeDiff)+", timeDiff="+timeDiff);
 				if (resTTL >= 0) {
 					benachrichtigeBeobachter("\nFrom " + args[0] + " (" + destIp + "): icmp_seq=" + (num + 1) + " ttl="
@@ -752,7 +748,6 @@ public class Terminal extends ClientAnwendung implements I18n {
 					} catch (InterruptedException e) {
 					}
 				}
-
 			} catch (java.util.concurrent.TimeoutException e) {
 				benachrichtigeBeobachter("\nFrom " + args[0] + " (" + destIp + "): icmp_seq=" + (num + 1)
 				        + "   -- Timeout!");
