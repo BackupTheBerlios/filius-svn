@@ -35,13 +35,8 @@ public class IcmpPaket implements Serializable {
 	/** Protokoll-Typ der Vermittlungsschicht */
 	private String protokollTyp;
 
-	/** MAC-Adresse des sendenden Knotens */
-	private String quellMacAdresse;
-
 	/** IP-Adresse des sendenden Knotens */
 	private String quellIp;
-
-	private String zielMacAdresse;
 
 	private String zielIp;
 
@@ -108,14 +103,6 @@ public class IcmpPaket implements Serializable {
 		this.quellIp = quellIp;
 	}
 
-	public String getQuellMacAdresse() {
-		return quellMacAdresse;
-	}
-
-	public void setQuellMacAdresse(String quellMacAdresse) {
-		this.quellMacAdresse = quellMacAdresse;
-	}
-
 	public String getZielIp() {
 		return zielIp;
 	}
@@ -124,18 +111,9 @@ public class IcmpPaket implements Serializable {
 		this.zielIp = zielIp;
 	}
 
-	public String getZielMacAdresse() {
-		return zielMacAdresse;
-	}
-
-	public void setZielMacAdresse(String zielMacAdresse) {
-		this.zielMacAdresse = zielMacAdresse;
-	}
-
 	public String toString() {
 		return "[" + "protokollTyp=" + protokollTyp + "; " + "quellIp=" + quellIp + "; " + "quellMacAdresse="
-		        + quellMacAdresse + "; " + "zielIp=" + zielIp + "; " + "zielMacAdresse=" + zielMacAdresse + "; "
-		        + "ttl=" + ttl + "; " + "seqNr=" + seqNr + "; " + "icmpType=" + icmpType + "; " + "icmpCode="
-		        + icmpCode + "]";
+		        + "zielIp=" + zielIp + "; " + "ttl=" + ttl + "; " + "seqNr=" + seqNr + "; " + "icmpType=" + icmpType
+		        + "; " + "icmpCode=" + icmpCode + "]";
 	}
 }

@@ -47,6 +47,9 @@ import filius.software.transportschicht.SocketSchnittstelle;
 import filius.software.transportschicht.TransportProtokoll;
 import filius.software.vermittlungsschicht.IP;
 import filius.software.vermittlungsschicht.IcmpPaket;
+import filius.software.vermittlungsschicht.Route;
+import filius.software.vermittlungsschicht.RouteNotFoundException;
+import filius.software.vermittlungsschicht.Weiterleitungstabelle;
 
 /**
  * Diese Klasse soll eine Art Eingabeaufforderung oder Unix-Shell darstellen, in
@@ -572,17 +575,18 @@ public class Terminal extends ClientAnwendung implements I18n {
 	}
 
 	private String[] getSocketInformation(SocketSchnittstelle socket) {
-		String[] routingEntry;
 		String localAddress = "", remoteAddress = "", state = "";
 		if (socket instanceof Socket) {
 			remoteAddress = ((Socket) socket).holeZielIPAdresse();
-			routingEntry = ((InternetKnotenBetriebssystem) this.getSystemSoftware()).getWeiterleitungstabelle()
-			        .holeWeiterleitungsZiele(remoteAddress);
-			if (routingEntry != null) {
-				localAddress = routingEntry[1];
-			} else {
+			try {
+				Weiterleitungstabelle weiterleitungstabelle = ((InternetKnotenBetriebssystem) this.getSystemSoftware())
+				        .getWeiterleitungstabelle();
+				Route routingEntry = weiterleitungstabelle.holeWeiterleitungsEintrag(remoteAddress);
+				localAddress = routingEntry.getInterfaceIpAddress();
+			} catch (RouteNotFoundException e) {
 				localAddress = "<unknown>";
 			}
+
 			state = ((Socket) socket).getStateAsString();
 		} else if (socket instanceof ServerSocket) {
 			remoteAddress = "-";

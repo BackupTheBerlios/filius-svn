@@ -134,8 +134,8 @@ public class VermittlungWeb extends WebServerPlugIn implements I18n {
 	private String routeToHtml(RIPRoute route) {
 		String html = "";
 
-		html += "<td>" + route.netAddr + "</td>";
-		html += "<td>" + route.netMask + "</td>";
+		html += "<td>" + route.getNetAddress() + "</td>";
+		html += "<td>" + route.getNetMask() + "</td>";
 		html += "<td>" + route.hops + "</td>";
 
 		if (route.expires == 0) {
@@ -145,7 +145,7 @@ public class VermittlungWeb extends WebServerPlugIn implements I18n {
 			html += "<td>" + gueltig + "</td>";
 		}
 
-		html += "<td>" + route.nextHop + "</td>";
+		html += "<td>" + route.getGateway() + "</td>";
 		html += "<td><a href=\"http://" + route.hopPublicIp + "/routes\">" + route.hopPublicIp + "</a></td>";
 
 		if (route.hops == 0) {

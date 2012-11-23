@@ -23,50 +23,51 @@
  ** You should have received a copy of the GNU General Public License
  ** along with Filius.  If not, see <http://www.gnu.org/licenses/>.
  */
-package filius.software.rip;
-
-import filius.software.vermittlungsschicht.Route;
+package filius.software.vermittlungsschicht;
 
 /**
- * 
- * @author pyropeter
- * @author stefanf
+ * @author stefan
  * 
  */
-public class RIPRoute extends Route {
-	public long expires;
-	public long created;
-	public int hops;
+public class Route {
 
-	public String hopPublicIp; // hint for system administrator
+	private String netAddress;
+	private String netMask;
+	protected String gateway;
+	protected String interfaceIpAddress;
 
-	public RIPRoute(int timeout, String netAddr, String netMask, String nextHop, String hopPublicIp, String nic,
-	        int hops) {
-		super(netAddr, netMask, nextHop, nic);
-		this.created = RIPUtil.getTime();
-		refresh(timeout);
-
-		this.hopPublicIp = hopPublicIp;
-		this.hops = hops;
+	public String getNetAddress() {
+		return netAddress;
 	}
 
-	public void refresh(int timeout) {
-		if (timeout > 0) {
-			this.expires = RIPUtil.getTime() + timeout;
-		} else {
-			this.expires = 0;
-		}
+	public String getNetMask() {
+		return netMask;
 	}
 
-	public boolean isExpired() {
-		return (this.expires > 0) && (this.expires < RIPUtil.getTime());
+	public String getGateway() {
+		return gateway;
 	}
 
-	public void setGateway(String gateway) {
+	public String getInterfaceIpAddress() {
+		return interfaceIpAddress;
+	}
+
+	public Route(String netAddress, String netMask, String gateway, String interfaceIpAddress) {
+		this.netAddress = netAddress;
+		this.netMask = netMask;
 		this.gateway = gateway;
+		this.interfaceIpAddress = interfaceIpAddress;
 	}
 
-	public void setInterfaceIpAddress(String interfaceIpAddress) {
-		this.interfaceIpAddress = interfaceIpAddress;
+	public Route(String[] routingInfo) {
+		if (routingInfo.length == 4) {
+			netAddress = routingInfo[0];
+			netMask = routingInfo[1];
+			gateway = routingInfo[2];
+			interfaceIpAddress = routingInfo[3];
+		} else if (routingInfo.length == 2) {
+			gateway = routingInfo[0];
+			interfaceIpAddress = routingInfo[1];
+		}
 	}
 }

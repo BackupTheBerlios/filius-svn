@@ -28,6 +28,7 @@ package filius.software.system;
 import filius.Main;
 import filius.software.dhcp.DHCPClient;
 import filius.software.dhcp.DHCPServer;
+import filius.software.rip.RIPTable;
 
 /**
  * Diese Klasse stellt die Funktionalitaet eines Betriebssystems fuer Hosts (d.
@@ -65,6 +66,16 @@ public class Betriebssystem extends InternetKnotenBetriebssystem {
 
 		dhcpServer = new DHCPServer();
 		dhcpServer.setSystemSoftware(this);
+	}
+
+	@Override
+	public boolean isRipEnabled() {
+		return false;
+	}
+
+	@Override
+	public RIPTable getRIPTable() {
+		return null;
 	}
 
 	/**

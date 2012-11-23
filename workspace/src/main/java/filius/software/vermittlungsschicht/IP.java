@@ -185,13 +185,14 @@ public class IP extends VermittlungsProtokoll implements I18n {
 	 * 
 	 * @param paket
 	 *            das zu versendende IP-Paket
+	 * @throws RouteNotFoundException
 	 */
-	private void sendeUnicast(IpPaket paket) {
+	private void sendeUnicast(IpPaket paket) throws RouteNotFoundException {
 		sendeUnicast(paket, false);
 	}
 
-	private void sendeUnicast(IpPaket paket, boolean setzeSender) {
-		if (this.isLocal(paket.getEmpfaenger())) {
+	private void sendeUnicast(IpPaket paket, boolean setzeSender) throws RouteNotFoundException {
+		if (this.isLocalAddress(paket.getEmpfaenger())) {
 			// Paket ist an diesen Rechner gerichtet
 			if (setzeSender) {
 				paket.setSender("127.0.0.1");
@@ -202,17 +203,6 @@ public class IP extends VermittlungsProtokoll implements I18n {
 
 		InternetKnotenBetriebssystem bs = (InternetKnotenBetriebssystem) holeSystemSoftware();
 		String[] route = bs.getWeiterleitungstabelle().holeWeiterleitungsZiele(paket.getEmpfaenger());
-
-		if (route == null) {
-			// Es wurde keine Route gefunden, ueber die das Paket versendet
-			// werden koennte.
-			// Es muss ein ICMP Destination Unreachable: Network Unreachable
-			// (3/0) zurueckgesendet werden:
-			if (!setzeSender) {
-				bs.holeICMP().sendeICMP(3, 0, paket.getSender());
-			}
-			return;
-		}
 
 		String gateway = route[0];
 		String schnittstelle = route[1];
@@ -244,7 +234,7 @@ public class IP extends VermittlungsProtokoll implements I18n {
 			// Es konnte keine MAC-Adresse bestimmt werden.
 			// Es muss ein ICMP Destination Unreachable: Host Unreachable
 			// (3/1) zurueckgesendet werden:
-			bs.holeICMP().sendeICMP(3, 1, paket.getSender());
+			bs.holeICMP().sendeICMP(ICMP.DESTINATION_UNREACHABLE, ICMP.CODE_DEST_HOST_UNREACHABLE, paket.getSender());
 		}
 	}
 
@@ -256,17 +246,15 @@ public class IP extends VermittlungsProtokoll implements I18n {
 	 * 
 	 * @param zielIp
 	 *            Gibt die Ziel-IP-Adresse an
+	 * @param quellIp
 	 * @param protokoll
 	 *            Der Parameter Protokoll gibt die Protokollnummer an. Dabei
 	 *            steht die Nummer 6 fuer das Protokoll TCP
+	 * @param ttl
 	 * @param segment
 	 *            - Enthaellt das erzeugte Segment mit den Nutzdaten.
 	 * @throws VerbindungsException
 	 */
-	public void senden(String zielIp, int protokoll, int ttl, Object segment) {
-		senden(zielIp, null, protokoll, ttl, segment);
-	}
-
 	public void senden(String zielIp, String quellIp, int protokoll, int ttl, Object segment) {
 		IpPaket paket = new IpPaket();
 		paket.setEmpfaenger(zielIp);
@@ -281,7 +269,11 @@ public class IP extends VermittlungsProtokoll implements I18n {
 			paket.setSender(quellIp);
 			sendeBroadcast(paket);
 		} else {
-			sendeUnicast(paket, true);
+			try {
+				sendeUnicast(paket, true);
+			} catch (RouteNotFoundException e) {
+
+			}
 		}
 	}
 
@@ -299,6 +291,8 @@ public class IP extends VermittlungsProtokoll implements I18n {
 	 *            das zu versendende IP-Paket
 	 */
 	public void weiterleitenPaket(IpPaket paket) {
+		InternetKnotenBetriebssystem bs = (InternetKnotenBetriebssystem) holeSystemSoftware();
+
 		if (paket.getEmpfaenger().equals("255.255.255.255")) {
 			// Broadcast, darf nicht weitergeleitet werden.
 			// Lokal verarbeiten:
@@ -309,12 +303,19 @@ public class IP extends VermittlungsProtokoll implements I18n {
 			// dekrementiert, bevor diese Funktion aufgerufen
 			// wird)
 			// ICMP Timeout Expired In Transit (11/0) zuruecksenden:
-			InternetKnotenBetriebssystem bs = (InternetKnotenBetriebssystem) holeSystemSoftware();
 			bs.holeICMP().sendeICMP(11, 0, paket.getSender());
 		} else {
 			// TTL ist nicht abgelaufen.
 			// Paket weiterleiten:
-			sendeUnicast(paket);
+			try {
+				sendeUnicast(paket);
+			} catch (RouteNotFoundException e) {
+				// Es wurde keine Route gefunden, ueber die das Paket versendet
+				// werden koennte.
+				// Es muss ein ICMP Destination Unreachable: Network Unreachable
+				// (3/0) zurueckgesendet werden:
+				bs.holeICMP().sendeICMP(3, 0, paket.getSender());
+			}
 		}
 	}
 

@@ -25,7 +25,6 @@
  */
 package filius.software.vermittlungsschicht;
 
-import java.util.ListIterator;
 import java.util.StringTokenizer;
 
 import filius.Main;
@@ -96,16 +95,13 @@ public abstract class VermittlungsProtokoll extends Protokoll {
 		return gleichesRechnernetz;
 	}
 
-	public boolean isLocal(String ip) {
+	public boolean isLocalAddress(String ip) {
 		if (gleichesRechnernetz(ip, "127.0.0.0", "255.0.0.0")) {
 			return true;
 		}
 
 		InternetKnoten knoten = (InternetKnoten) holeSystemSoftware().getKnoten();
-		ListIterator it = knoten.getNetzwerkInterfaces().listIterator();
-		NetzwerkInterface nic;
-		while (it.hasNext()) {
-			nic = (NetzwerkInterface) it.next();
+		for (NetzwerkInterface nic : knoten.getNetzwerkInterfaces()) {
 			if (ip.equals(nic.getIp())) {
 				return true;
 			}

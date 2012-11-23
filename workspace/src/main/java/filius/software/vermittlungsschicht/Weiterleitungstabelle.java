@@ -26,7 +26,6 @@
 package filius.software.vermittlungsschicht;
 
 import java.util.LinkedList;
-import java.util.ListIterator;
 
 import filius.Main;
 import filius.hardware.NetzwerkInterface;
@@ -145,13 +144,8 @@ public class Weiterleitungstabelle implements I18n {
 	 *            die auszugebende Tabelle
 	 */
 	public void printTabelle(String name) {
-		// Main.debug.println("INVOKED ("+this.hashCode()+") "+getClass()+" (Weiterleitungstabelle), printTabelle("+name+","+tabelle+")");
-		ListIterator it = holeTabelle().listIterator();
-		String[] eintrag;
-
 		Main.debug.println("DEBUG (" + name + ") Weiterleitungstabelle (IP,mask,gw,if):");
-		while (it.hasNext()) {
-			eintrag = (String[]) it.next();
+		for (String[] eintrag : holeTabelle()) {
 			Main.debug.printf("DEBUG (%s)  '%15s' | '%15s' | '%15s' | '%15s'\n", name, eintrag[0], eintrag[1],
 			        eintrag[2], eintrag[3]);
 		}
@@ -179,9 +173,7 @@ public class Weiterleitungstabelle implements I18n {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
 		        + " (Weiterleitungstabelle), holeTabelle()");
 		InternetKnoten knoten;
-		NetzwerkInterface nic = null;
 		String gateway;
-		ListIterator it;
 		LinkedList<String[]> tabelle;
 		String[] tmp = new String[4];
 
@@ -203,10 +195,7 @@ public class Weiterleitungstabelle implements I18n {
 			knoten = (InternetKnoten) firmware.getKnoten();
 
 			// Eintrag fuer eigenes Rechnernetz
-			it = knoten.getNetzwerkInterfaces().listIterator();
-			while (it.hasNext()) {
-				nic = (NetzwerkInterface) it.next();
-
+			for (NetzwerkInterface nic : knoten.getNetzwerkInterfaces()) {
 				tmp = new String[4];
 				// tmp[0] = nic.getIp();
 				tmp[0] = berechneNetzkennung(nic.getIp(), nic.getSubnetzMaske());
@@ -218,10 +207,7 @@ public class Weiterleitungstabelle implements I18n {
 			}
 
 			// Eintrag fuer eigene IP-Adresse
-			it = knoten.getNetzwerkInterfaces().listIterator();
-			while (it.hasNext()) {
-				nic = (NetzwerkInterface) it.next();
-
+			for (NetzwerkInterface nic : knoten.getNetzwerkInterfaces()) {
 				tmp = new String[4];
 				tmp[0] = nic.getIp();
 				tmp[1] = "255.255.255.255";
@@ -235,11 +221,8 @@ public class Weiterleitungstabelle implements I18n {
 			gateway = firmware.getStandardGateway();
 			if (gateway != null && !gateway.trim().equals("")) {
 				gateway = gateway.trim();
-				it = knoten.getNetzwerkInterfaces().listIterator();
 				tmp = null;
-				while (it.hasNext()) {
-					nic = (NetzwerkInterface) it.next();
-
+				for (NetzwerkInterface nic : knoten.getNetzwerkInterfaces()) {
 					if (nic != null
 					        && VermittlungsProtokoll.gleichesRechnernetz(gateway, nic.getIp(), nic.getSubnetzMaske())) {
 						tmp = new String[4];
@@ -285,28 +268,36 @@ public class Weiterleitungstabelle implements I18n {
 	 * @return das Ergebnis als String-Array bestehend aus der IP-Adresse des
 	 *         naechsten Gateways und der fuer den Versand zu verwendenden
 	 *         Schnittstelle
+	 * @throws RouteNotFoundException
 	 */
-	public String[] holeWeiterleitungsZiele(String zielStr) {
-		RIPTable table = firmware.getRIPTable();
-		if (table == null) {
-			return holeStatisch(zielStr);
+	@Deprecated
+	public String[] holeWeiterleitungsZiele(String zielIpAdresse) throws RouteNotFoundException {
+		Route bestRoute = null;
+		if (firmware.isRipEnabled()) {
+			bestRoute = determineRouteFromDynamicRoutingTable(zielIpAdresse);
 		} else {
-			synchronized (table) {
-				return holeDynamisch(table, zielStr);
-			}
+			bestRoute = determineRouteFromStaticRoutingTable(zielIpAdresse);
 		}
+		return new String[] { bestRoute.getGateway(), bestRoute.getInterfaceIpAddress() };
 	}
 
-	public String[] holeStatisch(String zielStr) {
-		long netAddr, maskAddr, zielAddr = IP.inetAton(zielStr);
-		String[] route;
+	public Route holeWeiterleitungsEintrag(String zielIpAdresse) throws RouteNotFoundException {
+		Route bestRoute = null;
+		if (firmware.isRipEnabled()) {
+			bestRoute = determineRouteFromDynamicRoutingTable(zielIpAdresse);
+		} else {
+			bestRoute = determineRouteFromStaticRoutingTable(zielIpAdresse);
+		}
+		return bestRoute;
+	}
+
+	public Route determineRouteFromStaticRoutingTable(String targetIPAddress) throws RouteNotFoundException {
+		long netAddr, maskAddr, zielAddr = IP.inetAton(targetIPAddress);
 
 		long bestMask = -1;
-		String[] bestRoute = null;
+		Route bestRoute = null;
 
-		ListIterator it = holeTabelle().listIterator();
-		while (it.hasNext()) {
-			route = (String[]) it.next();
+		for (String[] route : holeTabelle()) {
 			maskAddr = IP.inetAton(route[1]);
 			if (maskAddr <= bestMask) {
 				continue;
@@ -314,31 +305,40 @@ public class Weiterleitungstabelle implements I18n {
 			netAddr = IP.inetAton(route[0]);
 			if (netAddr == (maskAddr & zielAddr)) {
 				bestMask = maskAddr;
-				bestRoute = new String[] { route[2], route[3] };
+				bestRoute = new Route(route);
 			}
 		}
-		return bestRoute;
+		if (bestRoute != null) {
+			return bestRoute;
+		} else {
+			throw new RouteNotFoundException();
+		}
 	}
 
-	public String[] holeDynamisch(RIPTable table, String ip) {
-		// table must be synchronized by holeWeiterleitungsZiele
+	public Route determineRouteFromDynamicRoutingTable(String ip) throws RouteNotFoundException {
+		RIPTable table = firmware.getRIPTable();
+		Route bestRoute = null;
+		synchronized (table) {
+			int bestHops = RIPTable.INFINITY - 1;
+			long bestMask = -1;
 
-		String[] bestRoute = null;
-		int bestHops = RIPTable.INFINITY - 1;
-		long bestMask = -1;
-
-		for (RIPRoute route : table.routes) {
-			if (route.netAddr.equals(berechneNetzkennung(ip, route.netMask))) {
-				if (bestHops < route.hops) {
-					continue;
-				}
-				if (bestHops > route.hops || bestMask < IP.inetAton(route.netMask)) {
-					bestRoute = new String[] { route.nextHop, route.nic };
-					bestHops = route.hops;
-					bestMask = IP.inetAton(route.netMask);
+			for (RIPRoute route : table.routes) {
+				if (route.getNetAddress().equals(berechneNetzkennung(ip, route.getNetMask()))) {
+					if (bestHops < route.hops) {
+						continue;
+					}
+					if (bestHops > route.hops || bestMask < IP.inetAton(route.getNetMask())) {
+						bestRoute = route;
+						bestHops = route.hops;
+						bestMask = IP.inetAton(route.getNetMask());
+					}
 				}
 			}
 		}
-		return bestRoute;
+		if (bestRoute != null) {
+			return bestRoute;
+		} else {
+			throw new RouteNotFoundException();
+		}
 	}
 }

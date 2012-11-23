@@ -90,10 +90,10 @@ public class RIPBeacon extends ClientAnwendung {
 			msg = new RIPMessage(nic.getIp(), bs.holeIPAdresse(), RIPTable.INFINITY, RIPTable.TIMEOUT);
 			for (RIPRoute route : table.routes) {
 				// split horizon:
-				if (nic.getIp().equals(route.nic)) {
+				if (nic.getIp().equals(route.getInterfaceIpAddress())) {
 					continue;
 				}
-				msg.addRoute(new RIPMessageRoute(route.netAddr, route.netMask, route.hops));
+				msg.addRoute(new RIPMessageRoute(route.getNetAddress(), route.getNetMask(), route.hops));
 			}
 			sock.bind(nic.getIp());
 			sock.senden(msg.toString());

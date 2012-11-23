@@ -183,7 +183,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 
 		vRechner.setName(name.getText());
 		bs.setStandardGateway(gateway.getText());
-		bs.setRip(rip.isSelected());
+		bs.setRipEnabled(rip.isSelected());
 
 		it = vRechner.getNetzwerkInterfaces().listIterator();
 		for (int i = 0; it.hasNext(); i++) {
@@ -1216,9 +1216,9 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 
 		name.setText(vRechner.holeAnzeigeName());
 		gateway.setText(bs.getStandardGateway());
-		rip.setSelected(bs.getRip());
+		rip.setSelected(bs.isRipEnabled());
 
-		tpNetzwerkKarten.setEnabledAt(tpNetzwerkKarten.getTabCount() - 1, !bs.getRip());
+		tpNetzwerkKarten.setEnabledAt(tpNetzwerkKarten.getTabCount() - 1, !bs.isRipEnabled());
 
 		it = vRechner.getNetzwerkInterfaces().listIterator();
 		for (int i = 0; it.hasNext() && i < ipAdressen.length; i++) {

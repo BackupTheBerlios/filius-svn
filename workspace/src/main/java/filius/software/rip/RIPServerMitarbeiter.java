@@ -77,14 +77,14 @@ public class RIPServerMitarbeiter extends ServerMitarbeiter {
 				route = table.search(entry.ip, entry.mask);
 				if (route != null) {
 					// route exists, just update
-					if (!route.nextHop.equals(msg.ip) && route.hops <= hops) {
+					if (!route.getGateway().equals(msg.ip) && route.hops <= hops) {
 						continue;
 					}
 					if (route.hops > hops) {
 						// found a shorter route
-						route.nextHop = msg.ip;
+						route.setGateway(msg.ip);
 						route.hopPublicIp = msg.publicIp;
-						route.nic = nicIp;
+						route.setInterfaceIpAddress(nicIp);
 					} else if (route.hops < hops) {
 						// the old route just got worse. this has to be
 						// flushed to other routers immediately

@@ -83,7 +83,7 @@ public class RIPTable {
 
 	public RIPRoute search(String net, String mask) {
 		for (RIPRoute route : routes) {
-			if (route.netAddr.equals(net) && route.netMask.equals(mask)) {
+			if (route.getNetAddress().equals(net) && route.getNetMask().equals(mask)) {
 				return route;
 			}
 		}

@@ -150,6 +150,7 @@ public class VermittlungsrechnerBetriebssystem extends InternetKnotenBetriebssys
 		}
 	}
 
+	@Override
 	public RIPTable getRIPTable() {
 		if (ripEnabled) {
 			return riptable;
@@ -158,11 +159,12 @@ public class VermittlungsrechnerBetriebssystem extends InternetKnotenBetriebssys
 		}
 	}
 
-	public boolean getRip() {
+	@Override
+	public boolean isRipEnabled() {
 		return ripEnabled;
 	}
 
-	public void setRip(boolean state) {
+	public void setRipEnabled(boolean state) {
 		ripEnabled = state;
 	}
 

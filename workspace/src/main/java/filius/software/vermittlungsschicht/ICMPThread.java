@@ -26,17 +26,14 @@
 package filius.software.vermittlungsschicht;
 
 import java.util.LinkedList;
-import java.util.ListIterator;
 
 import filius.Main;
-import filius.hardware.NetzwerkInterface;
 import filius.hardware.Verbindung;
-import filius.hardware.knoten.InternetKnoten;
 import filius.software.ProtokollThread;
 import filius.software.system.InternetKnotenBetriebssystem;
 
 /**
- * Klasse zur Ueberwachung des Puffers fuer eingehende ARP-Pakete
+ * Klasse zur Ueberwachung des Puffers fuer eingehende ICMP-Pakete
  * 
  */
 public class ICMPThread extends ProtokollThread {
@@ -47,44 +44,11 @@ public class ICMPThread extends ProtokollThread {
 	private LinkedList<IcmpPaket> rcvdPackets;
 
 	public ICMPThread(ICMP vermittlung) {
-		super(((InternetKnotenBetriebssystem) vermittlung.holeSystemSoftware()).holeEthernet().holeICMPPuffer()); // zu
-		                                                                                                          // überwachender
-		                                                                                                          // Puffer
-		                                                                                                          // als
-		                                                                                                          // Parameter
-		                                                                                                          // nötig
-		                                                                                                          // für
-		                                                                                                          // Thread-Steuerung
+		super(((InternetKnotenBetriebssystem) vermittlung.holeSystemSoftware()).holeEthernet().holeICMPPuffer());
 		Main.debug.println("INVOKED-2 (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + " (ICMPThread), constr: ICMPThread(" + vermittlung + ")");
 		this.rcvdPackets = new LinkedList<IcmpPaket>();
 		this.vermittlung = vermittlung;
-	}
-
-	/**
-	 * Hilfsmethode zur Bestimmung der Netzwerkkarte, die im Rechnernetz ist,
-	 * aus der das ICMP-Paket kam.
-	 * 
-	 * @param paket
-	 *            ein eingegangenes ICMP-Paket
-	 * @return die Netzwerkkarte aus dem Rechnernetz, aus dem das ICMP-Paket
-	 *         verschickt wurde
-	 */
-	private NetzwerkInterface bestimmeNetzwerkInterface(IcmpPaket paket) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
-		        + " (ICMPThread), bestimmeNetzwerkInterface(" + paket.toString() + ")");
-		NetzwerkInterface nic = null;
-		ListIterator it;
-
-		it = ((InternetKnoten) vermittlung.holeSystemSoftware().getKnoten()).getNetzwerkInterfaces().listIterator();
-		while (it.hasNext()) {
-			nic = (NetzwerkInterface) it.next();
-			if (VermittlungsProtokoll.gleichesRechnernetz(paket.getQuellIp(), nic.getIp(), nic.getSubnetzMaske())) {
-				return nic;
-			}
-		}
-
-		return nic;
 	}
 
 	/**
@@ -96,9 +60,9 @@ public class ICMPThread extends ProtokollThread {
 		// TTL dekrementieren
 		icmpPaket.setTtl(icmpPaket.getTtl() - 1);
 
-		if (vermittlung.isLocal(icmpPaket.getZielIp())) {
+		if (vermittlung.isLocalAddress(icmpPaket.getZielIp())) {
 			// Paket wurde an diesen Rechner gesendet
-			if (icmpPaket.getIcmpType() == 8 && icmpPaket.getIcmpCode() == 0) {
+			if (icmpPaket.getIcmpType() == ICMP.ECHO_REQUEST && icmpPaket.getIcmpCode() == ICMP.CODE_ECHO_REQUEST) {
 				vermittlung.sendEchoReply(icmpPaket);
 			} else {
 				synchronized (rcvdPackets) {
@@ -113,8 +77,11 @@ public class ICMPThread extends ProtokollThread {
 		}
 	}
 
-	// method to actually send a ping and compute the pong event
-	// return true if successful
+	/**
+	 * method to actually send a ping and compute the pong event
+	 * 
+	 * @return true if successful
+	 */
 	public int startSinglePing(String destIp, int seqNr) throws java.util.concurrent.TimeoutException {
 		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + " (ICMPThread), startSinglePing(" + destIp + "," + seqNr + ")");
@@ -152,8 +119,9 @@ public class ICMPThread extends ProtokollThread {
 		return resultTTL;
 	}
 
+	/** method to send a traceroute probe (realized as ping) */
 	public IcmpPaket sendProbe(String destIp, int ttl, int seqNr) {
-		vermittlung.sendeICMP(8, 0, ttl, seqNr, destIp);
+		vermittlung.sendeICMP(ICMP.ECHO_REQUEST, ICMP.CODE_ECHO_REQUEST, ttl, seqNr, null, destIp);
 
 		synchronized (rcvdPackets) {
 			try {
