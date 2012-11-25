@@ -104,24 +104,15 @@ public abstract class ServerAnwendung extends Anwendung implements I18n {
 	 * 
 	 * @param flag
 	 */
-	public void setAktiv(boolean flag) {
+	public synchronized void setAktiv(boolean flag) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + " (ServerAnwendung), setAktiv(" + flag + ")");
 		aktiv = flag;
 
-		// Main.debug.println(getClass() + "\n\taktiv = " + aktiv);
-
 		if (getState().equals(State.WAITING)) {
-			synchronized (this) {
-				// Main.debug.println("\taufgeweckt");
-				notifyAll();
-			}
+			notifyAll();
 		}
-
 		if (!flag) {
-			if (socket != null)
-				socket.schliessen();
-			socket = null;
 			benachrichtigeBeobachter(messages.getString("sw_serveranwendung_msg1"));
 		} else {
 			benachrichtigeBeobachter(messages.getString("sw_serveranwendung_msg2"));
@@ -238,13 +229,13 @@ public abstract class ServerAnwendung extends Anwendung implements I18n {
 					}
 				}
 			} else {
-
+				if (socket != null) {
+					socket.schliessen();
+				}
+				socket = null;
 				synchronized (this) {
 					try {
 						wait();
-						// Main.debug.println(getClass()
-						// +
-						// "\n\tThread fortgesetzt nach Aktivierung der Anwendung");
 					} catch (InterruptedException e) {
 					}
 				}

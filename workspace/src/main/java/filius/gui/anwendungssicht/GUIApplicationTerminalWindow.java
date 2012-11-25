@@ -74,7 +74,7 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 	private boolean multipleObserverEvents;
 
 	ArrayList<String> terminalCommandList = new ArrayList<String>(); // für
-																	 // pfeil-nach-oben-holt-letzten-befehl-wieder
+	                                                                 // pfeil-nach-oben-holt-letzten-befehl-wieder
 	int terminalCommandListStep = -1;
 
 	public GUIApplicationTerminalWindow(GUIDesktopPanel desktop, String appName) {
@@ -97,15 +97,15 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 		tpPane.setBorder(null);
 		tpPane.setBackground(new Color(0, 0, 0));
 		tpPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER); // do
-																						 // not
-																						 // show
-																						 // vert.
-																						 // scrollbar
+		                                                                                 // not
+		                                                                                 // show
+		                                                                                 // vert.
+		                                                                                 // scrollbar
 		tpPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER); // do
-																							 // not
-																							 // show
-																							 // hor.
-																							 // scrollbar
+		                                                                                     // not
+		                                                                                     // show
+		                                                                                     // hor.
+		                                                                                     // scrollbar
 
 		inputField = new JTextField("");
 		inputField.setEditable(true);
@@ -115,16 +115,16 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 		inputField.setBorder(null);
 		inputField.setFont(new Font("Courier New", Font.PLAIN, 11));
 		inputField.setOpaque(false);
-		
+
 		inputField.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					terminalCommandListStep = -1; // lass uns doch besser wieder
-												  // von unten/vorne beginnen
+					                              // von unten/vorne beginnen
 					if (!(inputField.getText().isEmpty() || inputField.getText().replaceAll(" ", "").isEmpty())) { // only
-																												   // process
-																												   // non-empty
-																												   // input
+						                                                                                           // process
+						                                                                                           // non-empty
+						                                                                                           // input
 						// Main.debug.println("DEBUG: "+getClass()+", keyPressed ('"+inputField.getText()+" + ENTER') event started");
 						terminalField.append("\n" + inputLabel.getText() + inputField.getText() + "\n");
 						StringTokenizer tk = new StringTokenizer(inputField.getText(), " ");
@@ -170,17 +170,12 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 					// Main.debug.println("DEBUG: "+getClass()+", keyPressed ('"+inputField.getText()+" + ENTER') event finished");
 					inputField.setText("");
 				}
-				if (e.getKeyCode() == KeyEvent.VK_C && e.getModifiers() == 2) { // [strg]
-																				// +
-																				// [c]
-					System.out.println("INTERRUPT");
+				// [strg] + [c]
+				if (e.getKeyCode() == KeyEvent.VK_C && e.getModifiers() == 2) {
 					((Terminal) holeAnwendung()).setInterrupt(true);
 				}
-				if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) { // 38
-																							  // arrow-up
-																							  // /
-																							  // 40
-																							  // arrow-down
+				// 38 arrow-up / 40 arrow-down
+				if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) {
 					if (e.getKeyCode() == KeyEvent.VK_UP) {
 						terminalCommandListStep++;
 					}
@@ -333,9 +328,9 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 				this.tpPane.repaint();
 				this.tpPane.getVerticalScrollBar().setValue(this.tpPane.getVerticalScrollBar().getMaximum());
 				if (!multipleObserverEvents) { // is this observer call expected
-											   // to be the last one for the
-											   // current command, i.e.,
-											   // multipleOverserverEvents=false?
+					                           // to be the last one for the
+					                           // current command, i.e.,
+					                           // multipleOverserverEvents=false?
 					this.inputLabel.setText("root "
 					        + Dateisystem.absoluterPfad(((Terminal) holeAnwendung()).getAktuellerOrdner()) + "> ");
 					this.inputLabel.setVisible(true);

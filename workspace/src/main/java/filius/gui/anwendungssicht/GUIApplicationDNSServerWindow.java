@@ -34,7 +34,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
-import java.util.ListIterator;
 import java.util.Observable;
 import java.util.Vector;
 
@@ -97,12 +96,11 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		buttonStart.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
-				if (buttonStart.getText().equals(messages.getString("dnsserver_msg1"))) {
-					((DNSServer) holeAnwendung()).setAktiv(true);
-				} else {
+				if (((DNSServer) holeAnwendung()).isAktiv()) {
 					((DNSServer) holeAnwendung()).setAktiv(false);
+				} else {
+					((DNSServer) holeAnwendung()).setAktiv(true);
 				}
-				aktualisieren();
 			}
 		});
 		hBox = Box.createHorizontalBox();
@@ -479,43 +477,13 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 	 * @author Thomas Gerding & Johannes Bade
 	 */
 	public void updateARecordsTable() {
-		ResourceRecord rr;
-
 		DefaultTableModel tabellenModell = (DefaultTableModel) aRecordsTable.getModel();
-		tabellenModell.setRowCount(0);
-
-		LinkedList<ResourceRecord> tempListe = ((DNSServer) holeAnwendung()).holeResourceRecords();
-
-		ListIterator<ResourceRecord> it = tempListe.listIterator();
-		while (it.hasNext()) {
-			rr = (ResourceRecord) it.next();
-			if (rr.getType().equals(ResourceRecord.ADDRESS)) {
-				Vector<String> v = new Vector<String>();
-				v.add(rr.getDomainname());
-				v.add(rr.getRdata());
-				tabellenModell.addRow(v);
-			}
-		}
+		updateRecordsTable(tabellenModell, ResourceRecord.ADDRESS);
 	}
 
 	public void updateNSRecordsTable() {
-		ResourceRecord rr;
-
 		DefaultTableModel tabellenModell = (DefaultTableModel) nsRecordsTable.getModel();
-		tabellenModell.setRowCount(0);
-
-		LinkedList<ResourceRecord> tempListe = ((DNSServer) holeAnwendung()).holeResourceRecords();
-
-		ListIterator<ResourceRecord> it = tempListe.listIterator();
-		while (it.hasNext()) {
-			rr = (ResourceRecord) it.next();
-			if (rr.getType().equals(ResourceRecord.NAME_SERVER)) {
-				Vector<String> v = new Vector<String>();
-				v.add(rr.getDomainname());
-				v.add(rr.getRdata());
-				tabellenModell.addRow(v);
-			}
-		}
+		updateRecordsTable(tabellenModell, ResourceRecord.NAME_SERVER);
 	}
 
 	/**
@@ -524,17 +492,17 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 	 * @author Thomas Gerding & Johannes Bade
 	 */
 	public void updateMXRecordsTable() {
-		ResourceRecord rr;
-
 		DefaultTableModel tabellenModell = (DefaultTableModel) mxRecordsTable.getModel();
+		updateRecordsTable(tabellenModell, ResourceRecord.MAIL_EXCHANGE);
+	}
+
+	private synchronized void updateRecordsTable(DefaultTableModel tabellenModell, String type) {
 		tabellenModell.setRowCount(0);
 
 		LinkedList<ResourceRecord> tempListe = ((DNSServer) holeAnwendung()).holeResourceRecords();
-		ListIterator<ResourceRecord> it = tempListe.listIterator();
 
-		while (it.hasNext()) {
-			rr = (ResourceRecord) it.next();
-			if (rr.getType().equals(ResourceRecord.MAIL_EXCHANGE)) {
+		for (ResourceRecord rr : tempListe) {
+			if (rr.getType().equals(type)) {
 
 				Vector<String> v = new Vector<String>();
 				v.add(rr.getDomainname());

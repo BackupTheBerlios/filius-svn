@@ -26,7 +26,6 @@
 package filius.software.vermittlungsschicht;
 
 import java.util.LinkedList;
-import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
@@ -47,8 +46,6 @@ import filius.software.transportschicht.UdpSegment;
  */
 public class IP extends VermittlungsProtokoll implements I18n {
 
-	private static final long serialVersionUID = 1L;
-
 	/** String-Konstante fuer die IP-Adresse Localhost (127.0.0.1) */
 	public static final String LOCALHOST = "127.0.0.1";
 
@@ -62,8 +59,6 @@ public class IP extends VermittlungsProtokoll implements I18n {
 	 * Der Thread zur Ueberwachung des IP-Pakete-Puffers der Ethernet-Schicht
 	 */
 	private IPThread thread;
-
-	private LinkedList<IpPaket> paketListe = new LinkedList<IpPaket>();
 
 	/**
 	 * Konstruktor zur Initialisierung der Systemsoftware
@@ -132,8 +127,6 @@ public class IP extends VermittlungsProtokoll implements I18n {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (IP), sendeBroadcast("
 		        + ipPaket.toString() + ")");
 		InternetKnoten knoten;
-		NetzwerkInterface nic;
-		ListIterator it;
 		InternetKnotenBetriebssystem bs;
 
 		// Damit Broadcast-Pakete nicht in Zyklen gesendet werden,
@@ -144,10 +137,7 @@ public class IP extends VermittlungsProtokoll implements I18n {
 		knoten = (InternetKnoten) holeSystemSoftware().getKnoten();
 		bs = (InternetKnotenBetriebssystem) holeSystemSoftware();
 
-		it = knoten.getNetzwerkInterfaces().listIterator();
-		while (it.hasNext()) {
-			nic = (NetzwerkInterface) it.next();
-
+		for (NetzwerkInterface nic : knoten.getNetzwerkInterfaces()) {
 			// Broadcast-Nachrichten werden nur im lokalen Rechnernetz
 			// verschickt
 			if (gleichesRechnernetz(ipPaket.getSender(), nic.getIp(), nic.getSubnetzMaske())) {
@@ -202,10 +192,10 @@ public class IP extends VermittlungsProtokoll implements I18n {
 		}
 
 		InternetKnotenBetriebssystem bs = (InternetKnotenBetriebssystem) holeSystemSoftware();
-		String[] route = bs.getWeiterleitungstabelle().holeWeiterleitungsZiele(paket.getEmpfaenger());
+		Route route = bs.getWeiterleitungstabelle().holeWeiterleitungsEintrag(paket.getEmpfaenger());
 
-		String gateway = route[0];
-		String schnittstelle = route[1];
+		String gateway = route.getGateway();
+		String schnittstelle = route.getInterfaceIpAddress();
 		InternetKnoten knoten = (InternetKnoten) bs.getKnoten();
 		NetzwerkInterface nic = knoten.getNetzwerkInterfaceByIp(schnittstelle);
 		String netzmaske = nic.getSubnetzMaske();
@@ -303,7 +293,7 @@ public class IP extends VermittlungsProtokoll implements I18n {
 			// dekrementiert, bevor diese Funktion aufgerufen
 			// wird)
 			// ICMP Timeout Expired In Transit (11/0) zuruecksenden:
-			bs.holeICMP().sendeICMP(11, 0, paket.getSender());
+			bs.holeICMP().sendeICMP(ICMP.TIME_EXCEEDED, ICMP.CODE_TTL_EXPIRED, paket.getSender());
 		} else {
 			// TTL ist nicht abgelaufen.
 			// Paket weiterleiten:
@@ -314,7 +304,12 @@ public class IP extends VermittlungsProtokoll implements I18n {
 				// werden koennte.
 				// Es muss ein ICMP Destination Unreachable: Network Unreachable
 				// (3/0) zurueckgesendet werden:
-				bs.holeICMP().sendeICMP(3, 0, paket.getSender());
+				bs.holeICMP().sendeICMP(ICMP.DESTINATION_UNREACHABLE, ICMP.CODE_DEST_NETWORK_UNREACHABLE,
+				        paket.getSender());
+
+				bs.benachrichtigeBeobacher(messages.getString("sw_ip_msg4") + " \"" + bs.getKnoten().getName()
+				        + "\"!\n" + messages.getString("sw_ip_msg5") + " " + paket.getEmpfaenger() + " "
+				        + messages.getString("sw_ip_msg6"));
 			}
 		}
 	}

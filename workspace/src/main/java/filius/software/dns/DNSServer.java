@@ -26,6 +26,7 @@
 package filius.software.dns;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.StringTokenizer;
 
@@ -38,8 +39,6 @@ import filius.software.transportschicht.Socket;
 public class DNSServer extends UDPServerAnwendung {
 
 	private boolean recursiveResolutionEnabled = false;
-
-	private LinkedList<ResourceRecord> records = new LinkedList<ResourceRecord>();
 
 	public boolean isRecursiveResolutionEnabled() {
 		return recursiveResolutionEnabled;
@@ -65,8 +64,6 @@ public class DNSServer extends UDPServerAnwendung {
 		if (!getSystemSoftware().getDateisystem().dateiVorhanden("dns", "hosts")) {
 			getSystemSoftware().getDateisystem().erstelleVerzeichnis("root", "dns");
 		}
-
-		initialisiereRecordListe();
 	}
 
 	public void beenden() {
@@ -76,8 +73,7 @@ public class DNSServer extends UDPServerAnwendung {
 	}
 
 	public LinkedList<ResourceRecord> holeResourceRecords() {
-		this.initialisiereRecordListe();
-		return records;
+		return leseRecordListe();
 	}
 
 	public void hinzuRecord(String domainname, String typ, String rdata) {
@@ -86,11 +82,12 @@ public class DNSServer extends UDPServerAnwendung {
 		ResourceRecord rr;
 
 		rr = new ResourceRecord(domainname, typ, rdata);
-		records.add(rr);
-		this.schreibeRecordListe();
+		LinkedList<ResourceRecord> rrList = leseRecordListe();
+		rrList.add(rr);
+		this.schreibeRecordListe(rrList);
 	}
 
-	private void initialisiereRecordListe() {
+	private LinkedList<ResourceRecord> leseRecordListe() {
 		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + ", initialisiereRecordListe()");
 		Datei hosts;
@@ -98,9 +95,9 @@ public class DNSServer extends UDPServerAnwendung {
 		String line;
 		ResourceRecord rr;
 		Dateisystem dateisystem;
-		LinkedList<ResourceRecord> tmp;
+		LinkedList<ResourceRecord> resourceRecords;
 
-		tmp = new LinkedList<ResourceRecord>();
+		resourceRecords = new LinkedList<ResourceRecord>();
 
 		dateisystem = getSystemSoftware().getDateisystem();
 		hosts = dateisystem.holeDatei(dateisystem.holeRootPfad() + Dateisystem.FILE_SEPARATOR + "dns"
@@ -113,14 +110,14 @@ public class DNSServer extends UDPServerAnwendung {
 				line = tokenizer.nextToken().trim();
 				if (!line.equals("") && !(line.split(" ", 5).length < 4)) {
 					rr = new ResourceRecord(line);
-					tmp.add(rr);
+					resourceRecords.add(rr);
 				}
 			}
 		}
-		records = tmp;
+		return resourceRecords;
 	}
 
-	private void schreibeRecordListe() {
+	private void schreibeRecordListe(List<ResourceRecord> records) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + " (DNSServer), schreibeRecordListe()");
 		Datei hosts;
@@ -147,13 +144,11 @@ public class DNSServer extends UDPServerAnwendung {
 	public void changeSingleEntry(int recordIdx, int partIdx, String type, String newValue) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", changeSingleEntry(" + recordIdx + ","
 		        + partIdx + "," + type + "," + newValue + ")");
-		ListIterator<ResourceRecord> it = records.listIterator();
-		ResourceRecord rrec = null;
+		List<ResourceRecord> rrList = leseRecordListe();
 		int countA = 0;
-		while (it.hasNext()) { // iterating whole list is necessary, since MX
-			                   // and A records are mixed in the records list!
-			                   // :-(
-			rrec = it.next();
+		// iterating whole list is necessary, since MX and A records are mixed
+		// in the records list! :-(
+		for (ResourceRecord rrec : rrList) {
 			if (rrec.getType().equals(type)) {
 				countA++;
 			}
@@ -167,32 +162,28 @@ public class DNSServer extends UDPServerAnwendung {
 				}
 			}
 		}
-		this.schreibeRecordListe();
+		this.schreibeRecordListe(rrList);
 	}
 
 	public void loescheResourceRecord(String domainname, String typ) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + " (DNSServer), loescheResourceRecord(" + domainname + "," + typ + ")");
-		ResourceRecord rr;
-		ListIterator<ResourceRecord> it;
-		boolean fertig = false;
+		List<ResourceRecord> rrList = leseRecordListe();
 
-		it = records.listIterator();
-		while (!fertig && it.hasNext()) {
-			rr = (ResourceRecord) it.next();
+		for (ResourceRecord rr : rrList) {
 			if (rr.getDomainname().equalsIgnoreCase(domainname) && rr.getType().equals(typ)) {
-				records.remove(rr);
-				fertig = true;
+				rrList.remove(rr);
+				break;
 			}
 		}
-		this.schreibeRecordListe();
+		this.schreibeRecordListe(rrList);
 	}
 
 	public ResourceRecord holeRecord(String domainname, String typ) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + " (DNSServer), holeRecord(" + domainname + "," + typ + ")");
 
-		for (ResourceRecord rr : records) {
+		for (ResourceRecord rr : leseRecordListe()) {
 			if (rr.getDomainname().equalsIgnoreCase(domainname) && rr.getType().equals(typ)) {
 				return rr;
 			}
@@ -207,13 +198,13 @@ public class DNSServer extends UDPServerAnwendung {
 
 		for (int i = 0; i < parts.length; i++) {
 			domain = this.implodeDomain(parts, i);
-			for (ResourceRecord rr : records) {
+			for (ResourceRecord rr : leseRecordListe()) {
 				if (rr.getDomainname().equalsIgnoreCase(domain) && rr.getType().equals(ResourceRecord.NAME_SERVER)) {
 					return rr;
 				}
 			}
 		}
-		for (ResourceRecord rr : records) {
+		for (ResourceRecord rr : leseRecordListe()) {
 			if (rr.getDomainname().equalsIgnoreCase(".")) {
 				return rr;
 			}
