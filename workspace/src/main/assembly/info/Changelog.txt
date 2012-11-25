@@ -1,5 +1,10 @@
 FILIUS Changelog
 ================
+*filius-1.4.5.3 (25. Nov 2012)
+------------------------------
+- Fehler zu DNS-Server bei schnellem Wechsel Starten/Beenden
+- Fehler zu ICMP (ping/traceroute) behoben
+
 *filius-1.4.5.2 (12. Nov 2012)
 ------------------------------
 Fehlerbehebung: Ping zu Vermittlungsrechner funktionierte nicht fuer
