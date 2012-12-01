@@ -947,6 +947,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		if (highlightedCable != null) {
 			highlightedCable.setAktiv(false);
 			highlightedCable = null;
+			this.tpNetzwerkKarten.setSelectedIndex(0);
 		}
 	}
 
@@ -1058,6 +1059,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		}
 
 		GUIContainer.getGUIContainer().updateViewport();
+		updateAttribute();
 		return remoteNode;
 	}
 
@@ -1233,6 +1235,20 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				verbundeneKomponente[i].setText(messages.getString("jvermittlungsrechnerkonfiguration_msg6") + " "
 				        + tempKnoten.holeAnzeigeName());
 
+		}
+		
+		vRechner = (Vermittlungsrechner) holeHardware();
+		LinkedList nicListe = vRechner.getNetzwerkInterfaces();
+		NetzwerkInterface tempNic;
+		it = nicListe.listIterator();
+		for (int i = 0; it.hasNext(); i++) {
+			tempNic = (NetzwerkInterface) it.next();
+			if(holeVerbundeneKomponente(tempNic) == null) {
+				tpNetzwerkKarten.setIconAt(i+1, new ImageIcon(getClass().getResource("/gfx/allgemein/conn_fail.png")));
+			}
+			else {
+				tpNetzwerkKarten.setIconAt(i+1, new ImageIcon(getClass().getResource("/gfx/allgemein/conn_ok.png")));
+			}
 		}
 
 		weiterleitungstabelle.updateAttribute();
