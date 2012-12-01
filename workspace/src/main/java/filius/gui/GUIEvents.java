@@ -49,6 +49,7 @@ import filius.gui.netzwerksicht.GUIDraftPanel;
 import filius.gui.netzwerksicht.GUIKabelItem;
 import filius.gui.netzwerksicht.GUIKnotenItem;
 import filius.gui.netzwerksicht.JCablePanel;
+import filius.gui.netzwerksicht.JKonfiguration;
 import filius.gui.netzwerksicht.JSidebarButton;
 import filius.hardware.Kabel;
 import filius.hardware.NetzwerkInterface;
@@ -850,9 +851,24 @@ public class GUIEvents implements I18n {
 
 	// remove a single cable without using touching the connected node
 	private void removeSingleCable(GUIKabelItem cable) {
+		Main.debug.println("INVOKED filius.gui.GUIEvents, removeSingleCable(" + cable + ")");
 		if (cable == null)
 			return; // no cable to be removed (this variable should be set in
 			        // contextMenuCable)
+		
+		filius.gui.netzwerksicht.JVermittlungsrechnerKonfiguration ziel1konf = null;
+		filius.gui.netzwerksicht.JVermittlungsrechnerKonfiguration ziel2konf = null;
+		
+		if(JKonfiguration.getInstance(cable.getKabelpanel().getZiel1().getKnoten()) 
+				instanceof filius.gui.netzwerksicht.JVermittlungsrechnerKonfiguration) {
+//			Main.debug.println("DEBUG filius.gui.GUIEvents, removeSingleCable: getZiel1 --> JVermittlungsrechnerKonfiguration");
+			ziel1konf = ((filius.gui.netzwerksicht.JVermittlungsrechnerKonfiguration) JKonfiguration.getInstance(cable.getKabelpanel().getZiel1().getKnoten())); 
+		}
+		if(JKonfiguration.getInstance(cable.getKabelpanel().getZiel2().getKnoten()) 
+				instanceof filius.gui.netzwerksicht.JVermittlungsrechnerKonfiguration) {
+//			Main.debug.println("DEBUG filius.gui.GUIEvents, removeSingleCable: getZiel1 --> JVermittlungsrechnerKonfiguration");
+			ziel2konf = ((filius.gui.netzwerksicht.JVermittlungsrechnerKonfiguration) JKonfiguration.getInstance(cable.getKabelpanel().getZiel2().getKnoten())); 
+		} 
 		try {
 			cable.getDasKabel().anschluesseTrennen();
 		} catch (VerbindungsException e) {
@@ -861,6 +877,9 @@ public class GUIEvents implements I18n {
 		GUIContainer.getGUIContainer().getCablelist().remove(cable);
 		GUIContainer.getGUIContainer().getDraftpanel().remove(cable.getKabelpanel());
 		GUIContainer.getGUIContainer().updateViewport();
+		
+		if(ziel1konf != null) ziel1konf.updateAttribute();
+		if(ziel2konf != null) ziel2konf.updateAttribute();
 	}
 
 	/**
