@@ -56,6 +56,13 @@
 			</includes>
 		</fileSet>
 		<fileSet>
+			<directory>src/main/assembly/tmpl/quelltext_vorlagen</directory>
+			<outputDirectory>/tmpl/quelltext_vorlagen</outputDirectory>
+			<includes>
+				<include>*</include>
+			</includes>
+		</fileSet>
+		<fileSet>
 			<directory>src/main/assembly/img</directory>
 			<outputDirectory>/img</outputDirectory>
 			<includes>
