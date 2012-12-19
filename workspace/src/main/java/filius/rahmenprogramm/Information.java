@@ -62,6 +62,12 @@ public class Information implements Serializable {
 
 	private static boolean lowResolution = false;
 
+	private static boolean posixCommandLineToolBehaviour = false;
+
+	public static boolean isPosixCommandLineToolBehaviour() {
+		return posixCommandLineToolBehaviour;
+	}
+
 	private static String version = null;
 
 	public static boolean isLowResolution() {
@@ -640,6 +646,10 @@ public class Information implements Serializable {
 								} else if (configKey.equalsIgnoreCase("native-look-n-feel")) {
 									if (configValue.trim().equals("1")) {
 										Main.activateNativeLookAndFeel();
+									}
+								} else if (configKey.equalsIgnoreCase("posix-behaviour")) {
+									if (configValue.trim().equals("1")) {
+										this.posixCommandLineToolBehaviour = true;
 									}
 								}
 							}

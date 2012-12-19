@@ -36,6 +36,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import filius.Main;
 import filius.exception.SocketException;
 import filius.rahmenprogramm.I18n;
+import filius.rahmenprogramm.Information;
 import filius.software.clientserver.ClientAnwendung;
 import filius.software.system.Betriebssystem;
 import filius.software.system.Datei;
@@ -729,7 +730,8 @@ public class Terminal extends ClientAnwendung implements I18n {
 
 		int receivedReplies = 0;
 		int num;
-		for (num = 0; !interrupted && num < 20; num++) {
+		int loopNumber = Information.isPosixCommandLineToolBehaviour() ? 10 : 4;
+		for (num = 0; !interrupted && num < loopNumber; num++) {
 			try {
 				timeStart = Calendar.getInstance().getTimeInMillis();
 				// / CAVE: wahrscheinlich hier Queue nötig und blockieren, bis
