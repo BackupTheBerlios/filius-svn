@@ -185,25 +185,13 @@ public class JMainFrame extends javax.swing.JFrame implements WindowListener, Ob
 						                         // sense for cables!
 						if (e.getKeyCode() == 49) { // key '1' (cable)
 							// Main.debug.println("KeyDispatcher:    ALT+1 recognised");
-							GUIContainer
-							        .getGUIContainer()
-							        .getKabelvorschau()
-							        .setBounds(
-							                (int) (MouseInfo.getPointerInfo().getLocation().getX() - getLocationOnScreen()
-							                        .getX())
-							                        - (GUIContainer.getGUIContainer().getKabelvorschau().getWidth() / 2),
-							                (int) (MouseInfo.getPointerInfo().getLocation().getY() - getLocationOnScreen()
-							                        .getY())
-							                        - (GUIContainer.getGUIContainer().getKabelvorschau().getHeight() / 2)
-							                        - 32, // subtract titlebar
-							                              // (approx. 32px)
-							                GUIContainer.getGUIContainer().getKabelvorschau().getWidth(),
-							                GUIContainer.getGUIContainer().getKabelvorschau().getHeight());
-							// GUIContainer.getGUIContainer()
-							GUIContainer.getGUIContainer().getKabelvorschau().setVisible(true);
+							switchCablePreview();
 							return true;
 						}
 					} // ALT key pressed, i.e., sidebar item selected
+					if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+						GUIEvents.getGUIEvents().resetAndHideCablePreview();
+					}
 				} // KEY_PRESSED
 				return false;
 			}
@@ -286,6 +274,16 @@ public class JMainFrame extends javax.swing.JFrame implements WindowListener, Ob
 
 	public void update(Observable arg0, Object arg1) {
 		aktualisiere();
+	}
+
+	private void switchCablePreview() {
+		if (GUIContainer.getGUIContainer().getKabelvorschau().isVisible()) {
+			GUIEvents.getGUIEvents().resetAndHideCablePreview();
+		} else {
+			int currentPosX = (int) (MouseInfo.getPointerInfo().getLocation().getX() - getLocationOnScreen().getX());
+			int currentPosY = (int) (MouseInfo.getPointerInfo().getLocation().getY() - getLocationOnScreen().getY());
+			GUIEvents.getGUIEvents().resetAndShowCablePreview(currentPosX, currentPosY);
+		}
 	}
 
 }

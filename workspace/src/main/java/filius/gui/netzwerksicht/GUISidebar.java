@@ -40,6 +40,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.MouseInputAdapter;
 
 import filius.gui.GUIContainer;
+import filius.gui.GUIEvents;
 import filius.gui.JBackgroundPanel;
 import filius.hardware.Kabel;
 import filius.hardware.knoten.Modem;
@@ -77,7 +78,7 @@ public class GUISidebar implements Serializable {
 
 	private List<JSidebarButton> buttonList; // , configItems;
 
-	private JLabel kabel_neu, kabelvorschau;
+	private JLabel kabel_neu;
 
 	private static GUISidebar sidebar;
 
@@ -107,7 +108,6 @@ public class GUISidebar implements Serializable {
 
 		leistenpanel.setBackgroundImage("gfx/allgemein/leisten_hg.png");
 		leistenpanel.setEnabled(false);
-		kabelvorschau = GUIContainer.getGUIContainer().getKabelvorschau();
 
 		addCableItemToSidebar();
 
@@ -132,16 +132,15 @@ public class GUISidebar implements Serializable {
 		kabel_neu.setVerticalTextPosition(SwingConstants.BOTTOM);
 		kabel_neu.setHorizontalTextPosition(SwingConstants.CENTER);
 
+		kabel_neu.setToolTipText("<Alt>+1");
+
 		leistenpanel.add(kabel_neu);
 
 		kabel_neu.addMouseListener(new MouseInputAdapter() {
 			public void mousePressed(MouseEvent e) {
 				/* Wechselt bla */
-				kabelvorschau.setBounds(e.getX() - kabelvorschau.getWidth() / 2, e.getY() - kabelvorschau.getHeight()
-				        / 2 + GUIContainer.getGUIContainer().getMenu().getMenupanel().getHeight(),
-				        kabelvorschau.getWidth(), kabelvorschau.getHeight());
-				kabelvorschau.setVisible(true);
-
+				GUIEvents.getGUIEvents().resetAndShowCablePreview(e.getX(),
+				        e.getY() + GUIContainer.getGUIContainer().getMenu().getMenupanel().getHeight());
 			}
 		});
 	}

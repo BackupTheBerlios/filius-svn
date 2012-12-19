@@ -264,7 +264,7 @@ public class GUIContainer implements Serializable, I18n {
 					// Main.debug.println("GUIContainer: Maustaste wurde ueber "
 					// + testlabel.getHardwareTyp() + " betaetigt.");
 					neueVorschau(testlabel.getHardwareTyp(), e.getX(), e.getY());
-					GUIContainer.getGUIContainer().getKabelvorschau().setVisible(false);
+					GUIEvents.getGUIEvents().resetAndHideCablePreview();
 				}
 
 			}
@@ -683,10 +683,7 @@ public class GUIContainer implements Serializable, I18n {
 			getSidebarScrollpane().updateUI();
 			getProperty().setVisible(false);
 
-			GUIContainer.getGUIContainer().getKabelvorschau().setVisible(false);
-			GUIContainer.getGUIContainer().getKabelvorschau()
-			        .setIcon(new ImageIcon(getClass().getResource("/gfx/allgemein/ziel1.png")));
-
+			GUIEvents.getGUIEvents().resetAndHideCablePreview();
 		}
 		updateViewport();
 	}
