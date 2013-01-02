@@ -29,8 +29,10 @@ import java.util.LinkedList;
 
 import filius.Main;
 import filius.hardware.NetzwerkInterface;
+import filius.rahmenprogramm.I18n;
 import filius.software.ProtokollThread;
 import filius.software.netzzugangsschicht.EthernetFrame;
+import filius.software.vermittlungsschicht.IcmpPaket;
 import filius.software.vermittlungsschicht.IpPaket;
 
 /*
@@ -39,7 +41,7 @@ import filius.software.vermittlungsschicht.IpPaket;
  * tauscht den Ip-Pakete-Puffer aus, sodass sie nach Regeln selektieren kann, welche Pakete
  * als gueltig weitergeleitet werden
  */
-public class FirewallThread extends ProtokollThread {
+public class FirewallThread extends ProtokollThread implements I18n {
 
 	private LinkedList<EthernetFrame> ausgangsPuffer;
 	private Firewall firewall;
@@ -100,12 +102,28 @@ public class FirewallThread extends ProtokollThread {
 		// EthernetThread
 		// oder nicht weiterleiten
 
-		if (ipPaket == null || !firewall.pruefePaketVerwerfen(ipPaket)) {
+//		Main.debug.println("DEBUG EVAL: firewall.getDropICMP = "+firewall.getDropICMP());
+//		Main.debug.println("DEBUG EVAL: is ICMP = "+(frame.getDaten() instanceof IcmpPaket));
+//		Main.debug.println("DEBUG EVAL: ipPacket null = "+(ipPaket==null));
+//		if(ipPaket!=null)
+//			Main.debug.println("DEBUG EVAL: accept ipPacket = "+firewall.allowedIPpacket(ipPaket));
+
+//		if (ipPaket == null || !firewall.pruefePaketVerwerfen(ipPaket)) {
+		if( (ipPaket == null && !(frame.getDaten() instanceof IcmpPaket)) || 
+			(!firewall.getDropICMP() && (frame.getDaten() instanceof IcmpPaket)) ||
+		    (ipPaket != null && firewall.allowedIPpacket(ipPaket)) ) {
 			synchronized (ausgangsPuffer) {
 				// Main.debug.println("FirewallThread: Paket wurde von FirewallThread weitergeleitet");
 
 				ausgangsPuffer.add(frame);
 				ausgangsPuffer.notify();
+			}
+		}
+		else {
+			if((firewall.getDropICMP() && (frame.getDaten() instanceof IcmpPaket))) {
+				IcmpPaket icmp = (IcmpPaket) frame.getDaten();
+				firewall.benachrichtigeBeobachter(messages.getString("firewallthread_msg1")+
+						icmp.getQuellIp()+" -> "+icmp.getZielIp()+" (code: "+icmp.getIcmpCode()+", type: "+icmp.getIcmpType()+")");
 			}
 		}
 	}

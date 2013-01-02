@@ -40,7 +40,9 @@ public class IpPaket implements Serializable {
 
 	private int identification, offset;
 
-	private boolean ff, df, mf;
+	private boolean ff, 
+					df,  // don't fragment 
+					mf;  // more fragments
 
 	private int ttl, protocol, checksum;
 

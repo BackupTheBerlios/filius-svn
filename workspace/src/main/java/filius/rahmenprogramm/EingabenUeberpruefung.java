@@ -29,6 +29,8 @@ import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import filius.Main;
+
 /**
  * 
  * Dient dazu Eingaben auf Richtigkeit zu Pruefen. Dazu stehen verschiedene
@@ -84,7 +86,9 @@ public class EingabenUeberpruefung implements I18n {
 	        .compile("^[a-z A-Z0-9\\-_\\.]* <[a-zA-Z0-9\\-_][a-zA-Z0-9\\-_\\.]*[a-zA-Z0-9\\-_]@[a-zA-Z0-9][a-zA-Z0-9\\-_]*(\\.[a-zA-Z0-9][a-zA-Z0-9\\-_]*)*>$");
 	public static final Pattern musterKlassenName = Pattern.compile("[A-Z]([a-zA-Z]{2,})?");
 	public static final Pattern musterPort = Pattern
-	        .compile("([1-9]{1,4}|[1-5][0-9]{1,4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])");
+	        .compile("([1-9]|[1-9][0-9]{1,3}|[1-5][0-9]{1,4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])");
+	public static final Pattern musterPortAuchLeer = Pattern
+	        .compile("(^$|[1-9]|[1-9][0-9]{1,3}|[1-5][0-9]{1,4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])");
 	public static final Pattern musterKeineLeerzeichen = Pattern.compile("[^\\s]*");
 	public static final Pattern musterEmailBenutzername = Pattern.compile("([a-zA-Z0-9]|\\.|\\_|\\-)*");
 	public static final Pattern musterMindEinZeichen = Pattern.compile("(.){1,}");
@@ -93,6 +97,7 @@ public class EingabenUeberpruefung implements I18n {
 	// Pattern.compile("([a-zA-Z0-9]|\\.){2,}");
 	public static final Pattern musterDomain = Pattern
 	        .compile("[a-zA-Z0-9][a-zA-Z0-9\\-_]*(\\.[a-zA-Z0-9][a-zA-Z0-9\\-_]*)*");
+	public static final Pattern musterSubnetBinary = Pattern.compile("^11*0*$"); 
 
 	public static final Color farbeFalsch = new Color(255, 20, 20);
 	public static final Color farbeRichtig = new Color(0, 0, 0);
@@ -108,8 +113,33 @@ public class EingabenUeberpruefung implements I18n {
 	 * @return
 	 */
 	public static boolean isGueltig(String zuPruefen, Pattern muster) {
+		Main.debug.println("INVOKED (EingabenUeberpruefung), isGueltig(" + zuPruefen + "," + muster + ")");
 		Matcher m = muster.matcher(zuPruefen);
 		return m.matches();
+	}
+	
+	public static boolean isValidSubnetmask(String subnet) {
+		Main.debug.println("INVOKED (EingabenUeberpruefung), isValidSubnetmask(" + subnet + ")");
+		String[] token = subnet.split("\\.");
+		String binary = "";
+		Main.debug.println("DEBUG (EingabenUeberpruefung), '"+token+"', length="+token.length);
+		if(token.length != 4)
+			return false;
+		try {
+			for(int i=0; i<token.length; i++) {
+				String currBin = Integer.toBinaryString(Integer.parseInt(token[i]));
+				while(currBin.length() < 8)
+					currBin = "0" + currBin;
+				binary += currBin;
+				Main.debug.println("DEBUG (EingabenUeberpruefung), '"+token[i]+"' ~~> binary ("+i+") = '" + binary + "'");
+			}
+		}
+		catch (Exception e) {
+			return false;
+		}
+		if(binary.length() == 32 && isGueltig(binary,EingabenUeberpruefung.musterSubnetBinary))
+			return true;
+		return false;
 	}
 
 }

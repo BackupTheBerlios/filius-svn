@@ -95,6 +95,34 @@ public abstract class VermittlungsProtokoll extends Protokoll {
 		return gleichesRechnernetz;
 	}
 
+	/*
+	 * Determine subnet address for given IP and netmask.
+	 */
+	public static String getSubnetForIp(String ip, String mask) {
+		Main.debug.println("INVOKED (static) filius.software.vermittlungsschicht.VermittlungsProtokoll, getSubnetForIp("
+		                + ip + "," + mask + ")");
+		int[] a1, m;
+		int[] res = new int[4];
+		StringTokenizer tokenizer;
+
+		tokenizer = new StringTokenizer(ip, ".");
+		a1 = new int[4];
+		for (int i = 0; i < a1.length && tokenizer.hasMoreTokens(); i++) {
+			a1[i] = Integer.parseInt(tokenizer.nextToken());
+		}
+		tokenizer = new StringTokenizer(mask, ".");
+		m = new int[4];
+		for (int i = 0; i < m.length && tokenizer.hasMoreTokens(); i++) {
+			m[i] = Integer.parseInt(tokenizer.nextToken());
+		}
+
+		for (int i = 0; i < 4; i++) {
+			res[i] = a1[i] & m[i]; 
+		}
+
+		return res[0]+"."+res[1]+"."+res[2]+"."+res[3];
+	}
+	
 	public boolean isLocalAddress(String ip) {
 		if (gleichesRechnernetz(ip, "127.0.0.0", "255.0.0.0")) {
 			return true;

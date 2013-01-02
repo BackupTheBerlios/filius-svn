@@ -215,12 +215,13 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		        .getSystemSoftware()).holeFirewall();
 
 		JFirewallDialog firewallDialog = new JFirewallDialog(firewall, JMainFrame.getJMainFrame());
-		firewallDialog.setBounds(100, 100, 620, 340);
+		firewallDialog.setBounds(100, 100, 850, 340);
 		firewallDialog.setName(messages.getString("jvermittlungsrechnerkonfiguration_msg1"));
 
 		firewallDialog.updateAttribute(); // muss hier passieren, damit beim
 		                                  // oeffnen immer die aktuellen Werte
 		                                  // vorhanden sind!
+		firewallDialog.updateRuleTable();
 		firewallDialog.setVisible(true);
 	}
 
