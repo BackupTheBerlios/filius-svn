@@ -74,6 +74,7 @@
 			<outputDirectory>/hilfe</outputDirectory>
 			<includes>
 				<include>*</include>
+				<include>*/*</include>
 			</includes>
 		</fileSet>
 	</fileSets>
