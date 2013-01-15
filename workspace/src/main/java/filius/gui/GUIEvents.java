@@ -34,6 +34,7 @@ import java.util.ListIterator;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -44,7 +45,7 @@ import javax.swing.table.DefaultTableModel;
 
 import filius.Main;
 import filius.exception.VerbindungsException;
-import filius.gui.nachrichtensicht.LauscherDialog;
+import filius.gui.nachrichtensicht.ExchangeDialog;
 import filius.gui.netzwerksicht.GUIDraftPanel;
 import filius.gui.netzwerksicht.GUIKabelItem;
 import filius.gui.netzwerksicht.GUIKnotenItem;
@@ -54,7 +55,6 @@ import filius.gui.netzwerksicht.JSidebarButton;
 import filius.hardware.Kabel;
 import filius.hardware.NetzwerkInterface;
 import filius.hardware.Port;
-import filius.hardware.knoten.Host;
 import filius.hardware.knoten.InternetKnoten;
 import filius.hardware.knoten.Knoten;
 import filius.hardware.knoten.Modem;
@@ -64,8 +64,7 @@ import filius.hardware.knoten.Switch;
 import filius.hardware.knoten.Vermittlungsrechner;
 import filius.rahmenprogramm.I18n;
 import filius.rahmenprogramm.SzenarioVerwaltung;
-import filius.software.system.Betriebssystem;
-import filius.software.system.ModemFirmware;
+import filius.software.system.InternetKnotenBetriebssystem;
 import filius.software.system.SwitchFirmware;
 import filius.software.system.VermittlungsrechnerBetriebssystem;
 
@@ -668,18 +667,19 @@ public class GUIEvents implements I18n {
 		updateAktivesItem(e);
 
 		if (aktivesItem != null) {
-			if (aktivesItem.getKnoten() instanceof Rechner || aktivesItem.getKnoten() instanceof Notebook) {
+			if (aktivesItem.getKnoten() instanceof InternetKnoten) {
 
 				JPopupMenu popmen = new JPopupMenu();
 
 				ActionListener al = new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						if (e.getActionCommand() == "desktopanzeigen") {
+						if (e.getActionCommand().equals("desktopanzeigen")) {
 							desktopAnzeigen(aktivesItem);
 						}
 
-						if (e.getActionCommand() == "datenaustausch") {
-							datenAustauschAnzeigen(aktivesItem);
+						if (e.getActionCommand().startsWith("datenaustausch")) {
+							String macAddress = e.getActionCommand().substring(15);
+							datenAustauschAnzeigen(aktivesItem, macAddress);
 						}
 
 					}
@@ -692,16 +692,17 @@ public class GUIEvents implements I18n {
 				JMenuItem pmDesktopAnzeigen = new JMenuItem(messages.getString("guievents_msg3"));
 				pmDesktopAnzeigen.setActionCommand("desktopanzeigen");
 				pmDesktopAnzeigen.addActionListener(al);
-
-				JMenuItem pmDatenAustauschAnzeigen = new JMenuItem(messages.getString("guievents_msg4"));
-				pmDatenAustauschAnzeigen.setActionCommand("datenaustausch");
-				pmDatenAustauschAnzeigen.addActionListener(al);
-
 				if (aktivesItem.getKnoten() instanceof Rechner || aktivesItem.getKnoten() instanceof Notebook) {
 					popmen.add(pmDesktopAnzeigen);
-					popmen.add(pmDatenAustauschAnzeigen);
 				}
-				if (aktivesItem.getKnoten() instanceof Modem) {
+
+				InternetKnoten node = (InternetKnoten) aktivesItem.getKnoten();
+				for (NetzwerkInterface nic : node.getNetzwerkInterfaces()) {
+					JMenuItem pmDatenAustauschAnzeigen = new JMenuItem(messages.getString("guievents_msg4") + " ("
+					        + nic.getIp() + ")");
+					pmDatenAustauschAnzeigen.setActionCommand("datenaustausch-" + nic.getMac());
+					pmDatenAustauschAnzeigen.addActionListener(al);
+
 					popmen.add(pmDatenAustauschAnzeigen);
 				}
 
@@ -713,18 +714,15 @@ public class GUIEvents implements I18n {
 		}
 	}
 
-	private void datenAustauschAnzeigen(GUIKnotenItem item) {
-		Betriebssystem bs;
+	private void datenAustauschAnzeigen(GUIKnotenItem item, String macAddress) {
+		InternetKnotenBetriebssystem bs;
 		VermittlungsrechnerBetriebssystem vbs;
+		ExchangeDialog exchangeDialog = GUIContainer.getGUIContainer().getExchangeDialog();
 
-		if (item.getKnoten() instanceof Host) {
-			bs = (Betriebssystem) ((Host) item.getKnoten()).getSystemSoftware();
-			LauscherDialog.getLauscherDialog(JMainFrame.getJMainFrame()).addTabelle(bs, bs.holeMACAdresse());
-			LauscherDialog.getLauscherDialog(JMainFrame.getJMainFrame()).setVisible(true);
-		} else if (item.getKnoten() instanceof Modem) {
-			ModemFirmware firmware = (ModemFirmware) ((Modem) item.getKnoten()).getSystemSoftware();
-			LauscherDialog.getLauscherDialog(JMainFrame.getJMainFrame()).addTabelle(firmware, firmware.toString());
-			LauscherDialog.getLauscherDialog(JMainFrame.getJMainFrame()).setVisible(true);
+		if (item.getKnoten() instanceof InternetKnoten) {
+			bs = (InternetKnotenBetriebssystem) ((InternetKnoten) item.getKnoten()).getSystemSoftware();
+			exchangeDialog.addTable(bs, macAddress);
+			((JDialog) exchangeDialog).setVisible(true);
 		}
 	}
 

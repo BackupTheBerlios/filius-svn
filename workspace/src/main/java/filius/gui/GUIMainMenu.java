@@ -36,6 +36,7 @@ import java.util.LinkedList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -45,7 +46,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
 import filius.Main;
-import filius.gui.nachrichtensicht.LauscherDialog;
 import filius.gui.netzwerksicht.GUIKabelItem;
 import filius.gui.netzwerksicht.GUIKnotenItem;
 import filius.gui.netzwerksicht.JVermittlungsrechnerKonfiguration;
@@ -415,7 +415,7 @@ public class GUIMainMenu implements Serializable, I18n {
 			btSpeichern.setEnabled(true);
 			btWizard.setEnabled(true);
 
-			LauscherDialog.getLauscherDialog(JMainFrame.getJMainFrame()).setVisible(false);
+			((JDialog) GUIContainer.getGUIContainer().getExchangeDialog()).setVisible(false);
 
 			aktuellerModus = mode;
 		}

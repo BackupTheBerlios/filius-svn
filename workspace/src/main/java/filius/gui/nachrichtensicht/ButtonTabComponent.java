@@ -55,14 +55,16 @@ import filius.software.system.SystemSoftware;
  * a JButton to close the tab it belongs to
  */
 public class ButtonTabComponent extends JPanel implements I18n {
-	private LauscherDialog lauscherDialog;
+	private ExchangeDialog lauscherDialog;
 	private SystemSoftware systemSoftware;
+	private String macAddress;
 
-	public ButtonTabComponent(LauscherDialog dialog, SystemSoftware system) {
+	public ButtonTabComponent(ExchangeDialog dialog, SystemSoftware system, String macAddress) {
 		super(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
-		lauscherDialog = dialog;
-		systemSoftware = system;
+		this.lauscherDialog = dialog;
+		this.systemSoftware = system;
+		this.macAddress = macAddress;
 		setOpaque(false);
 
 		JLabel label = new JLabel();
@@ -99,7 +101,7 @@ public class ButtonTabComponent extends JPanel implements I18n {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			lauscherDialog.removeTabelle(systemSoftware, ButtonTabComponent.this);
+			lauscherDialog.removeTable(macAddress, ButtonTabComponent.this);
 		}
 
 		// paint the cross

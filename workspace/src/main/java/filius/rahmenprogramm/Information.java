@@ -44,7 +44,7 @@ import java.util.Vector;
 import javax.swing.JFileChooser;
 
 import filius.Main;
-import filius.gui.nachrichtensicht.LauscherDialog;
+import filius.gui.GUIContainer;
 import filius.hardware.Verbindung;
 
 /**
@@ -84,7 +84,7 @@ public class Information implements Serializable {
 	 * Die MAC-Adressen werden zentral verwaltet, um zu gewaehrleisten, dass
 	 * keine Adresse mehrfach vergeben wird.
 	 */
-	private Vector<String> macAdressen;
+	private Vector<String> macAdressen = new Vector<String>();
 
 	/**
 	 * Die maximale Anzahl von Vermittlungsstellen wird zur Berechnung des
@@ -115,7 +115,13 @@ public class Information implements Serializable {
 	/** Lokalisierungsobjekt fuer Standard-Spracheinstellung */
 	private Locale locale = null;
 
+	private boolean oldExchangeDialog = true;
+
 	// private Locale locale = new Locale("en", "GB");
+
+	public boolean isOldExchangeDialog() {
+		return oldExchangeDialog;
+	}
 
 	// ////////////////////////////
 	private static String getHomeDir() {
@@ -188,14 +194,14 @@ public class Information implements Serializable {
 	 */
 	private Information() {
 		if (checkWD(initArbeitsbereichPfad)) {
-			reset();
+			init();
 			initOk = true;
 		}
 	}
 
 	private Information(String path) {
 		if (checkWD(path)) {
-			reset();
+			init();
 			initOk = true;
 		}
 	}
@@ -263,10 +269,15 @@ public class Information implements Serializable {
 	 * wurden und alle Projektspezifischen Daten.
 	 */
 	public void reset() {
-		macAdressen = new Vector<String>();
+		macAdressen.clear();
+
+		GUIContainer.getGUIContainer().getExchangeDialog().reset();
+		init();
+	}
+
+	private void init() {
 		maxVermittlungsStellen = 48;
 
-		LauscherDialog.reset();
 		try {
 			initialisiereVerzeichnisse();
 		} catch (Exception e) {
@@ -650,6 +661,12 @@ public class Information implements Serializable {
 								} else if (configKey.equalsIgnoreCase("posix-behaviour")) {
 									if (configValue.trim().equals("1")) {
 										this.posixCommandLineToolBehaviour = true;
+									}
+								} else if (configKey.equalsIgnoreCase("old-exchange-dialog")) {
+									if (configValue.trim().equals("1")) {
+										this.oldExchangeDialog = true;
+									} else if (configValue.trim().equals("0")) {
+										this.oldExchangeDialog = false;
 									}
 								}
 							}

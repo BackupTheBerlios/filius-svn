@@ -39,6 +39,7 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -46,7 +47,9 @@ import javax.swing.event.MouseInputAdapter;
 
 import filius.Main;
 import filius.gui.anwendungssicht.GUIDesktopWindow;
-import filius.gui.nachrichtensicht.LauscherDialog;
+import filius.gui.nachrichtensicht.AggregatedExchangeDialog;
+import filius.gui.nachrichtensicht.ExchangeDialog;
+import filius.gui.nachrichtensicht.LayeredExchangeDialog;
 import filius.gui.netzwerksicht.GUIDraftPanel;
 import filius.gui.netzwerksicht.GUIKabelItem;
 import filius.gui.netzwerksicht.GUIKnotenItem;
@@ -137,7 +140,17 @@ public class GUIContainer implements Serializable, I18n {
 	}
 
 	public void nachrichtenDialogAnzeigen() {
-		LauscherDialog.getLauscherDialog(JMainFrame.getJMainFrame()).setVisible(true);
+		((JDialog) getExchangeDialog()).setVisible(true);
+	}
+
+	public ExchangeDialog getExchangeDialog() {
+		ExchangeDialog exchangeDialog;
+		if (Information.getInformation().isOldExchangeDialog()) {
+			exchangeDialog = LayeredExchangeDialog.getInstance(JMainFrame.getJMainFrame());
+		} else {
+			exchangeDialog = AggregatedExchangeDialog.getInstance(JMainFrame.getJMainFrame());
+		}
+		return exchangeDialog;
 	}
 
 	/**

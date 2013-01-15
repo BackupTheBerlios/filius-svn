@@ -46,9 +46,9 @@ public class LauscherTableCellRenderer extends DefaultTableCellRenderer {
 		int tblCols = table.getColumnCount();
 		int tblRows = table.getRowCount();
 
-		if (tblRows > row && tblCols > NachrichtenTabelle.SCHICHT_SPALTE
-		        && table.getValueAt(row, NachrichtenTabelle.SCHICHT_SPALTE) != null)
-			schichtString = table.getValueAt(row, NachrichtenTabelle.SCHICHT_SPALTE).toString();
+		if (tblRows > row && tblCols > LayeredMessageTable.SCHICHT_SPALTE
+		        && table.getValueAt(row, LayeredMessageTable.SCHICHT_SPALTE) != null)
+			schichtString = table.getValueAt(row, LayeredMessageTable.SCHICHT_SPALTE).toString();
 		else
 			schichtString = "";
 
@@ -64,32 +64,43 @@ public class LauscherTableCellRenderer extends DefaultTableCellRenderer {
 				schicht = i;
 		}
 
+		Color color1;
+		Color color2;
 		switch (schicht) {
 		case 0:
-			setForeground(Color.BLACK);
+			color1 = Color.BLACK;
 			// if (lfdNr%2==0)
-			setBackground(new Color(0.9f, 0.9f, 0.9f));
+			color2 = new Color(0.9f, 0.9f, 0.9f);
 			// else setBackground(new Color(0.8f, 0.8f, 0.8f));
 			break;
 		case 1:
-			setForeground(Color.BLACK);
-			if (lfdNr % 2 == 0)
-				setBackground(new Color(0.3f, 1f, 0.3f));
-			else
-				setBackground(new Color(0.2f, 1f, 0.2f));
+			color1 = Color.BLACK;
+			// if (lfdNr % 2 == 0)
+			color2 = new Color(0.3f, 1f, 0.3f);
+			// else
+			// setBackground(new Color(0.2f, 1f, 0.2f));
 			break;
 		case 2:
-			setForeground(Color.BLACK);
-			setBackground(Color.CYAN);
-			setFont(new Font(Font.MONOSPACED, Font.PLAIN, 10));
+			color1 = Color.BLACK;
+			color2 = Color.CYAN;
+			// setFont(new Font(Font.MONOSPACED, Font.PLAIN, 10));
 			break;
 		case 3:
-			setForeground(Color.WHITE);
-			setBackground(Color.BLUE);
-			setFont(new Font(Font.DIALOG, Font.BOLD, 12));
+			color1 = Color.WHITE;
+			color2 = Color.BLUE;
+			// setFont(new Font(Font.DIALOG, Font.BOLD, 12));
 			break;
 		default:
-			setBackground(Color.DARK_GRAY);
+			color1 = Color.WHITE;
+			color2 = Color.DARK_GRAY;
+		}
+
+		if (!isSelected) {
+			setForeground(color1);
+			setBackground(color2);
+		} else {
+			setForeground(Color.WHITE);
+			setBackground(Color.BLACK);
 		}
 
 		switch (column) {
@@ -117,7 +128,7 @@ public class LauscherTableCellRenderer extends DefaultTableCellRenderer {
 		}
 
 		if (value != null)
-			setText(value.toString());
+			setText(value.toString().replace('\n', ' '));
 		else
 			setText("");
 

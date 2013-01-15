@@ -349,26 +349,6 @@ public class SzenarioVerwaltung extends Observable implements I18n {
 			kabelItems.clear();
 			while (it.hasNext()) {
 				GUIKabelItem cable = (GUIKabelItem) it.next();
-				// Main.debug.println("DEBUG laden, ziel1: ("
-				// + cable.getKabelpanel().getZiel1().getImageLabel().getX()
-				// + "/"
-				// + cable.getKabelpanel().getZiel1().getImageLabel().getY()
-				// + ")  [W="
-				// + cable.getKabelpanel().getZiel1().getImageLabel().getWidth()
-				// + "; H="
-				// +
-				// cable.getKabelpanel().getZiel1().getImageLabel().getHeight()
-				// + "]");
-				// Main.debug.println("DEBUG laden, ziel2: ("
-				// + cable.getKabelpanel().getZiel2().getImageLabel().getX()
-				// + "/"
-				// + cable.getKabelpanel().getZiel2().getImageLabel().getY()
-				// + ")  [W="
-				// + cable.getKabelpanel().getZiel2().getImageLabel().getWidth()
-				// + "; H="
-				// +
-				// cable.getKabelpanel().getZiel2().getImageLabel().getHeight()
-				// + "]");
 				kabelItems.add(cable);
 			}
 

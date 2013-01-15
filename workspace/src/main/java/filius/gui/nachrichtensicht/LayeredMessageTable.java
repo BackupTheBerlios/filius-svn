@@ -51,7 +51,7 @@ import filius.rahmenprogramm.I18n;
 import filius.rahmenprogramm.nachrichten.Lauscher;
 import filius.rahmenprogramm.nachrichten.LauscherBeobachter;
 
-public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I18n {
+public class LayeredMessageTable extends JTable implements LauscherBeobachter, I18n {
 
 	private static final long serialVersionUID = 1L;
 
@@ -60,10 +60,10 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 
 	private String interfaceId;
 
-	private JCheckBox netzzugangCheckBox;
-	private JCheckBox vermittlungCheckBox;
-	private JCheckBox transportCheckBox;
-	private JCheckBox anwendungCheckBox;
+	private boolean netzzugangVisible = true;
+	private boolean vermittlungVisible = true;
+	private boolean transportVisible = true;
+	private boolean anwendungVisible = true;
 
 	private JCheckBoxMenuItem checkbox;
 
@@ -74,27 +74,26 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 	private boolean autoscroll = true;
 	private JPopupMenu menu;
 
-	public NachrichtenTabelle(JDialog dialog, String interfaceId) {
+	public LayeredMessageTable(JDialog dialog, String macAddress) {
 		super();
 
 		TableColumn col;
 		DefaultTableColumnModel columnModel;
 
 		this.dialog = dialog;
-		setinterfaceId(interfaceId);
+		setinterfaceId(macAddress);
 
-		DefaultTableModel tableModel;
-		String[] spalten = Lauscher.SPALTEN;
+		initTableModel();
 
-		tableModel = new DefaultTableModel();
-		this.setModel(tableModel);
 		this.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 
 		columnModel = new DefaultTableColumnModel();
+		String[] spalten = Lauscher.SPALTEN;
 		for (int i = 0; i < spalten.length; i++) {
 			col = new TableColumn();
 			col.setHeaderValue(spalten[i]);
 			col.setIdentifier(spalten[i]);
+			col.setModelIndex(i);
 			columnModel.addColumn(col);
 		}
 
@@ -125,6 +124,14 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 		update();
 	}
 
+	private void initTableModel() {
+		DefaultTableModel tableModel;
+		tableModel = new DefaultTableModel();
+		this.setModel(tableModel);
+		tableModel.addTableModelListener(this);
+		tableModel.setColumnIdentifiers(Lauscher.SPALTEN);
+	}
+
 	public void setScrollPane(JScrollPane scrollPane) {
 		this.scrollPane = scrollPane;
 	}
@@ -133,7 +140,7 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 		return dialog;
 	}
 
-	private NachrichtenTabelle getTabelle() {
+	private LayeredMessageTable getTabelle() {
 		return this;
 	}
 
@@ -167,10 +174,14 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 		schichtenKonfigDialog.getContentPane().setLayout(new FlowLayout());
 		((FlowLayout) schichtenKonfigDialog.getContentPane().getLayout()).setAlignment(FlowLayout.LEFT);
 
-		netzzugangCheckBox = new JCheckBox(messages.getString("nachrichtentabelle_msg2"), true);
-		vermittlungCheckBox = new JCheckBox(messages.getString("nachrichtentabelle_msg3"), true);
-		transportCheckBox = new JCheckBox(messages.getString("nachrichtentabelle_msg4"), true);
-		anwendungCheckBox = new JCheckBox(messages.getString("nachrichtentabelle_msg5"), true);
+		final JCheckBox netzzugangCheckBox = new JCheckBox(messages.getString("nachrichtentabelle_msg2"),
+		        netzzugangVisible);
+		final JCheckBox vermittlungCheckBox = new JCheckBox(messages.getString("nachrichtentabelle_msg3"),
+		        vermittlungVisible);
+		final JCheckBox transportCheckBox = new JCheckBox(messages.getString("nachrichtentabelle_msg4"),
+		        transportVisible);
+		final JCheckBox anwendungCheckBox = new JCheckBox(messages.getString("nachrichtentabelle_msg5"),
+		        anwendungVisible);
 		schichtenKonfigDialog.getContentPane().add(netzzugangCheckBox);
 		schichtenKonfigDialog.getContentPane().add(vermittlungCheckBox);
 		schichtenKonfigDialog.getContentPane().add(transportCheckBox);
@@ -191,6 +202,12 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 				        schichtenKonfigDialog.getHeight());
 
 				schichtenKonfigDialog.setVisible(true);
+				netzzugangVisible = netzzugangCheckBox.isSelected();
+				vermittlungVisible = vermittlungCheckBox.isSelected();
+				transportVisible = transportCheckBox.isSelected();
+				anwendungVisible = anwendungCheckBox.isSelected();
+
+				initTableModel();
 				update();
 			}
 		});
@@ -202,7 +219,6 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 				menu.setVisible(false);
 
 				Lauscher.getLauscher().reset();
-				update();
 			}
 		});
 		menu.add(menuItem);
@@ -224,63 +240,64 @@ public class NachrichtenTabelle extends JTable implements LauscherBeobachter, I1
 
 	}
 
-	public void setinterfaceId(String interfaceId) {
+	private void setinterfaceId(String interfaceId) {
 		this.interfaceId = interfaceId;
 
 		Lauscher.getLauscher().addBeobachter(interfaceId, this);
 	}
 
-	public void update() {
+	public synchronized void update() {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (NachrichtenTabelle), update()");
 		Object[][] daten;
-		Vector<Object[]> gefilterteDaten;
-		int[] colWidth, colMaxWidth;
-		int zaehler = 0;
 
-		colWidth = new int[this.getColumnCount()];
-		colMaxWidth = new int[this.getColumnCount()];
-		for (int i = 0; i < colWidth.length; i++) {
-			colWidth[i] = this.getColumnModel().getColumn(i).getPreferredWidth();
-			colMaxWidth[i] = this.getColumnModel().getColumn(i).getMaxWidth();
+		daten = Lauscher.getLauscher().getDaten(interfaceId, false);
+
+		if (daten.length == 0) {
+			initTableModel();
+		}
+		int lastNo = -1;
+		if (getModel().getRowCount() > 0) {
+			lastNo = Integer.parseInt(this.getModel().getValueAt(this.getModel().getRowCount() - 1, 0).toString());
 		}
 
-		daten = Lauscher.getLauscher().getDaten(interfaceId);
-		gefilterteDaten = new Vector<Object[]>();
 		for (int i = 0; i < daten.length; i++) {
+			int currentNo = Integer.parseInt(daten[i][0].toString());
+			if (currentNo <= lastNo) {
+				continue;
+			}
+
+			boolean isValid = false;
 			if (daten[i][SCHICHT_SPALTE].equals(Lauscher.PROTOKOLL_SCHICHTEN[0])) {
-				if (zaehler < gefilterteDaten.size()) {
-					gefilterteDaten.addElement(new Object[daten[i].length]);
-					zaehler = gefilterteDaten.size();
+				if (netzzugangVisible) {
+					isValid = true;
 				}
-				if (netzzugangCheckBox.isSelected())
-					gefilterteDaten.addElement(daten[i]);
 			} else if (daten[i][SCHICHT_SPALTE].equals(Lauscher.PROTOKOLL_SCHICHTEN[1])) {
-				if (vermittlungCheckBox.isSelected())
-					gefilterteDaten.addElement(daten[i]);
+				if (vermittlungVisible) {
+					isValid = true;
+				}
 			} else if (daten[i][SCHICHT_SPALTE].equals(Lauscher.PROTOKOLL_SCHICHTEN[2])) {
-				if (transportCheckBox.isSelected())
-					gefilterteDaten.addElement(daten[i]);
+				if (transportVisible) {
+					isValid = true;
+				}
 			} else if (daten[i][SCHICHT_SPALTE].equals(Lauscher.PROTOKOLL_SCHICHTEN[3])) {
-				if (anwendungCheckBox.isSelected())
-					gefilterteDaten.addElement(daten[i]);
+				if (anwendungVisible) {
+					isValid = true;
+				}
 			} else {
-				gefilterteDaten.addElement(daten[i]);
+				isValid = true;
+			}
+
+			if (isValid) {
+				Vector<Object> rowData = new Vector<Object>(daten[i].length);
+				for (int col = 0; col < daten[i].length; col++) {
+					rowData.add(col, daten[i][col]);
+				}
+				((DefaultTableModel) this.getModel()).addRow(rowData);
 			}
 		}
-		daten = new Object[gefilterteDaten.size()][Lauscher.SPALTEN.length];
-		for (int i = 0; i < gefilterteDaten.size(); i++) {
-			daten[i] = (Object[]) gefilterteDaten.elementAt(i);
-		}
 
-		((DefaultTableModel) this.getModel()).setDataVector(daten, Lauscher.SPALTEN);
-
-		for (int i = 0; i < colWidth.length; i++) {
-			this.getColumnModel().getColumn(i).setMaxWidth(colMaxWidth[i]);
-			this.getColumnModel().getColumn(i).setPreferredWidth(colWidth[i]);
-		}
-		this.getColumnModel().getColumn(6).setResizable(true);
-
-		if (scrollPane != null && scrollPane.getViewport() != null && autoscroll) {
+		((DefaultTableModel) this.getModel()).fireTableDataChanged();
+		if (this.getRowCount() > 0 && scrollPane != null && scrollPane.getViewport() != null && autoscroll) {
 			scrollPane.getViewport().setViewPosition(new Point(0, this.getHeight()));
 		}
 	}

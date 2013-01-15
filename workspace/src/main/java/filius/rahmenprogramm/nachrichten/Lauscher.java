@@ -151,8 +151,8 @@ public class Lauscher implements I18n {
 		liste = (LinkedList<Object[]>) datenEinheiten.get(interfaceId);
 		if (liste == null) {
 			liste = new LinkedList<Object[]>();
-			liste.add(frameMitZeitstempel);
-		} else {
+		}
+		synchronized (liste) {
 			liste.addLast(frameMitZeitstempel);
 		}
 
@@ -160,12 +160,12 @@ public class Lauscher implements I18n {
 		benachrichtigeBeobachter(interfaceId);
 	}
 
-	public Object[][] getDaten(String interfaceId) {
+	public Object[][] getDaten(String interfaceId, boolean inheritAddress) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", getDaten(" + interfaceId + ")");
 		Vector<Object[]> vector;
 		Object[][] daten;
 
-		vector = datenVorbereiten(interfaceId);
+		vector = datenVorbereiten(interfaceId, inheritAddress);
 		if (vector == null) {
 			daten = new Object[0][SPALTEN.length];
 			return daten;
@@ -182,7 +182,7 @@ public class Lauscher implements I18n {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", print(" + interfaceId + ")");
 		Object[][] daten;
 
-		daten = getDaten(interfaceId);
+		daten = getDaten(interfaceId, false);
 		for (int i = 0; i < daten.length; i++) {
 			for (int j = 0; j < daten[i].length; j++) {
 				Main.debug.print("\t" + daten[i][j]);
@@ -191,7 +191,7 @@ public class Lauscher implements I18n {
 		}
 	}
 
-	private Vector<Object[]> datenVorbereiten(String interfaceId) {
+	private Vector<Object[]> datenVorbereiten(String interfaceId, boolean inheritAddress) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", datenVorbereiten(" + interfaceId
 		        + ")");
 		Vector<Object[]> daten;
@@ -213,48 +213,36 @@ public class Lauscher implements I18n {
 		} else {
 			daten = new Vector<Object[]>();
 
-			it = liste.listIterator();
-			for (int i = 1; it.hasNext(); i++) {
-				frameMitZeitstempel = (Object[]) it.next();
-				neuerEintrag = new Object[SPALTEN.length];
-				neuerEintrag[0] = "" + i;
+			synchronized (liste) {
+				it = liste.listIterator();
+				for (int i = 1; it.hasNext(); i++) {
+					frameMitZeitstempel = (Object[]) it.next();
+					neuerEintrag = new Object[SPALTEN.length];
+					neuerEintrag[0] = "" + i;
 
-				zeit = new GregorianCalendar();
-				zeit.setTimeInMillis(((Long) frameMitZeitstempel[0]).longValue());
-				timestampStr = (zeit.get(Calendar.HOUR_OF_DAY) < 10 ? "0" + zeit.get(Calendar.HOUR_OF_DAY) : zeit
-				        .get(Calendar.HOUR_OF_DAY))
-				        + ":"
-				        + (zeit.get(Calendar.MINUTE) < 10 ? "0" + zeit.get(Calendar.MINUTE) : zeit.get(Calendar.MINUTE))
-				        + ":"
-				        + (zeit.get(Calendar.SECOND) < 10 ? "0" + zeit.get(Calendar.SECOND) : zeit.get(Calendar.SECOND))
-				        + "."
-				        + (zeit.get(Calendar.MILLISECOND) < 10 ? "00" + zeit.get(Calendar.MILLISECOND) : (zeit
-				                .get(Calendar.MILLISECOND) < 100 ? "0" + zeit.get(Calendar.MILLISECOND) : zeit
-				                .get(Calendar.MILLISECOND)));
+					zeit = new GregorianCalendar();
+					zeit.setTimeInMillis(((Long) frameMitZeitstempel[0]).longValue());
+					timestampStr = (zeit.get(Calendar.HOUR_OF_DAY) < 10 ? "0" + zeit.get(Calendar.HOUR_OF_DAY) : zeit
+					        .get(Calendar.HOUR_OF_DAY))
+					        + ":"
+					        + (zeit.get(Calendar.MINUTE) < 10 ? "0" + zeit.get(Calendar.MINUTE) : zeit
+					                .get(Calendar.MINUTE))
+					        + ":"
+					        + (zeit.get(Calendar.SECOND) < 10 ? "0" + zeit.get(Calendar.SECOND) : zeit
+					                .get(Calendar.SECOND))
+					        + "."
+					        + (zeit.get(Calendar.MILLISECOND) < 10 ? "00" + zeit.get(Calendar.MILLISECOND) : (zeit
+					                .get(Calendar.MILLISECOND) < 100 ? "0" + zeit.get(Calendar.MILLISECOND) : zeit
+					                .get(Calendar.MILLISECOND)));
 
-				neuerEintrag[1] = timestampStr;
-				frame = (EthernetFrame) frameMitZeitstempel[1];
-				neuerEintrag[2] = frame.getQuellMacAdresse();
-				neuerEintrag[3] = frame.getZielMacAdresse();
-				neuerEintrag[4] = ETHERNET;
-				neuerEintrag[5] = PROTOKOLL_SCHICHTEN[0];
-				neuerEintrag[6] = frame.getTyp();
+					neuerEintrag[1] = timestampStr;
+					frame = (EthernetFrame) frameMitZeitstempel[1];
+					neuerEintrag[2] = frame.getQuellMacAdresse();
+					neuerEintrag[3] = frame.getZielMacAdresse();
+					neuerEintrag[4] = ETHERNET;
+					neuerEintrag[5] = PROTOKOLL_SCHICHTEN[0];
+					neuerEintrag[6] = frame.getTyp();
 
-				daten.addElement(neuerEintrag);
-
-				neuerEintrag = new Object[SPALTEN.length];
-				neuerEintrag[0] = "" + i;
-
-				neuerEintrag[1] = timestampStr;
-
-				if (frame.getTyp().equals(EthernetFrame.IP) && !frame.isICMP()) {
-					ipPaket = (IpPaket) frame.getDaten();
-					neuerEintrag[2] = ipPaket.getSender();
-					neuerEintrag[3] = ipPaket.getEmpfaenger();
-					neuerEintrag[4] = IP;
-					neuerEintrag[5] = PROTOKOLL_SCHICHTEN[1];
-					neuerEintrag[6] = messages.getString("rp_lauscher_msg12") + ipPaket.getProtocol() + ", TTL: "
-					        + ipPaket.getTtl();
 					daten.addElement(neuerEintrag);
 
 					neuerEintrag = new Object[SPALTEN.length];
@@ -262,114 +250,147 @@ public class Lauscher implements I18n {
 
 					neuerEintrag[1] = timestampStr;
 
-					if (ipPaket.getProtocol() == IpPaket.TCP) {
-						tcpSeg = (TcpSegment) ipPaket.getSegment();
-						neuerEintrag[2] = tcpSeg.getQuellPort();
-						neuerEintrag[3] = tcpSeg.getZielPort();
-						neuerEintrag[4] = TCP;
-						neuerEintrag[5] = PROTOKOLL_SCHICHTEN[2];
-						if (tcpSeg.isAck() && !tcpSeg.isSyn() && !tcpSeg.isFin()) {
-							neuerEintrag[6] = "ACK: " + tcpSeg.getAckNummer();
-						} else {
-							if (tcpSeg.isSyn()) {
-								neuerEintrag[6] = "SYN";
-							} else if (tcpSeg.isFin()) {
-								neuerEintrag[6] = "FIN";
-							}
-							if (tcpSeg.isAck()) {
-								neuerEintrag[6] = neuerEintrag[6] + ", ACK:" + tcpSeg.getAckNummer();
-							}
-
-							// Sequenznummer nur, wenn SYN-Segment
-							// oder Nutzdaten-Segment
-							if (tcpSeg.isSyn() || (!tcpSeg.isAck() && !tcpSeg.isFin())) {
-								neuerEintrag[6] = ((neuerEintrag[6] == null) ? "" : neuerEintrag[6])
-								        + (tcpSeg.isSyn() ? ", " : "") + "SEQ: " + tcpSeg.getSeqNummer();
-							}
-						}
-					} else if (ipPaket.getProtocol() == IpPaket.UDP) {
-						udpSeg = (UdpSegment) ipPaket.getSegment();
-						neuerEintrag[2] = udpSeg.getQuellPort();
-						neuerEintrag[3] = udpSeg.getZielPort();
-						neuerEintrag[4] = UDP;
-						neuerEintrag[5] = PROTOKOLL_SCHICHTEN[2];
-						neuerEintrag[6] = "";
-					} else {
-						Main.debug.println("ERROR (" + this.hashCode() + "): Protokoll der Transportschicht ("
-						        + ipPaket.getProtocol() + ") nicht bekannt.");
-					}
-					daten.addElement(neuerEintrag);
-
-					neuerEintrag = new Object[SPALTEN.length];
-					neuerEintrag[0] = "" + i;
-
-					neuerEintrag[1] = timestampStr;
-					neuerEintrag[2] = "";
-					neuerEintrag[3] = "";
-					neuerEintrag[4] = "";
-					neuerEintrag[5] = PROTOKOLL_SCHICHTEN[3];
-					if (ipPaket.getProtocol() == IpPaket.TCP) {
-						neuerEintrag[6] = tcpSeg.getDaten();
-						if (neuerEintrag[6] != null)
-							neuerEintrag[6] = ((String) neuerEintrag[6]).replace('\n', ' ');
-					} else if (ipPaket.getProtocol() == IpPaket.UDP) {
-						neuerEintrag[6] = udpSeg.getDaten();
-						if (neuerEintrag[6] != null)
-							neuerEintrag[6] = ((String) neuerEintrag[6]).replace('\n', ' ');
-					}
-
-					if (neuerEintrag[6] != null && !((String) neuerEintrag[6]).trim().equals(""))
+					if (frame.getTyp().equals(EthernetFrame.IP) && !frame.isICMP()) {
+						ipPaket = (IpPaket) frame.getDaten();
+						neuerEintrag[2] = ipPaket.getSender();
+						neuerEintrag[3] = ipPaket.getEmpfaenger();
+						neuerEintrag[4] = IP;
+						neuerEintrag[5] = PROTOKOLL_SCHICHTEN[1];
+						neuerEintrag[6] = messages.getString("rp_lauscher_msg12") + ipPaket.getProtocol() + ", TTL: "
+						        + ipPaket.getTtl();
 						daten.addElement(neuerEintrag);
-				} else if (frame.getTyp().equals(EthernetFrame.ARP)) {
-					arpPaket = (ArpPaket) frame.getDaten();
-					neuerEintrag[2] = arpPaket.getQuellIp();
-					neuerEintrag[3] = arpPaket.getZielIp();
-					neuerEintrag[4] = ARP;
-					neuerEintrag[5] = PROTOKOLL_SCHICHTEN[1];
-					if (arpPaket.getZielMacAdresse().equalsIgnoreCase("ff:ff:ff:ff:ff:ff")) {
-						neuerEintrag[6] = messages.getString("rp_lauscher_msg13") + " " + arpPaket.getZielIp() + ", ";
-					} else {
-						neuerEintrag[6] = "";
-					}
-					neuerEintrag[6] = neuerEintrag[6] + arpPaket.getQuellIp() + ": " + arpPaket.getQuellMacAdresse();
 
-					daten.addElement(neuerEintrag);
-				} else if (frame.getTyp().equals(EthernetFrame.IP) && frame.isICMP()) {
-					icmpPaket = (IcmpPaket) frame.getDaten();
-					neuerEintrag[2] = icmpPaket.getQuellIp();
-					neuerEintrag[3] = icmpPaket.getZielIp();
-					neuerEintrag[4] = ICMP;
-					neuerEintrag[5] = PROTOKOLL_SCHICHTEN[1];
-					switch (icmpPaket.getIcmpType()) {
-					case 0:
-						neuerEintrag[6] = "ICMP Echo Reply (pong)";
-						break;
-					case 3:
-						switch (icmpPaket.getIcmpCode()) {
+						neuerEintrag = new Object[SPALTEN.length];
+						neuerEintrag[0] = "" + i;
+
+						neuerEintrag[1] = timestampStr;
+
+						String source = null;
+						String dest = null;
+
+						if (ipPaket.getProtocol() == IpPaket.TCP) {
+							tcpSeg = (TcpSegment) ipPaket.getSegment();
+
+							if (inheritAddress) {
+								source = ipPaket.getSender() + ":" + tcpSeg.getQuellPort();
+								neuerEintrag[2] = source;
+								dest = ipPaket.getEmpfaenger() + ":" + tcpSeg.getZielPort();
+								neuerEintrag[3] = dest;
+							} else {
+								neuerEintrag[2] = tcpSeg.getQuellPort();
+								neuerEintrag[3] = tcpSeg.getZielPort();
+							}
+							neuerEintrag[4] = TCP;
+							neuerEintrag[5] = PROTOKOLL_SCHICHTEN[2];
+							if (tcpSeg.isAck() && !tcpSeg.isSyn() && !tcpSeg.isFin()) {
+								neuerEintrag[6] = "ACK: " + tcpSeg.getAckNummer();
+							} else {
+								if (tcpSeg.isSyn()) {
+									neuerEintrag[6] = "SYN";
+								} else if (tcpSeg.isFin()) {
+									neuerEintrag[6] = "FIN";
+								}
+								if (tcpSeg.isAck()) {
+									neuerEintrag[6] = neuerEintrag[6] + ", ACK:" + tcpSeg.getAckNummer();
+								}
+
+								// Sequenznummer nur, wenn SYN-Segment
+								// oder Nutzdaten-Segment
+								if (tcpSeg.isSyn() || (!tcpSeg.isAck() && !tcpSeg.isFin())) {
+									neuerEintrag[6] = ((neuerEintrag[6] == null) ? "" : neuerEintrag[6])
+									        + (tcpSeg.isSyn() ? ", " : "") + "SEQ: " + tcpSeg.getSeqNummer();
+								}
+							}
+						} else if (ipPaket.getProtocol() == IpPaket.UDP) {
+							udpSeg = (UdpSegment) ipPaket.getSegment();
+							if (inheritAddress) {
+								source = ipPaket.getSender() + ":" + udpSeg.getQuellPort();
+								neuerEintrag[2] = source;
+								dest = ipPaket.getEmpfaenger() + ":" + udpSeg.getZielPort();
+								neuerEintrag[3] = dest;
+							} else {
+								neuerEintrag[2] = udpSeg.getQuellPort();
+								neuerEintrag[3] = udpSeg.getZielPort();
+							}
+							neuerEintrag[4] = UDP;
+							neuerEintrag[5] = PROTOKOLL_SCHICHTEN[2];
+							neuerEintrag[6] = "";
+						} else {
+							Main.debug.println("ERROR (" + this.hashCode() + "): Protokoll der Transportschicht ("
+							        + ipPaket.getProtocol() + ") nicht bekannt.");
+						}
+						daten.addElement(neuerEintrag);
+
+						neuerEintrag = new Object[SPALTEN.length];
+						neuerEintrag[0] = "" + i;
+
+						neuerEintrag[1] = timestampStr;
+						neuerEintrag[2] = source;
+						neuerEintrag[3] = dest;
+						neuerEintrag[4] = "";
+						neuerEintrag[5] = PROTOKOLL_SCHICHTEN[3];
+						if (ipPaket.getProtocol() == IpPaket.TCP) {
+							neuerEintrag[6] = tcpSeg.getDaten();
+						} else if (ipPaket.getProtocol() == IpPaket.UDP) {
+							neuerEintrag[6] = udpSeg.getDaten();
+						}
+
+						if (neuerEintrag[6] != null && !((String) neuerEintrag[6]).trim().equals(""))
+							daten.addElement(neuerEintrag);
+					} else if (frame.getTyp().equals(EthernetFrame.ARP)) {
+						arpPaket = (ArpPaket) frame.getDaten();
+						neuerEintrag[2] = arpPaket.getQuellIp();
+						neuerEintrag[3] = arpPaket.getZielIp();
+						neuerEintrag[4] = ARP;
+						neuerEintrag[5] = PROTOKOLL_SCHICHTEN[1];
+						if (arpPaket.getZielMacAdresse().equalsIgnoreCase("ff:ff:ff:ff:ff:ff")) {
+							neuerEintrag[6] = messages.getString("rp_lauscher_msg13") + " " + arpPaket.getZielIp()
+							        + ", ";
+						} else {
+							neuerEintrag[6] = "";
+						}
+						neuerEintrag[6] = neuerEintrag[6] + arpPaket.getQuellIp() + ": "
+						        + arpPaket.getQuellMacAdresse();
+
+						daten.addElement(neuerEintrag);
+					} else if (frame.getTyp().equals(EthernetFrame.IP) && frame.isICMP()) {
+						icmpPaket = (IcmpPaket) frame.getDaten();
+						neuerEintrag[2] = icmpPaket.getQuellIp();
+						neuerEintrag[3] = icmpPaket.getZielIp();
+						neuerEintrag[4] = ICMP;
+						neuerEintrag[5] = PROTOKOLL_SCHICHTEN[1];
+						switch (icmpPaket.getIcmpType()) {
 						case 0:
-							neuerEintrag[6] = "ICMP Network Unreachable";
+							neuerEintrag[6] = "ICMP Echo Reply (pong)";
 							break;
-						case 1:
-							neuerEintrag[6] = "ICMP Host Unreachable";
+						case 3:
+							switch (icmpPaket.getIcmpCode()) {
+							case 0:
+								neuerEintrag[6] = "ICMP Network Unreachable";
+								break;
+							case 1:
+								neuerEintrag[6] = "ICMP Host Unreachable";
+								break;
+							default:
+								neuerEintrag[6] = "ICMP Destination Unreachable (code " + icmpPaket.getIcmpCode() + ")";
+								break;
+							}
+							break;
+						case 8:
+							neuerEintrag[6] = "ICMP Echo Request (ping)";
+							break;
+						case 11:
+							neuerEintrag[6] = "ICMP Time Exeeded (poof)";
 							break;
 						default:
-							neuerEintrag[6] = "ICMP Destination Unreachable (code " + icmpPaket.getIcmpCode() + ")";
+							neuerEintrag[6] = "ICMP unknown: " + icmpPaket.getIcmpType() + " / "
+							        + icmpPaket.getIcmpCode();
 							break;
+
 						}
-						break;
-					case 8:
-						neuerEintrag[6] = "ICMP Echo Request (ping)";
-						break;
-					case 11:
-						neuerEintrag[6] = "ICMP Time Exeeded (poof)";
-						break;
-					default:
-						neuerEintrag[6] = "ICMP unknown: " + icmpPaket.getIcmpType() + " / " + icmpPaket.getIcmpCode();
-						break;
 
+						daten.addElement(neuerEintrag);
 					}
-
-					daten.addElement(neuerEintrag);
 				}
 			}
 		}
