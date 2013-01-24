@@ -42,6 +42,7 @@ import filius.software.transportschicht.SocketSchnittstelle;
 import filius.software.transportschicht.TCPSocket;
 import filius.software.transportschicht.TcpSegment;
 import filius.software.transportschicht.UDPSocket;
+import filius.software.transportschicht.UdpSegment;
 import filius.software.vermittlungsschicht.IpPaket;
 import filius.software.vermittlungsschicht.VermittlungsProtokoll;
 
@@ -74,16 +75,16 @@ public class Firewall extends Anwendung implements I18n {
 
 	// firewall ruleset
 	private Vector<FirewallRule> ruleset;
-	
+
 	private short defaultPolicy = FirewallRule.DROP;
-	
+
 	private boolean aktiviert = true;
 	private boolean verbindungsaufbauAblehnen = false;
 	private LinkedList<String> absenderFilter, empfaengerFilter;
-	private boolean activated = true; 
-	private boolean doDropICMP = true;
+	private boolean activated = true;
+	private boolean doDropICMP = false;
 	private boolean allowRelatedPackets = true;
-	
+
 	/**
 	 * Liste mit Portregeln besetehen aus dem jeweiligen TCP/UDP-Port und einem
 	 * Flag, das angibt, ob diese Ausschlussregel nur auf IP-Pakete aller
@@ -137,14 +138,14 @@ public class Firewall extends Anwendung implements I18n {
 
 	private void starteFirewallThread(NetzwerkInterface nic) {
 		FirewallThread thread = new FirewallThread(this, nic);
-		transferRules();  // transfer old format to new ruleset format for downwards compatibility
+		transferRules(); // transfer old format to new ruleset format for
+		                 // downwards compatibility
 		thread.starten();
 		this.threads.add(thread);
 	}
 
 	public void transferRules() {
-		if(this.absenderFilter.size() + this.empfaengerFilter.size() + this.portList.size() > 
-			this.ruleset.size()) {
+		if (this.absenderFilter.size() + this.empfaengerFilter.size() + this.portList.size() > this.ruleset.size()) {
 			Main.debug.println("INVOKED, if (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 			        + " (Firewall), transferRules()");
 			FirewallRule newRule;
@@ -152,68 +153,78 @@ public class Firewall extends Anwendung implements I18n {
 			Object[] objArray;
 			String von;
 			String bis;
-	
-			for(int i=0; i < absenderFilter.size(); i++) {
+
+			for (int i = 0; i < absenderFilter.size(); i++) {
 				strArray = absenderFilter.get(i).split("\\#");
-				Main.debug.println("DEBUG (Firewall), transferRules():  absenderFilter #"+i+", string='"+absenderFilter.get(i)+"', strArray[0]="+strArray[0]);
+				Main.debug.println("DEBUG (Firewall), transferRules():  absenderFilter #" + i + ", string='"
+				        + absenderFilter.get(i) + "', strArray[0]=" + strArray[0]);
 				von = strArray[0];
 				bis = strArray[1];
-				// write rule equivalent/similar to former effects 
-				newRule = new FirewallRule(von, "", "", "", FirewallRule.ALL_PORTS, FirewallRule.ALL_PROTOCOLS, FirewallRule.ACCEPT);
-				if(bis.trim().isEmpty()) // not set --> assume single host
+				// write rule equivalent/similar to former effects
+				newRule = new FirewallRule(von, "", "", "", FirewallRule.ALL_PORTS, FirewallRule.ALL_PROTOCOLS,
+				        FirewallRule.ACCEPT);
+				if (bis.trim().isEmpty()) // not set --> assume single host
 					newRule.srcMask = "255.255.255.255";
 				else {
-					newRule.srcMask = "255.255.255.0"; // assume class C net (default IP range)
+					newRule.srcMask = "255.255.255.0"; // assume class C net
+					                                   // (default IP range)
 					newRule.srcIP = VermittlungsProtokoll.getSubnetForIp(von, "255.255.255.0");
 				}
 				ruleset.add(newRule);
 			}
 			absenderFilter.clear();
-			for(int i=0; i < empfaengerFilter.size(); i++) {
+			for (int i = 0; i < empfaengerFilter.size(); i++) {
 				strArray = empfaengerFilter.get(i).split("\\#");
-				Main.debug.println("DEBUG (Firewall), transferRules():  empfaenferFilter #"+i+", string='"+empfaengerFilter+"', strArray[0]="+strArray[0]);
+				Main.debug.println("DEBUG (Firewall), transferRules():  empfaenferFilter #" + i + ", string='"
+				        + empfaengerFilter + "', strArray[0]=" + strArray[0]);
 				von = strArray[0];
 				bis = strArray[1];
-				// write rule equivalent/similar to former effects 
-				newRule = new FirewallRule("", "", von, "", FirewallRule.ALL_PORTS, FirewallRule.ALL_PROTOCOLS, FirewallRule.ACCEPT);
-				if(bis.trim().isEmpty()) // not set --> assume single host
+				// write rule equivalent/similar to former effects
+				newRule = new FirewallRule("", "", von, "", FirewallRule.ALL_PORTS, FirewallRule.ALL_PROTOCOLS,
+				        FirewallRule.ACCEPT);
+				if (bis.trim().isEmpty()) // not set --> assume single host
 					newRule.destMask = "255.255.255.255";
 				else {
-					newRule.destMask = "255.255.255.0"; // assume class C net (default IP range)
+					newRule.destMask = "255.255.255.0"; // assume class C net
+					                                    // (default IP range)
 					newRule.destIP = VermittlungsProtokoll.getSubnetForIp(von, "255.255.255.0");
 				}
 				ruleset.add(newRule);
 			}
 			empfaengerFilter.clear();
-			for(int i=0; i < portList.size(); i++) {
+			for (int i = 0; i < portList.size(); i++) {
 				objArray = portList.get(i);
-				//---------
+				// ---------
 				// insert comparable rule for new scheme
 				int portNum = -1;
 				try {
 					portNum = Integer.parseInt((String) objArray[0]);
-					if(((Boolean) objArray[1])) {  // unterscheideNetzwerk = TRUE
-						Main.debug.println("DEBUG (Firewall), transferRules():  portRule, port='"+portNum+"', unterscheideNetzwerk="+(((Boolean) objArray[1])));
-						for(int o=0; i < holeNetzwerkInterfaces().size(); o++) {
-							newRule = new FirewallRule("", "", "", "", portNum, FirewallRule.ALL_PROTOCOLS, FirewallRule.ACCEPT);
-							newRule.srcIP = VermittlungsProtokoll.getSubnetForIp(holeNetzwerkInterfaces().get(o).getIp(), 
-									holeNetzwerkInterfaces().get(o).getSubnetzMaske());
+					if (((Boolean) objArray[1])) { // unterscheideNetzwerk =
+						                           // TRUE
+						Main.debug.println("DEBUG (Firewall), transferRules():  portRule, port='" + portNum
+						        + "', unterscheideNetzwerk=" + (((Boolean) objArray[1])));
+						for (int o = 0; i < holeNetzwerkInterfaces().size(); o++) {
+							newRule = new FirewallRule("", "", "", "", portNum, FirewallRule.ALL_PROTOCOLS,
+							        FirewallRule.ACCEPT);
+							newRule.srcIP = VermittlungsProtokoll.getSubnetForIp(holeNetzwerkInterfaces().get(o)
+							        .getIp(), holeNetzwerkInterfaces().get(o).getSubnetzMaske());
 							newRule.srcMask = holeNetzwerkInterfaces().get(o).getSubnetzMaske();
 							ruleset.add(newRule);
 						}
-					}
-					else {
-						Main.debug.println("DEBUG (Firewall), transferRules():  portRule, port='"+portNum+"', unterscheideNetzwerk="+(! ((Boolean) objArray[1])));
-						newRule = new FirewallRule("", "", "", "", portNum, FirewallRule.ALL_PROTOCOLS, FirewallRule.ACCEPT);
+					} else {
+						Main.debug.println("DEBUG (Firewall), transferRules():  portRule, port='" + portNum
+						        + "', unterscheideNetzwerk=" + (!((Boolean) objArray[1])));
+						newRule = new FirewallRule("", "", "", "", portNum, FirewallRule.ALL_PROTOCOLS,
+						        FirewallRule.ACCEPT);
 						ruleset.add(newRule);
 					}
+				} catch (Exception e) {
 				}
-				catch (Exception e) {}
 			}
 			portList.clear();
 		}
 	}
-	
+
 	/**
 	 * ruft die Methoden zum ordnungsgemäßen Stoppen aller existierenden Threads
 	 * auf
@@ -238,73 +249,84 @@ public class Firewall extends Anwendung implements I18n {
 	}
 
 	/**
-	 * Method to check whether IP packet is allowed;
-	 * other packets (like ICMP) have to be evluated in another place
-	 * @param	 ipPacket
+	 * Method to check whether IP packet is allowed; other packets (like ICMP)
+	 * have to be evluated in another place
+	 * 
+	 * @param ipPacket
 	 */
 	public boolean allowedIPpacket(IpPaket ipPacket) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + " (Firewall), allowedIPpacket(" + ipPacket + ")");
-		if(this.isActivated()) {
-			if(this.getAllowRelatedPackets() && ipPacket.getProtocol() == IpPaket.TCP) {
+		if (this.isActivated()) {
+
+			if (this.getAllowRelatedPackets() && ipPacket.getProtocol() == IpPaket.TCP) {
 				// SYN-ACK or ACK only -> accept
-				if ( !((TcpSegment) ipPacket.getSegment()).isSyn() || ((TcpSegment) ipPacket.getSegment()).isAck()) {
+				if (!((TcpSegment) ipPacket.getSegment()).isSyn() || ((TcpSegment) ipPacket.getSegment()).isAck()) {
 					return true;
 				}
 			}
 			boolean ruleMatch = true;
-			for (int i=0; i<ruleset.size(); i++) {
-				ruleMatch=true;
-				if(! ruleset.get(i).srcIP.isEmpty()) {
-					if(ruleset.get(i).srcIP.equals(FirewallRule.SAME_NETWORK)) {
-						ListIterator<NetzwerkInterface> it = ((InternetKnoten) getSystemSoftware().getKnoten()).getNetzwerkInterfaces().listIterator();
+			for (int i = 0; i < ruleset.size(); i++) {
+				ruleMatch = true;
+				if (modus == PERSONAL && ipPacket.getSegment() instanceof UdpSegment) {
+					return true;
+				}
+				if (!ruleset.get(i).srcIP.isEmpty()) {
+					if (ruleset.get(i).srcIP.equals(FirewallRule.SAME_NETWORK)) {
+						ListIterator<NetzwerkInterface> it = ((InternetKnoten) getSystemSoftware().getKnoten())
+						        .getNetzwerkInterfaces().listIterator();
 						boolean foundNIC = false;
-						while(it.hasNext() && !foundNIC) {
+						while (it.hasNext() && !foundNIC) {
 							NetzwerkInterface iface = it.next();
-							if(VermittlungsProtokoll.gleichesRechnernetz(ipPacket.getSender(), iface.getIp(), iface.getSubnetzMaske())) {
-								foundNIC = true;   // found NIC with IP address of same network
+							if (VermittlungsProtokoll.gleichesRechnernetz(ipPacket.getSender(), iface.getIp(),
+							        iface.getSubnetzMaske())) {
+								foundNIC = true; // found NIC with IP address of
+								                 // same network
 							}
 						}
 						ruleMatch = ruleMatch && foundNIC;
-					}
-					else 
-						ruleMatch = ruleMatch &&
-								VermittlungsProtokoll.gleichesRechnernetz(ipPacket.getSender(), ruleset.get(i).srcIP, ruleset.get(i).srcMask);
+					} else
+						ruleMatch = ruleMatch
+						        && VermittlungsProtokoll.gleichesRechnernetz(ipPacket.getSender(),
+						                ruleset.get(i).srcIP, ruleset.get(i).srcMask);
 				}
-				if(! ruleset.get(i).destIP.isEmpty()) {
-					ruleMatch = ruleMatch &&
-							VermittlungsProtokoll.gleichesRechnernetz(ipPacket.getEmpfaenger(), ruleset.get(i).destIP, ruleset.get(i).destMask);
+				if (!ruleset.get(i).destIP.isEmpty()) {
+					ruleMatch = ruleMatch
+					        && VermittlungsProtokoll.gleichesRechnernetz(ipPacket.getEmpfaenger(),
+					                ruleset.get(i).destIP, ruleset.get(i).destMask);
 				}
-				if(ruleset.get(i).protocol != FirewallRule.ALL_PROTOCOLS) {
-					ruleMatch = ruleMatch &&
-							(ipPacket.getProtocol() == (int) ruleset.get(i).protocol); 
+				if (ruleset.get(i).protocol != FirewallRule.ALL_PROTOCOLS) {
+					ruleMatch = ruleMatch && (ipPacket.getProtocol() == (int) ruleset.get(i).protocol);
 				}
-				if(ruleset.get(i).port != FirewallRule.ALL_PORTS) {
-					ruleMatch = ruleMatch &&
-							(((Segment) ipPacket.getSegment()).getZielPort() == ruleset.get(i).port); 
+				if (ruleset.get(i).port != FirewallRule.ALL_PORTS) {
+					ruleMatch = ruleMatch && (((Segment) ipPacket.getSegment()).getZielPort() == ruleset.get(i).port);
 				}
-				
-				if(ruleMatch) { // if rule matches to current packet, then return true for ACCEPT target, else false
-					benachrichtigeBeobachter(messages.getString("sw_firewall_msg8")+
-							" #"+(i+1)+" ("+ruleset.get(i).toString(holeNetzwerkInterfaces())+")  -> "+
-							((ruleset.get(i).action == FirewallRule.ACCEPT)?
-								messages.getString("jfirewalldialog_msg33"):
-								messages.getString("jfirewalldialog_msg34")) );
+
+				if (ruleMatch) { // if rule matches to current packet, then
+					             // return true for ACCEPT target, else false
+					benachrichtigeBeobachter(messages.getString("sw_firewall_msg8")
+					        + " #"
+					        + (i + 1)
+					        + " ("
+					        + ruleset.get(i).toString(holeNetzwerkInterfaces())
+					        + ")  -> "
+					        + ((ruleset.get(i).action == FirewallRule.ACCEPT) ? messages
+					                .getString("jfirewalldialog_msg33") : messages.getString("jfirewalldialog_msg34")));
 					return (ruleset.get(i).action == FirewallRule.ACCEPT);
 				}
 			}
-			// return true for defaultPolicy ACCEPT, false otherwise (i.e. in case of DROP policy)
-			benachrichtigeBeobachter(messages.getString("sw_firewall_msg9")+" "+
-					((this.defaultPolicy == FirewallRule.ACCEPT)?
-						messages.getString("jfirewalldialog_msg33"):
-						messages.getString("jfirewalldialog_msg34")) );
+			// return true for defaultPolicy ACCEPT, false otherwise (i.e. in
+			// case of DROP policy)
+			benachrichtigeBeobachter(messages.getString("sw_firewall_msg9")
+			        + " "
+			        + ((this.defaultPolicy == FirewallRule.ACCEPT) ? messages.getString("jfirewalldialog_msg33")
+			                : messages.getString("jfirewalldialog_msg34")));
 			return (this.defaultPolicy == FirewallRule.ACCEPT);
-		}
-		else {
+		} else {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * <p>
 	 * Untersucht im <b>Modus Gateway</b> das uebergebene IP-Paket nach einer
@@ -437,7 +459,7 @@ public class Firewall extends Anwendung implements I18n {
 	// following function assume ID to be human readable ID starting from 1;
 	// --> for internal processing reduce by 1
 	public boolean moveUp(int id) {
-		if(id <= ruleset.size() && id > 1) {
+		if (id <= ruleset.size() && id > 1) {
 			FirewallRule currRule = ruleset.get(id - 1);
 			ruleset.remove(id - 1);
 			ruleset.insertElementAt(currRule, id - 2);
@@ -445,8 +467,9 @@ public class Firewall extends Anwendung implements I18n {
 		}
 		return false;
 	}
+
 	public boolean moveDown(int id) {
-		if(id >= 0 && id < ruleset.size()) {
+		if (id >= 0 && id < ruleset.size()) {
 			FirewallRule currRule = ruleset.get(id - 1);
 			ruleset.remove(id - 1);
 			ruleset.insertElementAt(currRule, id);
@@ -454,69 +477,69 @@ public class Firewall extends Anwendung implements I18n {
 		}
 		return false;
 	}
+
 	public void addRule() {
 		ruleset.add(new FirewallRule());
 	}
+
 	public void addRule(FirewallRule rule) {
 		ruleset.add(rule);
 	}
+
 	public void delRule(int id) {
-		if(id >= 0 && id <= ruleset.size())
+		if (id >= 0 && id <= ruleset.size())
 			ruleset.remove(id - 1);
 	}
-	
+
 	/*
-	 * Store changed value. Invoked by cell editor from table in JFirewallDialog.
-	 * @param row	index of row, i.e., id of ruleset vector (starting with 0)
-	 * @param col	column of table that was changed
-	 * @param value	new value (correctness is assumed / evaluated before!)
+	 * Store changed value. Invoked by cell editor from table in
+	 * JFirewallDialog.
+	 * 
+	 * @param row index of row, i.e., id of ruleset vector (starting with 0)
+	 * 
+	 * @param col column of table that was changed
+	 * 
+	 * @param value new value (correctness is assumed / evaluated before!)
 	 */
 	public String changeSingleEntry(int row, int col, String value) {
-		if(row > ruleset.size()-1) return "";
-		if(col == 0) {// ID
+		if (row > ruleset.size() - 1)
+			return "";
+		if (col == 0) {// ID
 			// shouldn't be possible, thus, an error obviously occurred...
-		}
-		else if(col == 1) {// srcIP
+		} else if (col == 1) {// srcIP
 			ruleset.get(row).srcIP = value;
-		}
-		else if(col == 2) {// srcMask
+		} else if (col == 2) {// srcMask
 			ruleset.get(row).srcMask = value;
-		}
-		else if(col == 3) {// destIP
+		} else if (col == 3) {// destIP
 			ruleset.get(row).destIP = value;
-		}
-		else if(col == 4) {// destMask
+		} else if (col == 4) {// destMask
 			ruleset.get(row).destMask = value;
-		}
-		else if(col == 5) {// protocol
-			if(value.equals("TCP"))
+		} else if (col == 5) {// protocol
+			if (value.equals("TCP"))
 				ruleset.get(row).protocol = FirewallRule.TCP;
-			else if(value.equals("UDP"))
+			else if (value.equals("UDP"))
 				ruleset.get(row).protocol = FirewallRule.UDP;
-			else if(value.equals("ICMP"))
+			else if (value.equals("ICMP"))
 				ruleset.get(row).protocol = FirewallRule.ICMP;
-			else if(value.equals("*")) {
+			else if (value.equals("*")) {
 				ruleset.get(row).protocol = FirewallRule.ALL_PROTOCOLS;
 				return "";
 			}
-		}
-		else if(col == 6) {// port
+		} else if (col == 6) {// port
 			try {
 				int portInt = Integer.parseInt(value);
 				ruleset.get(row).port = portInt;
+			} catch (Exception e) {
 			}
-			catch (Exception e) {				
-			}
-		}
-		else if(col == 7) {// action
-			if(value.equals(messages.getString("jfirewalldialog_msg33")))
+		} else if (col == 7) {// action
+			if (value.equals(messages.getString("jfirewalldialog_msg33")))
 				ruleset.get(row).action = FirewallRule.ACCEPT;
 			else
 				ruleset.get(row).action = FirewallRule.DROP;
 		}
 		return value;
 	}
-	
+
 	/**
 	 * Ueberprueft, ob die uebergebene IP-Adresse einem Adressbereich in den
 	 * Absender-Regeln entspricht.
@@ -630,28 +653,32 @@ public class Firewall extends Anwendung implements I18n {
 		String tmp = von + "#" + bis + "#" + typ;
 
 		if (typ.equals(ABSENDER_FILTER)) {
-			//---------
-			// write rule equivalent/similar to former effects 
-			newRule = new FirewallRule(von, "", "", "", FirewallRule.ALL_PORTS, FirewallRule.ALL_PROTOCOLS, FirewallRule.ACCEPT);
-			if(bis.equals(" ")) // not set --> assume single host
+			// ---------
+			// write rule equivalent/similar to former effects
+			newRule = new FirewallRule(von, "", "", "", FirewallRule.ALL_PORTS, FirewallRule.ALL_PROTOCOLS,
+			        FirewallRule.ACCEPT);
+			if (bis.equals(" ")) // not set --> assume single host
 				newRule.srcMask = "255.255.255.255";
 			else
-				newRule.srcMask = "255.255.255.0"; // assume class C net (default IP range)
+				newRule.srcMask = "255.255.255.0"; // assume class C net
+				                                   // (default IP range)
 			ruleset.add(newRule);
-			//---------
+			// ---------
 			absenderFilter.add(tmp);
 			// Main.debug.println("Erfolgreich hinzugefügt: "+tmp );
 			benachrichtigeBeobachter(messages.getString("sw_firewall_msg4") + von + " - " + bis);
 		} else if (typ.equals(EMPFAENGER_FILTER)) {
-			//---------
-			// write rule equivalent/similar to former effects 
-			newRule = new FirewallRule("", "", von, "", FirewallRule.ALL_PORTS, FirewallRule.ALL_PROTOCOLS, FirewallRule.ACCEPT);
-			if(bis.equals(" ")) // not set --> assume single host
+			// ---------
+			// write rule equivalent/similar to former effects
+			newRule = new FirewallRule("", "", von, "", FirewallRule.ALL_PORTS, FirewallRule.ALL_PROTOCOLS,
+			        FirewallRule.ACCEPT);
+			if (bis.equals(" ")) // not set --> assume single host
 				newRule.destMask = "255.255.255.255";
 			else
-				newRule.destMask = "255.255.255.0"; // assume class C net (default IP range)
+				newRule.destMask = "255.255.255.0"; // assume class C net
+				                                    // (default IP range)
 			ruleset.add(newRule);
-			//---------
+			// ---------
 			empfaengerFilter.add(tmp);
 			// Main.debug.println("Erfolgreich hinzugefügt: "+tmp );
 			benachrichtigeBeobachter(messages.getString("sw_firewall_msg4") + von + " - " + bis);
@@ -679,20 +706,23 @@ public class Firewall extends Anwendung implements I18n {
 
 			portList.add(regel);
 
-			//---------
+			// ---------
 			// insert comparable rule for new scheme
 			int portNum = -1;
 			try {
 				portNum = Integer.parseInt(port);
-				FirewallRule newRule = new FirewallRule("", "", "", "", portNum, FirewallRule.ALL_PROTOCOLS, FirewallRule.ACCEPT);
-				if(unterscheideNetzwerk) {   // unterscheideNetzwerk = TRUE, wenn "Alle Absender" erlaubt => FALSE, wenn "nur Intranet"
+				FirewallRule newRule = new FirewallRule("", "", "", "", portNum, FirewallRule.ALL_PROTOCOLS,
+				        FirewallRule.ACCEPT);
+				if (unterscheideNetzwerk) { // unterscheideNetzwerk = TRUE, wenn
+					                        // "Alle Absender" erlaubt => FALSE,
+					                        // wenn "nur Intranet"
 					newRule.srcIP = FirewallRule.SAME_NETWORK;
 				}
 				ruleset.add(newRule);
+			} catch (Exception e) {
 			}
-			catch (Exception e) {}
-			//---------
-			
+			// ---------
+
 			// Main.debug.println("Erfolgreich hinzugefuegt: "+port+
 			// "Listenindex: "+ portList.indexOf(regel));
 			benachrichtigeBeobachter(messages.getString("sw_firewall_msg5") + port);
@@ -753,8 +783,11 @@ public class Firewall extends Anwendung implements I18n {
 			                                           // werden kann
 			portList.remove(nummer);
 		}
-		if(nummer < ruleset.size())
-			ruleset.remove(nummer);  // CAVE: only works for personal firewall! Otherwise numbering may contain offsets due to one-for-all set (port, source, dest) in new format.
+		if (nummer < ruleset.size())
+			ruleset.remove(nummer); // CAVE: only works for personal firewall!
+			                        // Otherwise numbering may contain offsets
+			                        // due to one-for-all set (port, source,
+			                        // dest) in new format.
 	}
 
 	/**
@@ -860,11 +893,11 @@ public class Firewall extends Anwendung implements I18n {
 	public void setAbsenderFilterList(LinkedList<String> ipList) {
 		this.absenderFilter = ipList;
 	}
-	
+
 	public Vector<FirewallRule> getRuleset() {
 		return this.ruleset;
 	}
-	
+
 	public void setRuleset(Vector<FirewallRule> rules) {
 		this.ruleset = rules;
 	}
@@ -952,52 +985,63 @@ public class Firewall extends Anwendung implements I18n {
 	public void setInactiveNics(Vector<Integer> inactiveNics) {
 		this.inactiveNics = inactiveNics;
 	}
-	
+
 	/*
 	 * change default policy
-	 * @param langPolicy	new default policy; provided as String in the language currently chosen
+	 * 
+	 * @param langPolicy new default policy; provided as String in the language
+	 * currently chosen
 	 */
 	public void setDefaultPolicyString(String langPolicy) {
-		if(langPolicy.equals(messages.getString("jfirewalldialog_msg33")))
+		if (langPolicy.equals(messages.getString("jfirewalldialog_msg33")))
 			defaultPolicy = FirewallRule.ACCEPT;
 		else
 			defaultPolicy = FirewallRule.DROP;
 	}
+
 	/*
 	 * change default policy
-	 * @param defPol	new default policy; provided as 'short' value as defined in FirewallRule
+	 * 
+	 * @param defPol new default policy; provided as 'short' value as defined in
+	 * FirewallRule
 	 */
 	public void setDefaultPolicy(short defPol) {
 		defaultPolicy = defPol;
 	}
-	
+
 	public short getDefaultPolicy() {
 		return defaultPolicy;
 	}
-	
+
 	public String getDefaultPolicyString() {
-		if(defaultPolicy == FirewallRule.ACCEPT)
+		if (defaultPolicy == FirewallRule.ACCEPT)
 			return messages.getString("jfirewalldialog_msg33");
-		else if(defaultPolicy == FirewallRule.DROP)
+		else if (defaultPolicy == FirewallRule.DROP)
 			return messages.getString("jfirewalldialog_msg34");
-		else return "";
+		else
+			return "";
 	}
-	
+
 	public void setDropICMP(boolean selState) {
 		doDropICMP = selState;
 	}
+
 	public boolean getDropICMP() {
 		return doDropICMP;
 	}
+
 	public void setAllowRelatedPackets(boolean selState) {
 		allowRelatedPackets = selState;
 	}
+
 	public boolean getAllowRelatedPackets() {
 		return allowRelatedPackets;
 	}
+
 	public void setActivated(boolean selState) {
 		activated = selState;
 	}
+
 	public boolean isActivated() {
 		return activated;
 	}

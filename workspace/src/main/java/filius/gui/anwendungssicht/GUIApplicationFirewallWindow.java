@@ -76,7 +76,8 @@ public class GUIApplicationFirewallWindow extends GUIApplicationWindow {
 
 	private JTextArea log; // Log-Fenster
 
-	private JCheckBox cbEinAus = new JCheckBox(); // Initial an oder ausgehakt?
+	private JCheckBox cbEinAus = new JCheckBox();
+	private JCheckBox cbIcmp = new JCheckBox();
 
 	private void initKomponenten() {
 		Box box;
@@ -92,20 +93,30 @@ public class GUIApplicationFirewallWindow extends GUIApplicationWindow {
 		boxFirewall = Box.createVerticalBox();
 		boxFirewall.add(Box.createVerticalStrut(10));
 
-		cbEinAus = new JCheckBox(messages.getString("firewall_msg1"));// Bei
-		                                                              // true
-		                                                              // nur mit
-		                                                              // 1
-		                                                              // durchlassen
+		cbEinAus = new JCheckBox(messages.getString("firewall_msg1"));
 		cbEinAus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				((Firewall) holeAnwendung()).setAktiviert(cbEinAus.isSelected());  // old format
-				((Firewall) holeAnwendung()).setActivated(cbEinAus.isSelected());  // new format
+				((Firewall) holeAnwendung()).setAktiviert(cbEinAus.isSelected()); // old
+				                                                                  // format
+				((Firewall) holeAnwendung()).setActivated(cbEinAus.isSelected()); // new
+				                                                                  // format
+				cbIcmp.setEnabled(cbEinAus.isSelected());
 				updateAttribute();
 
 			}
 		});
 		boxFirewall.add(cbEinAus);
+
+		cbIcmp = new JCheckBox(messages.getString("firewall_msg13"));// Bei
+		cbIcmp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				((Firewall) holeAnwendung()).setDropICMP(!cbIcmp.isSelected()); // old
+				                                                                // format
+				updateAttribute();
+
+			}
+		});
+		boxFirewall.add(cbIcmp);
 		boxFirewall.add(Box.createVerticalStrut(10));
 
 		text = new JEditorPane();
@@ -208,10 +219,22 @@ public class GUIApplicationFirewallWindow extends GUIApplicationWindow {
 
 		try {
 			port = Integer.parseInt(tfPort.getText());
-			unterscheideNetzwerk = (cbAlleAbsender.getSelectedIndex() == 1);  // index 0: all sources; index 1: only local network
+			unterscheideNetzwerk = (cbAlleAbsender.getSelectedIndex() == 1); // index
+			                                                                 // 0:
+			                                                                 // all
+			                                                                 // sources;
+			                                                                 // index
+			                                                                 // 1:
+			                                                                 // only
+			                                                                 // local
+			                                                                 // network
 
-			((Firewall) holeAnwendung()).eintragHinzufuegenPort("" + port, unterscheideNetzwerk); // old (includes new rule creation)
-//			((Firewall) holeAnwendung()).addRule(new FirewallRule());
+			((Firewall) holeAnwendung()).eintragHinzufuegenPort("" + port, unterscheideNetzwerk); // old
+			                                                                                      // (includes
+			                                                                                      // new
+			                                                                                      // rule
+			                                                                                      // creation)
+			// ((Firewall) holeAnwendung()).addRule(new FirewallRule());
 			tfPort.setText("");
 		} catch (Exception e) {
 		}
@@ -226,8 +249,7 @@ public class GUIApplicationFirewallWindow extends GUIApplicationWindow {
 	}
 
 	/*
-	 * @author Weyer 
-	 * Im Konstruktor werden alle Dinge erzeugt, die in der GUI
+	 * @author Weyer Im Konstruktor werden alle Dinge erzeugt, die in der GUI
 	 * angezeigt werden muessen
 	 */
 	public GUIApplicationFirewallWindow(final GUIDesktopPanel desktop, String appName) {
@@ -240,8 +262,7 @@ public class GUIApplicationFirewallWindow extends GUIApplicationWindow {
 	}
 
 	/*
-	 * @author Weyer 
-	 * bringt das aktuell angezeigte Fenster immer auf den
+	 * @author Weyer bringt das aktuell angezeigte Fenster immer auf den
 	 * neuesten Stand mit aktuellen Daten
 	 */
 	public void updateAttribute() {
@@ -255,23 +276,24 @@ public class GUIApplicationFirewallWindow extends GUIApplicationWindow {
 		model.setRowCount(0);
 
 		// Main.debug.println("Portliste mit "+portList.size()+" Eintraegen");
-//		for (int i = 0; i < portList.size(); i++) {
-//			vector = new Vector<String>();
-//			vector.addElement((String) ((Object[]) portList.get(i))[0]);
-//			if ((Boolean) ((Object[]) portList.get(i))[1]) {
-//				vector.addElement(messages.getString("firewall_msg12"));
-//			} else {
-//				vector.addElement(messages.getString("firewall_msg4"));
-//			}
-//			model.addRow(vector);
-//		}
-//
+		// for (int i = 0; i < portList.size(); i++) {
+		// vector = new Vector<String>();
+		// vector.addElement((String) ((Object[]) portList.get(i))[0]);
+		// if ((Boolean) ((Object[]) portList.get(i))[1]) {
+		// vector.addElement(messages.getString("firewall_msg12"));
+		// } else {
+		// vector.addElement(messages.getString("firewall_msg4"));
+		// }
+		// model.addRow(vector);
+		// }
+		//
 		Vector<FirewallRule> ruleset = ((Firewall) holeAnwendung()).getRuleset();
 		for (int i = 0; i < ruleset.size(); i++) {
 			model.addRow(ruleset.get(i).getVectorPFW());
 		}
 
 		cbEinAus.setSelected(((Firewall) holeAnwendung()).isActivated());
+		cbIcmp.setSelected(!((Firewall) holeAnwendung()).getDropICMP());
 	}
 
 	public void update(Observable arg0, Object nachricht) {

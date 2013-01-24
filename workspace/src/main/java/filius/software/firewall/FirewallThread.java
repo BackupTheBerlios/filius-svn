@@ -91,10 +91,6 @@ public class FirewallThread extends ProtokollThread implements I18n {
 		IpPaket ipPaket = null;
 		EthernetFrame frame = (EthernetFrame) datenEinheit;
 
-		if (frame.getDaten() instanceof IpPaket) {
-			ipPaket = (IpPaket) frame.getDaten();
-		}
-
 		// Hier erfolgt nun die Abfrage, ob die Pakete laut Firewall in Ordnung
 		// sind:
 		// Bei false werden die Pakete weitergeleitet
@@ -102,29 +98,29 @@ public class FirewallThread extends ProtokollThread implements I18n {
 		// EthernetThread
 		// oder nicht weiterleiten
 
-//		Main.debug.println("DEBUG EVAL: firewall.getDropICMP = "+firewall.getDropICMP());
-//		Main.debug.println("DEBUG EVAL: is ICMP = "+(frame.getDaten() instanceof IcmpPaket));
-//		Main.debug.println("DEBUG EVAL: ipPacket null = "+(ipPaket==null));
-//		if(ipPaket!=null)
-//			Main.debug.println("DEBUG EVAL: accept ipPacket = "+firewall.allowedIPpacket(ipPaket));
+		// Main.debug.println("DEBUG EVAL: firewall.getDropICMP = "+firewall.getDropICMP());
+		// Main.debug.println("DEBUG EVAL: is ICMP = "+(frame.getDaten()
+		// instanceof IcmpPaket));
+		// Main.debug.println("DEBUG EVAL: ipPacket null = "+(ipPaket==null));
+		// if(ipPaket!=null)
+		// Main.debug.println("DEBUG EVAL: accept ipPacket = "+firewall.allowedIPpacket(ipPaket));
 
-//		if (ipPaket == null || !firewall.pruefePaketVerwerfen(ipPaket)) {
-		if( (ipPaket == null && !(frame.getDaten() instanceof IcmpPaket)) || 
-			(!firewall.getDropICMP() && (frame.getDaten() instanceof IcmpPaket)) ||
-		    (ipPaket != null && firewall.allowedIPpacket(ipPaket)) ) {
-			synchronized (ausgangsPuffer) {
-				// Main.debug.println("FirewallThread: Paket wurde von FirewallThread weitergeleitet");
-
-				ausgangsPuffer.add(frame);
-				ausgangsPuffer.notify();
-			}
+		// if (ipPaket == null || !firewall.pruefePaketVerwerfen(ipPaket)) {
+		boolean isIcmp = frame.getDaten() instanceof IcmpPaket;
+		if (firewall.isActivated() && firewall.getDropICMP() && isIcmp) {
+			IcmpPaket icmp = (IcmpPaket) frame.getDaten();
+			firewall.benachrichtigeBeobachter(messages.getString("firewallthread_msg1") + icmp.getQuellIp() + " -> "
+			        + icmp.getZielIp() + " (code: " + icmp.getIcmpCode() + ", type: " + icmp.getIcmpType() + ")");
+			return;
 		}
-		else {
-			if((firewall.getDropICMP() && (frame.getDaten() instanceof IcmpPaket))) {
-				IcmpPaket icmp = (IcmpPaket) frame.getDaten();
-				firewall.benachrichtigeBeobachter(messages.getString("firewallthread_msg1")+
-						icmp.getQuellIp()+" -> "+icmp.getZielIp()+" (code: "+icmp.getIcmpCode()+", type: "+icmp.getIcmpType()+")");
-			}
+		if (frame.getDaten() instanceof IpPaket && !firewall.allowedIPpacket((IpPaket) frame.getDaten())) {
+			return;
+		}
+		synchronized (ausgangsPuffer) {
+			// Main.debug.println("FirewallThread: Paket wurde von FirewallThread weitergeleitet");
+
+			ausgangsPuffer.add(frame);
+			ausgangsPuffer.notify();
 		}
 	}
 
