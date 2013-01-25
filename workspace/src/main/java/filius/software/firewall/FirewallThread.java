@@ -113,7 +113,8 @@ public class FirewallThread extends ProtokollThread implements I18n {
 			        + icmp.getZielIp() + " (code: " + icmp.getIcmpCode() + ", type: " + icmp.getIcmpType() + ")");
 			return;
 		}
-		if (frame.getDaten() instanceof IpPaket && !firewall.allowedIPpacket((IpPaket) frame.getDaten())) {
+		if (frame.getDaten() != null && frame.getDaten() instanceof IpPaket
+		        && !firewall.allowedIPpacket((IpPaket) frame.getDaten())) {
 			return;
 		}
 		synchronized (ausgangsPuffer) {

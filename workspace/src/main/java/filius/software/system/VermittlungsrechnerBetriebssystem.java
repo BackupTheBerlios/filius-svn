@@ -31,6 +31,7 @@ import filius.hardware.knoten.InternetKnoten;
 import filius.hardware.knoten.Knoten;
 import filius.rahmenprogramm.Information;
 import filius.software.firewall.Firewall;
+import filius.software.firewall.FirewallRule;
 import filius.software.firewall.FirewallWebKonfig;
 import filius.software.firewall.FirewallWebLog;
 import filius.software.rip.RIPBeacon;
@@ -88,6 +89,7 @@ public class VermittlungsrechnerBetriebssystem extends InternetKnotenBetriebssys
 		firewall = this.holeFirewall();
 		server = this.holeWebServer();
 		firewall.setModus(Firewall.GATEWAY);
+		firewall.setDefaultPolicy(FirewallRule.ACCEPT);
 
 		// Erweiterung des Webservers fuer die Anzeige der
 		// Log-Eintraege der Firewall
