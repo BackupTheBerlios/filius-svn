@@ -89,7 +89,8 @@ public class VermittlungsrechnerBetriebssystem extends InternetKnotenBetriebssys
 		firewall = this.holeFirewall();
 		server = this.holeWebServer();
 		firewall.setModus(Firewall.GATEWAY);
-		firewall.setDefaultPolicy(FirewallRule.ACCEPT);
+		firewall.setDefaultPolicy(FirewallRule.DROP);
+		firewall.setActivated(false);
 
 		// Erweiterung des Webservers fuer die Anzeige der
 		// Log-Eintraege der Firewall

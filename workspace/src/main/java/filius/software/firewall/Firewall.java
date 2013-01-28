@@ -111,7 +111,8 @@ public class Firewall extends Anwendung implements I18n {
 		super();
 		Main.debug.println("INVOKED-2 (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + " (Firewall), constr: Firewall()");
-
+		
+		defaultPolicy = FirewallRule.DROP;
 		absenderFilter = new LinkedList<String>();
 		empfaengerFilter = new LinkedList<String>();
 		portList = new LinkedList<Object[]>();
