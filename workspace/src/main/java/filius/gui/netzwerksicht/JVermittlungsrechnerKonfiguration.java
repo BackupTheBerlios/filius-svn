@@ -218,9 +218,6 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		firewallDialog.setBounds(100, 100, 850, 340);
 		firewallDialog.setName(messages.getString("jvermittlungsrechnerkonfiguration_msg1"));
 
-		firewallDialog.updateAttribute(); // muss hier passieren, damit beim
-		                                  // oeffnen immer die aktuellen Werte
-		                                  // vorhanden sind!
 		firewallDialog.updateRuleTable();
 		firewallDialog.setVisible(true);
 	}

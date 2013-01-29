@@ -96,8 +96,6 @@ public class GUIApplicationFirewallWindow extends GUIApplicationWindow {
 		cbEinAus = new JCheckBox(messages.getString("firewall_msg1"));
 		cbEinAus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				((Firewall) holeAnwendung()).setAktiviert(cbEinAus.isSelected()); // old
-				                                                                  // format
 				((Firewall) holeAnwendung()).setActivated(cbEinAus.isSelected()); // new
 				                                                                  // format
 				cbIcmp.setEnabled(cbEinAus.isSelected());
@@ -266,27 +264,11 @@ public class GUIApplicationFirewallWindow extends GUIApplicationWindow {
 	 * neuesten Stand mit aktuellen Daten
 	 */
 	public void updateAttribute() {
-		LinkedList portList;
-		Vector<String> vector;
 		DefaultTableModel model;
-
-		portList = ((Firewall) holeAnwendung()).getPortList();
 
 		model = (DefaultTableModel) tTabellePort.getModel();
 		model.setRowCount(0);
 
-		// Main.debug.println("Portliste mit "+portList.size()+" Eintraegen");
-		// for (int i = 0; i < portList.size(); i++) {
-		// vector = new Vector<String>();
-		// vector.addElement((String) ((Object[]) portList.get(i))[0]);
-		// if ((Boolean) ((Object[]) portList.get(i))[1]) {
-		// vector.addElement(messages.getString("firewall_msg12"));
-		// } else {
-		// vector.addElement(messages.getString("firewall_msg4"));
-		// }
-		// model.addRow(vector);
-		// }
-		//
 		Vector<FirewallRule> ruleset = ((Firewall) holeAnwendung()).getRuleset();
 		for (int i = 0; i < ruleset.size(); i++) {
 			model.addRow(ruleset.get(i).getVectorPFW());
