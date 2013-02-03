@@ -1,5 +1,18 @@
 FILIUS Changelog
 ================
+*filius-1.5 (3. Feb 2013)
+-------------------------
+- Firewall grundlegend ueberarbeitet (Firewall-Konfiguration
+  in Projektdateien nicht kompatibel mit aelteren Versionen)
+- Neuer Nachrichtendialog (alter Nachrichtendialog in filius.ini
+  aktivierbar)
+- Im Entwurfsmodus: erstellen mehrerer Kabelverbindungen mit einmaliger
+  Selektion des Kabelwerkzeugs moeglich
+- Anzahl der Pings ueber Kommandozeile wieder auf vier reduziert
+  (Anpassung ueber filius.ini moeglich)
+- Fehlerhafte Anzeige des Icons eines Vermittlungsrechners in Abhaengigkeit
+  des Verbindungsstatus behoben
+  
 *filius-1.4.5.3 (25. Nov 2012)
 ------------------------------
 - Fehler zu DNS-Server bei schnellem Wechsel Starten/Beenden
