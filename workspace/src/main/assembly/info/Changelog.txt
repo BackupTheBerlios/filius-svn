@@ -1,5 +1,10 @@
 FILIUS Changelog
 ================
+
+*filius-1.5.1 (13. Feb 2013)
+----------------------------
+- Kleine Fehlerbehebungen
+
 *filius-1.5 (3. Feb 2013)
 -------------------------
 - Firewall grundlegend ueberarbeitet (Firewall-Konfiguration
