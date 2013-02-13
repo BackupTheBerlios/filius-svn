@@ -104,8 +104,7 @@ public class GUIDesktopPanel extends JBackgroundPanel implements I18n, Observer 
 		Box boxTaskLeiste = Box.createHorizontalBox();
 		boxTaskLeiste.setBorder(BorderFactory.createEmptyBorder());
 		boxTaskLeiste.add(Box.createHorizontalStrut(600));
-		taskLeiste.setBounds(0, 420, 640, 36);
-
+		
 		gnw = new GUINetworkWindow(this);
 
 		lbNetzwerk = new JLabel(new ImageIcon(getClass().getResource("/gfx/desktop/netzwek_aus.png")));
@@ -129,7 +128,7 @@ public class GUIDesktopPanel extends JBackgroundPanel implements I18n, Observer 
 
 		taskLeiste.add(boxTaskLeiste);
 
-		desktopPane.add(taskLeiste);
+		this.add(taskLeiste, BorderLayout.SOUTH);
 		desktopPane.add(iconPanel);
 		desktopPane.validate();
 		this.updateAnwendungen();

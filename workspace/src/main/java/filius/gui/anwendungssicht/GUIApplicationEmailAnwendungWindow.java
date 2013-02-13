@@ -519,70 +519,73 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
 
 				mail = new Email();
 
-				kontoString = cbAbsender.getSelectedItem().toString();
-				versendeKonto = (EmailKonto) ((EmailAnwendung) holeAnwendung()).getKontoListe().get(kontoString);
-
-				// Main.debug.println("kontoString = " + kontoString);
-				// Main.debug.println(versendeKonto.toString());
-
-				mail.setAbsender(versendeKonto.getVorname()
-				        + (!versendeKonto.getNachname().isEmpty() ? (" " + versendeKonto.getNachname()) : "") + " <"
-				        + versendeKonto.getEmailAdresse() + ">");
-
-				if (!mailPruefen(anField)) {
-					// anField.setText("");
-					eingabeFehler = true;
+				if (cbAbsender.getSelectedItem() == null) {
+					String msgNoAccountAvailable = GUIApplicationEmailAnwendungWindow.this.messages
+					        .getString("emailanwendung_msg47");
+					GUIApplicationEmailAnwendungWindow.this.showMessageDialog(msgNoAccountAvailable);
 				} else {
-					adressen = anField.getText().split(",");
-					for (int i = 0; i < adressen.length; i++) {
-						if (!adressen[i].trim().equals(""))
-							mail.getEmpfaenger().add(extractMailAddress(adressen[i].trim()));
+					kontoString = cbAbsender.getSelectedItem().toString();
+					versendeKonto = (EmailKonto) ((EmailAnwendung) holeAnwendung()).getKontoListe().get(kontoString);
+
+					mail.setAbsender(versendeKonto.getVorname()
+					        + (!versendeKonto.getNachname().isEmpty() ? (" " + versendeKonto.getNachname()) : "")
+					        + " <" + versendeKonto.getEmailAdresse() + ">");
+
+					if (!mailPruefen(anField)) {
+						// anField.setText("");
+						eingabeFehler = true;
+					} else {
+						adressen = anField.getText().split(",");
+						for (int i = 0; i < adressen.length; i++) {
+							if (!adressen[i].trim().equals(""))
+								mail.getEmpfaenger().add(extractMailAddress(adressen[i].trim()));
+						}
 					}
-				}
 
-				if (!mailPruefen(ccField)) {
-					// ccField.setText("");
-					eingabeFehler = true;
-				} else {
-					adressen = ccField.getText().split(",");
-					for (int i = 0; i < adressen.length; i++) {
-						if (!adressen[i].trim().equals(""))
-							mail.getCc().add(extractMailAddress(adressen[i].trim()));
+					if (!mailPruefen(ccField)) {
+						// ccField.setText("");
+						eingabeFehler = true;
+					} else {
+						adressen = ccField.getText().split(",");
+						for (int i = 0; i < adressen.length; i++) {
+							if (!adressen[i].trim().equals(""))
+								mail.getCc().add(extractMailAddress(adressen[i].trim()));
+						}
 					}
-				}
 
-				if (!mailPruefen(bccField)) {
-					// bccField.setText("");
-					eingabeFehler = true;
-				} else {
-					adressen = bccField.getText().split(",");
-					for (int i = 0; i < adressen.length; i++) {
-						if (!adressen[i].trim().isEmpty())
-							mail.getBcc().add(extractMailAddress(adressen[i].trim()));
+					if (!mailPruefen(bccField)) {
+						// bccField.setText("");
+						eingabeFehler = true;
+					} else {
+						adressen = bccField.getText().split(",");
+						for (int i = 0; i < adressen.length; i++) {
+							if (!adressen[i].trim().isEmpty())
+								mail.getBcc().add(extractMailAddress(adressen[i].trim()));
+						}
 					}
-				}
 
-				if (eingabeFehler) {
-					showMessageDialog(messages.getString("emailanwendung_msg20"));
-				} else if (mail.getEmpfaenger().size() == 0 && mail.getCc().size() == 0 && mail.getBcc().size() == 0) {
-					showMessageDialog(messages.getString("emailanwendung_msg21"));
-				} else {
-					mail.setBetreff(betreffszeile.getText());
-					mail.setText(inhaltField.getText());
+					if (eingabeFehler) {
+						showMessageDialog(messages.getString("emailanwendung_msg20"));
+					} else if (mail.getEmpfaenger().size() == 0 && mail.getCc().size() == 0 && mail.getBcc().size() == 0) {
+						showMessageDialog(messages.getString("emailanwendung_msg21"));
+					} else {
+						mail.setBetreff(betreffszeile.getText());
+						mail.setText(inhaltField.getText());
 
-					progressBar = new JProgressBar(0, 100);
-					progressBar.setValue(0);
-					progressBar.setIndeterminate(true);
-					progressBar.setStringPainted(true);
+						progressBar = new JProgressBar(0, 100);
+						progressBar.setValue(0);
+						progressBar.setIndeterminate(true);
+						progressBar.setStringPainted(true);
 
-					middleBox.add(progressBar);
-					middleBox.invalidate();
-					middleBox.validate();
+						middleBox.add(progressBar);
+						middleBox.invalidate();
+						middleBox.validate();
 
-					progressBar.setString(messages.getString("emailanwendung_msg22"));
-					((EmailAnwendung) holeAnwendung()).versendeEmail(versendeKonto.getSmtpserver(), mail,
-					        versendeKonto.getEmailAdresse());
-					tabbedPane.setSelectedIndex(1);
+						progressBar.setString(messages.getString("emailanwendung_msg22"));
+						((EmailAnwendung) holeAnwendung()).versendeEmail(versendeKonto.getSmtpserver(), mail,
+						        versendeKonto.getEmailAdresse());
+						tabbedPane.setSelectedIndex(1);
+					}
 				}
 			}
 		};

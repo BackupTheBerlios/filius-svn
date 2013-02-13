@@ -36,40 +36,44 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
+import filius.gui.netzwerksicht.JFirewallDialog;
 import filius.rahmenprogramm.EingabenUeberpruefung;
 import filius.software.dns.DNSServer;
 import filius.software.firewall.Firewall;
 import filius.software.www.WebServer;
-import filius.gui.netzwerksicht.JFirewallDialog;
 
 public class JTableEditable extends JTable {
-	
+
 	public class ColorTableCellRenderer implements TableCellRenderer {
-		private HashMap<Integer,Color> cellData=new HashMap<Integer,Color>();
-		public Component getTableCellRendererComponent(JTable table,Object value,boolean isSelected,boolean hasFocus,int row,int column) {
-		    JLabel label=new JLabel((String)value);
-		    int key=((row+1)*1000)+column;
-		    label.setOpaque(true);
-	    	if(isSelected)
-	    		label.setBackground(Color.CYAN);
-	    	else {
-			    if(cellData.containsKey(key)) {
-			        label.setBackground(cellData.get(key));
-			    }
-			    else { // default color
-			        label.setBackground(Color.WHITE);
-			    }
-	    	}
-		    return label;
+		private HashMap<Integer, Color> cellData = new HashMap<Integer, Color>();
+
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+		        boolean hasFocus, int row, int column) {
+			JLabel label = new JLabel(value != null ? value.toString() : "");
+			int key = ((row + 1) * 1000) + column;
+			label.setOpaque(true);
+			if (isSelected)
+				label.setBackground(Color.CYAN);
+			else {
+				if (cellData.containsKey(key)) {
+					label.setBackground(cellData.get(key));
+				} else { // default color
+					label.setBackground(Color.WHITE);
+				}
+			}
+			return label;
 		}
-		public void setColor(int row,int column,Color color) {
-		    int key=((row+1)*1000)+column;
-		    cellData.put(key,color);
+
+		public void setColor(int row, int column, Color color) {
+			int key = ((row + 1) * 1000) + column;
+			cellData.put(key, color);
 		}
-		public void resetColor(int row,int column) {
-		    int key=((row+1)*1000)+column;
-		    cellData.remove(key);
+
+		public void resetColor(int row, int column) {
+			int key = ((row + 1) * 1000) + column;
+			cellData.remove(key);
 		}
+
 		public void resetColors() {
 			cellData.clear();
 		}
@@ -80,7 +84,8 @@ public class JTableEditable extends JTable {
 
 	// optional parameter for identifying the table, e.g., whether storing MX or
 	// A entries for DNS
-	// --> not specific to DNS server, but provides an additional flag to control processes (s. editingStopped)
+	// --> not specific to DNS server, but provides an additional flag to
+	// control processes (s. editingStopped)
 	private String typeID = null;
 
 	private Object parentGUI;
@@ -88,7 +93,7 @@ public class JTableEditable extends JTable {
 	public JTableEditable(TableModel model, boolean editable) {
 		super(model);
 		setEditable(editable);
-		for(int i=0; i<getColumnCount(); i++)
+		for (int i = 0; i < getColumnCount(); i++)
 			this.getColumnModel().getColumn(i).setCellRenderer(new ColorTableCellRenderer());
 	}
 
@@ -96,7 +101,7 @@ public class JTableEditable extends JTable {
 		super(model);
 		setEditable(editable);
 		this.typeID = type;
-		for(int i=0; i<getColumnCount(); i++)
+		for (int i = 0; i < getColumnCount(); i++)
 			this.getColumnModel().getColumn(i).setCellRenderer(new ColorTableCellRenderer());
 	}
 
@@ -162,28 +167,31 @@ public class JTableEditable extends JTable {
 				}
 			}
 			if (parentGUI instanceof JFirewallDialog) {
-				if(editingColumn == 0)
+				if (editingColumn == 0)
 					setValueAt(formerValue, editingRow, editingColumn);
 				else {
-					String retValue = ((Firewall) ((JFirewallDialog) parentGUI).getFirewall()).changeSingleEntry(editingRow,editingColumn,value);
-					if(! retValue.equals(value))
+					String retValue = ((Firewall) ((JFirewallDialog) parentGUI).getFirewall()).changeSingleEntry(
+					        editingRow, editingColumn, value);
+					if (!retValue.equals(value))
 						setValueAt(retValue, editingRow, editingColumn);
-					if(editingColumn == 1 || editingColumn == 3) {
-						if(! EingabenUeberpruefung.isGueltig(value,EingabenUeberpruefung.musterIpAdresseAuchLeer)) {
-							((ColorTableCellRenderer) getCellRenderer(editingRow, editingColumn)).setColor(editingRow, editingColumn, EingabenUeberpruefung.farbeFalsch);
+					if (editingColumn == 1 || editingColumn == 3) {
+						if (!EingabenUeberpruefung.isGueltig(value, EingabenUeberpruefung.musterIpAdresseAuchLeer)) {
+							((ColorTableCellRenderer) getCellRenderer(editingRow, editingColumn)).setColor(editingRow,
+							        editingColumn, EingabenUeberpruefung.farbeFalsch);
+						} else {
+							((ColorTableCellRenderer) getCellRenderer(editingRow, editingColumn)).resetColor(
+							        editingRow, editingColumn);
 						}
-						else {
-							((ColorTableCellRenderer) getCellRenderer(editingRow, editingColumn)).resetColor(editingRow, editingColumn);
-						}
-						if(! value.isEmpty() && ((String) getValueAt(editingRow, editingColumn+1)).isEmpty())
-							setValueAt("255.255.255.255", editingRow, editingColumn+1);
+						if (!value.isEmpty() && ((String) getValueAt(editingRow, editingColumn + 1)).isEmpty())
+							setValueAt("255.255.255.255", editingRow, editingColumn + 1);
 					}
-					if(editingColumn == 6) {
-						if(! EingabenUeberpruefung.isGueltig(value,EingabenUeberpruefung.musterPortAuchLeer)) {
-							((ColorTableCellRenderer) getCellRenderer(editingRow, editingColumn)).setColor(editingRow, editingColumn, EingabenUeberpruefung.farbeFalsch);
-						}
-						else {
-							((ColorTableCellRenderer) getCellRenderer(editingRow, editingColumn)).resetColor(editingRow, editingColumn);
+					if (editingColumn == 6) {
+						if (!EingabenUeberpruefung.isGueltig(value, EingabenUeberpruefung.musterPortAuchLeer)) {
+							((ColorTableCellRenderer) getCellRenderer(editingRow, editingColumn)).setColor(editingRow,
+							        editingColumn, EingabenUeberpruefung.farbeFalsch);
+						} else {
+							((ColorTableCellRenderer) getCellRenderer(editingRow, editingColumn)).resetColor(
+							        editingRow, editingColumn);
 						}
 					}
 				}
