@@ -363,9 +363,11 @@ public class EmailServer extends Anwendung implements I18n {
 			while (iterN.hasNext()) {
 				Email email = (Email) iterN.next();
 				emailStr = emailStr + "#" + (email.getAbsender() != null ? email.getAbsender() : "") + "$"
-				        + llzuStr(email.getEmpfaenger()) + "$" + llzuStr(email.getCc()) + "$" + llzuStr(email.getBcc())
-				        + "$" + email.getDateReceived() + "$" + (email.getBetreff() != null ? email.getBetreff() : "")
-				        + "$" + nltobr(replaceSpecialChar(email.getText()));
+				        + EmailUtils.addressEntryListToString(email.getEmpfaenger()) + "$"
+				        + EmailUtils.addressEntryListToString(email.getCc()) + "$"
+				        + EmailUtils.addressEntryListToString(email.getBcc()) + "$" + email.getDateReceived() + "$"
+				        + (email.getBetreff() != null ? email.getBetreff() : "") + "$"
+				        + nltobr(replaceSpecialChar(email.getText()));
 
 			}
 			ergebnis = ergebnis + konto.getBenutzername() + ";" + this.mailDomain + ";" + konto.getPasswort() + ";"
@@ -414,9 +416,9 @@ public class EmailServer extends Anwendung implements I18n {
 						if (strArray.length == 7) {
 							Email email = new Email();
 							email.setAbsender(strArray[0]);
-							email.setEmpfaenger(strzuLL(strArray[1]));
-							email.setCc(strzuLL(strArray[2]));
-							email.setBcc(strzuLL(strArray[3]));
+							email.setEmpfaenger(EmailUtils.stringToAddressEntryList(strArray[1]));
+							email.setCc(EmailUtils.stringToAddressEntryList(strArray[2]));
+							email.setBcc(EmailUtils.stringToAddressEntryList(strArray[3]));
 							email.setDateReceived(strArray[4]);
 							email.setBetreff(strArray[5]);
 							email.setText(undoSpecialChar(brtonl(strArray[6])));
@@ -460,44 +462,6 @@ public class EmailServer extends Anwendung implements I18n {
 			Main.debug.println("ERROR (" + this.hashCode() + "): Konten laden fehlgeschlagen");
 		}
 
-	}
-
-	/**
-	 * Diese Mehtode wandelt eine LL in einen String, die einzelnen
-	 * Listenelemente durch Kommata getrennt.
-	 * 
-	 * @param args
-	 * @return
-	 */
-	private String llzuStr(LinkedList args) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
-		        + " (EmailServer), llzuStr(" + args + ")");
-		String str = "";
-		for (ListIterator iter = args.listIterator(); iter.hasNext();) {
-			str = str + ((String) iter.next());
-			if (iter.hasNext())
-				str += ",";
-		}
-
-		return str;
-	}
-
-	/**
-	 * Wandelt einen String in eine LinkedList, jeder der durch Kommata
-	 * getrennten Werte des Strings wird ein eigenes Listenelement.
-	 * 
-	 * @param args
-	 * @return
-	 */
-	private LinkedList strzuLL(String args) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
-		        + " (EmailServer), strzuLL(" + args + ")");
-		LinkedList ergebnis = new LinkedList();
-		String[] argument = args.split(",");
-		for (int i = 0; i < argument.length; i++) {
-			ergebnis.add(argument[i]);
-		}
-		return ergebnis;
 	}
 
 	// Get- und Set-Methoden

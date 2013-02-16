@@ -98,25 +98,16 @@ public class EmailAnwendung extends Anwendung {
 	 * @param remoteServerIP
 	 */
 	public void versendeEmail(String remoteServerIP, Email email, String absender) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (EmailAnwendung), versendeEmail("
-		        + remoteServerIP + "," + email + "," + absender + ")");
-
-		String rcpts = "";
-
-		if (email.getEmpfaenger().size() > 0)
-			rcpts += llzuStr(email.getEmpfaenger());
+		String rcpts = EmailUtils.addressEntryListToString(email.getEmpfaenger());
 		if (email.getCc().size() > 0) {
-			if (!rcpts.equals(""))
-				rcpts += ",";
-			rcpts += llzuStr(email.getCc());
+			rcpts += ", ";
+			rcpts += EmailUtils.addressEntryListToString(email.getCc());
 		}
 		if (email.getBcc().size() > 0) {
-			if (!rcpts.equals(""))
-				rcpts += ",";
-			rcpts += llzuStr(email.getBcc());
+			rcpts += ", ";
+			rcpts += EmailUtils.addressEntryListToString(email.getBcc());
 		}
 		smtpclient.versendeEmail(remoteServerIP, email, absender, rcpts);
-
 	}
 
 	/**
@@ -134,39 +125,6 @@ public class EmailAnwendung extends Anwendung {
 		pop3client.emailsHolen(pop3Server, pop3Port, benutzername, passwort);
 	}
 
-	/**
-	 * Diese Mehtode wandelt eine LL in einen String, die einzelnen
-	 * Listenelemente durch Kommata getrennt.
-	 * 
-	 * @param args
-	 * @return
-	 */
-	public String llzuStr(LinkedList args) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (EmailAnwendung), llzuStr(" + args
-		        + ")");
-		String str = "";
-		for (ListIterator iter = args.listIterator(); iter.hasNext();) {
-			str = str + ((String) iter.next());
-			if (iter.hasNext())
-				str += ",";
-		}
-
-		return str;
-	}
-
-	/**
-	 * FUNKTIONIERT
-	 * 
-	 * @param name
-	 * @param vorname
-	 * @param strasse
-	 * @param hausnr
-	 * @param plz
-	 * @param wohnort
-	 * @param email
-	 * @param telefon
-	 * @return
-	 */
 	public boolean kontaktHinzufuegen(String name, String vorname, String strasse, int hausnr, int plz, String wohnort,
 	        String email, String telefon) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()

@@ -68,6 +68,7 @@ import filius.rahmenprogramm.EingabenUeberpruefung;
 import filius.software.email.Email;
 import filius.software.email.EmailAnwendung;
 import filius.software.email.EmailKonto;
+import filius.software.email.EmailUtils;
 
 /**
  * Applikationsfenster fr den Email-Client
@@ -480,25 +481,9 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
 
 		if (antwortAuf != null) {
 			betreffszeile.setText(messages.getString("emailanwendung_msg18") + " " + antwortAuf.getBetreff());
-			if (!(antwortAuf.getAbsender().indexOf("<") >= 0)) {
-				if (antwortAuf.getAbsender().indexOf("@") >= 0) {
-					inhaltField.setText("\n\n<" + antwortAuf.getAbsender() + "> "
-					        + messages.getString("emailanwendung_msg19") + "\n" + replyLayout(antwortAuf.getText()));
-				} else {
-					inhaltField.setText("\n\n" + antwortAuf.getAbsender() + " "
-					        + messages.getString("emailanwendung_msg19") + "\n" + replyLayout(antwortAuf.getText()));
-				}
-				anField.setText(antwortAuf.getAbsender());
-			} else if (antwortAuf.getAbsender().substring(0, antwortAuf.getAbsender().indexOf("<")).trim().isEmpty()) {
-				inhaltField.setText("\n\n" + antwortAuf.getAbsender() + " "
-				        + messages.getString("emailanwendung_msg19") + "\n" + replyLayout(antwortAuf.getText()));
-				anField.setText(extractMailAddress(antwortAuf.getAbsender()));
-			} else {
-				inhaltField.setText("\n\n"
-				        + antwortAuf.getAbsender().substring(0, antwortAuf.getAbsender().indexOf("<")).trim() + " "
-				        + messages.getString("emailanwendung_msg19") + "\n" + replyLayout(antwortAuf.getText()));
-				anField.setText(antwortAuf.getAbsender());
-			}
+			inhaltField.setText("\n\n" + antwortAuf.getAbsender().toString() + " "
+			        + messages.getString("emailanwendung_msg19") + "\n" + replyLayout(antwortAuf.getText()));
+			anField.setText(antwortAuf.getAbsender().toString());
 		}
 
 		inFrVerfassen.getContentPane().add(verfassenPanel);
@@ -532,41 +517,27 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
 					        + " <" + versendeKonto.getEmailAdresse() + ">");
 
 					if (!mailPruefen(anField)) {
-						// anField.setText("");
 						eingabeFehler = true;
 					} else {
-						adressen = anField.getText().split(",");
-						for (int i = 0; i < adressen.length; i++) {
-							if (!adressen[i].trim().equals(""))
-								mail.getEmpfaenger().add(extractMailAddress(adressen[i].trim()));
-						}
+						mail.setEmpfaenger(EmailUtils.stringToAddressEntryList(anField.getText()));
 					}
 
 					if (!mailPruefen(ccField)) {
-						// ccField.setText("");
 						eingabeFehler = true;
 					} else {
-						adressen = ccField.getText().split(",");
-						for (int i = 0; i < adressen.length; i++) {
-							if (!adressen[i].trim().equals(""))
-								mail.getCc().add(extractMailAddress(adressen[i].trim()));
-						}
+						mail.setCc(EmailUtils.stringToAddressEntryList(ccField.getText()));
 					}
 
 					if (!mailPruefen(bccField)) {
-						// bccField.setText("");
 						eingabeFehler = true;
 					} else {
-						adressen = bccField.getText().split(",");
-						for (int i = 0; i < adressen.length; i++) {
-							if (!adressen[i].trim().isEmpty())
-								mail.getBcc().add(extractMailAddress(adressen[i].trim()));
-						}
+						mail.setBcc(EmailUtils.stringToAddressEntryList(bccField.getText()));
 					}
 
 					if (eingabeFehler) {
 						showMessageDialog(messages.getString("emailanwendung_msg20"));
-					} else if (mail.getEmpfaenger().size() == 0 && mail.getCc().size() == 0 && mail.getBcc().size() == 0) {
+					} else if (mail.getEmpfaenger().size() == 0 && mail.getCc().size() == 0
+					        && mail.getBcc().size() == 0) {
 						showMessageDialog(messages.getString("emailanwendung_msg21"));
 					} else {
 						mail.setBetreff(betreffszeile.getText());
@@ -633,14 +604,13 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
 		while (mailit.hasNext()) {
 			Email neueMail = (Email) mailit.next();
 			Vector v = new Vector();
-			String absender = neueMail.getAbsender();
-			if (absender == null) {
-				v.add("");
-			} else if (absender.indexOf("<") >= 0 && absender.substring(0, absender.indexOf("<")).trim().isEmpty()) {
-				v.add(absender.substring(absender.indexOf("<") + 1, absender.indexOf(">")));
+			String absender;
+			if (neueMail.getAbsender().getName() == null) {
+				absender = neueMail.getAbsender().getMailAddress();
 			} else {
-				v.add(absender);
+				absender = neueMail.getAbsender().getName();
 			}
+			v.add(absender);
 			v.add(neueMail.getBetreff());
 
 			posteingangModell.addRow(v);

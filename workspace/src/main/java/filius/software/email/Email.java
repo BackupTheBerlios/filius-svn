@@ -26,7 +26,7 @@
 package filius.software.email;
 
 import java.util.LinkedList;
-import java.util.ListIterator;
+import java.util.List;
 
 import filius.Main;
 
@@ -36,13 +36,13 @@ import filius.Main;
  * 
  */
 public class Email {
-	private String absender;
+	private AddressEntry absender;
 
-	private LinkedList<String> empfaenger = new LinkedList<String>();
+	private List<AddressEntry> empfaenger = new LinkedList<AddressEntry>();
 
-	private LinkedList<String> cc = new LinkedList<String>();
+	private List<AddressEntry> cc = new LinkedList<AddressEntry>();
 
-	private LinkedList<String> bcc = new LinkedList<String>();
+	private List<AddressEntry> bcc = new LinkedList<AddressEntry>();
 
 	private String betreff;
 
@@ -84,7 +84,7 @@ public class Email {
 	public Email(String nachricht) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Email), constr: Email(" + nachricht
 		        + ")");
-		String tmp;
+		String fieldName, fieldData;
 		String[] liste;
 		String[] emaildaten = nachricht.split("\n");
 		int pos1, pos2;
@@ -92,47 +92,36 @@ public class Email {
 		for (int i = 0; i < emaildaten.length; i++) {
 			pos1 = 0;
 			pos2 = emaildaten[i].indexOf(":");
-			if (pos2 > pos1)
-				tmp = emaildaten[i].substring(pos1, pos2).trim();
-			else
-				tmp = "";
+			if (pos2 > pos1) {
+				fieldName = emaildaten[i].substring(pos1, pos2).trim();
+				fieldData = emaildaten[i].substring(pos2 + 1).trim();
+			} else {
+				fieldName = null;
+				fieldData = null;
+			}
 
-			if (tmp.equalsIgnoreCase("from")) {
-				// pos1 = emaildaten[i].indexOf("<") + 1;
-				// pos2 = emaildaten[i].indexOf(">");
-				absender = emaildaten[i].substring(emaildaten[i].indexOf(":") + 1).trim();
-			} else if (tmp.equalsIgnoreCase("to")) {
+			if ("from".equalsIgnoreCase(fieldName)) {
+				absender = new AddressEntry(fieldData);
+			} else if ("to".equalsIgnoreCase(fieldName)) {
 				empfaenger.clear();
-				liste = emaildaten[i].split(",");
+				liste = fieldData.split(",");
 				for (int j = 0; j < liste.length; j++) {
-					pos1 = liste[j].indexOf("<") + 1;
-					pos2 = liste[j].indexOf(">");
-					if (pos1 >= 0 && pos2 > pos1)
-						empfaenger.add(liste[j].substring(pos1, pos2).trim());
+					empfaenger.add(new AddressEntry(liste[j]));
 				}
-			} else if (tmp.equalsIgnoreCase("cc")) {
+			} else if ("cc".equalsIgnoreCase(fieldName)) {
 				cc.clear();
-				liste = emaildaten[i].split(",");
+				liste = fieldData.split(",");
 				for (int j = 0; j < liste.length; j++) {
-					pos1 = liste[j].indexOf("<") + 1;
-					pos2 = liste[j].indexOf(">");
-					if (pos1 >= 0 && pos2 > pos1)
-						cc.add(liste[j].substring(pos1, pos2).trim());
+					cc.add(new AddressEntry(liste[j]));
 				}
-			} else if (tmp.equalsIgnoreCase("bcc")) {
+			} else if ("bcc".equalsIgnoreCase(fieldName)) {
 				bcc.clear();
-				liste = emaildaten[i].split(",");
+				liste = fieldData.split(",");
 				for (int j = 0; j < liste.length; j++) {
-					pos1 = liste[j].indexOf("<") + 1;
-					pos2 = liste[j].indexOf(">");
-					if (pos1 >= 0 && pos2 > pos1)
-						bcc.add(liste[j].substring(pos1, pos2).trim());
+					bcc.add(new AddressEntry(liste[j]));
 				}
-			} else if (tmp.equalsIgnoreCase("subject")) {
-				pos1 = emaildaten[i].indexOf(":") + 1;
-				pos2 = emaildaten[i].length();
-				if (pos1 > 0)
-					betreff = emaildaten[i].substring(pos1, pos2).trim();
+			} else if ("subject".equalsIgnoreCase(fieldName)) {
+				betreff = fieldData;
 			} else {
 				if (!text.equals(""))
 					text = text + "\n";
@@ -160,35 +149,25 @@ public class Email {
 	public String toString() {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Email), toString()");
 		String ergebnis;
-		ListIterator<String> it;
 		String toListe = "", ccListe = "";
 
-		it = empfaenger.listIterator();
-		String nextReceiver;
-		while (it.hasNext()) {
-			nextReceiver = (String) it.next();
-			if (nextReceiver.indexOf("<") >= 0)
-				toListe = toListe + nextReceiver;
-			else
-				toListe = toListe + "<" + nextReceiver + ">";
-			if (it.hasNext())
-				toListe = toListe + ", ";
+		for (AddressEntry rcpt : empfaenger) {
+			toListe += rcpt.toString() + ", ";
+		}
+		if (!toListe.isEmpty()) {
+			toListe = toListe.substring(0, toListe.length() - 2);
 		}
 
-		it = cc.listIterator();
-		while (it.hasNext()) {
-			nextReceiver = (String) it.next();
-			if (nextReceiver.indexOf("<") >= 0)
-				ccListe = ccListe + nextReceiver;
-			else
-				ccListe = ccListe + "<" + nextReceiver + ">";
-			if (it.hasNext())
-				ccListe = ccListe + ", ";
+		for (AddressEntry rcpt : cc) {
+			ccListe += rcpt.toString() + ", ";
+		}
+		if (!ccListe.isEmpty()) {
+			ccListe = ccListe.substring(0, ccListe.length() - 2);
 		}
 
 		ergebnis = "";
 		if (absender != null) {
-			ergebnis += "From: " + absender.trim() + "" + "\n";
+			ergebnis += "From: " + absender.toString() + "" + "\n";
 		}
 		if (!toListe.equals("")) {
 			ergebnis += "To: " + toListe + "\n";
@@ -225,11 +204,11 @@ public class Email {
 		this.neu = neu;
 	}
 
-	public String getAbsender() {
+	public AddressEntry getAbsender() {
 		return absender;
 	}
 
-	public LinkedList<String> getEmpfaenger() {
+	public List<AddressEntry> getEmpfaenger() {
 		return empfaenger;
 	}
 
@@ -242,6 +221,10 @@ public class Email {
 	}
 
 	public void setAbsender(String absender) {
+		this.absender = new AddressEntry(absender);
+	}
+
+	public void setAbsender(AddressEntry absender) {
 		this.absender = absender;
 	}
 
@@ -249,8 +232,8 @@ public class Email {
 		this.betreff = betreff;
 	}
 
-	public void setEmpfaenger(LinkedList<String> empfaenger) {
-		this.empfaenger = empfaenger;
+	public void setEmpfaenger(List<AddressEntry> recipients) {
+		empfaenger = recipients;
 	}
 
 	public void setText(String text) {
@@ -273,19 +256,19 @@ public class Email {
 		this.versendet = versendet;
 	}
 
-	public LinkedList<String> getBcc() {
+	public List<AddressEntry> getBcc() {
 		return bcc;
 	}
 
-	public void setBcc(LinkedList<String> bcc) {
+	public void setBcc(List<AddressEntry> bcc) {
 		this.bcc = bcc;
 	}
 
-	public LinkedList<String> getCc() {
+	public List<AddressEntry> getCc() {
 		return cc;
 	}
 
-	public void setCc(LinkedList<String> cc) {
+	public void setCc(List<AddressEntry> cc) {
 		this.cc = cc;
 	}
 }
