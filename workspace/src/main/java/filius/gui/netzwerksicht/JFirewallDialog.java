@@ -75,13 +75,13 @@ public class JFirewallDialog extends JDialog implements I18n {
 		 * 
 		 */
 		private static final long serialVersionUID = -4372708685136408285L;
-		private JComboBox<String> cmbBox;
+		private JComboBox cmbBox;
 //	    private String [] values = {"First", "Second", "Third"};
 
 	    public ComboBoxTableCellEditor(String[] values)
 	    {
 		    // create a new ComboBox with values provided as parameter (array of Strings)
-		    cmbBox = new JComboBox<String>(values);
+		    cmbBox = new JComboBox(values);
 	    }
 
 	    @Override
@@ -118,7 +118,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 	Box boxTabellen;
 
 	private JTableEditable ruleTable;
-	private JComboBox<String> defaultPolicyCombo;
+	private JComboBox defaultPolicyCombo;
 
 	private JCheckBox rejectConnections;
 	private JCheckBox activateFirewall;
@@ -285,7 +285,7 @@ public class JFirewallDialog extends JDialog implements I18n {
 		hBox.add(label);
 		hBox.add(Box.createHorizontalStrut(10));
 
-		defaultPolicyCombo = new JComboBox<String>();
+		defaultPolicyCombo = new JComboBox();
 		defaultPolicyCombo.addItem(messages.getString("jfirewalldialog_msg33"));
 		defaultPolicyCombo.addItem(messages.getString("jfirewalldialog_msg34"));
 		
