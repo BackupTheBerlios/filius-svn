@@ -81,66 +81,267 @@
 				</configuration>
 			</plugin>
 
-			<plugin>
-				<groupId>com.akathist.maven.plugins.launch4j</groupId>
-				<artifactId>launch4j-maven-plugin</artifactId>
-				<version>1.5.2</version>
-				<executions>
-					<execution>
-						<id>l4j-clui</id>
-						<phase>package</phase>
-						<goals>
-							<goal>launch4j</goal>
-						</goals>
-						<configuration>
-							<headerType>gui</headerType>
-							<outfile>target/Filius.exe</outfile>
-							<errTitle>FILIUS - Error</errTitle>
-							<jar>target/filius.jar</jar>
-							<icon>src/main/resources/gfx/filius32.ico</icon>
-							<classPath>
-								<mainClass>filius.Main</mainClass>
-								<addDependencies>true</addDependencies>
-							</classPath>
-							<chdir>.</chdir>
-							<jre>
-								<minVersion>1.6.0</minVersion>
-								<jdkPreference>preferJdk</jdkPreference>
-							</jre>
-							<versionInfo>
-								<fileVersion>1.0.0.0</fileVersion>
-								<txtFileVersion>txt file version</txtFileVersion>
-								<fileDescription>Lernsoftware Filius</fileDescription>
-								<copyright>Stefan Freischlad</copyright>
-								<productVersion>1.0.0.0</productVersion>
-								<txtProductVersion>Das neue Filius</txtProductVersion>
-								<productName>Filius</productName>
-								<internalName>filius</internalName>
-								<originalFilename>Filius.exe</originalFilename>
-							</versionInfo>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
-					<descriptors>
-						<descriptor>assembly.xml</descriptor>
-					</descriptors>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>attached</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>windows</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.akathist.maven.plugins.launch4j</groupId>
+						<artifactId>launch4j-maven-plugin</artifactId>
+						<version>1.5.2</version>
+						<executions>
+							<execution>
+								<id>l4j-clui</id>
+								<phase>package</phase>
+								<goals>
+									<goal>launch4j</goal>
+								</goals>
+								<configuration>
+									<headerType>gui</headerType>
+									<outfile>target/Filius.exe</outfile>
+									<errTitle>FILIUS - Error</errTitle>
+									<jar>target/filius.jar</jar>
+									<icon>src/main/resources/gfx/filius32.ico</icon>
+									<classPath>
+										<mainClass>filius.Main</mainClass>
+										<addDependencies>true</addDependencies>
+									</classPath>
+									<chdir>.</chdir>
+									<jre>
+										<minVersion>1.6.0</minVersion>
+										<jdkPreference>preferJdk</jdkPreference>
+									</jre>
+									<versionInfo>
+										<fileVersion>1.0.0.0</fileVersion>
+										<txtFileVersion>txt file version</txtFileVersion>
+										<fileDescription>Lernsoftware Filius</fileDescription>
+										<copyright>Stefan Freischlad</copyright>
+										<productVersion>1.0.0.0</productVersion>
+										<txtProductVersion>Das neue Filius</txtProductVersion>
+										<productName>Filius</productName>
+										<internalName>filius</internalName>
+										<originalFilename>Filius.exe</originalFilename>
+									</versionInfo>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<version>2.3</version>
+						<configuration>
+							<descriptors>
+								<descriptor>assembly.xml</descriptor>
+							</descriptors>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>attached</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>linux</id>
+			<activation>
+				<os>
+					<family>unix</family>
+				</os>
+			</activation>
+			<build>
+				<plugins>
+
+					<plugin>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+								<configuration>
+									<excludeArtifactIds>junit,mockito-all,fest-assert</excludeArtifactIds>
+									<excludeTransitive>true</excludeTransitive>
+									<outputDirectory>${project.build.directory}/lib</outputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- plugin> <groupId>de.tarent.maven.plugins</groupId> <artifactId>maven-pkg-plugin</artifactId> 
+						<version>4.0.3</version> <configuration> <target>debianPackage</target> <targetConfigurations> 
+						<targetConfiguration> <target>debianPackage</target> <maintainer>Stefan Freischlad 
+						&lt;stefan@lernsoftware-filius.de&gt;, Christian Eibl</maintainer> <distros><distro>ubuntu-lynx</distro></distros> 
+						<section>education</section> <mainClass>filius.Main</mainClass> </targetConfiguration> 
+						</targetConfigurations> </configuration> </plugin -->
+					<!-- plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>unix-maven-plugin</artifactId> 
+						<version>1.0-alpha-3</version> <extensions>true</extensions> <configuration> 
+						<contact>Stefan Freischlad</contact> <contactEmail>stefan@lernsoftware-filius.de</contactEmail> 
+						<deb> <section>education</section> </deb> <assembly> <copyFile> <file>${project.build.directory}/${project.build.finalName}.jar</file> 
+						<toFile>/usr/share/filius/filius.jar</toFile> <attributes> <user>root</user> 
+						<group>root</group> <mode>0644</mode> </attributes> </copyFile> </assembly> 
+						</configuration> </plugin -->
+
+					<plugin>
+						<artifactId>jdeb</artifactId>
+						<groupId>org.vafer</groupId>
+						<version>1.0.1</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>jdeb</goal>
+								</goals>
+								<configuration>
+									<installDir>/usr/share/filius</installDir>
+									<dataSet>
+										<data>
+											<src>${project.build.directory}/${project.build.finalName}.jar</src>
+											<type>file</type>
+											<dst>/usr/share/filius/filius.jar</dst>
+										</data>
+										<data>
+											<src>${project.basedir}/src/main/assembly/scripts/Filius.sh</src>
+											<type>file</type>
+											<dst>/usr/share/filius/filius.sh</dst>
+											<mapper>
+												<type>perm</type>
+												<filemode>755</filemode>
+												<user>root</user>
+												<group>root</group>
+											</mapper>
+										</data>
+										<data>
+											<type>link</type>
+											<linkName>/usr/bin/filius</linkName>
+											<linkTarget>/usr/share/filius/filius.sh</linkTarget>
+											<symlink>true</symlink>
+										</data>
+										<data>
+											<src>${project.basedir}/src/deb/filius.desktop</src>
+											<type>file</type>
+											<dst>/usr/share/applications/filius.desktop</dst>
+										</data>
+										<data>
+											<src>${project.basedir}/src/deb/filius32.png</src>
+											<type>file</type>
+											<dst>/usr/share/pixmaps/filius32.png</dst>
+										</data>
+										<data>
+											<src>${project.basedir}/src/main/assembly/info</src>
+											<type>directory</type>
+											<excludes>.svn</excludes>
+											<includes>*.*</includes>
+											<mapper>
+												<type>perm</type>
+												<strip>1</strip>
+												<prefix>/usr/share/filius</prefix>
+											</mapper>
+										</data>
+										<data>
+											<src>${project.basedir}/src/main/assembly/config</src>
+											<type>directory</type>
+											<excludes>.svn</excludes>
+											<includes>*.*</includes>
+											<mapper>
+												<type>perm</type>
+												<strip>1</strip>
+												<prefix>/usr/share/filius/config</prefix>
+											</mapper>
+										</data>
+										<data>
+											<type>link</type>
+											<linkName>/etc/filius</linkName>
+											<linkTarget>/usr/share/filius/config</linkTarget>
+											<symlink>true</symlink>
+										</data>
+										<data>
+											<src>${project.basedir}/src/main/assembly/tmpl</src>
+											<type>directory</type>
+											<excludes>**/.svn</excludes>
+											<includes>*.*</includes>
+											<mapper>
+												<type>perm</type>
+												<strip>1</strip>
+												<prefix>/usr/share/filius/tmpl</prefix>
+											</mapper>
+										</data>
+										<data>
+											<src>${project.basedir}/src/main/assembly/tmpl/quelltext_vorlagen</src>
+											<type>directory</type>
+											<excludes>**/.svn</excludes>
+											<includes>*.*</includes>
+											<mapper>
+												<type>perm</type>
+												<strip>1</strip>
+												<prefix>/usr/share/filius/tmpl/quelltext_vorlagen</prefix>
+											</mapper>
+										</data>
+										<data>
+											<src>${project.basedir}/src/main/assembly/img</src>
+											<type>directory</type>
+											<excludes>**/.svn</excludes>
+											<includes>*.*</includes>
+											<mapper>
+												<type>perm</type>
+												<strip>1</strip>
+												<prefix>/usr/share/filius/img</prefix>
+											</mapper>
+										</data>
+										<data>
+											<src>${project.basedir}/src/main/assembly/hilfe</src>
+											<type>directory</type>
+											<excludes>**/.svn</excludes>
+											<includes>*.*</includes>
+											<mapper>
+												<type>perm</type>
+												<strip>1</strip>
+												<prefix>/usr/share/filius/hilfe</prefix>
+											</mapper>
+										</data>
+										<data>
+											<src>${project.basedir}/src/main/assembly/hilfe/gfx</src>
+											<type>directory</type>
+											<excludes>**/.svn</excludes>
+											<includes>*.*</includes>
+											<mapper>
+												<type>perm</type>
+												<strip>1</strip>
+												<prefix>/usr/share/filius/hilfe/gfx</prefix>
+											</mapper>
+										</data>
+										<data>
+											<src>${project.build.directory}/lib</src>
+											<type>directory</type>
+											<includes>*.jar</includes>
+											<mapper>
+												<type>perm</type>
+												<strip>1</strip>
+												<prefix>/usr/share/filius/lib</prefix>
+											</mapper>
+										</data>
+									</dataSet>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

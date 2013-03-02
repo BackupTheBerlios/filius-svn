@@ -82,8 +82,6 @@ public class Email {
 	 * @param nachricht
 	 */
 	public Email(String nachricht) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Email), constr: Email(" + nachricht
-		        + ")");
 		String fieldName, fieldData;
 		String[] liste;
 		String[] emaildaten = nachricht.split("\n");

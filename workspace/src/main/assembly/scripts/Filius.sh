@@ -5,8 +5,8 @@
 #
 
 # change to directory where filius is installed
-relpath=$0
-cd ${relpath%`basename $0`}
+installation_path=`realpath $0`
+cd ${installation_path%`basename ${installation_path}`}
 
 # start filius
 java -jar filius.jar $@

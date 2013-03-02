@@ -1,0 +1,9 @@
+Package: Filius
+Version: [[version]]
+Section: misc
+Priority: optional
+Architecture: all
+Recommends: jdk (>= 1.6)
+Maintainer: Stefan Freischlad <stefan@lernsoftware-filius.de>, Christian Eibl
+Description: Lernsoftware zu Rechnernetzen
+Distribution: production
