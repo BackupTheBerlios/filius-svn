@@ -1,0 +1,50 @@
+<installation version="5.0"
+	xmlns:izpack="http://izpack.org/schema/installation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://izpack.org/schema/installation http://izpack.org/schema/5.0/izpack-installation-5.0.xsd">
+
+	<info>
+		<appname>@{izpack.appName}</appname>
+		<appversion>@{izpack.appVersion}</appversion>
+		<appsubpath>@{izpack.installDir}</appsubpath>
+		<javaversion>@{execJre.version}</javaversion>
+	</info>
+
+	<locale>
+		<langpack iso3="eng" />
+	</locale>
+
+	<guiprefs width="600" height="400" resizable="no">
+		<!-- splash>images/peas_load.gif</splash -->
+		<laf name="substance">
+			<os family="windows" />
+			<param name="variant" value="mist-silver" />
+		</laf>
+		<modifier key="useHeadingPanel" value="yes" />
+	</guiprefs>
+
+	<resources>
+		<res id="LicencePanel.licence" src="info/GPLv2.txt" />
+	</resources>
+
+	<panels>
+		<panel classname="HelloPanel" />
+		<panel classname="LicencePanel" />
+		<panel classname="TargetPanel" />
+		<panel classname="InstallPanel" />
+		<panel classname="FinishPanel" />
+	</panels>
+
+	<packs>
+		<pack name="install-filius" required="yes">
+			<description>The core files needed for the application</description>
+			<fileset dir="config" targetdir="${INSTALL_PATH}/config" override="false" />
+			<fileset dir="lib" targetdir="${INSTALL_PATH}/lib" override="true" />
+			<fileset dir="info" targetdir="${INSTALL_PATH}" override="true" />
+			<fileset dir="img" targetdir="${INSTALL_PATH}/img" override="true" />
+			<fileset dir="hilfe" targetdir="${INSTALL_PATH}/hilfe" override="true" />
+			<fileset dir="tmpl" targetdir="${INSTALL_PATH}/tmpl" override="true" />
+			<fileset dir="" includes="*.jar,*.exe" targetdir="${INSTALL_PATH}" override="true" />
+		</pack>
+	</packs>
+
+</installation>

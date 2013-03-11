@@ -8,43 +8,62 @@
 	<properties>
 		<buildDate>13.02.2013</buildDate>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<junit.version>4.10</junit.version>
+		<mockito.version>1.9.0</mockito.version>
+		<fest.version>1.4</fest.version>
+		<htmlparser.version>1.6</htmlparser.version>
+		<jna.version>3.0.9</jna.version>
+		<mavenCompiler.version>2.0.2</mavenCompiler.version>
+		<java.version>1.6</java.version>
+		<execJre.version>1.6.0</execJre.version>
+		<mavenJar.version>2.4</mavenJar.version>
+		<launch4j.version>1.5.2</launch4j.version>
+		<launch4j.starterName>Filius.exe</launch4j.starterName>
+		<izpack.version>5.0.0-beta11</izpack.version>
+		<izpack.staging>${project.build.directory}/izpack</izpack.staging>
+		<izpack.appName>Filius</izpack.appName>
+		<izpack.url>http://www.lernsoftware-filius.de</izpack.url>
+		<izpack.installDir>Filius</izpack.installDir>
+		<izpack.appVersion>${project.version}</izpack.appVersion>
 	</properties>
 	<packaging>jar</packaging>
 
-	<name>Lernsoftware Filius</name>
+	<name>Filius</name>
+	<description>Lernsoftware zu Rechnernetzen</description>
 	<url>http://www.lernsoftware-filius.de</url>
 
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
-			<version>1.9.0</version>
+			<version>${mockito.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.easytesting</groupId>
 			<artifactId>fest-assert</artifactId>
-			<version>1.4</version>
+			<version>${fest.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.htmlparser</groupId>
 			<artifactId>htmlparser</artifactId>
-			<version>1.6</version>
+			<version>${htmlparser.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.sun.jna</groupId>
 			<artifactId>jna</artifactId>
-			<version>3.0.9</version>
+			<version>${jna.version}</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -60,16 +79,16 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
+				<version>${mavenCompiler.version}</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
+				<version>${mavenJar.version}</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -93,21 +112,23 @@
 			</activation>
 			<build>
 				<plugins>
+
+					<!-- Create Filius Executable for Windows -->
 					<plugin>
 						<groupId>com.akathist.maven.plugins.launch4j</groupId>
 						<artifactId>launch4j-maven-plugin</artifactId>
-						<version>1.5.2</version>
+						<version>${launch4j.version}</version>
 						<executions>
 							<execution>
-								<id>l4j-clui</id>
+								<id>l4j-programme</id>
 								<phase>package</phase>
 								<goals>
 									<goal>launch4j</goal>
 								</goals>
 								<configuration>
 									<headerType>gui</headerType>
-									<outfile>target/Filius.exe</outfile>
-									<errTitle>FILIUS - Error</errTitle>
+									<outfile>target/${launch4j.starterName}</outfile>
+									<errTitle>Filius - Error</errTitle>
 									<jar>target/filius.jar</jar>
 									<icon>src/main/resources/gfx/filius32.ico</icon>
 									<classPath>
@@ -116,25 +137,89 @@
 									</classPath>
 									<chdir>.</chdir>
 									<jre>
-										<minVersion>1.6.0</minVersion>
+										<minVersion>${execJre.version}</minVersion>
 										<jdkPreference>preferJdk</jdkPreference>
 									</jre>
 									<versionInfo>
-										<fileVersion>1.0.0.0</fileVersion>
+										<fileVersion>${project.version}.0</fileVersion>
 										<txtFileVersion>txt file version</txtFileVersion>
-										<fileDescription>Lernsoftware Filius</fileDescription>
-										<copyright>Stefan Freischlad</copyright>
-										<productVersion>1.0.0.0</productVersion>
-										<txtProductVersion>Das neue Filius</txtProductVersion>
-										<productName>Filius</productName>
-										<internalName>filius</internalName>
-										<originalFilename>Filius.exe</originalFilename>
+										<fileDescription>${project.name}</fileDescription>
+										<copyright>Stefan Freischlad, Christian Eibl</copyright>
+										<productVersion>${project.version}.0</productVersion>
+										<txtProductVersion>${project.description}</txtProductVersion>
+										<productName>${project.name}</productName>
+										<internalName>${project.artifactId}</internalName>
+										<originalFilename>${launch4j.starterName}</originalFilename>
 									</versionInfo>
 								</configuration>
 							</execution>
 						</executions>
 					</plugin>
 
+					<!-- Prepare Windows Installer Resources -->
+					<plugin>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-product-dependencies</id>
+								<phase>package</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+								<configuration>
+									<excludeArtifactIds>junit,mockito-all,fest-assert</excludeArtifactIds>
+									<excludeTransitive>true</excludeTransitive>
+									<outputDirectory>${izpack.staging}/lib</outputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>create-staging-area</id>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<copy todir="${izpack.staging}">
+											<fileset dir="${basedir}/src/izpack" />
+										</copy>
+										<copy
+											file="${project.build.directory}/${project.build.finalName}.jar"
+											todir="${izpack.staging}" />
+										<copy file="${project.build.directory}/${launch4j.starterName}"
+											todir="${izpack.staging}" />
+										<copy todir="${izpack.staging}/config">
+											<fileset dir="${basedir}/src/main/assembly/config"
+												includes="**/*" />
+										</copy>
+										<copy todir="${izpack.staging}/hilfe">
+											<fileset dir="${basedir}/src/main/assembly/hilfe"
+												includes="**/*" />
+										</copy>
+										<copy todir="${izpack.staging}/info">
+											<fileset dir="${basedir}/src/main/assembly/info"
+												includes="**/*" />
+										</copy>
+										<copy todir="${izpack.staging}/img">
+											<fileset dir="${basedir}/src/main/assembly/img"
+												includes="**/*" />
+										</copy>
+										<copy todir="${izpack.staging}/tmpl">
+											<fileset dir="${basedir}/src/main/assembly/tmpl"
+												includes="**/*" />
+										</copy>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- Create a Zip-Archive for Platform Independent Delivery -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-assembly-plugin</artifactId>
@@ -150,6 +235,31 @@
 								<goals>
 									<goal>attached</goal>
 								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- Create a Windows Installer -->
+					<plugin>
+						<groupId>org.codehaus.izpack</groupId>
+						<artifactId>izpack-maven-plugin</artifactId>
+						<version>${izpack.version}</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>izpack</goal>
+								</goals>
+								<configuration>
+									<baseDir>${izpack.staging}</baseDir>
+									<installFile>${izpack.staging}/install.xml</installFile>
+									<installerFile>${project.build.directory}/${project.build.finalName}-setup.jar</installerFile>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+									<finalName>${project.build.finalName}-setup</finalName>
+									<enableAttachArtifact>false</enableAttachArtifact>
+									<autoIncludeUrl>true</autoIncludeUrl>
+									<autoIncludeDevelopers>true</autoIncludeDevelopers>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
@@ -170,7 +280,7 @@
 						<artifactId>maven-dependency-plugin</artifactId>
 						<executions>
 							<execution>
-								<phase>package</phase>
+								<phase>prepare-package</phase>
 								<goals>
 									<goal>copy-dependencies</goal>
 								</goals>
@@ -183,20 +293,7 @@
 						</executions>
 					</plugin>
 
-					<!-- plugin> <groupId>de.tarent.maven.plugins</groupId> <artifactId>maven-pkg-plugin</artifactId> 
-						<version>4.0.3</version> <configuration> <target>debianPackage</target> <targetConfigurations> 
-						<targetConfiguration> <target>debianPackage</target> <maintainer>Stefan Freischlad 
-						&lt;stefan@lernsoftware-filius.de&gt;, Christian Eibl</maintainer> <distros><distro>ubuntu-lynx</distro></distros> 
-						<section>education</section> <mainClass>filius.Main</mainClass> </targetConfiguration> 
-						</targetConfigurations> </configuration> </plugin -->
-					<!-- plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>unix-maven-plugin</artifactId> 
-						<version>1.0-alpha-3</version> <extensions>true</extensions> <configuration> 
-						<contact>Stefan Freischlad</contact> <contactEmail>stefan@lernsoftware-filius.de</contactEmail> 
-						<deb> <section>education</section> </deb> <assembly> <copyFile> <file>${project.build.directory}/${project.build.finalName}.jar</file> 
-						<toFile>/usr/share/filius/filius.jar</toFile> <attributes> <user>root</user> 
-						<group>root</group> <mode>0644</mode> </attributes> </copyFile> </assembly> 
-						</configuration> </plugin -->
-
+					<!-- Create Debian Package (used for Ubuntu Platform) -->
 					<plugin>
 						<artifactId>jdeb</artifactId>
 						<groupId>org.vafer</groupId>
