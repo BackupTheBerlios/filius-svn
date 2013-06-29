@@ -26,6 +26,7 @@
 package filius.software.system;
 
 import java.io.Serializable;
+import java.util.Observable;
 
 import filius.rahmenprogramm.Base64;
 
@@ -37,17 +38,8 @@ import filius.rahmenprogramm.Base64;
  * @author Nadja & Thomas Gerding
  * 
  */
-public class Datei implements Serializable {
+public class Datei extends Observable implements Serializable {
 
-	/*
-	 * Attribute
-	 * ----------------------------------------------------------------
-	 * ------------------
-	 */
-
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/** Typ der Datei, z.B. mp3, doc, txt,... */
@@ -137,6 +129,8 @@ public class Datei implements Serializable {
 
 	public void setDateiInhalt(String dateiInhalt) {
 		this.dateiInhalt = dateiInhalt;
+		this.setChanged();
+		this.notifyObservers();
 	}
 
 	/**
@@ -174,6 +168,8 @@ public class Datei implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+		this.setChanged();
+		this.notifyObservers();
 	}
 
 	public String toString() {

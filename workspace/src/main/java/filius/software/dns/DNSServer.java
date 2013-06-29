@@ -27,7 +27,6 @@ package filius.software.dns;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.StringTokenizer;
 
 import filius.Main;
@@ -61,8 +60,13 @@ public class DNSServer extends UDPServerAnwendung {
 		        + " (DNSServer), starten()");
 		super.starten();
 
-		if (!getSystemSoftware().getDateisystem().dateiVorhanden("dns", "hosts")) {
-			getSystemSoftware().getDateisystem().erstelleVerzeichnis("root", "dns");
+		Dateisystem dateisystem = getSystemSoftware().getDateisystem();
+		if (!dateisystem.dateiVorhanden(Dateisystem.FILE_SEPARATOR + "dns", "hosts")) {
+			dateisystem.erstelleVerzeichnis(dateisystem.getRoot(), "dns");
+			Datei hostsFile = new Datei();
+			hostsFile.setName("hosts");
+			hostsFile.setDateiInhalt("");
+			dateisystem.speicherDatei(Dateisystem.FILE_SEPARATOR + "dns", hostsFile);
 		}
 	}
 
@@ -72,7 +76,7 @@ public class DNSServer extends UDPServerAnwendung {
 		super.beenden();
 	}
 
-	public LinkedList<ResourceRecord> holeResourceRecords() {
+	public List<ResourceRecord> holeResourceRecords() {
 		return leseRecordListe();
 	}
 
@@ -82,34 +86,26 @@ public class DNSServer extends UDPServerAnwendung {
 		ResourceRecord rr;
 
 		rr = new ResourceRecord(domainname, typ, rdata);
-		LinkedList<ResourceRecord> rrList = leseRecordListe();
+		List<ResourceRecord> rrList = leseRecordListe();
 		rrList.add(rr);
 		this.schreibeRecordListe(rrList);
 	}
 
-	private LinkedList<ResourceRecord> leseRecordListe() {
+	private List<ResourceRecord> leseRecordListe() {
 		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + ", initialisiereRecordListe()");
-		Datei hosts;
-		StringTokenizer tokenizer;
-		String line;
-		ResourceRecord rr;
-		Dateisystem dateisystem;
-		LinkedList<ResourceRecord> resourceRecords;
 
-		resourceRecords = new LinkedList<ResourceRecord>();
+		Dateisystem dateisystem = getSystemSoftware().getDateisystem();
+		Datei hosts = dateisystem.holeDatei(Dateisystem.FILE_SEPARATOR + "dns" + Dateisystem.FILE_SEPARATOR + "hosts");
 
-		dateisystem = getSystemSoftware().getDateisystem();
-		hosts = dateisystem.holeDatei(dateisystem.holeRootPfad() + Dateisystem.FILE_SEPARATOR + "dns"
-		        + Dateisystem.FILE_SEPARATOR + "hosts");
-
+		List<ResourceRecord> resourceRecords = new LinkedList<ResourceRecord>();
 		if (hosts != null) {
-			tokenizer = new StringTokenizer(hosts.getDateiInhalt(), "\n");
+			StringTokenizer tokenizer = new StringTokenizer(hosts.getDateiInhalt(), "\n");
 
 			while (tokenizer.hasMoreTokens()) {
-				line = tokenizer.nextToken().trim();
+				String line = tokenizer.nextToken().trim();
 				if (!line.equals("") && !(line.split(" ", 5).length < 4)) {
-					rr = new ResourceRecord(line);
+					ResourceRecord rr = new ResourceRecord(line);
 					resourceRecords.add(rr);
 				}
 			}
@@ -120,25 +116,22 @@ public class DNSServer extends UDPServerAnwendung {
 	private void schreibeRecordListe(List<ResourceRecord> records) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + " (DNSServer), schreibeRecordListe()");
-		Datei hosts;
-		StringBuffer text;
-		ListIterator<ResourceRecord> it;
-		Dateisystem dateisystem;
 
-		dateisystem = getSystemSoftware().getDateisystem();
-
-		text = new StringBuffer();
-
-		it = records.listIterator();
-		while (it.hasNext()) {
-			text.append(it.next().toString() + "\n");
+		StringBuffer text = new StringBuffer();
+		for (ResourceRecord resourceRecord : records) {
+			text.append(resourceRecord.toString() + "\n");
 		}
 
-		hosts = new Datei();
-		hosts.setDateiInhalt(text.toString());
-		hosts.setName("hosts");
+		Dateisystem dateisystem = getSystemSoftware().getDateisystem();
+		Datei hostsFile = dateisystem.holeDatei(dateisystem.holeRootPfad() + Dateisystem.FILE_SEPARATOR + "dns",
+		        "hosts");
+		if (hostsFile == null) {
+			hostsFile = new Datei();
+			hostsFile.setName("hosts");
+			dateisystem.speicherDatei(dateisystem.holeRootPfad() + Dateisystem.FILE_SEPARATOR + "dns", hostsFile);
+		}
 
-		dateisystem.speicherDatei(dateisystem.holeRootPfad() + Dateisystem.FILE_SEPARATOR + "dns", hosts);
+		hostsFile.setDateiInhalt(text.toString());
 	}
 
 	public void changeSingleEntry(int recordIdx, int partIdx, String type, String newValue) {

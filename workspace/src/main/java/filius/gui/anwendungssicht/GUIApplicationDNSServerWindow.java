@@ -33,7 +33,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Vector;
 
@@ -499,7 +499,7 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 	private synchronized void updateRecordsTable(DefaultTableModel tabellenModell, String type) {
 		tabellenModell.setRowCount(0);
 
-		LinkedList<ResourceRecord> tempListe = ((DNSServer) holeAnwendung()).holeResourceRecords();
+		List<ResourceRecord> tempListe = ((DNSServer) holeAnwendung()).holeResourceRecords();
 
 		for (ResourceRecord rr : tempListe) {
 			if (rr.getType().equals(type)) {

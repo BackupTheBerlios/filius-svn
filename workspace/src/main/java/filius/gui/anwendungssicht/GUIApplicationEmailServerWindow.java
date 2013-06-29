@@ -161,15 +161,15 @@ public class GUIApplicationEmailServerWindow extends GUIApplicationWindow {
 			public void mousePressed(MouseEvent e) {
 				{
 
-					int Auswahl = showOptionDialog(
-					        messages.getString("emailserver_msg11")
-					                + ((EmailKonto) ((EmailServer) holeAnwendung()).getListeBenutzerkonten().get(
-					                        markierteZeile)).getBenutzername().toString()
-					                + messages.getString("emailserver_msg12"), messages.getString("emailserver_msg13"),
-					        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+					EmailKonto mailAccount = (EmailKonto) ((EmailServer) holeAnwendung()).getListeBenutzerkonten().get(
+					        markierteZeile);
+					int Auswahl = showOptionDialog(messages.getString("emailserver_msg11")
+					        + mailAccount.getBenutzername().toString() + messages.getString("emailserver_msg12"),
+					        messages.getString("emailserver_msg13"), JOptionPane.YES_NO_CANCEL_OPTION,
+					        JOptionPane.QUESTION_MESSAGE, null, null, null);
 
 					if (Auswahl == JOptionPane.YES_OPTION) {
-						((EmailServer) holeAnwendung()).getListeBenutzerkonten().remove(markierteZeile);
+						((EmailServer) holeAnwendung()).kontoLoeschen(mailAccount);
 						updatekontenListenTabelle();
 					}
 				}

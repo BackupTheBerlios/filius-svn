@@ -198,6 +198,7 @@ public class SMTPMitarbeiter extends ServerMitarbeiter {
 				// Main.debug.println("=================================WeiterleitungsEmpfaenger sieht so aus: "+weitereEmpfaenger+" =========================");
 			}
 		}
+		emailServer.kontenSpeichern();
 		if (!weitereEmpfaenger.equals(""))
 			emailServer.emailWeiterleiten(kopie, mailFrom, weitereEmpfaenger);
 	}

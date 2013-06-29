@@ -121,6 +121,11 @@ public class EmailServer extends Anwendung implements I18n {
 		        + " (EmailServer), starten()");
 		super.starten();
 
+		Datei konten = getSystemSoftware().getDateisystem().holeDatei(verzeichnis, "konten.txt");
+		if (konten == null) {
+			konten = new Datei("konten.txt", "txt", "");
+			getSystemSoftware().getDateisystem().speicherDatei(verzeichnis, konten);
+		}
 		kontenLaden();
 
 		pop3 = new POP3Server(110, this);
@@ -223,20 +228,23 @@ public class EmailServer extends Anwendung implements I18n {
 
 				if (konto.getBenutzername().equals(benutzername)) {
 					if (konto.getPasswort().equals(passwort)) {
-						synchronized (getListeBenutzerkonten()) {
-							getListeBenutzerkonten().remove(konto);
-						}
-						benachrichtigeBeobachter();
-						kontenSpeichern();
-						return true;
+						return kontoLoeschen(konto);
 					}
 				}
-
 			}
 		} catch (Exception e) {
 			throw new DeleteAccountException(messages.getString("sw_emailserver_msg1"));
 		}
 		return false;
+	}
+
+	public boolean kontoLoeschen(EmailKonto konto) {
+		synchronized (getListeBenutzerkonten()) {
+			getListeBenutzerkonten().remove(konto);
+		}
+		kontenSpeichern();
+		benachrichtigeBeobachter();
+		return true;
 	}
 
 	/**
@@ -305,14 +313,10 @@ public class EmailServer extends Anwendung implements I18n {
 	public void kontenSpeichern() {
 		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + " (EmailServer), kontenSpeichern()");
-		Datei konten;
-		String tmp;
-		boolean erfolg;
 
-		tmp = listeBenutzerkontenZuString(listeBenutzerkonten);
-		konten = new Datei("konten.txt", "txt", tmp);
-
-		erfolg = getSystemSoftware().getDateisystem().speicherDatei(verzeichnis, konten);
+		String tmp = listeBenutzerkontenZuString(listeBenutzerkonten);
+		Datei konten = getSystemSoftware().getDateisystem().holeDatei(verzeichnis, "konten.txt");
+		konten.setDateiInhalt(tmp);
 	}
 
 	private String nltobr(String originalText) {
@@ -453,8 +457,7 @@ public class EmailServer extends Anwendung implements I18n {
 	public void kontenLaden() {
 		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + " (EmailServer), kontenLaden()");
-		Datei konten;
-		konten = getSystemSoftware().getDateisystem().holeDatei(verzeichnis, "konten.txt");
+		Datei konten = getSystemSoftware().getDateisystem().holeDatei(verzeichnis, "konten.txt");
 
 		if (konten != null) {
 			setListeBenutzerkonten(stringZuListeBenutzerkonten(konten.getDateiInhalt()));

@@ -33,7 +33,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
 import java.util.ListIterator;
 import java.util.Observable;
 
@@ -49,7 +48,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.event.InternalFrameEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import filius.Main;
@@ -65,9 +63,6 @@ import filius.software.system.Datei;
  */
 public class GUIApplicationTextEditorWindow extends GUIApplicationWindow {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 	private JTextArea editorField;
 	private JPanel backPanel;
@@ -175,8 +170,8 @@ public class GUIApplicationTextEditorWindow extends GUIApplicationWindow {
 
 	public void speichern() {
 		if (aktuelleDatei != null) {
-			aktuelleDatei.setDateiInhalt(editorField.getText());
 			original = editorField.getText();
+			aktuelleDatei.setDateiInhalt(original);
 		} else {
 			speichernUnter();
 		}
@@ -188,31 +183,41 @@ public class GUIApplicationTextEditorWindow extends GUIApplicationWindow {
 
 		if (rueckgabe == DMTNFileChooser.OK) {
 			String dateiNameNeu = fc.getAktuellerDateiname();
-			aktuelleDatei = new Datei(dateiNameNeu, messages.getString("texteditor_msg8"), editorField.getText());
-			this.holeAnwendung().getSystemSoftware().getDateisystem()
-			        .speicherDatei(fc.getAktuellerOrdner(), aktuelleDatei);
-			this.setTitle(aktuelleDatei.getName());
+			Datei tmpFile = new Datei(dateiNameNeu, messages.getString("texteditor_msg8"), editorField.getText());
+			this.holeAnwendung().getSystemSoftware().getDateisystem().speicherDatei(fc.getAktuellerOrdner(), tmpFile);
+			changeCurrentFile(tmpFile);
+		}
+	}
+
+	public void changeCurrentFile(Datei tmpFile) {
+		if (aktuelleDatei != null) {
+			aktuelleDatei.deleteObserver(this);
+		}
+		aktuelleDatei = tmpFile;
+		updateFromFile();
+		if (aktuelleDatei != null) {
+			aktuelleDatei.addObserver(this);
 		}
 	}
 
 	public void oeffnen() {
 		DMTNFileChooser fc = new DMTNFileChooser((Betriebssystem) holeAnwendung().getSystemSoftware());
 		int rueckgabe = fc.openDialog();
-
 		if (rueckgabe == DMTNFileChooser.OK) {
-			aktuelleDatei = holeAnwendung().getSystemSoftware().getDateisystem()
-			        .holeDatei(fc.getAktuellerOrdner(), fc.getAktuellerDateiname());
-			this.aktualisiereDateiInhalt();
+			String aktuellerDateiname = fc.getAktuellerDateiname();
+			Datei tmpFile = holeAnwendung().getSystemSoftware().getDateisystem()
+			        .holeDatei(fc.getAktuellerOrdner(), aktuellerDateiname);
+			changeCurrentFile(tmpFile);
 		} else {
 			Main.debug.println("ERROR (" + this.hashCode() + "): Fehler beim oeffnen einer Datei");
 		}
 	}
 
-	private void aktualisiereDateiInhalt() {
+	private void updateFromFile() {
 		if (aktuelleDatei != null) {
 			this.setTitle(aktuelleDatei.getName());
-			editorField.setText(aktuelleDatei.getDateiInhalt());
 			original = aktuelleDatei.getDateiInhalt();
+			editorField.setText(original);
 		} else {
 			Main.debug.println("ERROR (" + this.hashCode()
 			        + "): Fehler beim oeffnen einer Datei: keine Datei ausgewaehlt");
@@ -341,62 +346,20 @@ public class GUIApplicationTextEditorWindow extends GUIApplicationWindow {
 	public void neu() {
 		editorField.setText("");
 		setTitle(messages.getString("texteditor_msg1"));
-		aktuelleDatei = null;
+		changeCurrentFile(null);
 	}
 
-	public void windowActivated(WindowEvent e) {
-
+	public void updateUnchangedTextFromFile() {
+		if (original != null && editorField != null && aktuelleDatei != null && original.equals(editorField.getText())) {
+			original = aktuelleDatei.getDateiInhalt();
+			editorField.setText(original);
+		}
 	}
 
-	public void windowClosing(WindowEvent e) {
-
-	}
-
-	public void windowDeactivated(WindowEvent e) {
-
-	}
-
-	public void windowDeiconified(WindowEvent e) {
-
-	}
-
-	public void windowIconified(WindowEvent e) {
-
-	}
-
-	public void windowOpened(WindowEvent e) {
-
-	}
-
-	public void internalFrameActivated(InternalFrameEvent e) {
-
-	}
-
-	public void internalFrameClosed(InternalFrameEvent e) {
-
-	}
-
-	public void internalFrameClosing(InternalFrameEvent e) {
-
-	}
-
-	public void internalFrameDeactivated(InternalFrameEvent e) {
-
-	}
-
-	public void internalFrameDeiconified(InternalFrameEvent e) {
-
-	}
-
-	public void internalFrameIconified(InternalFrameEvent e) {
-
-	}
-
-	public void internalFrameOpened(InternalFrameEvent e) {
-
-	}
-
-	public void update(Observable arg0, Object arg1) {
-
+	@Override
+	public void update(Observable observable, Object arg1) {
+		if (observable == aktuelleDatei) {
+			updateUnchangedTextFromFile();
+		}
 	}
 }

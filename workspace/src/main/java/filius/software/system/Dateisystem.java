@@ -387,7 +387,10 @@ public class Dateisystem implements Serializable {
 				node.add(dateiNode);
 			} else {
 				node = verzeichnisKnoten(verzeichnisPfad + FILE_SEPARATOR + datei.getName());
-				node.setUserObject(datei);
+				Datei file = (Datei) node.getUserObject();
+				file.setDateiInhalt(datei.getDateiInhalt());
+				file.setDateiTyp(datei.getDateiTyp());
+				file.setSize(datei.holeGroesse());
 			}
 			return true;
 		} else {
