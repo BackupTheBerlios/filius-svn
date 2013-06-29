@@ -58,6 +58,10 @@ import filius.software.system.Dateisystem;
 public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 
 	/**
+     * 
+     */
+	private static final String MENU_LINE = "==========================================================================\n";
+	/**
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
@@ -155,9 +159,8 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 								terminalField.append(" \n");
 							} // padding with new lines for bottom alignment of
 							  // new output
-							terminalField.append("================================================================\n");
-							terminalField.append(messages.getString("sw_terminal_msg25")
-							        + "================================================================" + "\n");
+							terminalField.append(MENU_LINE);
+							terminalField.append(messages.getString("sw_terminal_msg25") + MENU_LINE);
 						} else {
 							inputLabel.setVisible(false);
 							jobRunning = true;
@@ -235,12 +238,12 @@ public class GUIApplicationTerminalWindow extends GUIApplicationWindow {
 		this.getContentPane().add(backPanel);
 
 		terminalField.setText("");
-		for (int i = 0; i < 12; i++) {
+		for (int i = 0; i < 10; i++) {
 			terminalField.append(" \n");
 		} // padding with new lines for bottom alignment of new output
-		terminalField.append("================================================================\n");
+		terminalField.append(MENU_LINE);
 		terminalField.append(messages.getString("sw_terminal_msg25"));
-		terminalField.append("================================================================\n\n");
+		terminalField.append(MENU_LINE);
 
 		try {
 			Thread.sleep(100);

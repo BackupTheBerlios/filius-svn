@@ -25,10 +25,10 @@
  */
 package filius.software.vermittlungsschicht;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import filius.Main;
@@ -96,8 +96,7 @@ public class ARP extends VermittlungsProtokoll {
 	public void hinzuARPTabellenEintrag(String ipAdresse, String macAdresse) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (ARP), hinzuARPTabellenEintrag("
 		        + ipAdresse + "," + macAdresse + ")");
-		Date tmpDate = new Date();
-		String tmpTime = "" + tmpDate.getTime();
+		String tmpTime = "" + System.currentTimeMillis();
 		String[] tmpString = { macAdresse, tmpTime };
 
 		synchronized (arpTabelle) {
@@ -122,6 +121,15 @@ public class ARP extends VermittlungsProtokoll {
 			entry = (Entry) it.next();
 			Main.debug.println("\t" + entry.getKey() + " \t " + ((String[]) entry.getValue())[0]);
 		}
+	}
+
+	public Map<String, String> holeARPTabelle() {
+		Map<String, String> table = new HashMap<String, String>();
+
+		for (String ipAddress : arpTabelle.keySet()) {
+			table.put(ipAddress, arpTabelle.get(ipAddress)[0]);
+		}
+		return table;
 	}
 
 	/**

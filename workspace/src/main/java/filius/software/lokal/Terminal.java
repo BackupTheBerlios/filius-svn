@@ -29,6 +29,7 @@ import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -623,6 +624,39 @@ public class Terminal extends ClientAnwendung implements I18n {
 	public String help(String[] args) {
 		benachrichtigeBeobachter(messages.getString("sw_terminal_msg25"));
 		return messages.getString("sw_terminal_msg25");
+	}
+
+	public String type(String[] args) {
+		return cat(args);
+	}
+
+	public String cat(String[] args) {
+		StringBuilder result = new StringBuilder();
+		if (args == null || args.length < 1 || args[0] == null || "".equals(args[0])) {
+			result.append(messages.getString("sw_terminal_msg51"));
+		} else {
+			Datei file = getSystemSoftware().getDateisystem().holeDatei(this.aktuellerOrdner, args[0]);
+			result.append(file.getDateiInhalt());
+		}
+		benachrichtigeBeobachter(result.toString());
+		return result.toString();
+	}
+
+	public String arp(String[] args) {
+		StringBuilder ergebnis = new StringBuilder();
+
+		ergebnis.append(messages.getString("sw_terminal_msg50"));
+		ergebnis.append("----------------------------------------\n");
+
+		Map<String, String> arpTable = this.getSystemSoftware().holeARP().holeARPTabelle();
+		for (String ipAddress : arpTable.keySet()) {
+			ergebnis.append(String.format("| %-15s  ", ipAddress));
+			ergebnis.append(String.format("| %-17s |\n", arpTable.get(ipAddress)));
+
+		}
+		ergebnis.append("----------------------------------------\n");
+		benachrichtigeBeobachter(ergebnis.toString());
+		return ergebnis.toString();
 	}
 
 	/**
