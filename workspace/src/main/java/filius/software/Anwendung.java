@@ -26,9 +26,8 @@
 package filius.software;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.ListIterator;
+import java.util.Map;
 import java.util.Observer;
 
 import filius.Main;
@@ -76,17 +75,12 @@ public abstract class Anwendung extends Thread {
 	public Anwendung() {
 		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
 		        + " (Anwendung), constr: Anwendung()");
-		ListIterator<HashMap<String, String>> it;
-		boolean erfolg = false;
-		HashMap<String, String> tmpMap;
 
 		try {
-			it = Information.getInformation().ladeProgrammListe().listIterator();
-			while (it.hasNext() && !erfolg) {
-				tmpMap = (HashMap<String, String>) it.next();
-				if (this.getClass().getCanonicalName().equals((String) tmpMap.get("Klasse"))) {
-
-					this.setzeAnwendungsName(tmpMap.get("Anwendung").toString());
+			for (Map<String, String> appInfo : Information.getInformation().ladeProgrammListe()) {
+				if (this.getClass().getCanonicalName().equals((String) appInfo.get("Klasse"))) {
+					this.setzeAnwendungsName(appInfo.get("Anwendung").toString());
+					break;
 				}
 			}
 		} catch (Exception e) {

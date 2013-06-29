@@ -32,11 +32,13 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.ListIterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.Box;
@@ -61,17 +63,17 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 
 	private Container c;
 
-	private JList softwareInstalliert, softwareVerfuegbar;
+	private JList<String> softwareInstalliert, softwareVerfuegbar;
 
 	private JButton removeButton, addButton, confirmButton;
 
 	private JLabel titleInstalled, titleAvailable;
 
-	private DefaultListModel lmVerfuegbar, lmInstalliert;
+	private DefaultListModel<String> lmVerfuegbar, lmInstalliert;
 
 	private GUIDesktopPanel dp;
 
-	private LinkedList programme = null;
+	private List<Map<String, String>> programme = null;
 
 	public GUIInstallationsDialog(GUIDesktopPanel dp) {
 		super();
@@ -154,7 +156,7 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 	}
 
 	private void hinzufuegen() {
-		Vector vLoeschen = new Vector();
+		Vector<String> vLoeschen = new Vector<String>();
 		int[] selektiertIndices = softwareVerfuegbar.getSelectedIndices();
 
 		for (int i : selektiertIndices) {
@@ -164,15 +166,15 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 
 		// umständlich, aber wegen der Möglichkeit von Mehrfachselektion lassen
 		// sich nicht einzelne Anwendungen sofort entfernen
-		for (Enumeration e = vLoeschen.elements(); e.hasMoreElements();) {
-			Object oZuLoeschen = e.nextElement();
+		for (Enumeration<String> e = vLoeschen.elements(); e.hasMoreElements();) {
+			String oZuLoeschen = e.nextElement();
 			lmVerfuegbar.removeElement(oZuLoeschen);
 		}
 	}
 
 	private void entfernen() {
 		int[] selektiertIndices = softwareInstalliert.getSelectedIndices();
-		Vector hinzu = new Vector();
+		Vector<String> hinzu = new Vector<String>();
 
 		for (int i : selektiertIndices) {
 			lmVerfuegbar.addElement(lmInstalliert.getElementAt(i));
@@ -181,8 +183,8 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 
 		// umständlich, aber wegen der Möglichkeit von Mehrfachselektion lassen
 		// sich nicht einzelne Anwendungen sofort entfernen
-		for (Enumeration e = hinzu.elements(); e.hasMoreElements();) {
-			Object hinzuObjekt = e.nextElement();
+		for (Enumeration<String> e = hinzu.elements(); e.hasMoreElements();) {
+			String hinzuObjekt = e.nextElement();
 			lmInstalliert.removeElement(hinzuObjekt);
 		}
 	}
@@ -190,28 +192,24 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 	private void aenderungenSpeichern() {
 		InternetKnotenBetriebssystem bs = getDesktopPanel().getBetriebssystem();
 		Anwendung anwendung;
-		HashMap map;
-		ListIterator it;
 
-		it = programme.listIterator();
-		while (it.hasNext()) {
-			map = (HashMap) it.next();
+		for (Map<String, String> appInfo : programme) {
 			for (int i = 0; i < lmInstalliert.getSize(); i++) {
-				if (lmInstalliert.getElementAt(i).equals(map.get("Anwendung"))
-				        && bs.holeSoftware(map.get("Klasse").toString()) == null) {
-					bs.installiereSoftware(map.get("Klasse").toString());
+				if (lmInstalliert.getElementAt(i).equals(appInfo.get("Anwendung"))
+				        && bs.holeSoftware(appInfo.get("Klasse").toString()) == null) {
+					bs.installiereSoftware(appInfo.get("Klasse").toString());
 
-					anwendung = bs.holeSoftware(map.get("Klasse").toString());
+					anwendung = bs.holeSoftware(appInfo.get("Klasse").toString());
 					anwendung.starten();
 				}
 			}
 
 			for (int i = 0; i < lmVerfuegbar.getSize(); i++) {
-				if (lmVerfuegbar.getElementAt(i).equals(map.get("Anwendung"))) {
-					anwendung = bs.holeSoftware(map.get("Klasse").toString());
+				if (lmVerfuegbar.getElementAt(i).equals(appInfo.get("Anwendung"))) {
+					anwendung = bs.holeSoftware(appInfo.get("Klasse").toString());
 					if (anwendung != null) {
 						anwendung.beenden();
-						bs.entferneSoftware(map.get("Klasse").toString());
+						bs.entferneSoftware(appInfo.get("Klasse").toString());
 					}
 				}
 			}
@@ -267,26 +265,74 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 		anwendungen = bs.holeArrayInstallierteSoftware();
 
 		for (int i = 0; i < anwendungen.length; i++) {
-			if (anwendungen[i] != null)
+			if (anwendungen[i] != null) {
 				lmInstalliert.addElement(anwendungen[i].holeAnwendungsName());
+			}
 		}
 
 		if (programme != null) {
-			ListIterator it = programme.listIterator();
-
-			while (it.hasNext()) {
-				tmpMap = (HashMap) it.next();
-				awKlasse = (String) tmpMap.get("Klasse");
+			for (Map<String, String> programmInfo : programme) {
+				awKlasse = (String) programmInfo.get("Klasse");
 
 				if (dp.getBetriebssystem().holeSoftware(awKlasse) == null) {
-					lmVerfuegbar.addElement(tmpMap.get("Anwendung"));
+					lmVerfuegbar.addElement(programmInfo.get("Anwendung"));
 				}
 			}
 		}
 
 		/* Listen */
-		softwareInstalliert = new JList(lmInstalliert);
-		softwareVerfuegbar = new JList(lmVerfuegbar);
+		softwareInstalliert = new JList<String>(lmInstalliert);
+		softwareInstalliert.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					GUIInstallationsDialog.this.entfernen();
+				}
+			}
+		});
+		softwareVerfuegbar = new JList<String>(lmVerfuegbar);
+		softwareVerfuegbar.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					GUIInstallationsDialog.this.hinzufuegen();
+				}
+			}
+		});
 	}
 
 	public void setAnwendungsIcon(String datei) {

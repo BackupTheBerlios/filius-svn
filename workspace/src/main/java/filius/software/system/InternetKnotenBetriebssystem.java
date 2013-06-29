@@ -28,7 +28,9 @@ package filius.software.system;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import filius.Main;
@@ -447,10 +449,10 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 		printInstallierteAnwendungen(); // DEBUG
 		Anwendung neueAnwendung = null;
 		boolean erfolg = false;
-		LinkedList liste = null;
-		HashMap tmpMap;
+		List<Map<String, String>> liste = null;
+		Map<String, String> tmpMap;
 		Class<?> cl;
-		ListIterator it;
+		ListIterator<Map<String, String>> it;
 
 		if (holeSoftware(klassenname) != null) {
 			// Main.debug.println(klassenname + " ist bereits installiert!");
@@ -465,7 +467,7 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 
 			it = liste.listIterator();
 			while (it.hasNext() && !erfolg) {
-				tmpMap = (HashMap) it.next();
+				tmpMap = it.next();
 				if (klassenname.equals((String) tmpMap.get("Klasse"))) {
 
 					try {
@@ -484,11 +486,6 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 						installierteAnwendung.put(klassenname, neueAnwendung);
 						erfolg = true;
 					}
-					// Main.debug.println("Installiert: " + klassenname);
-					// Main.debug
-					// .println(" SIZE: " + installierteAnwendung.size());
-					// Main.debug.println("Anwendung--->"
-					// + installierteAnwendung.toString());
 				}
 			}
 		}

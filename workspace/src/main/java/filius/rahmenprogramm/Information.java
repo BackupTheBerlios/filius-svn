@@ -34,7 +34,9 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -349,11 +351,11 @@ public class Information implements Serializable {
 	 * @return
 	 * @throws IOException
 	 */
-	public LinkedList<HashMap<String, String>> ladeProgrammListe() throws IOException {
-		LinkedList<HashMap<String, String>> tmpList;
+	public List<Map<String, String>> ladeProgrammListe() throws IOException {
+		List<Map<String, String>> tmpList;
 		RandomAccessFile desktopFile;
 
-		tmpList = new LinkedList<HashMap<String, String>>();
+		tmpList = new LinkedList<Map<String, String>>();
 		desktopFile = new RandomAccessFile(holeAnwendungenDateipfad(), "r");
 		for (String line; (line = desktopFile.readLine()) != null;) {
 			if (!line.trim().startsWith("#") && !line.trim().equals("")) {

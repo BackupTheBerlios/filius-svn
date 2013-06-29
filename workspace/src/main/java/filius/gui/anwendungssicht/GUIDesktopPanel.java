@@ -33,8 +33,9 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -104,7 +105,7 @@ public class GUIDesktopPanel extends JBackgroundPanel implements I18n, Observer 
 		Box boxTaskLeiste = Box.createHorizontalBox();
 		boxTaskLeiste.setBorder(BorderFactory.createEmptyBorder());
 		boxTaskLeiste.add(Box.createHorizontalStrut(600));
-		
+
 		gnw = new GUINetworkWindow(this);
 
 		lbNetzwerk = new JLabel(new ImageIcon(getClass().getResource("/gfx/desktop/netzwek_aus.png")));
@@ -136,7 +137,7 @@ public class GUIDesktopPanel extends JBackgroundPanel implements I18n, Observer 
 
 	public void updateAnwendungen() {
 		GUIDesktopIcon tmpLabel;
-		LinkedList<?> softwareList = null;
+		List<Map<String, String>> softwareList = null;
 		String softwareKlasse, guiKlassenName;
 		HashMap<?, ?> tmpMap;
 		Class<?> cl = null;
