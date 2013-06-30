@@ -46,12 +46,12 @@ public class EingabenUeberpruefung implements I18n {
 	// NOTE: include *.*.*.0 to be able to still use this pattern for routing
 	// table configuration as network identifier
 	public static final Pattern musterIpAdresse = Pattern
-	        .compile("(0*([1-9][0-9]?|1[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))\\.((0*(1?[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))\\.){2}(0*(1?[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))");
+	        .compile("^(0*([1-9][0-9]?|1[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))\\.((0*(1?[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))\\.){2}(0*(1?[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))$");
 	public static final Pattern musterIpAdresseAuchLeer = Pattern
-	        .compile("((0*([1-9][0-9]?|1[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))\\.((0*(1?[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))\\.){2}(0*(1?[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))){0,1}");
+	        .compile("^((0*([1-9][0-9]?|1[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))\\.((0*(1?[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))\\.){2}(0*(1?[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))){0,1}$");
 
 	public static final Pattern musterSubNetz = Pattern
-	        .compile("(0*([1-9]|1?[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))\\.((0*([0-9]|1?[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))\\.){2}(0*([0-9]|1?[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))");
+	        .compile("^(0*([1-9]|1?[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))\\.((0*([0-9]|1?[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))\\.){2}(0*([0-9]|1?[0-9]{1,2}|2[0-4]?[0-9]|25[0-5]))$");
 	// public static final Pattern musterEmailAdresse =
 	// Pattern.compile("^[a-zA-Z0-9\\-_][a-zA-Z0-9\\-_\\.]*[a-zA-Z0-9\\-_]@[a-zA-Z0-9][a-zA-Z0-9\\-_]*(\\.[a-zA-Z0-9][a-zA-Z0-9\\-_]*)*$");
 	public static final Pattern musterEmailAdresse = Pattern.compile("^"
@@ -96,8 +96,8 @@ public class EingabenUeberpruefung implements I18n {
 	// public static final Pattern musterDomain =
 	// Pattern.compile("([a-zA-Z0-9]|\\.){2,}");
 	public static final Pattern musterDomain = Pattern
-	        .compile("[a-zA-Z0-9][a-zA-Z0-9\\-_]*(\\.[a-zA-Z0-9][a-zA-Z0-9\\-_]*)*");
-	public static final Pattern musterSubnetBinary = Pattern.compile("^11*0*$"); 
+	        .compile("^([a-zA-Z][a-zA-Z0-9\\-_]*(\\.[a-zA-Z0-9][a-zA-Z0-9\\-_]*)*){0,1}\\.{0,1}$");
+	public static final Pattern musterSubnetBinary = Pattern.compile("^11*0*$");
 
 	public static final Color farbeFalsch = new Color(255, 20, 20);
 	public static final Color farbeRichtig = new Color(0, 0, 0);
@@ -117,27 +117,27 @@ public class EingabenUeberpruefung implements I18n {
 		Matcher m = muster.matcher(zuPruefen);
 		return m.matches();
 	}
-	
+
 	public static boolean isValidSubnetmask(String subnet) {
 		Main.debug.println("INVOKED (EingabenUeberpruefung), isValidSubnetmask(" + subnet + ")");
 		String[] token = subnet.split("\\.");
 		String binary = "";
-		Main.debug.println("DEBUG (EingabenUeberpruefung), '"+token+"', length="+token.length);
-		if(token.length != 4)
+		Main.debug.println("DEBUG (EingabenUeberpruefung), '" + token + "', length=" + token.length);
+		if (token.length != 4)
 			return false;
 		try {
-			for(int i=0; i<token.length; i++) {
+			for (int i = 0; i < token.length; i++) {
 				String currBin = Integer.toBinaryString(Integer.parseInt(token[i]));
-				while(currBin.length() < 8)
+				while (currBin.length() < 8)
 					currBin = "0" + currBin;
 				binary += currBin;
-				Main.debug.println("DEBUG (EingabenUeberpruefung), '"+token[i]+"' ~~> binary ("+i+") = '" + binary + "'");
+				Main.debug.println("DEBUG (EingabenUeberpruefung), '" + token[i] + "' ~~> binary (" + i + ") = '"
+				        + binary + "'");
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return false;
 		}
-		if(binary.length() == 32 && isGueltig(binary,EingabenUeberpruefung.musterSubnetBinary))
+		if (binary.length() == 32 && isGueltig(binary, EingabenUeberpruefung.musterSubnetBinary))
 			return true;
 		return false;
 	}

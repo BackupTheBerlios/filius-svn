@@ -32,7 +32,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Observable;
 import java.util.Vector;
@@ -49,7 +48,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
-import javax.swing.event.MouseInputAdapter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -179,6 +177,11 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 
 		aDomainField = new JTextField();
 		aDomainField.setPreferredSize(new Dimension(275, 25));
+		aDomainField.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				checkFQDN(aDomainField);
+			}
+		});
 		hBox.add(aDomainField);
 
 		vBox.add(hBox);
@@ -196,7 +199,7 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		aIpField.setPreferredSize(new Dimension(275, 25));
 		aIpField.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
-				ipPruefen(aIpField);
+				checkIP(aIpField);
 			}
 		});
 		hBox.add(aIpField);
@@ -210,15 +213,14 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		aAddButton = new JButton(messages.getString("dnsserver_msg6"));
 		aAddButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				{
-					if (!aDomainField.getText().trim().isEmpty() && !aIpField.getText().trim().isEmpty()
-					        && IP.ipCheck(aIpField.getText()) != null) {
-						((DNSServer) holeAnwendung()).hinzuRecord(aDomainField.getText(), ResourceRecord.ADDRESS,
-						        aIpField.getText());
-						aDomainField.setText("");
-						aIpField.setText("");
-						updateARecordsTable();
-					}
+				if (checkFQDN(aDomainField) && checkIP(aIpField) && IP.ipCheck(aIpField.getText()) != null) {
+					((DNSServer) holeAnwendung()).hinzuRecord(aDomainField.getText(), ResourceRecord.ADDRESS,
+					        aIpField.getText());
+					aDomainField.setText("");
+					aIpField.setText("");
+					updateARecordsTable();
+				} else {
+					GUIApplicationDNSServerWindow.this.showMessageDialog(messages.getString("dnsserver_msg21"));
 				}
 			}
 		});
@@ -228,7 +230,6 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		buttonEntfernen = new JButton(messages.getString("dnsserver_msg7"));
 		buttonEntfernen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				int zeilenNummer = aRecordsTable.getSelectedRow();
 				if (zeilenNummer != -1) {
 					String domainname = aRecordsTable.getValueAt(zeilenNummer, 0).toString();
@@ -287,6 +288,11 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 
 		mxMaildomainField = new JTextField();
 		mxMaildomainField.setPreferredSize(new Dimension(275, 25));
+		mxMaildomainField.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				checkFQDN(mxMaildomainField);
+			}
+		});
 		hBox.add(mxMaildomainField);
 
 		vBox.add(hBox);
@@ -302,6 +308,11 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 
 		mxURLField = new JTextField();
 		mxURLField.setPreferredSize(new Dimension(275, 25));
+		mxURLField.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				checkFQDN(mxURLField);
+			}
+		});
 		hBox.add(mxURLField);
 
 		vBox.add(hBox);
@@ -311,16 +322,16 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		hBox.add(Box.createHorizontalStrut(5));
 
 		mxAddButton = new JButton(messages.getString("dnsserver_msg6"));
-		mxAddButton.addMouseListener(new MouseInputAdapter() {
-			public void mousePressed(MouseEvent e) {
-				{
-					if (!mxMaildomainField.getText().trim().isEmpty() && !mxURLField.getText().trim().isEmpty()) {
-						((DNSServer) holeAnwendung()).hinzuRecord(mxMaildomainField.getText(),
-						        ResourceRecord.MAIL_EXCHANGE, mxURLField.getText());
-						mxMaildomainField.setText("");
-						mxURLField.setText("");
-						updateMXRecordsTable();
-					}
+		mxAddButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (checkFQDN(mxMaildomainField) && checkFQDN(mxURLField)) {
+					((DNSServer) holeAnwendung()).hinzuRecord(mxMaildomainField.getText(),
+					        ResourceRecord.MAIL_EXCHANGE, mxURLField.getText());
+					mxMaildomainField.setText("");
+					mxURLField.setText("");
+					updateMXRecordsTable();
+				} else {
+					GUIApplicationDNSServerWindow.this.showMessageDialog(messages.getString("dnsserver_msg23"));
 				}
 			}
 		});
@@ -387,6 +398,11 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 
 		nsDomainField = new JTextField();
 		nsDomainField.setPreferredSize(new Dimension(275, 25));
+		nsDomainField.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				checkFQDN(nsDomainField);
+			}
+		});
 		hBox.add(nsDomainField);
 
 		vBox.add(hBox);
@@ -402,6 +418,11 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 
 		nsDomainServerField = new JTextField();
 		nsDomainServerField.setPreferredSize(new Dimension(275, 25));
+		nsDomainServerField.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				checkFQDN(nsDomainServerField);
+			}
+		});
 		hBox.add(nsDomainServerField);
 
 		vBox.add(hBox);
@@ -411,21 +432,16 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		hBox.add(Box.createHorizontalStrut(5));
 
 		nsAddButton = new JButton(messages.getString("dnsserver_msg6"));
-		nsAddButton.addMouseListener(new MouseInputAdapter() {
-			public void mousePressed(MouseEvent e) {
-				{
-					if (!nsDomainField.getText().trim().isEmpty()
-					        && !nsDomainServerField.getText().trim().isEmpty()
-					        && EingabenUeberpruefung.isGueltig(nsDomainServerField.getText().trim(),
-					                EingabenUeberpruefung.musterDomain)
-					        && !EingabenUeberpruefung.isGueltig(nsDomainServerField.getText().trim(),
-					                EingabenUeberpruefung.musterIpAdresse)) {
-						((DNSServer) holeAnwendung()).hinzuRecord(nsDomainField.getText(), ResourceRecord.NAME_SERVER,
-						        nsDomainServerField.getText());
-						nsDomainField.setText("");
-						nsDomainServerField.setText("");
-						updateNSRecordsTable();
-					}
+		nsAddButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (checkFQDN(nsDomainField) && checkFQDN(nsDomainServerField)) {
+					((DNSServer) holeAnwendung()).hinzuRecord(nsDomainField.getText(), ResourceRecord.NAME_SERVER,
+					        nsDomainServerField.getText());
+					nsDomainField.setText("");
+					nsDomainServerField.setText("");
+					updateNSRecordsTable();
+				} else {
+					GUIApplicationDNSServerWindow.this.showMessageDialog(messages.getString("dnsserver_msg22"));
 				}
 			}
 		});
@@ -434,7 +450,6 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		nsRemoveButton = new JButton(messages.getString("dnsserver_msg7"));
 		nsRemoveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				int zeilenNummer = nsRecordsTable.getSelectedRow();
 				if (zeilenNummer != -1) {
 					String domainname = nsRecordsTable.getValueAt(zeilenNummer, 0).toString();
@@ -515,17 +530,27 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 	/**
 	 * Funktion die während der Eingabe ueberprueft ob die bisherige Eingabe
 	 * einen korrekten Wert darstellt.
-	 * 
-	 * @author Johannes Bade & Thomas Gerding
-	 * @param pruefRegel
-	 * @param feld
 	 */
-	private void ipPruefen(JTextField feld) {
-		if (EingabenUeberpruefung.isGueltig(feld.getText(), EingabenUeberpruefung.musterIpAdresse)) {
+	private boolean checkIP(JTextField feld) {
+		feld.setText(feld.getText().trim());
+		boolean validAddress = EingabenUeberpruefung.isGueltig(feld.getText(), EingabenUeberpruefung.musterIpAdresse);
+		if (validAddress) {
 			feld.setForeground(EingabenUeberpruefung.farbeRichtig);
 		} else {
 			feld.setForeground(EingabenUeberpruefung.farbeFalsch);
 		}
+		return validAddress;
+	}
+
+	private boolean checkFQDN(JTextField feld) {
+		feld.setText(feld.getText().trim());
+		boolean validFqdn = EingabenUeberpruefung.isGueltig(feld.getText(), EingabenUeberpruefung.musterDomain);
+		if (validFqdn) {
+			feld.setForeground(EingabenUeberpruefung.farbeRichtig);
+		} else {
+			feld.setForeground(EingabenUeberpruefung.farbeFalsch);
+		}
+		return validFqdn;
 	}
 
 	private void aktualisieren() {
