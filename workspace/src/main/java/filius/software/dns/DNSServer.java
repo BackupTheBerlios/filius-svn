@@ -156,6 +156,7 @@ public class DNSServer extends UDPServerAnwendung {
 			}
 		}
 		this.schreibeRecordListe(rrList);
+		benachrichtigeBeobachter(type);
 	}
 
 	public void loescheResourceRecord(String domainname, String typ) {

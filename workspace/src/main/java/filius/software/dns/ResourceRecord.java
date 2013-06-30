@@ -177,7 +177,7 @@ public class ResourceRecord {
 	 *            the rdata to set
 	 */
 	public void setRdata(String rdata) {
-		if (this.type.equals(NAME_SERVER) && !rdata.matches(".*\\.")) {
+		if ((this.type.equals(NAME_SERVER) || this.type.equals(MAIL_EXCHANGE)) && !rdata.matches(".*\\.")) {
 			this.rdata = rdata + ".";
 		} else {
 			this.rdata = rdata;

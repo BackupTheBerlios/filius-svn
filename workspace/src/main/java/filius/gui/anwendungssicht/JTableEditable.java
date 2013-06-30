@@ -25,6 +25,10 @@
  */
 package filius.gui.anwendungssicht;
 
+import static filius.software.dns.ResourceRecord.ADDRESS;
+import static filius.software.dns.ResourceRecord.MAIL_EXCHANGE;
+import static filius.software.dns.ResourceRecord.NAME_SERVER;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.util.HashMap;
@@ -138,25 +142,49 @@ public class JTableEditable extends JTable {
 			String value = (String) editor.getCellEditorValue();
 			if (value == null)
 				value = "";
-			setValueAt(value, editingRow, editingColumn);
+			boolean updateCellValue = true;
 
 			// store value in DNS records
 			if (parentGUI instanceof GUIApplicationDNSServerWindow) {
+				value = value.trim();
+				updateCellValue = false;
+				DNSServer dnsServer = (DNSServer) ((GUIApplicationDNSServerWindow) parentGUI).holeAnwendung();
+				boolean validChange;
 				if (typeID != null && typeID.equals("A")) {
 					if (editingColumn == 0) {
-						((DNSServer) ((GUIApplicationDNSServerWindow) parentGUI).holeAnwendung()).changeSingleEntry(
-						        editingRow, 0, filius.software.dns.ResourceRecord.ADDRESS, value);
+						validChange = EingabenUeberpruefung.isGueltig(value, EingabenUeberpruefung.musterDomain);
+						if (validChange) {
+							dnsServer.changeSingleEntry(editingRow, 0, ADDRESS, value);
+						}
 					} else {
-						((DNSServer) ((GUIApplicationDNSServerWindow) parentGUI).holeAnwendung()).changeSingleEntry(
-						        editingRow, 3, filius.software.dns.ResourceRecord.ADDRESS, value);
+						validChange = EingabenUeberpruefung.isGueltig(value, EingabenUeberpruefung.musterIpAdresse);
+						if (validChange) {
+							dnsServer.changeSingleEntry(editingRow, 3, ADDRESS, value);
+						}
 					}
 				} else if (typeID != null && typeID.equals("MX")) {
 					if (editingColumn == 0) {
-						((DNSServer) ((GUIApplicationDNSServerWindow) parentGUI).holeAnwendung()).changeSingleEntry(
-						        editingRow, 0, filius.software.dns.ResourceRecord.MAIL_EXCHANGE, value);
+						validChange = EingabenUeberpruefung.isGueltig(value, EingabenUeberpruefung.musterDomain);
+						if (validChange) {
+							dnsServer.changeSingleEntry(editingRow, 0, MAIL_EXCHANGE, value);
+						}
 					} else {
-						((DNSServer) ((GUIApplicationDNSServerWindow) parentGUI).holeAnwendung()).changeSingleEntry(
-						        editingRow, 3, filius.software.dns.ResourceRecord.MAIL_EXCHANGE, value);
+						validChange = EingabenUeberpruefung.isGueltig(value, EingabenUeberpruefung.musterDomain);
+						if (validChange) {
+							dnsServer.changeSingleEntry(editingRow, 3, MAIL_EXCHANGE, value);
+						}
+					}
+				} else if (typeID != null && typeID.equals("NS")) {
+					if (editingColumn == 0) {
+						validChange = EingabenUeberpruefung.isGueltig(value, EingabenUeberpruefung.musterDomain);
+						if (validChange) {
+							dnsServer.changeSingleEntry(editingRow, 0, NAME_SERVER, value);
+						}
+					} else {
+						validChange = EingabenUeberpruefung.isGueltig(value, EingabenUeberpruefung.musterDomain);
+						if (validChange) {
+							dnsServer.changeSingleEntry(editingRow, 3, NAME_SERVER, value);
+						}
 					}
 				}
 			}
@@ -196,7 +224,14 @@ public class JTableEditable extends JTable {
 					}
 				}
 			}
+			if (updateCellValue) {
+				setValueAt(value, editingRow, editingColumn);
+			}
 			removeEditor();
 		}
+	}
+
+	public String getType() {
+		return this.typeID;
 	}
 }

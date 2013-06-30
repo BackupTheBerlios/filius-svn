@@ -32,9 +32,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -246,7 +246,7 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		vBox.add(Box.createVerticalStrut(5));
 
 		tabellenModell = new DefaultTableModel(0, 2);
-		aRecordsTable = new JTableEditable(tabellenModell, false, "A");
+		aRecordsTable = new JTableEditable(tabellenModell, true, "A");
 		aRecordsTable.setParentGUI(this); // tell the table who presents its
 		                                  // values, such that the back-end DNS
 		                                  // server can be found for adapting
@@ -356,7 +356,7 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		vBox.add(Box.createVerticalStrut(5));
 
 		tabellenModell = new DefaultTableModel(0, 2);
-		mxRecordsTable = new JTableEditable(tabellenModell, false, "MX");
+		mxRecordsTable = new JTableEditable(tabellenModell, true, "MX");
 		mxRecordsTable.setParentGUI(this); // tell the table who presents its
 		                                   // values, such that the back-end DNS
 		                                   // server can be found for adapting
@@ -465,7 +465,7 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		vBox.add(Box.createVerticalStrut(5));
 
 		tabellenModell = new DefaultTableModel(0, 2);
-		nsRecordsTable = new JTableEditable(tabellenModell, false, "NS");
+		nsRecordsTable = new JTableEditable(tabellenModell, true, "NS");
 		nsRecordsTable.setParentGUI(this); // tell the table who presents its
 		                                   // values, such that the back-end DNS
 		                                   // server can be found for adapting
@@ -486,44 +486,34 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 		nsPanel.add(vBox, BorderLayout.CENTER);
 	}
 
-	/**
-	 * Aktualisiert die Tabelle der A-Records
-	 * 
-	 * @author Thomas Gerding & Johannes Bade
-	 */
 	public void updateARecordsTable() {
-		DefaultTableModel tabellenModell = (DefaultTableModel) aRecordsTable.getModel();
-		updateRecordsTable(tabellenModell, ResourceRecord.ADDRESS);
+		updateRecordsTable(aRecordsTable);
 	}
 
 	public void updateNSRecordsTable() {
-		DefaultTableModel tabellenModell = (DefaultTableModel) nsRecordsTable.getModel();
-		updateRecordsTable(tabellenModell, ResourceRecord.NAME_SERVER);
+		updateRecordsTable(nsRecordsTable);
 	}
 
-	/**
-	 * Aktualisiert die Tabelle der MX-Records
-	 * 
-	 * @author Thomas Gerding & Johannes Bade
-	 */
 	public void updateMXRecordsTable() {
-		DefaultTableModel tabellenModell = (DefaultTableModel) mxRecordsTable.getModel();
-		updateRecordsTable(tabellenModell, ResourceRecord.MAIL_EXCHANGE);
+		updateRecordsTable(mxRecordsTable);
 	}
 
-	private synchronized void updateRecordsTable(DefaultTableModel tabellenModell, String type) {
-		tabellenModell.setRowCount(0);
+	private synchronized void updateRecordsTable(JTableEditable table) {
+		String type = table.getType();
 
 		List<ResourceRecord> tempListe = ((DNSServer) holeAnwendung()).holeResourceRecords();
-
+		List<ResourceRecord> recordsOfSelectedType = new ArrayList<ResourceRecord>();
 		for (ResourceRecord rr : tempListe) {
 			if (rr.getType().equals(type)) {
-
-				Vector<String> v = new Vector<String>();
-				v.add(rr.getDomainname());
-				v.add(rr.getRdata());
-				tabellenModell.addRow(v);
+				recordsOfSelectedType.add(rr);
 			}
+		}
+		((DefaultTableModel) table.getModel()).setRowCount(recordsOfSelectedType.size());
+		int row = 0;
+		for (ResourceRecord rr : recordsOfSelectedType) {
+			table.setValueAt(rr.getDomainname(), row, 0);
+			table.setValueAt(rr.getRdata(), row, 1);
+			row++;
 		}
 	}
 
@@ -567,7 +557,13 @@ public class GUIApplicationDNSServerWindow extends GUIApplicationWindow {
 	}
 
 	public void update(Observable arg0, Object arg1) {
-		if (arg1 != null) {
+		if ("A".equals(arg1)) {
+			updateARecordsTable();
+		} else if ("NS".equals(arg1)) {
+			updateNSRecordsTable();
+		} else if ("MX".equals(arg1)) {
+			updateMXRecordsTable();
+		} else if (arg1 != null) {
 			aktualisieren();
 		}
 	}
