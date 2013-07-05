@@ -4,9 +4,9 @@
 
 	<groupId>filius</groupId>
 	<artifactId>filius</artifactId>
-	<version>1.5.1</version>
+	<version>1.5.2</version>
 	<properties>
-		<buildDate>13.02.2013</buildDate>
+		<buildDate>05.07.2013</buildDate>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>4.10</junit.version>
 		<mockito.version>1.9.0</mockito.version>
@@ -19,6 +19,7 @@
 		<mavenJar.version>2.4</mavenJar.version>
 		<launch4j.version>1.5.2</launch4j.version>
 		<launch4j.starterName>Filius.exe</launch4j.starterName>
+		<launch4j.setupStarterName>Filius-Setup-${project.version}.exe</launch4j.setupStarterName>
 		<izpack.version>5.0.0-beta11</izpack.version>
 		<izpack.staging>${project.build.directory}/izpack</izpack.staging>
 		<izpack.appName>Filius</izpack.appName>
@@ -120,7 +121,7 @@
 						<version>${launch4j.version}</version>
 						<executions>
 							<execution>
-								<id>l4j-programme</id>
+								<id>filius-exe</id>
 								<phase>package</phase>
 								<goals>
 									<goal>launch4j</goal>
@@ -150,6 +151,36 @@
 										<productName>${project.name}</productName>
 										<internalName>${project.artifactId}</internalName>
 										<originalFilename>${launch4j.starterName}</originalFilename>
+									</versionInfo>
+								</configuration>
+							</execution>
+							<execution>
+								<id>filius-setup-exe</id>
+								<phase>install</phase>
+								<goals>
+									<goal>launch4j</goal>
+								</goals>
+								<configuration>
+									<headerType>gui</headerType>
+									<outfile>target/${launch4j.setupStarterName}</outfile>
+									<errTitle>Filius Installation - Error</errTitle>
+									<jar>target/${project.build.finalName}-setup.jar</jar>
+									<icon>src/main/resources/gfx/filius32.ico</icon>
+									<chdir>.</chdir>
+									<jre>
+										<minVersion>${execJre.version}</minVersion>
+										<jdkPreference>preferJdk</jdkPreference>
+									</jre>
+									<versionInfo>
+										<fileVersion>${project.version}.0</fileVersion>
+										<txtFileVersion>txt file version</txtFileVersion>
+										<fileDescription>${project.name}-Setup</fileDescription>
+										<copyright>Stefan Freischlad, Christian Eibl</copyright>
+										<productVersion>${project.version}.0</productVersion>
+										<txtProductVersion>${project.description}</txtProductVersion>
+										<productName>${project.name}</productName>
+										<internalName>${project.artifactId}</internalName>
+										<originalFilename>${launch4j.setupStarterName}</originalFilename>
 									</versionInfo>
 								</configuration>
 							</execution>

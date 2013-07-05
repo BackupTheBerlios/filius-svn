@@ -1,6 +1,16 @@
 FILIUS Changelog
 ================
 
+*filius-1.5.2 (5. Jul 2013)
+---------------------------
+- Umbenennung "Terminal" zu "Befehlszeile"/"Command line"
+- Neue Befehlszeilenwerkzeuge: arp, cat
+- Synchronisation von Dateiinhalten mit Anzeige im Texteditor 
+  (insbesondere für E-Mail- und DNS-Server)
+- Validierung von DNS-Server-Konfigurationseingaben und Hinweise 
+  bei falscher Eingabe
+- DNS-Server-Konfiguration in Tabellen editierbar
+
 *filius-1.5.1 (13. Feb 2013)
 ----------------------------
 - Kleine Fehlerbehebungen
