@@ -63,13 +63,13 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 
 	private Container c;
 
-	private JList<String> softwareInstalliert, softwareVerfuegbar;
+	private JList softwareInstalliert, softwareVerfuegbar;
 
 	private JButton removeButton, addButton, confirmButton;
 
 	private JLabel titleInstalled, titleAvailable;
 
-	private DefaultListModel<String> lmVerfuegbar, lmInstalliert;
+	private DefaultListModel lmVerfuegbar, lmInstalliert;
 
 	private GUIDesktopPanel dp;
 
@@ -161,7 +161,7 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 
 		for (int i : selektiertIndices) {
 			lmInstalliert.addElement(lmVerfuegbar.get(i));
-			vLoeschen.add(lmVerfuegbar.get(i));
+			vLoeschen.add((String)lmVerfuegbar.get(i));
 		}
 
 		// umständlich, aber wegen der Möglichkeit von Mehrfachselektion lassen
@@ -178,7 +178,7 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 
 		for (int i : selektiertIndices) {
 			lmVerfuegbar.addElement(lmInstalliert.getElementAt(i));
-			hinzu.add(lmInstalliert.getElementAt(i));
+			hinzu.add((String)lmInstalliert.getElementAt(i));
 		}
 
 		// umständlich, aber wegen der Möglichkeit von Mehrfachselektion lassen
@@ -252,7 +252,6 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 
 	private void initListen() {
 		Anwendung[] anwendungen;
-		HashMap tmpMap;
 		String awKlasse;
 		InternetKnotenBetriebssystem bs;
 
@@ -281,7 +280,7 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 		}
 
 		/* Listen */
-		softwareInstalliert = new JList<String>(lmInstalliert);
+		softwareInstalliert = new JList(lmInstalliert);
 		softwareInstalliert.addMouseListener(new MouseListener() {
 
 			@Override
@@ -307,7 +306,7 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 				}
 			}
 		});
-		softwareVerfuegbar = new JList<String>(lmVerfuegbar);
+		softwareVerfuegbar = new JList(lmVerfuegbar);
 		softwareVerfuegbar.addMouseListener(new MouseListener() {
 
 			@Override
