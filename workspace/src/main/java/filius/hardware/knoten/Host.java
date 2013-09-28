@@ -54,7 +54,7 @@ public abstract class Host extends InternetKnoten {
 	@Override
 	public String holeAnzeigeName() {
 		if (useIPAsName) {
-			return getNetzwerkInterfaces().getFirst().getIp();
+			return getNetzwerkInterfaces().get(0).getIp();
 		} else {
 			return getName();
 		}
@@ -62,7 +62,7 @@ public abstract class Host extends InternetKnoten {
 
 	public void setIpAdresse(String ip) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Host), setIpAdresse(" + ip + ")");
-		NetzwerkInterface nic = (NetzwerkInterface) this.getNetzwerkInterfaces().getFirst();
+		NetzwerkInterface nic = (NetzwerkInterface) this.getNetzwerkInterfaces().get(0);
 		nic.setIp(ip);
 	}
 }

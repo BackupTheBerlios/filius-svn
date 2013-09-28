@@ -26,6 +26,7 @@
 package filius.software.firewall;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -508,7 +509,7 @@ public class Firewall extends Anwendung implements I18n {
 	}
 
 	public void setzeNetzwerkInterfaces(LinkedList<NetzwerkInterface> netzwerkInterfaces) {
-		LinkedList<NetzwerkInterface> allNics = this.getAllNetworkInterfaces();
+		List<NetzwerkInterface> allNics = this.getAllNetworkInterfaces();
 
 		this.inactiveNics.removeAllElements();
 		for (NetzwerkInterface nic : allNics) {
@@ -518,14 +519,14 @@ public class Firewall extends Anwendung implements I18n {
 		}
 	}
 
-	public LinkedList<NetzwerkInterface> holeNetzwerkInterfaces() {
-		LinkedList<NetzwerkInterface> allNics = this.getAllNetworkInterfaces();
-		LinkedList<NetzwerkInterface> result = new LinkedList<NetzwerkInterface>();
+	public List<NetzwerkInterface> holeNetzwerkInterfaces() {
+		List<NetzwerkInterface> allNics = this.getAllNetworkInterfaces();
+		List<NetzwerkInterface> result = new LinkedList<NetzwerkInterface>();
 
 		for (NetzwerkInterface nic : allNics) {
 			try {
 				if (!this.inactiveNics.contains(new Integer(allNics.indexOf(nic)))) {
-					result.addLast(nic);
+					result.add(nic);
 				}
 			} catch (IndexOutOfBoundsException e) {
 			}
@@ -533,7 +534,7 @@ public class Firewall extends Anwendung implements I18n {
 		return result;
 	}
 
-	private LinkedList<NetzwerkInterface> getAllNetworkInterfaces() {
+	private List<NetzwerkInterface> getAllNetworkInterfaces() {
 		InternetKnoten host = (InternetKnoten) this.getSystemSoftware().getKnoten();
 
 		return host.getNetzwerkInterfaces();

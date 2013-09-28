@@ -212,7 +212,7 @@ public class GUIDesktopPanel extends JBackgroundPanel implements I18n, Observer 
 		this.iconPanel.updateUI();
 
 		NetzwerkInterface nic = (NetzwerkInterface) ((InternetKnoten) betriebssystem.getKnoten())
-		        .getNetzwerkInterfaces().getFirst();
+		        .getNetzwerkInterfaces().get(0);
 		if (nic != null) {
 			if (nic.getPort() != null) {
 				if (nic.getPort().getVerbindung() != null) {

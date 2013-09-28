@@ -599,7 +599,7 @@ public class GUIEvents implements I18n {
 			anschluss1 = ((SwitchFirmware) sw.getSystemSoftware()).getKnoten().holeFreienPort();
 		} else if (neuesKabel.getKabelpanel().getZiel1().getKnoten() instanceof InternetKnoten) {
 			nic1 = (NetzwerkInterface) ((InternetKnoten) neuesKabel.getKabelpanel().getZiel1().getKnoten())
-			        .getNetzwerkInterfaces().getFirst();
+			        .getNetzwerkInterfaces().get(0);
 			anschluss1 = nic1.getPort();
 		}
 
@@ -614,7 +614,7 @@ public class GUIEvents implements I18n {
 			anschluss2 = ((SwitchFirmware) sw.getSystemSoftware()).getKnoten().holeFreienPort();
 		} else if (neuesKabel.getKabelpanel().getZiel2().getKnoten() instanceof InternetKnoten) {
 			nic2 = (NetzwerkInterface) ((InternetKnoten) neuesKabel.getKabelpanel().getZiel2().getKnoten())
-			        .getNetzwerkInterfaces().getFirst();
+			        .getNetzwerkInterfaces().get(0);
 			anschluss2 = nic2.getPort();
 		}
 

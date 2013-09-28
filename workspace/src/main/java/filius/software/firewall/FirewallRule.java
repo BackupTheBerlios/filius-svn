@@ -26,6 +26,7 @@
 package filius.software.firewall;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import filius.hardware.NetzwerkInterface;
@@ -122,15 +123,15 @@ public class FirewallRule implements I18n {
 	public String toString() {
 		return toString(null);
 	}
-	public String toString(LinkedList<NetzwerkInterface> nics) {
+	public String toString(List<NetzwerkInterface> nics) {
 		String ip = null;
 		String mask = null;
 		String result = "";
 		boolean sameNet = false;
 		
 		if(nics != null) {
-			ip = nics.getFirst().getIp();
-			mask = nics.getFirst().getSubnetzMaske();
+			ip = nics.get(0).getIp();
+			mask = nics.get(0).getSubnetzMaske();
 			if(srcIP.equals(FirewallRule.SAME_NETWORK) && ip != null && mask != null)
 				sameNet = true;
 		}

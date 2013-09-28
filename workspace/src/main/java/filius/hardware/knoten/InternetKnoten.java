@@ -26,6 +26,7 @@
 package filius.hardware.knoten;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 
 import filius.Main;
@@ -35,7 +36,7 @@ import filius.hardware.Port;
 public abstract class InternetKnoten extends Knoten {
 
 	private static final long serialVersionUID = 1L;
-	private LinkedList<NetzwerkInterface> netzwerkInterfaces = new LinkedList<NetzwerkInterface>();
+	private List<NetzwerkInterface> netzwerkInterfaces = new LinkedList<NetzwerkInterface>();
 
 	public Port holeFreienPort() {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (InternetKnoten), holeFreienPort()");
@@ -87,7 +88,7 @@ public abstract class InternetKnoten extends Knoten {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
 		        + " (InternetKnoten), getNetzwerkInterfaceByIp(" + ip + ")");
 		if (ip.equals("127.0.0.1")) {
-			return (NetzwerkInterface) netzwerkInterfaces.getFirst();
+			return (NetzwerkInterface) netzwerkInterfaces.get(0);
 		}
 		NetzwerkInterface rueckgabe = null;
 		ListIterator<NetzwerkInterface> it = this.netzwerkInterfaces.listIterator();
@@ -100,11 +101,11 @@ public abstract class InternetKnoten extends Knoten {
 		return rueckgabe;
 	}
 
-	public LinkedList<NetzwerkInterface> getNetzwerkInterfaces() {
+	public List<NetzwerkInterface> getNetzwerkInterfaces() {
 		return netzwerkInterfaces;
 	}
 
-	public void setNetzwerkInterfaces(LinkedList<NetzwerkInterface> netzwerkInterfaces) {
+	public void setNetzwerkInterfaces(List<NetzwerkInterface> netzwerkInterfaces) {
 		this.netzwerkInterfaces = netzwerkInterfaces;
 	}
 

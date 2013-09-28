@@ -98,7 +98,7 @@ public class GUINetworkWindow extends JInternalFrame implements I18n {
 		macLabel.setPreferredSize(new Dimension(100, 15));
 
 		bs = this.dp.getBetriebssystem();
-		nic = (NetzwerkInterface) ((Host) bs.getKnoten()).getNetzwerkInterfaces().getFirst();
+		nic = (NetzwerkInterface) ((Host) bs.getKnoten()).getNetzwerkInterfaces().get(0);
 
 		ipField = new JTextField(nic.getIp());
 		ipField.setEditable(false);
@@ -275,7 +275,7 @@ public class GUINetworkWindow extends JInternalFrame implements I18n {
 		if (b) {
 			// bring data up-to-date:
 			bs = this.dp.getBetriebssystem();
-			NetzwerkInterface nic = (NetzwerkInterface) ((Host) bs.getKnoten()).getNetzwerkInterfaces().getFirst();
+			NetzwerkInterface nic = (NetzwerkInterface) ((Host) bs.getKnoten()).getNetzwerkInterfaces().get(0);
 
 			ipField.setText(nic.getIp());
 			dnsField.setText(bs.getDNSServer());

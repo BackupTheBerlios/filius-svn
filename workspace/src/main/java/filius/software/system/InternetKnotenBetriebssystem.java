@@ -233,13 +233,13 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 		if (this.getKnoten() != null) {
 			if (getKnoten() instanceof filius.hardware.knoten.Notebook) {
 				NetzwerkInterface nic = ((NetzwerkInterface) ((filius.hardware.knoten.Notebook) getKnoten())
-				        .getNetzwerkInterfaces().getFirst());
+				        .getNetzwerkInterfaces().get(0));
 				Main.debug.println("DEBUG (" + this.hashCode() + ") - NIC: {IP=" + nic.getIp() + "/"
 				        + nic.getSubnetzMaske() + ", MAC=" + nic.getMac() + ", DNS=" + nic.getDns() + ", GW="
 				        + nic.getGateway() + "}");
 			} else if (getKnoten() instanceof filius.hardware.knoten.Rechner) {
 				NetzwerkInterface nic = ((NetzwerkInterface) ((filius.hardware.knoten.Rechner) getKnoten())
-				        .getNetzwerkInterfaces().getFirst());
+				        .getNetzwerkInterfaces().get(0));
 				Main.debug.println("DEBUG (" + this.hashCode() + ") - NIC: {IP=" + nic.getIp() + "/"
 				        + nic.getSubnetzMaske() + ", MAC=" + nic.getMac() + ", DNS=" + nic.getDns() + ", GW="
 				        + nic.getGateway() + "}");
@@ -563,7 +563,7 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 			knoten = (InternetKnoten) getKnoten();
 
 			if (knoten.getNetzwerkInterfaces().size() > 0) {
-				nic = (NetzwerkInterface) knoten.getNetzwerkInterfaces().getFirst();
+				nic = (NetzwerkInterface) knoten.getNetzwerkInterfaces().get(0);
 				return nic.getGateway();
 			}
 		}
@@ -608,7 +608,7 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 		if (ip != null && EingabenUeberpruefung.isGueltig(ip, EingabenUeberpruefung.musterIpAdresse)
 		        && getKnoten() instanceof InternetKnoten) {
 			knoten = (InternetKnoten) getKnoten();
-			((NetzwerkInterface) knoten.getNetzwerkInterfaces().getFirst()).setIp(ip);
+			((NetzwerkInterface) knoten.getNetzwerkInterfaces().get(0)).setIp(ip);
 			// Main.debug.println("\t"
 			// + ((NetzwerkInterface) knoten.getNetzwerkInterfaces()
 			// .getFirst()).getIp());
@@ -654,7 +654,7 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 			knoten = (InternetKnoten) getKnoten();
 
 			if (knoten.getNetzwerkInterfaces().size() > 0) {
-				NetzwerkInterface nic = (NetzwerkInterface) knoten.getNetzwerkInterfaces().getFirst();
+				NetzwerkInterface nic = (NetzwerkInterface) knoten.getNetzwerkInterfaces().get(0);
 				return nic.getMac();
 			}
 		}
@@ -675,7 +675,7 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 			knoten = (InternetKnoten) getKnoten();
 
 			if (knoten.getNetzwerkInterfaces().size() > 0) {
-				NetzwerkInterface nic = (NetzwerkInterface) knoten.getNetzwerkInterfaces().getFirst();
+				NetzwerkInterface nic = (NetzwerkInterface) knoten.getNetzwerkInterfaces().get(0);
 				return nic.getDns();
 			}
 		}
@@ -718,7 +718,7 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 		if (mask != null && EingabenUeberpruefung.isGueltig(mask, EingabenUeberpruefung.musterSubNetz)
 		        && getKnoten() instanceof InternetKnoten) {
 			knoten = (InternetKnoten) getKnoten();
-			((NetzwerkInterface) knoten.getNetzwerkInterfaces().getFirst()).setSubnetzMaske(mask);
+			((NetzwerkInterface) knoten.getNetzwerkInterfaces().get(0)).setSubnetzMaske(mask);
 			// Main.debug.println("\t"
 			// + ((NetzwerkInterface) knoten.getNetzwerkInterfaces()
 			// .getFirst()).getSubnetzMaske());
@@ -736,7 +736,7 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
 
 		if (getKnoten() instanceof InternetKnoten) {
 			knoten = (InternetKnoten) getKnoten();
-			return ((NetzwerkInterface) knoten.getNetzwerkInterfaces().getFirst()).getSubnetzMaske();
+			return ((NetzwerkInterface) knoten.getNetzwerkInterfaces().get(0)).getSubnetzMaske();
 		}
 		return null;
 
