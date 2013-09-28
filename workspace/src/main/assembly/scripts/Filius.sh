@@ -5,7 +5,7 @@
 #
 
 # change to directory where filius is installed
-installation_path=`realpath $0`
+installation_path=`readlink -f $0`
 cd ${installation_path%`basename ${installation_path}`}
 
 # start filius
