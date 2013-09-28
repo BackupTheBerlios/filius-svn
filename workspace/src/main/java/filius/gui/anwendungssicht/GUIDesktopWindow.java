@@ -39,6 +39,27 @@ import filius.hardware.knoten.Rechner;
 import filius.software.system.Betriebssystem;
 
 public class GUIDesktopWindow extends JFrame implements Observer {
+	
+	public enum Mode {
+		ROW(0), COLUMN(1), STACK(2);
+		private final int value;
+		
+		Mode(int mode) {
+			this.value = mode;
+		}
+		
+		public static Mode getMode(int value) {
+			if (value == ROW.value) {
+				return ROW;
+			}
+			else if (value == COLUMN.value) {
+				return COLUMN;
+			}
+			else {
+				return STACK;
+			}
+		}
+	}
 
 	private static final long serialVersionUID = 1L;
 

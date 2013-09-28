@@ -446,8 +446,6 @@ public class GUIMainMenu implements Serializable, I18n {
 				SystemSoftware system;
 				system = knotenItem.getKnoten().getSystemSoftware();
 				system.starten();
-
-				GUIContainer.getGUIContainer().addDesktopWindow(knotenItem);
 			}
 
 			btOeffnen.setEnabled(false);
