@@ -324,6 +324,25 @@
 						</executions>
 					</plugin>
 
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.7</version>
+						<executions>
+							<execution>
+								<phase>prepare-package</phase>
+								<configuration>
+									<target>
+										<gzip destfile="${project.build.directory}/changelog.gz"
+											src="${project.basedir}/src/main/assembly/info/Changelog.txt" />
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
 					<!-- Create Debian Package (used for Ubuntu Platform) -->
 					<plugin>
 						<artifactId>jdeb</artifactId>
@@ -346,7 +365,7 @@
 										<data>
 											<src>${project.basedir}/src/main/assembly/scripts/Filius.sh</src>
 											<type>file</type>
-											<dst>/usr/share/filius/filius.sh</dst>
+											<dst>usr/share/filius/filius.sh</dst>
 											<mapper>
 												<type>perm</type>
 												<filemode>755</filemode>
@@ -357,7 +376,7 @@
 										<data>
 											<type>link</type>
 											<linkName>/usr/bin/filius</linkName>
-											<linkTarget>/usr/share/filius/filius.sh</linkTarget>
+											<linkTarget>../share/filius/filius.sh</linkTarget>
 											<symlink>true</symlink>
 										</data>
 										<data>
@@ -369,6 +388,16 @@
 											<src>${project.basedir}/src/deb/filius32.png</src>
 											<type>file</type>
 											<dst>/usr/share/pixmaps/filius32.png</dst>
+										</data>
+										<data>
+											<src>${project.basedir}/src/deb/copyright</src>
+											<type>file</type>
+											<dst>/usr/share/doc/filius/copyright</dst>
+										</data>
+										<data>
+											<src>${project.build.directory}/changelog.gz</src>
+											<type>file</type>
+											<dst>/usr/share/doc/filius/changelog.gz</dst>
 										</data>
 										<data>
 											<src>${project.basedir}/src/main/assembly/info</src>

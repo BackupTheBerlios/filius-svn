@@ -63,13 +63,15 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 
 	private Container c;
 
-	private JList softwareInstalliert, softwareVerfuegbar;
+	private JList softwareInstalliert;
+	private JList softwareVerfuegbar;
 
 	private JButton removeButton, addButton, confirmButton;
 
 	private JLabel titleInstalled, titleAvailable;
 
-	private DefaultListModel lmVerfuegbar, lmInstalliert;
+	private DefaultListModel lmVerfuegbar;
+	private DefaultListModel lmInstalliert;
 
 	private GUIDesktopPanel dp;
 
@@ -280,7 +282,8 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 		}
 
 		/* Listen */
-		softwareInstalliert = new JList(lmInstalliert);
+		softwareInstalliert = new JList();
+		softwareInstalliert.setModel(lmInstalliert);
 		softwareInstalliert.addMouseListener(new MouseListener() {
 
 			@Override
@@ -306,7 +309,8 @@ public class GUIInstallationsDialog extends JInternalFrame implements I18n {
 				}
 			}
 		});
-		softwareVerfuegbar = new JList(lmVerfuegbar);
+		softwareVerfuegbar = new JList();
+		softwareVerfuegbar.setModel(lmVerfuegbar);
 		softwareVerfuegbar.addMouseListener(new MouseListener() {
 
 			@Override
