@@ -26,13 +26,14 @@
 package filius.gui.netzwerksicht;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.ListIterator;
+import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 
 import filius.Main;
 import filius.gui.GUIContainer;
+import filius.gui.GUIMainMenu;
 import filius.gui.JBackgroundPanel;
 import filius.hardware.knoten.Knoten;
 import filius.hardware.knoten.Modem;
@@ -42,82 +43,83 @@ import filius.hardware.knoten.Switch;
 import filius.hardware.knoten.Vermittlungsrechner;
 
 /**
- * Diese Klasse dient als Oberklasse für die verschiedenen Sichten im
- * Haupt-Bereich der GUI.
+ * Diese Klasse dient als Oberklasse für die verschiedenen Sichten im Haupt-Bereich der GUI.
  */
 public class GUIMainArea extends JBackgroundPanel implements Serializable {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    protected double minX = Integer.MAX_VALUE, maxX = 0, minY = Integer.MAX_VALUE, maxY = 0;
 
-	/**
-	 * Macht ein Update des Panels. Dabei wird der gesamte Inhalt des Panels
-	 * geloescht und ganz neu mit den Elementen der itemlist und cablelist
-	 * befuellt.
-	 * 
-	 * @author Johannes Bade & Thomas Gerding
-	 * 
-	 */
-	public void updateViewport(LinkedList knoten, LinkedList kabel) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (GUIMainArea), updateViewport("
-		        + knoten + "," + kabel + ")");
-		GUIKnotenItem tempitem;
-		JSidebarButton templabel;
-		ListIterator it;
-		Knoten tempKnoten;
-		GUIKabelItem tempcable;
+    /**
+     * Macht ein Update des Panels. Dabei wird der gesamte Inhalt des Panels geloescht und ganz neu mit den Elementen
+     * der itemlist und cablelist befuellt.
+     * 
+     * @author Johannes Bade & Thomas Gerding
+     * @param docuItemsEnabled TODO
+     */
+    public void updateViewport(List<GUIKnotenItem> knoten, List<GUIKabelItem> kabel, List<GUIDocuItem> docuItems, boolean docuItemsEnabled) {
+        Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (GUIMainArea), updateViewport("
+                + knoten + "," + kabel + ")");
+        removeAll();
+        minX = Integer.MAX_VALUE;
+        maxX = 0;
+        minY = Integer.MAX_VALUE;
+        maxY = 0;
 
-		removeAll();
+        for (GUIKnotenItem tempitem : knoten) {
+            Knoten tempKnoten = tempitem.getKnoten();
+            JSidebarButton templabel = tempitem.getImageLabel();
 
-		it = knoten.listIterator();
+            tempKnoten.addObserver(templabel);
+            tempKnoten.getSystemSoftware().addObserver(templabel);
 
-		while (it.hasNext()) {
-			tempitem = (GUIKnotenItem) it.next();
-			tempKnoten = (Knoten) tempitem.getKnoten();
-			templabel = tempitem.getImageLabel();
+            templabel.setSelektiert(false);
+            templabel.setText(tempKnoten.holeAnzeigeName());
+            templabel.setTyp(tempKnoten.holeHardwareTyp());
+            if (tempitem.getKnoten() instanceof Switch) {
+                if (((Switch) tempitem.getKnoten()).isCloud())
+                    templabel.setIcon(new ImageIcon(getClass().getResource("/" + GUIDesignSidebar.SWITCH_CLOUD)));
+                else
+                    templabel.setIcon(new ImageIcon(getClass().getResource("/" + GUIDesignSidebar.SWITCH)));
+            } else if (tempitem.getKnoten() instanceof Vermittlungsrechner) {
+                templabel.setIcon(new ImageIcon(getClass().getResource("/" + GUIDesignSidebar.VERMITTLUNGSRECHNER)));
+            } else if (tempitem.getKnoten() instanceof Rechner) {
+                templabel.setIcon(new ImageIcon(getClass().getResource("/" + GUIDesignSidebar.RECHNER)));
+            } else if (tempitem.getKnoten() instanceof Notebook) {
+                templabel.setIcon(new ImageIcon(getClass().getResource("/" + GUIDesignSidebar.NOTEBOOK)));
+            } else if (tempitem.getKnoten() instanceof Modem) {
+                templabel.setIcon(new ImageIcon(getClass().getResource("/" + GUIDesignSidebar.MODEM)));
+            }
 
-			if (tempKnoten == null || templabel == null)
-				continue; // continue in case some elements are not yet created
-				          // correctly
+            templabel.setBounds(tempitem.getImageLabel().getBounds());
+            add(templabel);
 
-			tempKnoten.addObserver(templabel);
-			tempKnoten.getSystemSoftware().addObserver(templabel);
+            updateClipBounds(templabel);
+        }
 
-			templabel.setText(tempKnoten.holeAnzeigeName());
-			templabel.setHardwareTyp(tempKnoten.holeHardwareTyp());
-			if (tempitem.getKnoten() instanceof Switch) {
-				if (((Switch) tempitem.getKnoten()).isCloud())
-					templabel.setIcon(new ImageIcon(getClass().getResource("/" + GUISidebar.SWITCH_CLOUD)));
-				else
-					templabel.setIcon(new ImageIcon(getClass().getResource("/" + GUISidebar.SWITCH)));
-			} else if (tempitem.getKnoten() instanceof Vermittlungsrechner) {
-				templabel.setIcon(new ImageIcon(getClass().getResource("/" + GUISidebar.VERMITTLUNGSRECHNER)));
-			} else if (tempitem.getKnoten() instanceof Rechner) {
-				templabel.setIcon(new ImageIcon(getClass().getResource("/" + GUISidebar.RECHNER)));
-			} else if (tempitem.getKnoten() instanceof Notebook) {
-				templabel.setIcon(new ImageIcon(getClass().getResource("/" + GUISidebar.NOTEBOOK)));
-			} else if (tempitem.getKnoten() instanceof Modem) {
-				templabel.setIcon(new ImageIcon(getClass().getResource("/" + GUISidebar.MODEM)));
-			} else {
-				templabel = null;
-				Main.debug.println("ERROR (" + this.hashCode() + "): Hardware-Komponente "
-				        + tempitem.getKnoten().holeHardwareTyp() + " ist nicht bekannt.");
-			}
+        for (GUIKabelItem tempcable : kabel) {
+            add(tempcable.getKabelpanel());
+        }
+        for (GUIDocuItem item : docuItems) {
+            add(item.asDocuElement());
+            updateClipBounds(item.asDocuElement());
+            item.asDocuElement().setEnabled(
+                    docuItemsEnabled);
+        }
+    }
 
-			templabel.setBounds(tempitem.getImageLabel().getBounds());
-			add(templabel);
-		}
-
-		it = kabel.listIterator();
-		while (it.hasNext()) {
-			tempcable = (GUIKabelItem) it.next();
-			add(tempcable.getKabelpanel());
-		}
-
-		add(GUIContainer.getMarkierung());
-
-		updateUI();
-	}
+    private void updateClipBounds(JComponent elem) {
+        if (elem.getBounds().getMinX() < minX) {
+            minX = Math.max(0, elem.getBounds().getMinX());
+        }
+        if (elem.getBounds().getMaxX() > maxX) {
+            maxX = Math.min(elem.getBounds().getMaxX(), this.getWidth());
+        }
+        if (elem.getBounds().getMinY() < minY) {
+            minY = Math.max(0, elem.getBounds().getMinY());
+        }
+        if (elem.getBounds().getMaxY() > maxY) {
+            maxY = Math.min(elem.getBounds().getMaxY(), this.getHeight());
+        }
+    }
 }

@@ -31,9 +31,6 @@ import filius.gui.GUIContainer;
 
 public class GUISimulationPanel extends GUIMainArea {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public GUISimulationPanel() {

@@ -45,12 +45,9 @@ import javax.swing.JPanel;
  * @author Johannes Bade
  */
 public class JBackgroundPanel extends JPanel {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	private ImageIcon backgroundImage; // = new ImageIcon("gfx/menue_hg.png");
+	private ImageIcon backgroundImage;
 
 	private boolean repeatBG = true;
 
@@ -70,23 +67,22 @@ public class JBackgroundPanel extends JPanel {
 	 * Komponentenflaeche ein vorher bestimmtes Hintergrundbild
 	 * 
 	 * @author Johannes Bade
-	 * @param g
-	 *            Graphics
 	 */
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Insets ins = getInsets();
-		if (repeatBG) {
-			for (int a = 0; a <= this.getHeight() / backgroundImage.getIconHeight(); a++) {
-				for (int i = 0; i <= this.getWidth() / backgroundImage.getIconWidth(); i++) {
-					backgroundImage.paintIcon(this, g, ins.left + i * backgroundImage.getIconWidth(), ins.top + a
-					        * backgroundImage.getIconHeight());
+		if (backgroundImage != null) {
+			if (repeatBG) {
+				for (int a = 0; a <= this.getHeight() / backgroundImage.getIconHeight(); a++) {
+					for (int i = 0; i <= this.getWidth() / backgroundImage.getIconWidth(); i++) {
+						backgroundImage.paintIcon(this, g, ins.left + i * backgroundImage.getIconWidth(), ins.top + a
+						        * backgroundImage.getIconHeight());
+					}
 				}
+			} else {
+				backgroundImage.paintIcon(this, g, ins.left, ins.top);
 			}
-		} else {
-			backgroundImage.paintIcon(this, g, ins.left, ins.top);
 		}
-
 	}
 
 }

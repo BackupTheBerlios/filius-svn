@@ -29,14 +29,14 @@ import java.awt.Dimension;
 
 import filius.gui.GUIContainer;
 
-public class GUIDraftPanel extends GUIMainArea {
+public class GUIDesignPanel extends GUIMainArea {
 
 	private static final long serialVersionUID = 1L;
 
-	public GUIDraftPanel() {
+	public GUIDesignPanel() {
 		setLayout(null);
-		setBackgroundImage("gfx/allgemein/entwurfshg.png");
 		setPreferredSize(new Dimension(GUIContainer.FLAECHE_BREITE, GUIContainer.FLAECHE_HOEHE));
+		setOpaque(false);
 		setBounds(0, 0, GUIContainer.FLAECHE_BREITE, GUIContainer.FLAECHE_HOEHE);
 	}
 }

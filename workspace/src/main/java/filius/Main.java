@@ -138,15 +138,13 @@ public class Main implements I18n {
 
 		if (szenarioDatei != null) {
 			try {
-				SzenarioVerwaltung.getInstance().laden(szenarioDatei,
-				        GUIContainer.getGUIContainer().getGUIKnotenItemList(),
-				        GUIContainer.getGUIContainer().getCablelist());
+				SzenarioVerwaltung.getInstance()
+				        .laden(szenarioDatei, GUIContainer.getGUIContainer().getKnotenItems(),
+				                GUIContainer.getGUIContainer().getCableItems(),
+				                GUIContainer.getGUIContainer().getDocuItems());
 			} catch (Exception e) {
 				e.printStackTrace(Main.debug);
 			}
-		} else {
-			SzenarioVerwaltung.getInstance().laden(GUIContainer.getGUIContainer().getGUIKnotenItemList(),
-			        GUIContainer.getGUIContainer().getCablelist());
 		}
 
 		GUIContainer.getGUIContainer().setProperty(null);

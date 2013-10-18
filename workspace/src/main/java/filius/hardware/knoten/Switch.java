@@ -31,10 +31,12 @@ import filius.software.system.SwitchFirmware;
 
 public class Switch extends LokalerKnoten implements I18n {
 
+	public static final String TYPE = messages.getString("hw_switch_msg1");
 	private boolean showAsCloud = false;
 
-	public static String holeHardwareTyp() {
-		return messages.getString("hw_switch_msg1");
+	@Override
+	public String holeHardwareTyp() {
+		return TYPE;
 	}
 
 	public Switch() {
@@ -44,7 +46,7 @@ public class Switch extends LokalerKnoten implements I18n {
 		this.setzeAnzahlAnschluesse(8);
 		this.setSystemSoftware(new SwitchFirmware());
 		getSystemSoftware().setKnoten(this);
-		this.setName(messages.getString("hw_switch_msg1"));
+		this.setName(TYPE);
 	}
 
 	public void setCloud(boolean newVal) {

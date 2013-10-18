@@ -35,7 +35,7 @@ public abstract class Hardware extends Observable implements Serializable {
 	private boolean aktiv = false; // ist die Hardware gerade aktiv? vor allem
 	                               // wichtig fuer die GUI
 
-	public static String holeHardwareTyp() {
+	public String holeHardwareTyp() {
 		return "";
 	}
 

@@ -32,10 +32,12 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 
 public class JMarkerPanel extends JBackgroundPanel {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
+	public boolean inBounds(int x, int y) {
+		return x >= this.getX() && x <= this.getX() + this.getWidth() && y >= this.getY()
+		        && y <= this.getY() + this.getHeight();
+	}
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -45,5 +47,4 @@ public class JMarkerPanel extends JBackgroundPanel {
 		g2.setStroke(stroke);
 		g2.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
 	}
-
 }

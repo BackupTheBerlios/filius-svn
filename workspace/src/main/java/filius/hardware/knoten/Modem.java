@@ -30,11 +30,13 @@ import filius.software.system.ModemFirmware;
 
 public class Modem extends LokalerKnoten {
 
+	public static final String TYPE = "Modem";
 	private static final long serialVersionUID = 1L;
 	private boolean verbindungAktiv = false;
 
-	public static String holeHardwareTyp() {
-		return "Modem";
+	@Override
+	public String holeHardwareTyp() {
+		return TYPE;
 	}
 
 	public Modem() {
@@ -44,7 +46,7 @@ public class Modem extends LokalerKnoten {
 		this.setzeAnzahlAnschluesse(1);
 		this.setSystemSoftware(new ModemFirmware());
 		getSystemSoftware().setKnoten(this);
-		this.setName("Modem");
+		this.setName(TYPE);
 	}
 
 	public void setzeVerbindungAktiv(boolean verbindungAktiv) {

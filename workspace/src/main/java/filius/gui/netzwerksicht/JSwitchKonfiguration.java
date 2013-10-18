@@ -68,11 +68,11 @@ public class JSwitchKonfiguration extends JKonfiguration implements I18n {
 		filius.Main.debug.println("DEBUG: changeAppearance invoked for Switch");
 		if (checkCloud.isSelected()) {
 			GUIContainer.getGUIContainer().getLabelforKnoten(((Switch) holeHardware()))
-			        .setIcon(new ImageIcon(getClass().getResource("/" + GUISidebar.SWITCH_CLOUD)));
+			        .setIcon(new ImageIcon(getClass().getResource("/" + GUIDesignSidebar.SWITCH_CLOUD)));
 			((Switch) holeHardware()).setCloud(true);
 		} else {
 			GUIContainer.getGUIContainer().getLabelforKnoten(((Switch) holeHardware()))
-			        .setIcon(new ImageIcon(getClass().getResource("/" + GUISidebar.SWITCH)));
+			        .setIcon(new ImageIcon(getClass().getResource("/" + GUIDesignSidebar.SWITCH)));
 			((Switch) holeHardware()).setCloud(false);
 		}
 	}

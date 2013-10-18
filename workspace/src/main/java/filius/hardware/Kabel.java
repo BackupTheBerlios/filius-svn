@@ -25,14 +25,16 @@
  */
 package filius.hardware;
 
-
 /**
  * @author weyer
  * 
  */
 public class Kabel extends Verbindung {
 
-	public static String holeHardwareTyp() {
-		return messages.getString("hw_kabel_msg1");
+	public static final String TYPE = messages.getString("hw_kabel_msg1");
+
+	@Override
+	public String holeHardwareTyp() {
+		return TYPE;
 	}
 }

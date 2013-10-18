@@ -27,75 +27,25 @@ package filius.gui.netzwerksicht;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.MouseEvent;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.event.MouseInputAdapter;
-
-import filius.gui.GUIContainer;
-import filius.gui.GUIEvents;
 import filius.gui.JBackgroundPanel;
-import filius.hardware.Kabel;
-import filius.hardware.knoten.Modem;
-import filius.hardware.knoten.Notebook;
-import filius.hardware.knoten.Rechner;
-import filius.hardware.knoten.Switch;
-import filius.hardware.knoten.Vermittlungsrechner;
 
-/**
- * Klasse für das linke Panel in der Entwurfsansicht. Darin werden alle
- * nutzbaren Elemente für den Netzwerkentwurf angezeigt und können per Drag&Drop
- * in den Entwurfsbildschirm gezogen werden.
- * 
- * @author Johannes Bade & Thomas Gerding
- * 
- */
-public class GUISidebar implements Serializable {
+public abstract class GUISidebar {
+	protected JBackgroundPanel leistenpanel;
+	protected List<JSidebarButton> buttonList;
 
-	private static final long serialVersionUID = 1L;
+	private static int width = 0;
 
-	public static final String KABEL = "gfx/hardware/kabel.png";
-
-	public static final String RECHNER = "gfx/hardware/server.png";
-
-	public static final String SWITCH = "gfx/hardware/switch.png";
-	public static final String SWITCH_CLOUD = "gfx/hardware/cloud.png";
-
-	public static final String VERMITTLUNGSRECHNER = "gfx/hardware/router.png";
-
-	public static final String NOTEBOOK = "gfx/hardware/laptop.png";
-
-	public static final String MODEM = "gfx/hardware/vermittlungsrechner-out.png";
-
-	private JBackgroundPanel leistenpanel;
-
-	private List<JSidebarButton> buttonList; // , configItems;
-
-	private JLabel kabel_neu;
-
-	private static GUISidebar sidebar;
-
-	/**
-	 * @author Johannes Bade & Thomas Gerding
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 */
-	private GUISidebar() {
-
+	protected GUISidebar() {
 		buttonList = new LinkedList<JSidebarButton>();
 
 		leistenpanel = new JBackgroundPanel() {
 			private static final long serialVersionUID = 1L;
 
 			public Dimension getPreferredSize() {
-				int height = 0, width = 0;
+				int height = 0;
 				for (Component component : this.getComponents()) {
 					if (component.getWidth() > width)
 						width = component.getWidth();
@@ -105,93 +55,16 @@ public class GUISidebar implements Serializable {
 				return new Dimension(width, height);
 			}
 		};
-
 		leistenpanel.setBackgroundImage("gfx/allgemein/leisten_hg.png");
 		leistenpanel.setEnabled(false);
 
-		addCableItemToSidebar();
-
 		addItemsToSidebar();
-
 	}
 
-	public static GUISidebar getGUISidebar() {
-		if (sidebar == null) {
-			sidebar = new GUISidebar();
-		}
+	protected abstract void addItemsToSidebar();
 
-		return sidebar;
-	}
-
-	public void addCableItemToSidebar() {
-		kabel_neu = new JLabel(new ImageIcon(getClass().getResource("/" + KABEL)));
-		kabel_neu.setText(Kabel.holeHardwareTyp());
-		kabel_neu.setVerticalTextPosition(SwingConstants.BOTTOM);
-		kabel_neu.setHorizontalTextPosition(SwingConstants.CENTER);
-
-		kabel_neu.setVerticalTextPosition(SwingConstants.BOTTOM);
-		kabel_neu.setHorizontalTextPosition(SwingConstants.CENTER);
-
-		kabel_neu.setToolTipText("<Alt>+1");
-
-		leistenpanel.add(kabel_neu);
-
-		kabel_neu.addMouseListener(new MouseInputAdapter() {
-			public void mousePressed(MouseEvent e) {
-				/* Wechselt bla */
-				GUIEvents.getGUIEvents().resetAndShowCablePreview(e.getX(),
-				        e.getY() + GUIContainer.getGUIContainer().getMenu().getMenupanel().getHeight());
-			}
-		});
-	}
-
-	/**
-	 * Füllt das Sidebar Panel mit Items fuer die Knoten.
-	 * 
-	 * @author Johannes Bade & Thomas Gerding
-	 * @param llist
-	 */
-	public void addItemsToSidebar() {
-		String[] bildDateien;
-		String[] hardwareTypen;
-		JSidebarButton newLabel;
-		ImageIcon icon;
-
-		bildDateien = new String[5];
-		hardwareTypen = new String[5];
-		bildDateien[0] = RECHNER;
-		hardwareTypen[0] = Rechner.holeHardwareTyp();
-		bildDateien[1] = NOTEBOOK;
-		hardwareTypen[1] = Notebook.holeHardwareTyp();
-		bildDateien[2] = SWITCH;
-		hardwareTypen[2] = Switch.holeHardwareTyp();
-		bildDateien[3] = VERMITTLUNGSRECHNER;
-		hardwareTypen[3] = Vermittlungsrechner.holeHardwareTyp();
-		bildDateien[4] = MODEM;
-		hardwareTypen[4] = Modem.holeHardwareTyp();
-
-		// kabel_neu.setBorder(javax.swing.BorderFactory.createLineBorder(Color.red));
-
-		for (int i = 0; i < bildDateien.length && i < hardwareTypen.length; i++) {
-			icon = new ImageIcon(getClass().getResource("/" + bildDateien[i]));
-			newLabel = new JSidebarButton(hardwareTypen[i], icon, hardwareTypen[i]);
-			// newLabel.setBorder(javax.swing.BorderFactory.createLineBorder(Color.red));
-
-			/* Label wird liste und Leiste hinzugefuegt */
-			buttonList.add(newLabel);
-			leistenpanel.add(newLabel);
-		}
-
-		// leistenpanel.setBorder(javax.swing.BorderFactory.createLineBorder(Color.red));
-	}
-
-	public JBackgroundPanel getLeistenpanel() {
-		return leistenpanel;
-	}
-
-	public JSidebarButton aufButton(int x, int y) {
+	public JSidebarButton findButtonAt(int x, int y) {
 		JSidebarButton klickLabel = null;
-		y += GUIContainer.getGUIContainer().getSidebarScrollpane().getVerticalScrollBar().getValue();
 		for (JSidebarButton tmpLbl : buttonList) {
 			if (x >= tmpLbl.getX() && y >= tmpLbl.getY() && x <= tmpLbl.getX() + tmpLbl.getWidth()
 			        && y <= tmpLbl.getY() + tmpLbl.getHeight()) {
@@ -200,5 +73,9 @@ public class GUISidebar implements Serializable {
 
 		}
 		return klickLabel;
+	}
+
+	public JBackgroundPanel getLeistenpanel() {
+		return leistenpanel;
 	}
 }

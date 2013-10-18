@@ -42,12 +42,8 @@ import filius.Main;
  * @author Johannes Bade
  */
 public class JCablePanel extends javax.swing.JPanel implements Observer {
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 	private GUIKnotenItem ziel1, ziel2;
-	private GUIKabelItem kabelItem;
 
 	private boolean kurven = true;
 	private QuadCurve2D currCurve = null;
@@ -67,24 +63,6 @@ public class JCablePanel extends javax.swing.JPanel implements Observer {
 	public void updateBounds() {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (JCablePanel), updateBounds()");
 		int x1, x2, y1, y2, t1;
-		// Main.debug.println("DEBUG updateBounds, ziel1: ("
-		// + ziel1.getImageLabel().getX()
-		// + "/"
-		// + ziel1.getImageLabel().getY()
-		// + ")  [W="
-		// + ziel1.getImageLabel().getWidth()
-		// + "; H="
-		// + ziel1.getImageLabel().getHeight()
-		// + "]");
-		// Main.debug.println("DEBUG updateBounds, ziel2: ("
-		// + ziel2.getImageLabel().getX()
-		// + "/"
-		// + ziel2.getImageLabel().getY()
-		// + ")  [W="
-		// + ziel2.getImageLabel().getWidth()
-		// + "; H="
-		// + ziel2.getImageLabel().getHeight()
-		// + "]");
 
 		// Theoretisch korrekte Positionen
 		x1 = (int) (ziel1.getImageLabel().getX());
@@ -108,10 +86,9 @@ public class JCablePanel extends javax.swing.JPanel implements Observer {
 			y1 = y2;
 			y2 = t1;
 		}
-		setBounds(x1 - 2, y1 - 2, x2 - x1 + 4, y2 - y1 + 4); // add 2 for each
-		                                                     // direction to
-		                                                     // take care of
-		                                                     // linewidth
+
+		// add 2 for each direction to take care of linewidth
+		setBounds(x1 - 2, y1 - 2, x2 - x1 + 4, y2 - y1 + 4);
 		Main.debug.println("JCablePanel (" + this.hashCode() + "), bounds: " + x1 + "/" + y1 + ", " + x2 + "/" + y2
 		        + "  (W:" + (x2 - x1) + ", H:" + (y2 - y1) + ")");
 	}
@@ -141,7 +118,6 @@ public class JCablePanel extends javax.swing.JPanel implements Observer {
 				kp1 = 3 * kp1; // correct X value of control point for falling
 				               // lines (upper left to lower right corner)
 			int kp2 = (y1 - this.getY() + y2 - this.getY()) / 4;
-			// Main.debug.println("\trect: ("+x1+"/"+y1+") -> ("+kp1+"/"+kp2+") -> ("+x2+"/"+y2+"), thisXY: ("+this.getX()+"/"+this.getY()+"), color: "+kabelFarbe);
 
 			QuadCurve2D myCurve = new QuadCurve2D.Double(x1 - this.getX(), y1 - this.getY(), // Punkt
 			                                                                                 // 1
@@ -150,7 +126,6 @@ public class JCablePanel extends javax.swing.JPanel implements Observer {
 			);
 
 			// Kurve malen
-
 			g2.draw(myCurve);
 			this.currCurve = myCurve;
 		} else {
@@ -212,24 +187,10 @@ public class JCablePanel extends javax.swing.JPanel implements Observer {
 			        this.currCurve.getCtrlY() - deltaY, this.currCurve.getX2() + (xFactor * deltaX),
 			        this.currCurve.getY2() - deltaY);
 
-			// Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+" (JCablePanel), clicked:\n\tclicked within bounds of topCurve "+
-			// topCurve.getBounds()+": "+
-			// topCurve.contains(x-this.getX(), y-this.getY()));
-			// Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+" (JCablePanel), clicked:\n\tclicked within bounds of bottomCurve "+
-			// bottomCurve.getBounds()+": "+
-			// bottomCurve.contains(x-this.getX(), y-this.getY()));
 			if (!invers) {
-				// Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+" (JCablePanel), clicked:\n\tclicked between those bounds ["+(x-this.getX())+"/"+(y-this.getY())+"] (final result): "+
-				// (topCurve.contains(x-this.getX(), y-this.getY()) &&
-				// !bottomCurve.contains(x-this.getX(), y-this.getY()))
-				// );
 				return (topCurve.contains(x - this.getX(), y - this.getY()) && !bottomCurve.contains(x - this.getX(), y
 				        - this.getY()));
 			} else {
-				// Main.debug.println("DEBUG ("+this.hashCode()+") "+getClass()+" (JCablePanel), clicked:\n\tclicked between those bounds ["+(x-this.getX())+"/"+(y-this.getY())+"] (final result, INVERSE): "+
-				// (topCurve.contains(x-this.getX(), y-this.getY()) &&
-				// !bottomCurve.contains(x-this.getX(), y-this.getY()))
-				// );
 				return (!topCurve.contains(x - this.getX(), y - this.getY()) && bottomCurve.contains(x - this.getX(), y
 				        - this.getY()));
 			}

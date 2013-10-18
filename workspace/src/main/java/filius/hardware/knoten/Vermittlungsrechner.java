@@ -32,8 +32,11 @@ import filius.software.system.VermittlungsrechnerBetriebssystem;
 
 public class Vermittlungsrechner extends InternetKnoten implements I18n {
 
-	public static String holeHardwareTyp() {
-		return messages.getString("hw_vermittlungsrechner_msg1");
+	public static final String TYPE = messages.getString("hw_vermittlungsrechner_msg1");
+
+	@Override
+	public String holeHardwareTyp() {
+		return TYPE;
 	}
 
 	public Vermittlungsrechner() {
@@ -44,7 +47,7 @@ public class Vermittlungsrechner extends InternetKnoten implements I18n {
 		this.setzeAnzahlAnschluesse(1);
 		this.setSystemSoftware(new VermittlungsrechnerBetriebssystem());
 		getSystemSoftware().setKnoten(this);
-		this.setName(messages.getString("hw_vermittlungsrechner_msg1"));
+		this.setName(TYPE);
 	}
 
 }

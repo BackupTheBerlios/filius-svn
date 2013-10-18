@@ -83,11 +83,13 @@ public class JKonfiguration extends JBackgroundPanel {
 	}
 
 	public static JKonfiguration getInstance(Hardware hardware) {
+		if (hardware == null) {
+			return new JKonfiguration(null);
+		}
+
 		JKonfiguration newInstance;
 		if (!instances.containsKey(hardware)) {
-			if (hardware == null) {
-				newInstance = new JKonfiguration(null);
-			} else if (hardware instanceof Host) {
+			if (hardware instanceof Host) {
 				newInstance = new JHostKonfiguration(hardware);
 			} else if (hardware instanceof Modem) {
 				newInstance = new JModemKonfiguration(hardware);
@@ -178,7 +180,6 @@ public class JKonfiguration extends JBackgroundPanel {
 		attributPanel.updateUI();
 		attributPanel.invalidate();
 		attributPanel.validate();
-
 	}
 
 	// manually re-start initiation process (in case of significant changes)
@@ -203,13 +204,11 @@ public class JKonfiguration extends JBackgroundPanel {
 	}
 
 	public void maximieren() {
-		// Main.debug.println("JKonfiguration: Hoehe: " + this.getHeight());
 		this.setPreferredSize(new Dimension(this.getWidth(), HOEHE));
 		minimierenButton.setIcon(new ImageIcon(getClass().getResource("/gfx/allgemein/minimieren.png")));
 		updateSettings();
 		attributPanel.setVisible(true);
 		this.updateUI();
-		// Main.debug.println("JKonfiguration: Panel wurde maximiert");
 	}
 
 	public boolean isMaximiert() {

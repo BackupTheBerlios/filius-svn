@@ -31,6 +31,7 @@
 
 package filius.gui;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
@@ -40,6 +41,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Observable;
 import java.util.Observer;
@@ -80,11 +82,11 @@ public class JMainFrame extends javax.swing.JFrame implements WindowListener, Ob
 					}
 					/* delete item on deletion key press */
 					if ((e.getKeyChar() == KeyEvent.VK_DELETE) && (frame.isFocused())) {
-						if (GUIContainer.getMarkierung().isVisible()) { // several
-							                                            // items
-							                                            // are
-							                                            // selected
-							LinkedList<GUIKnotenItem> itemlist = GUIContainer.getGUIContainer().getGUIKnotenItemList();
+						if (GUIContainer.getGUIContainer().isMarkerVisible()) { // several
+							// items
+							// are
+							// selected
+							List<GUIKnotenItem> itemlist = GUIContainer.getGUIContainer().getKnotenItems();
 							JMarkerPanel auswahl = GUIContainer.getAuswahl();
 							JScrollPane scrollPane = GUIContainer.getGUIContainer().getScrollPane();
 							GUIKnotenItem tempitem;
@@ -119,7 +121,7 @@ public class JMainFrame extends javax.swing.JFrame implements WindowListener, Ob
 								        ((GUIKnotenItem) markedlist.get(i)));
 							}
 							auswahl.setVisible(false);
-							GUIContainer.getMarkierung().setVisible(false);
+							GUIContainer.getGUIContainer().getMarkierung().setVisible(false);
 							return true;
 						} else if (GUIEvents.getGUIEvents().getActiveItem() != null) { // single
 							                                                           // item
@@ -207,6 +209,12 @@ public class JMainFrame extends javax.swing.JFrame implements WindowListener, Ob
 		return frame;
 	}
 
+	public void addToContentPane(Component comp, Object constraints) {
+		if (comp != null) {
+			getContentPane().add(comp, constraints);
+		}
+	}
+
 	private void initComponents() {
 
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -286,4 +294,9 @@ public class JMainFrame extends javax.swing.JFrame implements WindowListener, Ob
 		}
 	}
 
+	public void removeFromContentPane(Component comp) {
+		if (comp != null) {
+			this.getContentPane().remove(comp);
+		}
+	}
 }

@@ -31,7 +31,7 @@ import java.util.Observer;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
-import filius.gui.netzwerksicht.GUISidebar;
+import filius.gui.netzwerksicht.GUIDesignSidebar;
 import filius.hardware.Hardware;
 import filius.hardware.knoten.Host;
 import filius.hardware.knoten.Notebook;
@@ -75,9 +75,9 @@ public class GUIDesktopWindow extends JFrame implements Observer {
 
 		hardware = bs.getKnoten();
 		if (hardware instanceof Rechner)
-			imageFile = GUISidebar.RECHNER;
+			imageFile = GUIDesignSidebar.RECHNER;
 		else if (hardware instanceof Notebook)
-			imageFile = GUISidebar.NOTEBOOK;
+			imageFile = GUIDesignSidebar.NOTEBOOK;
 
 		ImageIcon icon = new ImageIcon(getClass().getResource("/" + imageFile));
 		setIconImage(icon.getImage());

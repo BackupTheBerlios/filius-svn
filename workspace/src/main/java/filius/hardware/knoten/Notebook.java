@@ -30,8 +30,11 @@ import filius.rahmenprogramm.I18n;
 
 public class Notebook extends Host implements I18n {
 
-	public static String holeHardwareTyp() {
-		return messages.getString("hw_notebook_msg1");
+	public static final String TYPE = messages.getString("hw_notebook_msg1");
+
+	@Override
+	public String holeHardwareTyp() {
+		return TYPE;
 	}
 
 	/**

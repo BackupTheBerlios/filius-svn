@@ -31,6 +31,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.util.Observable;
@@ -49,10 +50,8 @@ public class JSidebarButton extends JLabel implements Observer {
 
 	private static final long serialVersionUID = 1L;
 
-	private String hardwareTyp;
-
+	private String typ;
 	private boolean selektiert = false;
-
 	private boolean modemVerbunden = false;
 
 	public boolean isSelektiert() {
@@ -63,12 +62,12 @@ public class JSidebarButton extends JLabel implements Observer {
 		this.selektiert = selektiert;
 	}
 
-	public String getHardwareTyp() {
-		return hardwareTyp;
+	public String getTyp() {
+		return typ;
 	}
 
-	public void setHardwareTyp(String hardwareTyp) {
-		this.hardwareTyp = hardwareTyp;
+	public void setTyp(String typ) {
+		this.typ = typ;
 	}
 
 	public JSidebarButton() {
@@ -76,12 +75,27 @@ public class JSidebarButton extends JLabel implements Observer {
 		this.setHorizontalTextPosition(SwingConstants.CENTER);
 	}
 
-	public JSidebarButton(String text, Icon icon, String hardwareTyp) {
+	private JSidebarButton(String text, Icon icon) {
 		super(text, icon, JLabel.CENTER);
 
 		this.setVerticalTextPosition(SwingConstants.BOTTOM);
 		this.setHorizontalTextPosition(SwingConstants.CENTER);
-		this.hardwareTyp = hardwareTyp;
+	}
+
+	public JSidebarButton(String text, Icon icon, String typ) {
+		this(text, icon);
+		this.typ = typ;
+	}
+
+	@Override
+	public Rectangle getBounds() {
+		return new Rectangle((int) super.getBounds().getX(), (int) super.getBounds().getY(), this.getWidth(),
+		        this.getHeight());
+	}
+
+	public boolean inBounds(int x, int y) {
+		return x >= this.getX() && x <= this.getX() + this.getWidth() && y >= this.getY()
+		        && y <= this.getY() + this.getHeight();
 	}
 
 	public int getWidth() {
@@ -106,12 +120,12 @@ public class JSidebarButton extends JLabel implements Observer {
 		if (this.getIcon() != null) {
 			height += this.getIcon().getIconHeight();
 		}
-		// height += 10;
+		height += 5;
 
-		// Main.debug.println("DEBUG ("+this.hashCode()+"), getHeight="+height);
 		return height;
 	}
 
+	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
@@ -150,5 +164,4 @@ public class JSidebarButton extends JLabel implements Observer {
 		}
 		this.updateUI();
 	}
-
 }

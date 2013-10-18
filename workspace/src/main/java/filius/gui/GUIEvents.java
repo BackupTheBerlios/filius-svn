@@ -30,6 +30,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
@@ -46,7 +47,7 @@ import javax.swing.table.DefaultTableModel;
 import filius.Main;
 import filius.exception.VerbindungsException;
 import filius.gui.nachrichtensicht.ExchangeDialog;
-import filius.gui.netzwerksicht.GUIDraftPanel;
+import filius.gui.netzwerksicht.GUIDesignPanel;
 import filius.gui.netzwerksicht.GUIKabelItem;
 import filius.gui.netzwerksicht.GUIKnotenItem;
 import filius.gui.netzwerksicht.JCablePanel;
@@ -72,7 +73,7 @@ public class GUIEvents implements I18n {
 
 	private int auswahlx, auswahly, auswahlx2, auswahly2, mausposx, mausposy;
 
-	private int mausmarkdifx, mausmarkdify;
+	private int startPosX, startPosY;
 
 	private GUIKabelItem neuesKabel;
 
@@ -82,7 +83,7 @@ public class GUIEvents implements I18n {
 
 	private boolean aufmarkierung = false;
 
-	private LinkedList<Object> markedlist;
+	private List<GUIKnotenItem> markedlist;
 
 	private GUIKnotenItem loeschitem, aktivesItem, ziel2;
 
@@ -91,7 +92,7 @@ public class GUIEvents implements I18n {
 	private JCablePanel kabelPanelVorschau;
 
 	private GUIEvents() {
-		markedlist = new LinkedList<Object>();
+		markedlist = new LinkedList<GUIKnotenItem>();
 	}
 
 	public static GUIEvents getGUIEvents() {
@@ -102,61 +103,40 @@ public class GUIEvents implements I18n {
 		return ref;
 	}
 
-	/*
-	 * FIXME: Funktionen sollten vielleicht nochmal in einzelfunktionen
-	 * aufgeteilt werden
-	 */
 	public void mausReleased() {
 		GUIContainer c = GUIContainer.getGUIContainer();
 
-		LinkedList<GUIKnotenItem> itemlist = c.getGUIKnotenItemList();
+		List<GUIKnotenItem> itemlist = c.getKnotenItems();
 		JMarkerPanel auswahl = GUIContainer.getAuswahl();
-		JMarkerPanel markierung = GUIContainer.getMarkierung();
-		JScrollPane scrollPane = c.getScrollPane();
-		GUIKnotenItem tempitem;
+		JMarkerPanel markierung = c.getMarkierung();
 
 		SzenarioVerwaltung.getInstance().setzeGeaendert();
 
 		if (auswahl.isVisible()) {
 			int tx, ty, twidth, theight;
 			int minx = 999999, miny = 999999, maxx = 0, maxy = 0;
-			boolean markiert = false;
-			markedlist = new LinkedList<Object>();
-			ListIterator it = itemlist.listIterator();
-			while (it.hasNext()) {
-				tempitem = (GUIKnotenItem) it.next();
+			markedlist = new LinkedList<GUIKnotenItem>();
+			for (GUIKnotenItem tempitem : itemlist) {
 				tx = tempitem.getImageLabel().getX();
 				twidth = tempitem.getImageLabel().getWidth();
 				ty = tempitem.getImageLabel().getY();
 				theight = tempitem.getImageLabel().getHeight();
 
-				if (tx > auswahl.getX() - c.getAbstandLinks() + scrollPane.getHorizontalScrollBar().getValue()
-				        && tx + twidth < auswahl.getX() + auswahl.getWidth() - c.getAbstandLinks()
-				                + scrollPane.getHorizontalScrollBar().getValue()
-				        && ty > auswahl.getY() - c.getAbstandOben() + scrollPane.getVerticalScrollBar().getValue()
-				        && ty + theight < auswahl.getY() + auswahl.getHeight() - c.getAbstandOben()
-				                + scrollPane.getVerticalScrollBar().getValue()) {
-					if (tx < minx) {
-						minx = tx;
-					}
-					if (tx + twidth > maxx) {
-						maxx = tx + twidth;
-					}
-					if (ty < miny) {
-						miny = ty;
-					}
-					if (ty + theight > maxy) {
-						maxy = ty + theight;
-					}
-					markierung.setBounds(minx, miny, maxx - minx, maxy - miny);
+				int itemPosX = tx + twidth / 2;
+				int itemPosY = ty + theight / 2;
+
+				if (itemPosX >= auswahl.getX() && itemPosX <= auswahl.getX() + auswahl.getWidth()
+				        && itemPosY >= auswahl.getY() && itemPosY <= auswahl.getY() + auswahl.getHeight()) {
+					minx = Math.min(tx, minx);
+					maxx = Math.max(tx + twidth, maxx);
+					miny = Math.min(ty, miny);
+					maxy = Math.max(ty + theight, maxy);
 
 					markedlist.add(tempitem);
-
-					markiert = true;
 				}
 			}
-
-			if (markiert) {
+			if (!this.markedlist.isEmpty()) {
+				markierung.setBounds(minx, miny, maxx - minx, maxy - miny);
 				markierung.setVisible(true);
 			}
 			auswahl.setVisible(false);
@@ -164,17 +144,14 @@ public class GUIEvents implements I18n {
 	}
 
 	public void mausDragged(MouseEvent e) {
-
 		// do not allow dragging while cable connector is visible, i.e., during
 		// cable assignment
 		if (GUIContainer.getGUIContainer().getKabelvorschau().isVisible())
 			return;
-		// ///
 
 		GUIContainer c = GUIContainer.getGUIContainer();
 
 		JMarkerPanel auswahl = GUIContainer.getAuswahl();
-		JMarkerPanel markierung = GUIContainer.getMarkierung();
 		JScrollPane scrollPane = c.getScrollPane();
 		int neuX, neuY, neuWidth, neuHeight;
 		int tmpX, tmpY; // for calculating the actual position (only within
@@ -185,9 +162,8 @@ public class GUIEvents implements I18n {
 		SzenarioVerwaltung.getInstance().setzeGeaendert();
 
 		// Einzelnes Item verschieben
-		if (!markierung.isVisible()) {
+		if (!c.isMarkerVisible()) {
 			if (aktiveslabel != null && !dragVorschau.isVisible()) {
-
 				tmpX = e.getX() + scrollPane.getHorizontalScrollBar().getValue() - (aktiveslabel.getWidth() / 2);
 				if (tmpX < -(aktiveslabel.getWidth() / 2)) {
 					neuX = -(aktiveslabel.getWidth() / 2);
@@ -209,19 +185,19 @@ public class GUIEvents implements I18n {
 				aktiveslabel.setBounds(neuX, neuY, neuWidth, neuHeight);
 				c.updateCables();
 			} else {
-				mausposx = e.getX() + c.getAbstandLinks();
-				mausposy = e.getY() + c.getAbstandOben();
+				mausposx = e.getX();
+				mausposy = e.getY();
 				if (!auswahl.isVisible()) {
-					auswahlx = mausposx;
-					auswahly = mausposy;
+					auswahlx = mausposx + c.getXOffset();
+					auswahly = mausposy + c.getYOffset();
 					auswahlx2 = auswahlx;
 					auswahly2 = auswahly;
 
 					auswahl.setBounds(auswahlx, auswahly, auswahlx2 - auswahlx, auswahly2 - auswahly);
 					auswahl.setVisible(true);
 				} else {
-					auswahlx2 = mausposx;
-					auswahly2 = mausposy;
+					auswahlx2 = mausposx + c.getXOffset();
+					auswahly2 = mausposy + c.getYOffset();
 
 					auswahl.setBounds(auswahlx, auswahly, auswahlx2 - auswahlx, auswahly2 - auswahly);
 
@@ -240,83 +216,22 @@ public class GUIEvents implements I18n {
 		// Items im Auswahlrahmen verschieben
 		else if (!dragVorschau.isVisible()) {
 			/* Verschieben mehrerer ausgewaehlter Objekte */
-			if (aufmarkierung && markedlist.size() > 0) {
-				/*
-				 * int ursprungx = markierung.getX(); int ursprungy =
-				 * markierung.getY();
-				 * 
-				 * markierung.setBounds(e.getX() + c.getAbstandOben() -
-				 * mausmarkdifx, e.getY() + c.getAbstandOben() - mausmarkdify,
-				 * markierung.getWidth(), markierung .getHeight()); int
-				 * verschiebungx = ursprungx - markierung.getX(); int
-				 * verschiebungy = ursprungy - markierung.getY();
-				 */
-				int maxMinusX = GUIContainer.FLAECHE_BREITE, maxPlusX = GUIContainer.FLAECHE_BREITE, maxMinusY = GUIContainer.FLAECHE_HOEHE, maxPlusY = GUIContainer.FLAECHE_HOEHE;
-				int tempM, tempP;
-				ListIterator<Object> it = markedlist.listIterator();
-				while (it.hasNext()) {
-					JSidebarButton templbl = ((GUIKnotenItem) it.next()).getImageLabel();
-					tempM = templbl.getX() + ((int) templbl.getWidth() / 2);
-					tempP = GUIContainer.FLAECHE_BREITE - (templbl.getX() + ((int) templbl.getWidth() / 2));
-					if (tempM < maxMinusX) {
-						maxMinusX = tempM;
-					}
-					if (tempP < maxPlusX) {
-						maxPlusX = tempP;
-					}
-					tempM = GUIContainer.FLAECHE_HOEHE - (templbl.getY() + ((int) templbl.getHeight() / 2));
-					tempP = templbl.getY() + ((int) templbl.getHeight() / 2);
-					if (tempM < maxMinusY) {
-						maxMinusY = tempM;
-					}
-					if (tempP < maxPlusY) {
-						maxPlusY = tempP;
-					}
-				}
-				// Main.debug.println("Max movement of selection compound (left <--> right; up <--> down):\n\t-"
-				// + maxMinusX+" < moveX < "+maxPlusX+"\n\t-"
-				// + maxMinusY+" < moveY < "+maxPlusY);
+			if (aufmarkierung && markedlist.size() > 0 && e.getX() >= 0 && e.getX() <= scrollPane.getWidth()
+			        && e.getY() >= 0 && e.getY() <= scrollPane.getHeight()) {
 
-				// movement to right: negative X value
-				// movement upwards: positive Y value
-				int verschiebungx = (markierung.getX() + mausmarkdifx) - e.getX();
-				int verschiebungy = (markierung.getY() + mausmarkdify) - e.getY();
+				int verschiebungx = startPosX - e.getX();
+				startPosX = e.getX();
+				int verschiebungy = startPosY - e.getY();
+				startPosY = e.getY();
 
-				// Main.debug.println("Actual mouse movement:\n\tX: "+verschiebungx+"\n\t Y: "+verschiebungy);
-				if (verschiebungx > maxMinusX) {
-					verschiebungx = maxMinusX;
-				}
-				if (verschiebungx < -maxPlusX) {
-					verschiebungx = -maxPlusX;
-				}
-				if (verschiebungy > maxPlusY) {
-					verschiebungy = maxPlusY;
-				}
-				if (verschiebungy < -maxMinusY) {
-					verschiebungy = -maxMinusY;
-				}
-
-				markierung.setBounds(markierung.getX() - verschiebungx, markierung.getY() - verschiebungy,
-				        markierung.getWidth(), markierung.getHeight());
-
-				it = markedlist.listIterator();
-				while (it.hasNext()) {
-					JSidebarButton templbl = ((GUIKnotenItem) it.next()).getImageLabel();
-					templbl.setLocation(templbl.getX() - verschiebungx, templbl.getY() - verschiebungy);
-				}
-				c.updateCables();
+				c.moveMarker(-verschiebungx, -verschiebungy, markedlist);
 			}
-
 		}
 	}
 
-	public void mausPressed(MouseEvent e) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", mausPressed(" + e + ")");
-
+	public void mausPressedDesignMode(MouseEvent e) {
 		GUIContainer c = GUIContainer.getGUIContainer();
 		JMarkerPanel auswahl = GUIContainer.getAuswahl();
-		JMarkerPanel markierung = GUIContainer.getMarkierung();
-		JScrollPane scrollPane = c.getScrollPane();
 
 		Port anschluss = null;
 		Knoten tempKnoten;
@@ -326,60 +241,47 @@ public class GUIEvents implements I18n {
 		if (neuesKabel == null) {
 			neuesKabel = new GUIKabelItem();
 		}
-		updateAktivesItem(e);
+		updateAktivesItem(e.getX() + GUIContainer.getGUIContainer().getXOffset(), e.getY()
+		        + GUIContainer.getGUIContainer().getYOffset());
 
-		// Wurde Maustaste im Bereich der Markierung betaetigt?
-		// -> aufmarkierung = true und initialisierung von der Groesse der
-		// Markierung
-
-		if (c.aufObjekt(markierung, e.getX() + scrollPane.getHorizontalScrollBar().getValue(), e.getY()
-		        + scrollPane.getVerticalScrollBar().getValue())) {
-			if (markierung.isVisible()) {
+		if (GUIContainer
+		        .getGUIContainer()
+		        .getMarkierung()
+		        .inBounds(e.getX() + GUIContainer.getGUIContainer().getXOffset(),
+		                e.getY() + GUIContainer.getGUIContainer().getYOffset())) {
+			if (GUIContainer.getGUIContainer().getMarkierung().isVisible()) {
 				aufmarkierung = true;
-				mausmarkdifx = e.getX() + -markierung.getX();
-				mausmarkdify = e.getY() + -markierung.getY();
+				startPosX = e.getX();
+				startPosY = e.getY();
 			}
 		} else {
 			aufmarkierung = false;
-			markierung.setVisible(false);
+			GUIContainer.getGUIContainer().getMarkierung().setVisible(false);
 			auswahl.setBounds(0, 0, 0, 0);
 		}
 
 		// Wurde die rechte Maustaste betaetigt?
 		if (e.getButton() == 3) {
 			if (aktivesItem != null && aktiveslabel != null) {
-				// Main.debug.println("\tmausPressed: IF-1");
-				if (GUIContainer.getGUIContainer().getActiveSite() == GUIMainMenu.MODUS_ENTWURF) {
-					// Main.debug.println("\tmausPressed: IF-1.1");
-					GUIContainer.getGUIContainer().getProperty().minimieren(); // hide
-					                                                           // property
-					                                                           // panel
-					                                                           // (JKonfiguration)
-					GUIContainer.getGUIContainer().setProperty(null);
+				GUIContainer.getGUIContainer().getProperty().minimieren(); // hide
+				                                                           // property
+				                                                           // panel
+				                                                           // (JKonfiguration)
+				GUIContainer.getGUIContainer().setProperty(null);
 
-					if (!c.getKabelvorschau().isVisible()) {
-						// Main.debug.println("\tmausPressed: IF-1.1.1");
-						kontextMenueEntwurfsmodus(aktiveslabel, e);
-					} else {
-						// Main.debug.println("\tmausPressed: ELSE-1.1.1");
-
-						resetAndHideCablePreview();
-					}
+				if (!c.getKabelvorschau().isVisible()) {
+					kontextMenueEntwurfsmodus(aktiveslabel, e.getX() + GUIContainer.getGUIContainer().getXOffset(),
+					        e.getY() + GUIContainer.getGUIContainer().getYOffset());
 				} else {
-					// Main.debug.println("\tmausPressed: ELSE-1.1");
-					if (GUIContainer.getGUIContainer().getActiveSite() == GUIMainMenu.MODUS_AKTION) {
-						kontextMenueAktionsmodus(aktiveslabel, e);
-					} else {
-						Main.debug.println("ERROR (" + this.hashCode()
-						        + "): weder Entwurfs- noch Aktionsmodus sind aktiv!?");
-					}
+					resetAndHideCablePreview();
 				}
 			} else {
 				GUIKabelItem cableItem = findClickedCable(e);
 				if ((kabelPanelVorschau == null || !kabelPanelVorschau.isVisible())
 				        && GUIContainer.getGUIContainer().getActiveSite() == GUIMainMenu.MODUS_ENTWURF
 				        && cableItem != null) {
-					contextMenuCable(cableItem, e);
+					contextMenuCable(cableItem, e.getX() + GUIContainer.getGUIContainer().getXOffset(), e.getY()
+					        + GUIContainer.getGUIContainer().getYOffset());
 				} else {
 					resetAndHideCablePreview();
 				}
@@ -387,84 +289,68 @@ public class GUIEvents implements I18n {
 		}
 		// Wurde die linke Maustaste betaetigt?
 		else {
-			// Main.debug.println("\tmausPressed: ELSE-1");
 			if (e.getButton() == 1) {
-				// Main.debug.println("\tmausPressed: IF-2");
-
-				// Aktivierung einer Komponente im Aktionsmodus mit Doppelklick
-				if (GUIContainer.getGUIContainer().getActiveSite() == GUIMainMenu.MODUS_AKTION
-				        && e.getClickCount() == 2) {
-					// Main.debug.println("\tmausPressed: IF-2.1");
-					if (aktivesItem != null && aktiveslabel != null) {
-						// Main.debug.println("\tmausPressed: IF-2.1.1");
-						if (aktivesItem.getKnoten() instanceof Rechner || aktivesItem.getKnoten() instanceof Notebook) {
-							// Main.debug.println("\tmausPressed: IF-2.1.1");
-							desktopAnzeigen(aktivesItem);
-						} else if (aktivesItem.getKnoten() instanceof Switch) {
-							// Main.debug.println("\tmausPressed: ELSE-2.1.1");
-							satTabelleAnzeigen(aktivesItem);
-						}
-					}
-
-				}
-
-				// Auswahl einer Komponente im Entwurfsmodus
-				if (GUIContainer.getGUIContainer().getActiveSite() == GUIMainMenu.MODUS_ENTWURF) {
-					// Main.debug.println("\tmausPressed: IF-2.2");
-					// eine neue Kabelverbindung erstellen
-					if (GUIContainer.getGUIContainer().getKabelvorschau().isVisible() && aktivesItem != null
-					        && aktiveslabel != null) {
-						// Main.debug.println("\tmausPressed: IF-2.2.1");
+				// eine neue Kabelverbindung erstellen
+				if (aktivesItem != null && aktiveslabel != null) {
+					if (GUIContainer.getGUIContainer().getKabelvorschau().isVisible()) {
 						// hide property panel (JKonfiguration)
 						GUIContainer.getGUIContainer().getProperty().minimieren();
-						GUIContainer.getGUIContainer().setProperty(null);
 
 						if (aktivesItem.getKnoten() instanceof Knoten) {
-							// Main.debug.println("\tmausPressed: IF-2.2.1.1");
 							tempKnoten = (Knoten) aktivesItem.getKnoten();
 							anschluss = tempKnoten.holeFreienPort();
 						}
 
 						if (anschluss != null) {
-							// Main.debug.println("\tmausPressed: IF-2.2.1.2");
 							processCableConnection(e.getX(), e.getY());
-						} else // Anzahl Angeschlossene > Anzahl Erlaubt
-						{
-							// Main.debug.println("\tmausPressed: ELSE-2.2.1.2");
-
+						} else {
 							GUIErrorHandler.getGUIErrorHandler().DisplayError(messages.getString("guievents_msg1"));
 						}
 
-					}
-					// einen Knoten zur Bearbeitung der Eigenschaften auswaehlen
-					else {
-						// Main.debug.println("\tmausPressed: ELSE-2.2.1");
-
+					} else {
+						// einen Knoten zur Bearbeitung der Eigenschaften
+						// auswaehlen
 						if (GUIContainer.getGUIContainer().getKabelvorschau().isVisible()) {
 							resetAndHideCablePreview();
 						}
 
 						c.setProperty(aktivesItem);
-
-						// wurde Maus ueber einem Knoten betaetigt?
-						// -> Item markieren und Eigenschaften anzeigen
-						if (aktivesItem != null && aktiveslabel != null) {
-							if (e.getClickCount() == 2) {
-								GUIContainer.getGUIContainer().getProperty().maximieren();
-							}
-							aktiveslabel.setSelektiert(true);
-							// auswahl.setVisible(false);
+						if (e.getClickCount() == 2) {
+							GUIContainer.getGUIContainer().getProperty().maximieren();
 						}
-						// wurde Maus ueber leerem Bereich betaetigt?
-						// -> Markierung sichtbar machen
-						else {
-							auswahl.setVisible(false);
-						}
+						aktiveslabel.setSelektiert(true);
 					}
+				} else {
+					// wurde Maus ueber leerem Bereich betaetigt? -> Markierung
+					// sichtbar machen
+					auswahl.setVisible(false);
+					GUIContainer.getGUIContainer().getProperty().minimieren();
+					GUIContainer.getGUIContainer().setProperty(null);
 				}
 			}
 		}
+	}
 
+	public void mausPressedSimulationMode(MouseEvent e) {
+		SzenarioVerwaltung.getInstance().setzeGeaendert();
+		updateAktivesItem(e.getX() + GUIContainer.getGUIContainer().getXOffset(), e.getY()
+		        + GUIContainer.getGUIContainer().getYOffset());
+
+		// Wurde die rechte Maustaste betaetigt?
+		if (e.getButton() == 3) {
+			if (aktivesItem != null && aktiveslabel != null) {
+				kontextMenueAktionsmodus(aktiveslabel, e.getX() + GUIContainer.getGUIContainer().getXOffset(), e.getY()
+				        + GUIContainer.getGUIContainer().getYOffset());
+			}
+		}
+		// Wurde die linke Maustaste betaetigt?
+		else if (e.getButton() == 1 && aktivesItem != null && aktiveslabel != null) {
+			if (aktivesItem.getKnoten() instanceof Rechner || aktivesItem.getKnoten() instanceof Notebook) {
+				desktopAnzeigen(aktivesItem);
+			} else if (aktivesItem.getKnoten() instanceof Switch) {
+				satTabelleAnzeigen(aktivesItem);
+			}
+		}
 	}
 
 	public void processCableConnection(int currentPosX, int currentPosY) {
@@ -475,8 +361,8 @@ public class GUIEvents implements I18n {
 			if (neuesKabel.getKabelpanel().getZiel2() == null && neuesKabel.getKabelpanel().getZiel1() != aktivesItem) {
 				connectCableToSecondComponent(aktivesItem);
 			}
-			int posX = currentPosX + GUIContainer.getGUIContainer().getSidebar().getLeistenpanel().getWidth();
-			int posY = currentPosY + GUIContainer.getGUIContainer().getMenu().getMenupanel().getHeight();
+			int posX = currentPosX;
+			int posY = currentPosY;
 			resetAndShowCablePreview(posX, posY);
 		}
 	}
@@ -487,7 +373,7 @@ public class GUIEvents implements I18n {
 		GUIContainer.getGUIContainer().getKabelvorschau()
 		        .setIcon(new ImageIcon(getClass().getResource("/gfx/allgemein/ziel2.png")));
 		kabelPanelVorschau = new JCablePanel();
-		GUIContainer.getGUIContainer().getDraftpanel().add(kabelPanelVorschau);
+		GUIContainer.getGUIContainer().getDesignpanel().add(kabelPanelVorschau);
 		kabelPanelVorschau.setZiel1(aktivesItem);
 		GUIContainer.getGUIContainer().setZiel2Label(new JSidebarButton());
 		ziel2 = new GUIKnotenItem();
@@ -509,49 +395,35 @@ public class GUIEvents implements I18n {
 	private GUIKabelItem findClickedCable(MouseEvent e) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + ", clickedCable(" + e + ")");
 		// Falls kein neues Objekt erstellt werden soll
-		LinkedList<GUIKabelItem> itemlist = GUIContainer.getGUIContainer().getCablelist();
-		ListIterator<GUIKabelItem> it = itemlist.listIterator();
-		GUIKabelItem tempitem = null;
-		GUIContainer c = GUIContainer.getGUIContainer();
-		int mouseX = e.getX() + c.getScrollPane().getHorizontalScrollBar().getValue();
-		int mouseY = e.getY() + c.getScrollPane().getVerticalScrollBar().getValue();
+		int xPos = e.getX() + GUIContainer.getGUIContainer().getXOffset();
+		int yPos = e.getY() + GUIContainer.getGUIContainer().getYOffset();
 
-		while (it.hasNext()) {
-			tempitem = it.next();
-
-			if (c.aufObjekt(tempitem.getKabelpanel(), mouseX, mouseY)) {
-				// item clicked, i.e., mouse pointer within item bounds
-				if (tempitem.getKabelpanel().clicked(mouseX, mouseY)) {
-					// mouse pointer really close to the drawn line, too
-					return tempitem;
-				}
+		for (GUIKabelItem tempitem : GUIContainer.getGUIContainer().getCableItems()) {
+			// item clicked, i.e., mouse pointer within item bounds
+			if (tempitem.getKabelpanel().clicked(xPos, yPos)) {
+				// mouse pointer really close to the drawn line, too
+				return tempitem;
 			}
 		}
 		return null;
 	}
 
-	private void updateAktivesItem(MouseEvent e) {
+	private void updateAktivesItem(int posX, int posY) {
 		// Falls kein neues Objekt erstellt werden soll
-		LinkedList itemlist = GUIContainer.getGUIContainer().getGUIKnotenItemList();
-		ListIterator it = itemlist.listIterator();
-		GUIKnotenItem tempitem = null;
-		GUIContainer c = GUIContainer.getGUIContainer();
-		JSidebarButton templabel;
-
 		aktiveslabel = null;
 		aktivesItem = null;
 
-		while (it.hasNext()) {
-			tempitem = (GUIKnotenItem) it.next();
-			templabel = tempitem.getImageLabel();
-			templabel.setSelektiert(false);
-			templabel.revalidate();
-			templabel.updateUI();
+		if (!GUIContainer.getGUIContainer().isMarkerVisible()) {
+			for (GUIKnotenItem tempitem : GUIContainer.getGUIContainer().getKnotenItems()) {
+				JSidebarButton templabel = tempitem.getImageLabel();
+				templabel.setSelektiert(false);
+				templabel.revalidate();
+				templabel.updateUI();
 
-			if (c.aufObjekt(templabel, e.getX() + c.getScrollPane().getHorizontalScrollBar().getValue(), e.getY()
-			        + c.getScrollPane().getVerticalScrollBar().getValue())) {
-				aktivesItem = tempitem;
-				aktiveslabel = tempitem.getImageLabel();
+				if (templabel.inBounds(posX, posY)) {
+					aktivesItem = tempitem;
+					aktiveslabel = tempitem.getImageLabel();
+				}
 			}
 		}
 	}
@@ -575,7 +447,7 @@ public class GUIEvents implements I18n {
 
 	private void connectCableToSecondComponent(GUIKnotenItem tempitem) {
 		GUIContainer c = GUIContainer.getGUIContainer();
-		GUIDraftPanel draftpanel = c.getDraftpanel();
+		GUIDesignPanel draftpanel = c.getDesignpanel();
 		NetzwerkInterface nic1, nic2;
 		Port anschluss1 = null;
 		Port anschluss2 = null;
@@ -587,7 +459,7 @@ public class GUIEvents implements I18n {
 		draftpanel.add(neuesKabel.getKabelpanel());
 		neuesKabel.getKabelpanel().updateBounds();
 		draftpanel.updateUI();
-		c.getCablelist().add(neuesKabel);
+		c.getCableItems().add(neuesKabel);
 		if (neuesKabel.getKabelpanel().getZiel1().getKnoten() instanceof Modem) {
 			Modem vrOut = (Modem) neuesKabel.getKabelpanel().getZiel1().getKnoten();
 			anschluss1 = vrOut.getErstenAnschluss();
@@ -644,10 +516,7 @@ public class GUIEvents implements I18n {
 		resetCable();
 
 		JSidebarButton cablePreview = GUIContainer.getGUIContainer().getKabelvorschau();
-		int cablePreviewWidth = cablePreview.getWidth();
-		int cablePreviewHeight = cablePreview.getHeight();
-		cablePreview.setBounds(currentPosX - cablePreviewWidth / 2, currentPosY - cablePreviewHeight / 2,
-		        cablePreviewWidth, cablePreviewHeight);
+		cablePreview.setBounds(currentPosX, currentPosY, cablePreview.getWidth(), cablePreview.getHeight());
 		cablePreview.setVisible(true);
 	}
 
@@ -663,8 +532,8 @@ public class GUIEvents implements I18n {
 	 * @param e
 	 *            MouseEvent (Für Position d. Kontextmenü u.a.)
 	 */
-	private void kontextMenueAktionsmodus(JSidebarButton templabel, MouseEvent e) {
-		updateAktivesItem(e);
+	private void kontextMenueAktionsmodus(JSidebarButton templabel, int posX, int posY) {
+		updateAktivesItem(posX, posY);
 
 		if (aktivesItem != null) {
 			if (aktivesItem.getKnoten() instanceof InternetKnoten) {
@@ -708,8 +577,7 @@ public class GUIEvents implements I18n {
 
 				GUIContainer.getGUIContainer().getSimpanel().add(popmen);
 				popmen.setVisible(true);
-				popmen.show(GUIContainer.getGUIContainer().getSimpanel(), e.getX(), e.getY());
-
+				popmen.show(GUIContainer.getGUIContainer().getSimpanel(), posX, posY);
 			}
 		}
 	}
@@ -738,11 +606,10 @@ public class GUIEvents implements I18n {
 	 * @param e
 	 *            MouseEvent (Für Position d. Kontextmenü u.a.)
 	 */
-	private void kontextMenueEntwurfsmodus(JSidebarButton templabel, MouseEvent e) {
-
+	private void kontextMenueEntwurfsmodus(JSidebarButton templabel, int posX, int posY) {
 		String textKabelEntfernen;
 
-		updateAktivesItem(e);
+		updateAktivesItem(posX, posY);
 
 		if (aktivesItem != null) {
 			if (aktivesItem.getKnoten() instanceof Rechner || aktivesItem.getKnoten() instanceof Notebook) {
@@ -751,6 +618,8 @@ public class GUIEvents implements I18n {
 				textKabelEntfernen = messages.getString("guievents_msg6");
 			}
 
+			final JMenuItem pmShowConfig = new JMenuItem(messages.getString("guievents_msg11"));
+			pmShowConfig.setActionCommand("showconfig");
 			final JMenuItem pmKabelEntfernen = new JMenuItem(textKabelEntfernen);
 			pmKabelEntfernen.setActionCommand("kabelentfernen");
 			final JMenuItem pmLoeschen = new JMenuItem(messages.getString("guievents_msg7"));
@@ -762,24 +631,26 @@ public class GUIEvents implements I18n {
 
 					if (e.getActionCommand() == pmLoeschen.getActionCommand()) {
 						itemLoeschen(loeschlabel, loeschitem);
-					}
-
-					if (e.getActionCommand() == pmKabelEntfernen.getActionCommand()) {
+					} else if (e.getActionCommand() == pmKabelEntfernen.getActionCommand()) {
 						kabelEntfernen();
+					} else if (e.getActionCommand() == pmShowConfig.getActionCommand()) {
+						GUIContainer.getGUIContainer().setProperty(aktivesItem);
+						GUIContainer.getGUIContainer().getProperty().maximieren();
 					}
 				}
 			};
 
 			pmLoeschen.addActionListener(al);
 			pmKabelEntfernen.addActionListener(al);
+			pmShowConfig.addActionListener(al);
 
+			popmen.add(pmShowConfig);
 			popmen.add(pmKabelEntfernen);
-
 			popmen.add(pmLoeschen);
 
-			GUIContainer.getGUIContainer().getDraftpanel().add(popmen);
+			GUIContainer.getGUIContainer().getDesignpanel().add(popmen);
 			popmen.setVisible(true);
-			popmen.show(GUIContainer.getGUIContainer().getDraftpanel(), e.getX(), e.getY());
+			popmen.show(GUIContainer.getGUIContainer().getDesignpanel(), posX, posY);
 
 			loeschlabel = templabel;
 			loeschitem = aktivesItem;
@@ -790,8 +661,7 @@ public class GUIEvents implements I18n {
 	 * context menu in case of clicking on single cable item --> used for
 	 * deleting a single cable
 	 */
-	private void contextMenuCable(final GUIKabelItem cable, MouseEvent e) {
-
+	private void contextMenuCable(final GUIKabelItem cable, int posX, int posY) {
 		final JMenuItem pmRemoveCable = new JMenuItem(messages.getString("guievents_msg5"));
 		pmRemoveCable.setActionCommand("removecable");
 
@@ -807,9 +677,9 @@ public class GUIEvents implements I18n {
 		pmRemoveCable.addActionListener(al);
 		popmen.add(pmRemoveCable);
 
-		GUIContainer.getGUIContainer().getDraftpanel().add(popmen);
+		GUIContainer.getGUIContainer().getDesignpanel().add(popmen);
 		popmen.setVisible(true);
-		popmen.show(GUIContainer.getGUIContainer().getDraftpanel(), e.getX(), e.getY());
+		popmen.show(GUIContainer.getGUIContainer().getDesignpanel(), posX, posY);
 	}
 
 	/**
@@ -821,7 +691,7 @@ public class GUIEvents implements I18n {
 	public void itemLoeschen(JSidebarButton loeschlabel, GUIKnotenItem loeschitem) {
 		loeschlabel.setVisible(false);
 		GUIContainer.getGUIContainer().setProperty(null);
-		ListIterator<GUIKabelItem> iteratorAlleKabel = GUIContainer.getGUIContainer().getCablelist().listIterator();
+		ListIterator<GUIKabelItem> iteratorAlleKabel = GUIContainer.getGUIContainer().getCableItems().listIterator();
 		GUIKabelItem kabel = new GUIKabelItem();
 		LinkedList<GUIKabelItem> loeschKabel = new LinkedList<GUIKabelItem>();
 
@@ -844,9 +714,9 @@ public class GUIEvents implements I18n {
 			this.removeSingleCable(kabel);
 		}
 
-		GUIContainer.getGUIContainer().getGUIKnotenItemList().remove(loeschitem);
-		GUIContainer.getGUIContainer().getDraftpanel().remove(loeschlabel);
-		GUIContainer.getGUIContainer().getDraftpanel().updateUI();
+		GUIContainer.getGUIContainer().getKnotenItems().remove(loeschitem);
+		GUIContainer.getGUIContainer().getDesignpanel().remove(loeschlabel);
+		GUIContainer.getGUIContainer().getDesignpanel().updateUI();
 		GUIContainer.getGUIContainer().updateViewport();
 
 	}
@@ -876,8 +746,8 @@ public class GUIEvents implements I18n {
 		} catch (VerbindungsException e) {
 			e.printStackTrace(Main.debug);
 		}
-		GUIContainer.getGUIContainer().getCablelist().remove(cable);
-		GUIContainer.getGUIContainer().getDraftpanel().remove(cable.getKabelpanel());
+		GUIContainer.getGUIContainer().getCableItems().remove(cable);
+		GUIContainer.getGUIContainer().getDesignpanel().remove(cable.getKabelpanel());
 		GUIContainer.getGUIContainer().updateViewport();
 
 		if (ziel1konf != null)
@@ -894,7 +764,7 @@ public class GUIEvents implements I18n {
 	 * 
 	 */
 	private void kabelEntfernen() {
-		ListIterator<GUIKabelItem> iteratorAlleKabel = GUIContainer.getGUIContainer().getCablelist().listIterator();
+		ListIterator<GUIKabelItem> iteratorAlleKabel = GUIContainer.getGUIContainer().getCableItems().listIterator();
 		GUIKabelItem tempKabel = null;
 		LinkedList<GUIKabelItem> loeschListe = new LinkedList<GUIKabelItem>();
 

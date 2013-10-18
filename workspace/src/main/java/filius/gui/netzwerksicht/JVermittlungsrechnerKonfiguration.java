@@ -86,8 +86,7 @@ import filius.software.firewall.Firewall;
 import filius.software.system.SwitchFirmware;
 import filius.software.system.VermittlungsrechnerBetriebssystem;
 
-public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
-		I18n {
+public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements I18n {
 
 	private static final long serialVersionUID = 1L;
 
@@ -146,10 +145,9 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		}
 
 		public String toString() {
-			return "[" + "name='" + getName() + "', " + "start=(" + lineStart.x
-					+ "/" + lineStart.y + "), " + "end=(" + lineEnd.x + "/"
-					+ lineEnd.y + "), " + "color=" + lineColor.toString()
-					+ ", " + "bounds=" + getBounds() + "]";
+			return "[" + "name='" + getName() + "', " + "start=(" + lineStart.x + "/" + lineStart.y + "), " + "end=("
+			        + lineEnd.x + "/" + lineEnd.y + "), " + "color=" + lineColor.toString() + ", " + "bounds="
+			        + getBounds() + "]";
 		}
 
 		// draw and delete line
@@ -174,12 +172,8 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 	}
 
 	public void aenderungenAnnehmen() {
-		Main.debug
-				.println("INVOKED ("
-						+ this.hashCode()
-						+ ") "
-						+ getClass()
-						+ " (JVermittlungsrechnerKonfiguration), aenderungenAnnehmen()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (JVermittlungsrechnerKonfiguration), aenderungenAnnehmen()");
 		ListIterator it;
 		Vermittlungsrechner vRechner;
 		NetzwerkInterface nic;
@@ -196,18 +190,15 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		for (int i = 0; it.hasNext(); i++) {
 			nic = (NetzwerkInterface) it.next();
 
-			if (ueberpruefen(EingabenUeberpruefung.musterIpAdresse,
-					ipAdressen[i]))
+			if (ueberpruefen(EingabenUeberpruefung.musterIpAdresse, ipAdressen[i]))
 				nic.setIp(ipAdressen[i].getText());
 			else
-				Main.debug.println("ERROR (" + this.hashCode()
-						+ "): IP-Adresse ungueltig " + ipAdressen[i].getText());
+				Main.debug.println("ERROR (" + this.hashCode() + "): IP-Adresse ungueltig " + ipAdressen[i].getText());
 
 			if (ueberpruefen(EingabenUeberpruefung.musterSubNetz, netzmasken[i]))
 				nic.setSubnetzMaske(netzmasken[i].getText());
 			else
-				Main.debug.println("ERROR (" + this.hashCode()
-						+ "): Netzmaske ungueltig " + netzmasken[i].getText());
+				Main.debug.println("ERROR (" + this.hashCode() + "): Netzmaske ungueltig " + netzmasken[i].getText());
 		}
 
 		GUIContainer.getGUIContainer().updateViewport();
@@ -218,34 +209,23 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 	 * wird von der Schaltflaeche "Firewall einrichten" in der GUI aufgerufen
 	 */
 	private void firewallDialogAnzeigen() {
-		Main.debug
-				.println("INVOKED ("
-						+ this.hashCode()
-						+ ") "
-						+ getClass()
-						+ " (JVermittlungsrechnerKonfiguration), firewallDialogAnzeigen()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (JVermittlungsrechnerKonfiguration), firewallDialogAnzeigen()");
 
 		Firewall firewall = ((VermittlungsrechnerBetriebssystem) ((Vermittlungsrechner) holeHardware())
-				.getSystemSoftware()).holeFirewall();
+		        .getSystemSoftware()).holeFirewall();
 
-		JFirewallDialog firewallDialog = new JFirewallDialog(firewall,
-				JMainFrame.getJMainFrame());
+		JFirewallDialog firewallDialog = new JFirewallDialog(firewall, JMainFrame.getJMainFrame());
 		firewallDialog.setBounds(100, 100, 850, 340);
-		firewallDialog.setName(messages
-				.getString("jvermittlungsrechnerkonfiguration_msg1"));
+		firewallDialog.setName(messages.getString("jvermittlungsrechnerkonfiguration_msg1"));
 
 		firewallDialog.updateRuleTable();
 		firewallDialog.setVisible(true);
 	}
 
 	protected void initAttributEingabeBox(Box box, Box rightBox) {
-		Main.debug
-				.println("INVOKED ("
-						+ this.hashCode()
-						+ ") "
-						+ getClass()
-						+ " (JVermittlungsrechnerKonfiguration), initAttributEingabeBox("
-						+ box + ")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (JVermittlungsrechnerKonfiguration), initAttributEingabeBox(" + box + ")");
 		Vermittlungsrechner vRechner;
 		NetzwerkInterface tempNic;
 		Knoten tempKnoten;
@@ -321,15 +301,13 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		tempBox = Box.createHorizontalBox();
 		tempBox.setMaximumSize(new Dimension(400, 40));
 
-		tempLabel = new JLabel(
-				messages.getString("jvermittlungsrechnerkonfiguration_msg2"));
+		tempLabel = new JLabel(messages.getString("jvermittlungsrechnerkonfiguration_msg2"));
 		tempLabel.setPreferredSize(new Dimension(140, 20));
 		tempLabel.setVisible(true);
 		tempLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		tempBox.add(tempLabel);
 
-		name = new JTextField(
-				messages.getString("jvermittlungsrechnerkonfiguration_msg3"));
+		name = new JTextField(messages.getString("jvermittlungsrechnerkonfiguration_msg3"));
 		name.setPreferredSize(new Dimension(160, 20));
 		name.addActionListener(actionListener);
 		name.addFocusListener(focusListener);
@@ -342,8 +320,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		tempBox = Box.createHorizontalBox();
 		tempBox.setMaximumSize(new Dimension(400, 40));
 
-		tempLabel = new JLabel(
-				messages.getString("jvermittlungsrechnerkonfiguration_msg9"));
+		tempLabel = new JLabel(messages.getString("jvermittlungsrechnerkonfiguration_msg9"));
 		tempLabel.setPreferredSize(new Dimension(140, 20));
 		tempLabel.setVisible(true);
 		tempLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -363,8 +340,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		tempBox = Box.createHorizontalBox();
 		tempBox.setMaximumSize(new Dimension(400, 40));
 
-		tempLabel = new JLabel(
-				messages.getString("jvermittlungsrechnerkonfiguration_msg26"));
+		tempLabel = new JLabel(messages.getString("jvermittlungsrechnerkonfiguration_msg26"));
 		tempLabel.setPreferredSize(new Dimension(140, 20));
 		tempLabel.setVisible(true);
 		tempLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -384,8 +360,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 
 		tempBox = Box.createHorizontalBox();
 		tempBox.setMaximumSize(new Dimension(400, 40));
-		btFirewall = new JButton(
-				messages.getString("jvermittlungsrechnerkonfiguration_msg4"));
+		btFirewall = new JButton(messages.getString("jvermittlungsrechnerkonfiguration_msg4"));
 
 		btFirewall.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -396,8 +371,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 
 		tempBox.add(Box.createHorizontalStrut(20));
 
-		changeBasicSettingsButton = new JButton(
-				messages.getString("jvermittlungsrechnerkonfiguration_msg23"));
+		changeBasicSettingsButton = new JButton(messages.getString("jvermittlungsrechnerkonfiguration_msg23"));
 		changeBasicSettingsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showBasicSettingsDialog();
@@ -408,9 +382,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		vBox.add(tempBox);
 
 		// NIC tabs
-		tpNetzwerkKarten.addTab(
-				messages.getString("jvermittlungsrechnerkonfiguration_msg17"),
-				vBox);
+		tpNetzwerkKarten.addTab(messages.getString("jvermittlungsrechnerkonfiguration_msg17"), vBox);
 
 		vRechner = (Vermittlungsrechner) holeHardware();
 		nicListe = vRechner.getNetzwerkInterfaces();
@@ -431,20 +403,17 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 
 			tempKnoten = holeVerbundeneKomponente(tempNic);
 			if (tempKnoten == null)
-				verbundeneKomponente[i] = new JLabel(
-						messages.getString("jvermittlungsrechnerkonfiguration_msg5"));
+				verbundeneKomponente[i] = new JLabel(messages.getString("jvermittlungsrechnerkonfiguration_msg5"));
 			else
-				verbundeneKomponente[i] = new JLabel(
-						messages.getString("jvermittlungsrechnerkonfiguration_msg6")
-								+ " " + tempKnoten.holeAnzeigeName());
+				verbundeneKomponente[i] = new JLabel(messages.getString("jvermittlungsrechnerkonfiguration_msg6") + " "
+				        + tempKnoten.holeAnzeigeName());
 			verbundeneKomponente[i].setPreferredSize(new Dimension(400, 10));
 			boxKomponente.add(verbundeneKomponente[i]);
 
 			// show IP address (editable)
 			boxIpAdresse = Box.createHorizontalBox();
 			boxIpAdresse.setMaximumSize(new Dimension(400, 40));
-			tempLabel = new JLabel(
-					messages.getString("jvermittlungsrechnerkonfiguration_msg7"));
+			tempLabel = new JLabel(messages.getString("jvermittlungsrechnerkonfiguration_msg7"));
 			tempLabel.setPreferredSize(new Dimension(120, 10));
 			boxIpAdresse.add(tempLabel);
 
@@ -454,8 +423,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 			// show netmask (editable)
 			boxSubnetz = Box.createHorizontalBox();
 			boxSubnetz.setMaximumSize(new Dimension(400, 40));
-			tempLabel = new JLabel(
-					messages.getString("jvermittlungsrechnerkonfiguration_msg8"));
+			tempLabel = new JLabel(messages.getString("jvermittlungsrechnerkonfiguration_msg8"));
 			tempLabel.setPreferredSize(new Dimension(120, 10));
 			boxSubnetz.add(tempLabel);
 
@@ -465,8 +433,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 			// show MAC address (not editable)
 			boxMacAdresse = Box.createHorizontalBox();
 			boxMacAdresse.setMaximumSize(new Dimension(400, 40));
-			tempLabel = new JLabel(
-					messages.getString("jvermittlungsrechnerkonfiguration_msg18"));
+			tempLabel = new JLabel(messages.getString("jvermittlungsrechnerkonfiguration_msg18"));
 			tempLabel.setPreferredSize(new Dimension(120, 10));
 			boxMacAdresse.add(tempLabel);
 
@@ -483,19 +450,11 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 			boxNic.add(boxMacAdresse);
 
 			if (tempKnoten == null) {
-				tpNetzwerkKarten
-						.addTab(messages
-								.getString("jvermittlungsrechnerkonfiguration_msg10")
-								+ (i + 1), new ImageIcon(getClass()
-								.getResource("/gfx/allgemein/conn_fail.png")),
-								boxNic);
+				tpNetzwerkKarten.addTab(messages.getString("jvermittlungsrechnerkonfiguration_msg10") + (i + 1),
+				        new ImageIcon(getClass().getResource("/gfx/allgemein/conn_fail.png")), boxNic);
 			} else {
-				tpNetzwerkKarten
-						.addTab(messages
-								.getString("jvermittlungsrechnerkonfiguration_msg10")
-								+ (i + 1), new ImageIcon(getClass()
-								.getResource("/gfx/allgemein/conn_ok.png")),
-								boxNic);
+				tpNetzwerkKarten.addTab(messages.getString("jvermittlungsrechnerkonfiguration_msg10") + (i + 1),
+				        new ImageIcon(getClass().getResource("/gfx/allgemein/conn_ok.png")), boxNic);
 			}
 		}
 
@@ -521,8 +480,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				}
 				if (sel > 0 && sel < pane.getComponentCount() - 1) {
 					Verbindung conn = ((NetzwerkInterface) ((Vermittlungsrechner) holeHardware())
-							.getNetzwerkInterfaces().get(sel - 1)).getPort()
-							.getVerbindung();
+					        .getNetzwerkInterfaces().get(sel - 1)).getPort().getVerbindung();
 					if (conn != null) {
 						conn.setAktiv(true);
 						highlightedCable = (Kabel) conn;
@@ -548,20 +506,16 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 
 		alleEintraegeAnzeigen = new JCheckBox();
 		alleEintraegeAnzeigen.setSelected(true);
-		alleEintraegeAnzeigen.setText(messages
-				.getString("jvermittlungsrechnerkonfiguration_msg11"));
+		alleEintraegeAnzeigen.setText(messages.getString("jvermittlungsrechnerkonfiguration_msg11"));
 		alleEintraegeAnzeigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				weiterleitungstabelle
-						.setzeAlleEintraegeAnzeigen(alleEintraegeAnzeigen
-								.isSelected());
+				weiterleitungstabelle.setzeAlleEintraegeAnzeigen(alleEintraegeAnzeigen.isSelected());
 				weiterleitungstabelle.updateAttribute();
 			}
 		});
 		tempBox.add(alleEintraegeAnzeigen, BorderLayout.NORTH);
 
-		btNeuerEintrag = new JButton(
-				messages.getString("jvermittlungsrechnerkonfiguration_msg12"));
+		btNeuerEintrag = new JButton(messages.getString("jvermittlungsrechnerkonfiguration_msg12"));
 		btNeuerEintrag.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				weiterleitungstabelle.neuerEintrag();
@@ -570,8 +524,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		tempBox.add(Box.createHorizontalStrut(50));
 		tempBox.add(btNeuerEintrag);
 
-		btEintragLoeschen = new JButton(
-				messages.getString("jvermittlungsrechnerkonfiguration_msg13"));
+		btEintragLoeschen = new JButton(messages.getString("jvermittlungsrechnerkonfiguration_msg13"));
 		btEintragLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				weiterleitungstabelle.markiertenEintragLoeschen();
@@ -580,24 +533,19 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		tempBox.add(Box.createHorizontalStrut(5));
 		tempBox.add(btEintragLoeschen);
 
-		btTabellenDialog = new JButton(
-				messages.getString("jvermittlungsrechnerkonfiguration_msg14"));
+		btTabellenDialog = new JButton(messages.getString("jvermittlungsrechnerkonfiguration_msg14"));
 		btTabellenDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JDialog tabellenDialog;
 				JScrollPane scrollPane;
 				JWeiterleitungsTabelle tabelle;
 
-				tabellenDialog = new JDialog(filius.gui.JMainFrame
-						.getJMainFrame(), true);
-				tabellenDialog.setTitle(messages
-						.getString("jvermittlungsrechnerkonfiguration_msg15"));
+				tabellenDialog = new JDialog(filius.gui.JMainFrame.getJMainFrame(), true);
+				tabellenDialog.setTitle(messages.getString("jvermittlungsrechnerkonfiguration_msg15"));
 				tabellenDialog.setSize(600, 400);
 
-				Dimension screenSize = Toolkit.getDefaultToolkit()
-						.getScreenSize();
-				tabellenDialog.setLocation(screenSize.width / 2 - 300,
-						screenSize.height / 2 - 200);
+				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+				tabellenDialog.setLocation(screenSize.width / 2 - 300, screenSize.height / 2 - 200);
 				tabelle = new JWeiterleitungsTabelle(getKonfiguration());
 				tabelle.updateAttribute();
 				scrollPane = new JScrollPane(tabelle);
@@ -615,9 +563,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		boxWeiterleitung.add(tempBox);
 		boxWeiterleitung.add(spWeiterleitung);
 
-		tpNetzwerkKarten.addTab(
-				messages.getString("jvermittlungsrechnerkonfiguration_msg15"),
-				boxWeiterleitung);
+		tpNetzwerkKarten.addTab(messages.getString("jvermittlungsrechnerkonfiguration_msg15"), boxWeiterleitung);
 
 		box.add(boxNetzwerkKarten);
 
@@ -626,18 +572,11 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 	}
 
 	private void showBasicSettingsDialog() {
-		Main.debug
-				.println("INVOKED ("
-						+ this.hashCode()
-						+ ") "
-						+ getClass()
-						+ " (JVermittlungsrechnerKonfiguration), showBasicSettingsDialog()");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (JVermittlungsrechnerKonfiguration), showBasicSettingsDialog()");
 		GUIContainer.getGUIContainer().getProperty().minimieren();
-		GUIContainer.getGUIContainer().setProperty(null);
-		JScrollPane scrollPane;
 		JPanel foreignPanel, localPanel;
 		JPanel upperCompound, noteCompound, buttonCompound;
-		Box scrollPaneContent;
 
 		JButton[] btnRemote = new JButton[8];
 		JLabel[] lblRemote = new JLabel[8];
@@ -645,25 +584,17 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 
 		cables = new LinkedList();
 
-		// temporary components for list entries in left and right column
-		Box tmpBox;
-		JButton tmpButton;
-		JLabel tmpLabel;
-
 		JButton btnClose;
 		JTextArea usageNote;
 		Dimension screenSize;
 
 		// basic dialog creation and settings
-		changeBasicSettingsDialog = new JDialog(
-				filius.gui.JMainFrame.getJMainFrame(), true);
-		changeBasicSettingsDialog.setTitle(messages
-				.getString("jvermittlungsrechnerkonfiguration_msg23"));
+		changeBasicSettingsDialog = new JDialog(filius.gui.JMainFrame.getJMainFrame(), true);
+		changeBasicSettingsDialog.setTitle(messages.getString("jvermittlungsrechnerkonfiguration_msg23"));
 
 		// positioning and size
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		changeBasicSettingsDialog.setLocation(screenSize.width / 2 - 300,
-				screenSize.height / 2 - 200);
+		changeBasicSettingsDialog.setLocation(screenSize.width / 2 - 300, screenSize.height / 2 - 200);
 
 		// ///////////////////////////////////////////
 		// contents
@@ -680,8 +611,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		SpringLayout layoutRemote = new SpringLayout();
 		foreignPanel = new JPanel(layoutRemote);
 		foreignPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
-		lblRemoteTitle = new JLabel(
-				messages.getString("jvermittlungsrechnerkonfiguration_msg21"));
+		lblRemoteTitle = new JLabel(messages.getString("jvermittlungsrechnerkonfiguration_msg21"));
 		foreignPanel.add(lblRemoteTitle);
 		foreignPanel.setPreferredSize(new Dimension(230, 700));
 		foreignPanel.setMaximumSize(foreignPanel.getPreferredSize());
@@ -690,34 +620,29 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		SpringLayout layoutLocal = new SpringLayout();
 		localPanel = new JPanel(layoutLocal);
 		localPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
-		lblLocalTitle = new JLabel(
-				messages.getString("jvermittlungsrechnerkonfiguration_msg22"));
+		lblLocalTitle = new JLabel(messages.getString("jvermittlungsrechnerkonfiguration_msg22"));
 		localPanel.add(lblLocalTitle);
 		localPanel.setPreferredSize(new Dimension(230, 700));
 		localPanel.setMaximumSize(localPanel.getPreferredSize());
 
-		btnAddInterface = new JButton(
-				messages.getString("jvermittlungsrechnerkonfiguration_msg24"));
+		btnAddInterface = new JButton(messages.getString("jvermittlungsrechnerkonfiguration_msg24"));
 
 		// --- create connectors in both columns
-		ListIterator it = ((Vermittlungsrechner) holeHardware())
-				.getNetzwerkInterfaces().listIterator();
+		ListIterator it = ((Vermittlungsrechner) holeHardware()).getNetzwerkInterfaces().listIterator();
 		int nicNr = 0;
 		NetzwerkInterface nic;
 		Knoten node;
 		while (it.hasNext()) {
 			nicNr++;
 			nic = (NetzwerkInterface) it.next();
-			btnLocal[nicNr - 1] = new JButton(new ImageIcon(getClass()
-					.getResource("/gfx/hardware/rj45.png")));
+			btnLocal[nicNr - 1] = new JButton(new ImageIcon(getClass().getResource("/gfx/hardware/rj45.png")));
 			btnLocal[nicNr - 1].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					interfaceButtonClicked(arg0);
 				}
 			});
 
-			lblLocal[nicNr - 1] = new JLabel("NIC " + nicNr + ": "
-					+ nic.getIp());
+			lblLocal[nicNr - 1] = new JLabel("NIC " + nicNr + ": " + nic.getIp());
 			localPanel.add(btnLocal[nicNr - 1]);
 			localPanel.add(lblLocal[nicNr - 1]);
 
@@ -734,14 +659,12 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				}
 				btnLocal[nicNr - 1].setBackground(Color.GREEN);
 				btnLocal[nicNr - 1].setEnabled(true);
-				btnRemote[nicNr - 1] = new JButton(new ImageIcon(getClass()
-						.getResource("/gfx/hardware/rj45.png")));
+				btnRemote[nicNr - 1] = new JButton(new ImageIcon(getClass().getResource("/gfx/hardware/rj45.png")));
 				btnRemote[nicNr - 1].setEnabled(false);
 				lblRemote[nicNr - 1] = new JLabel();
 				if (node instanceof filius.hardware.knoten.InternetKnoten) {
-					lblRemote[nicNr - 1].setText("<html>"
-							+ node.holeAnzeigeName() + "<br>(" + remoteAddress
-							+ ")</html>");
+					lblRemote[nicNr - 1].setText("<html>" + node.holeAnzeigeName() + "<br>(" + remoteAddress
+					        + ")</html>");
 				} else {
 					lblRemote[nicNr - 1].setText(node.holeAnzeigeName());
 				}
@@ -749,16 +672,15 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				foreignPanel.add(lblRemote[nicNr - 1]);
 				cables.add(new LinePanel());
 				cables.getLast().setName((nicNr - 1) + "-" + (nicNr - 1)); // encode
-																			// index
-																			// information
-																			// in
-																			// name
-																			// field
+				                                                           // index
+				                                                           // information
+				                                                           // in
+				                                                           // name
+				                                                           // field
 			} else {
 				btnLocal[nicNr - 1].setBackground(Color.RED);
 				btnLocal[nicNr - 1].setEnabled(true);
-				btnRemote[nicNr - 1] = new JButton(new ImageIcon(getClass()
-						.getResource("/gfx/hardware/rj45.png")));
+				btnRemote[nicNr - 1] = new JButton(new ImageIcon(getClass().getResource("/gfx/hardware/rj45.png")));
 				btnRemote[nicNr - 1].setEnabled(false);
 				btnRemote[nicNr - 1].setVisible(false);
 				lblRemote[nicNr - 1] = new JLabel();
@@ -771,8 +693,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 			}
 		}
 		for (int i = nicNr; i < 8; i++) {
-			btnLocal[i] = new JButton(new ImageIcon(getClass().getResource(
-					"/gfx/hardware/rj45.png")));
+			btnLocal[i] = new JButton(new ImageIcon(getClass().getResource("/gfx/hardware/rj45.png")));
 			btnLocal[i].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					interfaceButtonClicked(arg0);
@@ -784,8 +705,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 			localPanel.add(btnLocal[i]);
 			localPanel.add(lblLocal[i]);
 
-			btnRemote[i] = new JButton(new ImageIcon(getClass().getResource(
-					"/gfx/hardware/rj45.png")));
+			btnRemote[i] = new JButton(new ImageIcon(getClass().getResource("/gfx/hardware/rj45.png")));
 			btnRemote[i].setEnabled(false);
 			btnRemote[i].setVisible(false);
 			lblRemote[i] = new JLabel();
@@ -803,26 +723,20 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 					}
 				}
 				if (newIF >= 8) {
-					JOptionPane.showMessageDialog(
-							getKonfiguration(),
-							messages.getString("jvermittlungsrechnerkonfiguration_msg25"),
-							messages.getString("jvermittlungsrechnerkonfiguration_msg24"),
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(getKonfiguration(),
+					        messages.getString("jvermittlungsrechnerkonfiguration_msg25"),
+					        messages.getString("jvermittlungsrechnerkonfiguration_msg24"), JOptionPane.ERROR_MESSAGE);
 					btnAddInterface.setEnabled(false);
 					return;
 				}
-				((Vermittlungsrechner) getKonfiguration().holeHardware())
-						.hinzuAnschluss();
+				((Vermittlungsrechner) getKonfiguration().holeHardware()).hinzuAnschluss();
 				btnLocal[newIF].setEnabled(true);
 				btnLocal[newIF].setBackground(Color.RED);
-				lblLocal[newIF]
-						.setText("NIC "
-								+ (newIF + 1)
-								+ ": "
-								+ ((NetzwerkInterface) ((Vermittlungsrechner) getKonfiguration()
-										.holeHardware())
-										.getNetzwerkInterfaces().get(newIF))
-										.getIp());
+				lblLocal[newIF].setText("NIC "
+				        + (newIF + 1)
+				        + ": "
+				        + ((NetzwerkInterface) ((Vermittlungsrechner) getKonfiguration().holeHardware())
+				                .getNetzwerkInterfaces().get(newIF)).getIp());
 				if (newIF == 7) {
 					btnAddInterface.setEnabled(false);
 				}
@@ -849,8 +763,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		noteCompound = new JPanel();
 		// noteCompound.setBackground(Color.BLUE);
 		noteCompound.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		usageNote = new JTextArea(
-				messages.getString("jvermittlungsrechnerkonfiguration_msg19"));
+		usageNote = new JTextArea(messages.getString("jvermittlungsrechnerkonfiguration_msg19"));
 		usageNote.setOpaque(false);
 		usageNote.setEditable(false);
 		usageNote.setLineWrap(true);
@@ -866,8 +779,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		buttonCompound = new JPanel();
 		// buttonCompound.setBackground(Color.RED);
 		buttonCompound.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		btnClose = new JButton(
-				messages.getString("jvermittlungsrechnerkonfiguration_msg20"));
+		btnClose = new JButton(messages.getString("jvermittlungsrechnerkonfiguration_msg20"));
 		btnClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Container c = (Container) arg0.getSource();
@@ -875,8 +787,6 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 					c = c.getParent();
 				} while (!(c instanceof JDialog));
 				c.setVisible(false);
-				GUIContainer.getGUIContainer().setPropertyConf(
-						getKonfiguration());
 				GUIContainer.getGUIContainer().getProperty().reInit();
 				GUIContainer.getGUIContainer().getProperty().maximieren();
 			}
@@ -885,196 +795,132 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		buttonCompound.setMinimumSize(new Dimension(200, 50));
 
 		// changeBasicSettingsDialog.getContentPane().add(scrollPane,BorderLayout.CENTER);
-		changeBasicSettingsDialog.getContentPane().add(upperCompound,
-				BorderLayout.NORTH);
-		changeBasicSettingsDialog.getContentPane().add(noteCompound,
-				BorderLayout.CENTER);
-		changeBasicSettingsDialog.getContentPane().add(buttonCompound,
-				BorderLayout.SOUTH);
+		changeBasicSettingsDialog.getContentPane().add(upperCompound, BorderLayout.NORTH);
+		changeBasicSettingsDialog.getContentPane().add(noteCompound, BorderLayout.CENTER);
+		changeBasicSettingsDialog.getContentPane().add(buttonCompound, BorderLayout.SOUTH);
 
 		// ///////////////////////////////////////////
 
 		// ### Layout (Foreign Components)
-		layoutRemote.putConstraint(SpringLayout.NORTH, lblRemoteTitle, 5,
-				SpringLayout.NORTH, foreignPanel);
-		layoutRemote
-				.putConstraint(SpringLayout.HORIZONTAL_CENTER, lblRemoteTitle,
-						0, SpringLayout.HORIZONTAL_CENTER, foreignPanel);
+		layoutRemote.putConstraint(SpringLayout.NORTH, lblRemoteTitle, 5, SpringLayout.NORTH, foreignPanel);
+		layoutRemote.putConstraint(SpringLayout.HORIZONTAL_CENTER, lblRemoteTitle, 0, SpringLayout.HORIZONTAL_CENTER,
+		        foreignPanel);
 
-		layoutRemote.putConstraint(SpringLayout.NORTH, btnRemote[0], 25,
-				SpringLayout.NORTH, foreignPanel);
-		layoutRemote.putConstraint(SpringLayout.EAST, btnRemote[0], 0,
-				SpringLayout.EAST, foreignPanel);
-		layoutRemote.putConstraint(SpringLayout.NORTH, btnRemote[1], 0,
-				SpringLayout.SOUTH, btnRemote[0]);
-		layoutRemote.putConstraint(SpringLayout.EAST, btnRemote[1], 0,
-				SpringLayout.EAST, foreignPanel);
-		layoutRemote.putConstraint(SpringLayout.NORTH, btnRemote[2], 0,
-				SpringLayout.SOUTH, btnRemote[1]);
-		layoutRemote.putConstraint(SpringLayout.EAST, btnRemote[2], 0,
-				SpringLayout.EAST, foreignPanel);
-		layoutRemote.putConstraint(SpringLayout.NORTH, btnRemote[3], 0,
-				SpringLayout.SOUTH, btnRemote[2]);
-		layoutRemote.putConstraint(SpringLayout.EAST, btnRemote[3], 0,
-				SpringLayout.EAST, foreignPanel);
-		layoutRemote.putConstraint(SpringLayout.NORTH, btnRemote[4], 0,
-				SpringLayout.SOUTH, btnRemote[3]);
-		layoutRemote.putConstraint(SpringLayout.EAST, btnRemote[4], 0,
-				SpringLayout.EAST, foreignPanel);
-		layoutRemote.putConstraint(SpringLayout.NORTH, btnRemote[5], 0,
-				SpringLayout.SOUTH, btnRemote[4]);
-		layoutRemote.putConstraint(SpringLayout.EAST, btnRemote[5], 0,
-				SpringLayout.EAST, foreignPanel);
-		layoutRemote.putConstraint(SpringLayout.NORTH, btnRemote[6], 0,
-				SpringLayout.SOUTH, btnRemote[5]);
-		layoutRemote.putConstraint(SpringLayout.EAST, btnRemote[6], 0,
-				SpringLayout.EAST, foreignPanel);
-		layoutRemote.putConstraint(SpringLayout.NORTH, btnRemote[7], 0,
-				SpringLayout.SOUTH, btnRemote[6]);
-		layoutRemote.putConstraint(SpringLayout.EAST, btnRemote[7], 0,
-				SpringLayout.EAST, foreignPanel);
+		layoutRemote.putConstraint(SpringLayout.NORTH, btnRemote[0], 25, SpringLayout.NORTH, foreignPanel);
+		layoutRemote.putConstraint(SpringLayout.EAST, btnRemote[0], 0, SpringLayout.EAST, foreignPanel);
+		layoutRemote.putConstraint(SpringLayout.NORTH, btnRemote[1], 0, SpringLayout.SOUTH, btnRemote[0]);
+		layoutRemote.putConstraint(SpringLayout.EAST, btnRemote[1], 0, SpringLayout.EAST, foreignPanel);
+		layoutRemote.putConstraint(SpringLayout.NORTH, btnRemote[2], 0, SpringLayout.SOUTH, btnRemote[1]);
+		layoutRemote.putConstraint(SpringLayout.EAST, btnRemote[2], 0, SpringLayout.EAST, foreignPanel);
+		layoutRemote.putConstraint(SpringLayout.NORTH, btnRemote[3], 0, SpringLayout.SOUTH, btnRemote[2]);
+		layoutRemote.putConstraint(SpringLayout.EAST, btnRemote[3], 0, SpringLayout.EAST, foreignPanel);
+		layoutRemote.putConstraint(SpringLayout.NORTH, btnRemote[4], 0, SpringLayout.SOUTH, btnRemote[3]);
+		layoutRemote.putConstraint(SpringLayout.EAST, btnRemote[4], 0, SpringLayout.EAST, foreignPanel);
+		layoutRemote.putConstraint(SpringLayout.NORTH, btnRemote[5], 0, SpringLayout.SOUTH, btnRemote[4]);
+		layoutRemote.putConstraint(SpringLayout.EAST, btnRemote[5], 0, SpringLayout.EAST, foreignPanel);
+		layoutRemote.putConstraint(SpringLayout.NORTH, btnRemote[6], 0, SpringLayout.SOUTH, btnRemote[5]);
+		layoutRemote.putConstraint(SpringLayout.EAST, btnRemote[6], 0, SpringLayout.EAST, foreignPanel);
+		layoutRemote.putConstraint(SpringLayout.NORTH, btnRemote[7], 0, SpringLayout.SOUTH, btnRemote[6]);
+		layoutRemote.putConstraint(SpringLayout.EAST, btnRemote[7], 0, SpringLayout.EAST, foreignPanel);
 
-		layoutRemote.putConstraint(SpringLayout.VERTICAL_CENTER, lblRemote[0],
-				0, SpringLayout.VERTICAL_CENTER, btnRemote[0]);
-		layoutRemote.putConstraint(SpringLayout.EAST, lblRemote[0], -10,
-				SpringLayout.WEST, btnRemote[0]);
-		layoutRemote.putConstraint(SpringLayout.VERTICAL_CENTER, lblRemote[1],
-				0, SpringLayout.VERTICAL_CENTER, btnRemote[1]);
-		layoutRemote.putConstraint(SpringLayout.EAST, lblRemote[1], -10,
-				SpringLayout.WEST, btnRemote[1]);
-		layoutRemote.putConstraint(SpringLayout.VERTICAL_CENTER, lblRemote[2],
-				0, SpringLayout.VERTICAL_CENTER, btnRemote[2]);
-		layoutRemote.putConstraint(SpringLayout.EAST, lblRemote[2], -10,
-				SpringLayout.WEST, btnRemote[2]);
-		layoutRemote.putConstraint(SpringLayout.VERTICAL_CENTER, lblRemote[3],
-				0, SpringLayout.VERTICAL_CENTER, btnRemote[3]);
-		layoutRemote.putConstraint(SpringLayout.EAST, lblRemote[3], -10,
-				SpringLayout.WEST, btnRemote[3]);
-		layoutRemote.putConstraint(SpringLayout.VERTICAL_CENTER, lblRemote[4],
-				0, SpringLayout.VERTICAL_CENTER, btnRemote[4]);
-		layoutRemote.putConstraint(SpringLayout.EAST, lblRemote[4], -10,
-				SpringLayout.WEST, btnRemote[4]);
-		layoutRemote.putConstraint(SpringLayout.VERTICAL_CENTER, lblRemote[5],
-				0, SpringLayout.VERTICAL_CENTER, btnRemote[5]);
-		layoutRemote.putConstraint(SpringLayout.EAST, lblRemote[5], -10,
-				SpringLayout.WEST, btnRemote[5]);
-		layoutRemote.putConstraint(SpringLayout.VERTICAL_CENTER, lblRemote[6],
-				0, SpringLayout.VERTICAL_CENTER, btnRemote[6]);
-		layoutRemote.putConstraint(SpringLayout.EAST, lblRemote[6], -10,
-				SpringLayout.WEST, btnRemote[6]);
-		layoutRemote.putConstraint(SpringLayout.VERTICAL_CENTER, lblRemote[7],
-				0, SpringLayout.VERTICAL_CENTER, btnRemote[7]);
-		layoutRemote.putConstraint(SpringLayout.EAST, lblRemote[7], -10,
-				SpringLayout.WEST, btnRemote[7]);
+		layoutRemote.putConstraint(SpringLayout.VERTICAL_CENTER, lblRemote[0], 0, SpringLayout.VERTICAL_CENTER,
+		        btnRemote[0]);
+		layoutRemote.putConstraint(SpringLayout.EAST, lblRemote[0], -10, SpringLayout.WEST, btnRemote[0]);
+		layoutRemote.putConstraint(SpringLayout.VERTICAL_CENTER, lblRemote[1], 0, SpringLayout.VERTICAL_CENTER,
+		        btnRemote[1]);
+		layoutRemote.putConstraint(SpringLayout.EAST, lblRemote[1], -10, SpringLayout.WEST, btnRemote[1]);
+		layoutRemote.putConstraint(SpringLayout.VERTICAL_CENTER, lblRemote[2], 0, SpringLayout.VERTICAL_CENTER,
+		        btnRemote[2]);
+		layoutRemote.putConstraint(SpringLayout.EAST, lblRemote[2], -10, SpringLayout.WEST, btnRemote[2]);
+		layoutRemote.putConstraint(SpringLayout.VERTICAL_CENTER, lblRemote[3], 0, SpringLayout.VERTICAL_CENTER,
+		        btnRemote[3]);
+		layoutRemote.putConstraint(SpringLayout.EAST, lblRemote[3], -10, SpringLayout.WEST, btnRemote[3]);
+		layoutRemote.putConstraint(SpringLayout.VERTICAL_CENTER, lblRemote[4], 0, SpringLayout.VERTICAL_CENTER,
+		        btnRemote[4]);
+		layoutRemote.putConstraint(SpringLayout.EAST, lblRemote[4], -10, SpringLayout.WEST, btnRemote[4]);
+		layoutRemote.putConstraint(SpringLayout.VERTICAL_CENTER, lblRemote[5], 0, SpringLayout.VERTICAL_CENTER,
+		        btnRemote[5]);
+		layoutRemote.putConstraint(SpringLayout.EAST, lblRemote[5], -10, SpringLayout.WEST, btnRemote[5]);
+		layoutRemote.putConstraint(SpringLayout.VERTICAL_CENTER, lblRemote[6], 0, SpringLayout.VERTICAL_CENTER,
+		        btnRemote[6]);
+		layoutRemote.putConstraint(SpringLayout.EAST, lblRemote[6], -10, SpringLayout.WEST, btnRemote[6]);
+		layoutRemote.putConstraint(SpringLayout.VERTICAL_CENTER, lblRemote[7], 0, SpringLayout.VERTICAL_CENTER,
+		        btnRemote[7]);
+		layoutRemote.putConstraint(SpringLayout.EAST, lblRemote[7], -10, SpringLayout.WEST, btnRemote[7]);
 		// ##########
 
 		// ### Layout (Local interfaces)
-		layoutLocal.putConstraint(SpringLayout.NORTH, lblLocalTitle, 5,
-				SpringLayout.NORTH, localPanel);
-		layoutLocal.putConstraint(SpringLayout.HORIZONTAL_CENTER,
-				lblLocalTitle, 0, SpringLayout.HORIZONTAL_CENTER, localPanel);
+		layoutLocal.putConstraint(SpringLayout.NORTH, lblLocalTitle, 5, SpringLayout.NORTH, localPanel);
+		layoutLocal.putConstraint(SpringLayout.HORIZONTAL_CENTER, lblLocalTitle, 0, SpringLayout.HORIZONTAL_CENTER,
+		        localPanel);
 
-		layoutLocal.putConstraint(SpringLayout.NORTH, btnLocal[0], 25,
-				SpringLayout.NORTH, localPanel);
-		layoutLocal.putConstraint(SpringLayout.WEST, btnLocal[0], 0,
-				SpringLayout.WEST, localPanel);
-		layoutLocal.putConstraint(SpringLayout.NORTH, btnLocal[1], 0,
-				SpringLayout.SOUTH, btnLocal[0]);
-		layoutLocal.putConstraint(SpringLayout.WEST, btnLocal[1], 0,
-				SpringLayout.WEST, localPanel);
-		layoutLocal.putConstraint(SpringLayout.NORTH, btnLocal[2], 0,
-				SpringLayout.SOUTH, btnLocal[1]);
-		layoutLocal.putConstraint(SpringLayout.WEST, btnLocal[2], 0,
-				SpringLayout.WEST, localPanel);
-		layoutLocal.putConstraint(SpringLayout.NORTH, btnLocal[3], 0,
-				SpringLayout.SOUTH, btnLocal[2]);
-		layoutLocal.putConstraint(SpringLayout.WEST, btnLocal[3], 0,
-				SpringLayout.WEST, localPanel);
-		layoutLocal.putConstraint(SpringLayout.NORTH, btnLocal[4], 0,
-				SpringLayout.SOUTH, btnLocal[3]);
-		layoutLocal.putConstraint(SpringLayout.WEST, btnLocal[4], 0,
-				SpringLayout.WEST, localPanel);
-		layoutLocal.putConstraint(SpringLayout.NORTH, btnLocal[5], 0,
-				SpringLayout.SOUTH, btnLocal[4]);
-		layoutLocal.putConstraint(SpringLayout.WEST, btnLocal[5], 0,
-				SpringLayout.WEST, localPanel);
-		layoutLocal.putConstraint(SpringLayout.NORTH, btnLocal[6], 0,
-				SpringLayout.SOUTH, btnLocal[5]);
-		layoutLocal.putConstraint(SpringLayout.WEST, btnLocal[6], 0,
-				SpringLayout.WEST, localPanel);
-		layoutLocal.putConstraint(SpringLayout.NORTH, btnLocal[7], 0,
-				SpringLayout.SOUTH, btnLocal[6]);
-		layoutLocal.putConstraint(SpringLayout.WEST, btnLocal[7], 0,
-				SpringLayout.WEST, localPanel);
+		layoutLocal.putConstraint(SpringLayout.NORTH, btnLocal[0], 25, SpringLayout.NORTH, localPanel);
+		layoutLocal.putConstraint(SpringLayout.WEST, btnLocal[0], 0, SpringLayout.WEST, localPanel);
+		layoutLocal.putConstraint(SpringLayout.NORTH, btnLocal[1], 0, SpringLayout.SOUTH, btnLocal[0]);
+		layoutLocal.putConstraint(SpringLayout.WEST, btnLocal[1], 0, SpringLayout.WEST, localPanel);
+		layoutLocal.putConstraint(SpringLayout.NORTH, btnLocal[2], 0, SpringLayout.SOUTH, btnLocal[1]);
+		layoutLocal.putConstraint(SpringLayout.WEST, btnLocal[2], 0, SpringLayout.WEST, localPanel);
+		layoutLocal.putConstraint(SpringLayout.NORTH, btnLocal[3], 0, SpringLayout.SOUTH, btnLocal[2]);
+		layoutLocal.putConstraint(SpringLayout.WEST, btnLocal[3], 0, SpringLayout.WEST, localPanel);
+		layoutLocal.putConstraint(SpringLayout.NORTH, btnLocal[4], 0, SpringLayout.SOUTH, btnLocal[3]);
+		layoutLocal.putConstraint(SpringLayout.WEST, btnLocal[4], 0, SpringLayout.WEST, localPanel);
+		layoutLocal.putConstraint(SpringLayout.NORTH, btnLocal[5], 0, SpringLayout.SOUTH, btnLocal[4]);
+		layoutLocal.putConstraint(SpringLayout.WEST, btnLocal[5], 0, SpringLayout.WEST, localPanel);
+		layoutLocal.putConstraint(SpringLayout.NORTH, btnLocal[6], 0, SpringLayout.SOUTH, btnLocal[5]);
+		layoutLocal.putConstraint(SpringLayout.WEST, btnLocal[6], 0, SpringLayout.WEST, localPanel);
+		layoutLocal.putConstraint(SpringLayout.NORTH, btnLocal[7], 0, SpringLayout.SOUTH, btnLocal[6]);
+		layoutLocal.putConstraint(SpringLayout.WEST, btnLocal[7], 0, SpringLayout.WEST, localPanel);
 
-		layoutLocal.putConstraint(SpringLayout.VERTICAL_CENTER, lblLocal[0], 0,
-				SpringLayout.VERTICAL_CENTER, btnLocal[0]);
-		layoutLocal.putConstraint(SpringLayout.WEST, lblLocal[0], 10,
-				SpringLayout.EAST, btnLocal[0]);
-		layoutLocal.putConstraint(SpringLayout.VERTICAL_CENTER, lblLocal[1], 0,
-				SpringLayout.VERTICAL_CENTER, btnLocal[1]);
-		layoutLocal.putConstraint(SpringLayout.WEST, lblLocal[1], 10,
-				SpringLayout.EAST, btnLocal[1]);
-		layoutLocal.putConstraint(SpringLayout.VERTICAL_CENTER, lblLocal[2], 0,
-				SpringLayout.VERTICAL_CENTER, btnLocal[2]);
-		layoutLocal.putConstraint(SpringLayout.WEST, lblLocal[2], 10,
-				SpringLayout.EAST, btnLocal[2]);
-		layoutLocal.putConstraint(SpringLayout.VERTICAL_CENTER, lblLocal[3], 0,
-				SpringLayout.VERTICAL_CENTER, btnLocal[3]);
-		layoutLocal.putConstraint(SpringLayout.WEST, lblLocal[3], 10,
-				SpringLayout.EAST, btnLocal[3]);
-		layoutLocal.putConstraint(SpringLayout.VERTICAL_CENTER, lblLocal[4], 0,
-				SpringLayout.VERTICAL_CENTER, btnLocal[4]);
-		layoutLocal.putConstraint(SpringLayout.WEST, lblLocal[4], 10,
-				SpringLayout.EAST, btnLocal[4]);
-		layoutLocal.putConstraint(SpringLayout.VERTICAL_CENTER, lblLocal[5], 0,
-				SpringLayout.VERTICAL_CENTER, btnLocal[5]);
-		layoutLocal.putConstraint(SpringLayout.WEST, lblLocal[5], 10,
-				SpringLayout.EAST, btnLocal[5]);
-		layoutLocal.putConstraint(SpringLayout.VERTICAL_CENTER, lblLocal[6], 0,
-				SpringLayout.VERTICAL_CENTER, btnLocal[6]);
-		layoutLocal.putConstraint(SpringLayout.WEST, lblLocal[6], 10,
-				SpringLayout.EAST, btnLocal[6]);
-		layoutLocal.putConstraint(SpringLayout.VERTICAL_CENTER, lblLocal[7], 0,
-				SpringLayout.VERTICAL_CENTER, btnLocal[7]);
-		layoutLocal.putConstraint(SpringLayout.WEST, lblLocal[7], 10,
-				SpringLayout.EAST, btnLocal[7]);
+		layoutLocal.putConstraint(SpringLayout.VERTICAL_CENTER, lblLocal[0], 0, SpringLayout.VERTICAL_CENTER,
+		        btnLocal[0]);
+		layoutLocal.putConstraint(SpringLayout.WEST, lblLocal[0], 10, SpringLayout.EAST, btnLocal[0]);
+		layoutLocal.putConstraint(SpringLayout.VERTICAL_CENTER, lblLocal[1], 0, SpringLayout.VERTICAL_CENTER,
+		        btnLocal[1]);
+		layoutLocal.putConstraint(SpringLayout.WEST, lblLocal[1], 10, SpringLayout.EAST, btnLocal[1]);
+		layoutLocal.putConstraint(SpringLayout.VERTICAL_CENTER, lblLocal[2], 0, SpringLayout.VERTICAL_CENTER,
+		        btnLocal[2]);
+		layoutLocal.putConstraint(SpringLayout.WEST, lblLocal[2], 10, SpringLayout.EAST, btnLocal[2]);
+		layoutLocal.putConstraint(SpringLayout.VERTICAL_CENTER, lblLocal[3], 0, SpringLayout.VERTICAL_CENTER,
+		        btnLocal[3]);
+		layoutLocal.putConstraint(SpringLayout.WEST, lblLocal[3], 10, SpringLayout.EAST, btnLocal[3]);
+		layoutLocal.putConstraint(SpringLayout.VERTICAL_CENTER, lblLocal[4], 0, SpringLayout.VERTICAL_CENTER,
+		        btnLocal[4]);
+		layoutLocal.putConstraint(SpringLayout.WEST, lblLocal[4], 10, SpringLayout.EAST, btnLocal[4]);
+		layoutLocal.putConstraint(SpringLayout.VERTICAL_CENTER, lblLocal[5], 0, SpringLayout.VERTICAL_CENTER,
+		        btnLocal[5]);
+		layoutLocal.putConstraint(SpringLayout.WEST, lblLocal[5], 10, SpringLayout.EAST, btnLocal[5]);
+		layoutLocal.putConstraint(SpringLayout.VERTICAL_CENTER, lblLocal[6], 0, SpringLayout.VERTICAL_CENTER,
+		        btnLocal[6]);
+		layoutLocal.putConstraint(SpringLayout.WEST, lblLocal[6], 10, SpringLayout.EAST, btnLocal[6]);
+		layoutLocal.putConstraint(SpringLayout.VERTICAL_CENTER, lblLocal[7], 0, SpringLayout.VERTICAL_CENTER,
+		        btnLocal[7]);
+		layoutLocal.putConstraint(SpringLayout.WEST, lblLocal[7], 10, SpringLayout.EAST, btnLocal[7]);
 
-		layoutLocal.putConstraint(SpringLayout.NORTH, btnAddInterface, 5,
-				SpringLayout.SOUTH, btnLocal[7]);
-		layoutLocal.putConstraint(SpringLayout.HORIZONTAL_CENTER,
-				btnAddInterface, 0, SpringLayout.HORIZONTAL_CENTER,
-				foreignPanel);
+		layoutLocal.putConstraint(SpringLayout.NORTH, btnAddInterface, 5, SpringLayout.SOUTH, btnLocal[7]);
+		layoutLocal.putConstraint(SpringLayout.HORIZONTAL_CENTER, btnAddInterface, 0, SpringLayout.HORIZONTAL_CENTER,
+		        foreignPanel);
 		// ##########
 
 		// -- draw cable connections
-		Main.debug
-				.println("DEBUG: JVermittlungsrechnerkonfiguration, showBasicSettingsDialog, cables.size()="
-						+ cables.size());
+		Main.debug.println("DEBUG: JVermittlungsrechnerkonfiguration, showBasicSettingsDialog, cables.size()="
+		        + cables.size());
 		SpringLayout cableLayout = new SpringLayout();
 		cablePanel.setLayout(cableLayout);
 		for (int i = 0; i < cables.size(); i++) {
 			int l, r; // indices for foreign component (l; left area) and local
-						// component (r; right area)
+			          // component (r; right area)
 			LinePanel tmp = cables.get(i);
-			Main.debug
-					.println("DEBUG: JVermittlungsrechnerkonfiguration, showBasicSettingsDialog, tmp LinePanel: ("
-							+ tmp.hashCode() + ")");
+			Main.debug.println("DEBUG: JVermittlungsrechnerkonfiguration, showBasicSettingsDialog, tmp LinePanel: ("
+			        + tmp.hashCode() + ")");
 			String idxStr = tmp.getName();
 			l = Integer.parseInt(idxStr.substring(0, 1));
 			r = Integer.parseInt(idxStr.substring(2));
 			changeBasicSettingsDialog.pack();
-			tmp.setStartPoint(-2,
-					btnRemote[l].getY()
-							+ (btnRemote[l].getPreferredSize().height / 2));
-			tmp.setEndPoint(282,
-					btnLocal[r].getY()
-							+ (btnLocal[r].getPreferredSize().height / 2));
+			tmp.setStartPoint(-2, btnRemote[l].getY() + (btnRemote[l].getPreferredSize().height / 2));
+			tmp.setEndPoint(282, btnLocal[r].getY() + (btnLocal[r].getPreferredSize().height / 2));
 			cablePanel.add(tmp);
-			cableLayout.putConstraint(SpringLayout.WEST, tmp, 0,
-					SpringLayout.WEST, cablePanel);
-			cableLayout.putConstraint(SpringLayout.NORTH, tmp, 0,
-					SpringLayout.NORTH, cablePanel);
+			cableLayout.putConstraint(SpringLayout.WEST, tmp, 0, SpringLayout.WEST, cablePanel);
+			cableLayout.putConstraint(SpringLayout.NORTH, tmp, 0, SpringLayout.NORTH, cablePanel);
 			tmp.setPreferredSize(new Dimension(280, 700));
 		}
 		// -------------------------
@@ -1087,7 +933,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 
 	public void doUnselectAction() {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
-				+ " (JVermittlungsrechnerKonfiguration), doUnselectAction()");
+		        + " (JVermittlungsrechnerKonfiguration), doUnselectAction()");
 		if (highlightedCable != null) {
 			highlightedCable.setAktiv(false);
 			highlightedCable = null;
@@ -1113,16 +959,14 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 	// parameters are direct indices for NICs in NIC list
 	private void exchangeNICdata(int idx1, int idx2) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
-				+ " (JVermittlungsrechnerKonfiguration), exchangeNICdata("
-				+ idx1 + "," + idx2 + ")");
+		        + " (JVermittlungsrechnerKonfiguration), exchangeNICdata(" + idx1 + "," + idx2 + ")");
 		String mac;
 		String ip;
 		String subnetzMaske;
 		String gateway;
 		String dns;
 		NetzwerkInterface nic1, nic2;
-		List<NetzwerkInterface> nicList = ((Vermittlungsrechner) holeHardware())
-				.getNetzwerkInterfaces();
+		List<NetzwerkInterface> nicList = ((Vermittlungsrechner) holeHardware()).getNetzwerkInterfaces();
 
 		// get NIC copies
 		if (idx1 == idx2)
@@ -1170,10 +1014,8 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 	// processing
 	private GUIKnotenItem removeCable(Verbindung cableConn) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
-				+ " (JVermittlungsrechnerKonfiguration), removeCable("
-				+ cableConn + ")");
-		ListIterator cit = GUIContainer.getGUIContainer().getCablelist()
-				.listIterator();
+		        + " (JVermittlungsrechnerKonfiguration), removeCable(" + cableConn + ")");
+		ListIterator cit = GUIContainer.getGUIContainer().getCableItems().listIterator();
 		GUIKabelItem cittemp = new GUIKabelItem();
 		GUIKnotenItem remoteNode = null;
 		LinkedList<GUIKabelItem> loeschListe = new LinkedList<GUIKabelItem>();
@@ -1183,19 +1025,11 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 			cittemp = (GUIKabelItem) cit.next();
 			if (cittemp.getDasKabel() == cableConn) {
 				loeschListe.add(cittemp);
-				if (cittemp
-						.getKabelpanel()
-						.getZiel1()
-						.getKnoten()
-						.equals(((Vermittlungsrechner) holeHardware())
-								.getSystemSoftware().getKnoten())) {
+				if (cittemp.getKabelpanel().getZiel1().getKnoten()
+				        .equals(((Vermittlungsrechner) holeHardware()).getSystemSoftware().getKnoten())) {
 					remoteNode = cittemp.getKabelpanel().getZiel2();
-				} else if (cittemp
-						.getKabelpanel()
-						.getZiel2()
-						.getKnoten()
-						.equals(((Vermittlungsrechner) holeHardware())
-								.getSystemSoftware().getKnoten())) {
+				} else if (cittemp.getKabelpanel().getZiel2().getKnoten()
+				        .equals(((Vermittlungsrechner) holeHardware()).getSystemSoftware().getKnoten())) {
 					remoteNode = cittemp.getKabelpanel().getZiel1();
 				}
 
@@ -1210,9 +1044,8 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		ListIterator ctt = loeschListe.listIterator();
 		while (ctt.hasNext()) {
 			cittemp = (GUIKabelItem) ctt.next();
-			GUIContainer.getGUIContainer().getCablelist().remove(cittemp);
-			GUIContainer.getGUIContainer().getDraftpanel()
-					.remove(cittemp.getKabelpanel());
+			GUIContainer.getGUIContainer().getCableItems().remove(cittemp);
+			GUIContainer.getGUIContainer().getDesignpanel().remove(cittemp.getKabelpanel());
 		}
 
 		GUIContainer.getGUIContainer().updateViewport();
@@ -1221,27 +1054,24 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 	}
 
 	// add new cable
-	private boolean addCable(GUIKnotenItem remoteNode, Port localPort,
-			Port remotePort) {
+	private boolean addCable(GUIKnotenItem remoteNode, Port localPort, Port remotePort) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
-				+ " (JVermittlungsrechnerKonfiguration), addCable("
-				+ remoteNode + "," + localPort + "," + remotePort + ")");
+		        + " (JVermittlungsrechnerKonfiguration), addCable(" + remoteNode + "," + localPort + "," + remotePort
+		        + ")");
 		GUIContainer c = GUIContainer.getGUIContainer();
-		GUIDraftPanel draftpanel = c.getDraftpanel();
-		LinkedList<GUIKabelItem> cablelist = c.getCablelist();
+		GUIDesignPanel draftpanel = c.getDesignpanel();
+		List<GUIKabelItem> cablelist = c.getCableItems();
 		NetzwerkInterface nic2;
 		Port anschluss1 = null;
 		Port anschluss2 = null;
 
 		GUIKabelItem tmpCable = new GUIKabelItem();
-		ListIterator nit = GUIContainer.getGUIContainer()
-				.getGUIKnotenItemList().listIterator();
+		ListIterator nit = GUIContainer.getGUIContainer().getKnotenItems().listIterator();
 		GUIKnotenItem tmpNode;
 		tmpCable.getKabelpanel().setZiel1(null);
 		while (nit.hasNext()) {
 			tmpNode = (GUIKnotenItem) nit.next();
-			if (tmpNode.getKnoten() == ((Vermittlungsrechner) holeHardware())
-					.getSystemSoftware().getKnoten()) {
+			if (tmpNode.getKnoten() == ((Vermittlungsrechner) holeHardware()).getSystemSoftware().getKnoten()) {
 				tmpCable.getKabelpanel().setZiel1(tmpNode);
 			}
 		}
@@ -1251,28 +1081,23 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		tmpCable.getKabelpanel().setZiel2(remoteNode);
 
 		if (tmpCable.getKabelpanel().getZiel2().getKnoten() instanceof Modem) {
-			Modem vrOut = (Modem) tmpCable.getKabelpanel().getZiel2()
-					.getKnoten();
+			Modem vrOut = (Modem) tmpCable.getKabelpanel().getZiel2().getKnoten();
 			anschluss2 = vrOut.getErstenAnschluss();
 		} else if (tmpCable.getKabelpanel().getZiel2().getKnoten() instanceof Vermittlungsrechner) {
 			anschluss2 = remotePort; // only in this case use pre-determined
-										// port; otherwise use internal methods
+			                         // port; otherwise use internal methods
 		} else if (tmpCable.getKabelpanel().getZiel2().getKnoten() instanceof Switch) {
-			Switch sw = (Switch) tmpCable.getKabelpanel().getZiel2()
-					.getKnoten();
-			anschluss2 = ((SwitchFirmware) sw.getSystemSoftware()).getKnoten()
-					.holeFreienPort();
+			Switch sw = (Switch) tmpCable.getKabelpanel().getZiel2().getKnoten();
+			anschluss2 = ((SwitchFirmware) sw.getSystemSoftware()).getKnoten().holeFreienPort();
 		} else if (tmpCable.getKabelpanel().getZiel2().getKnoten() instanceof InternetKnoten) {
-			nic2 = (NetzwerkInterface) ((InternetKnoten) tmpCable
-					.getKabelpanel().getZiel2().getKnoten())
-					.getNetzwerkInterfaces().get(0);
+			nic2 = (NetzwerkInterface) ((InternetKnoten) tmpCable.getKabelpanel().getZiel2().getKnoten())
+			        .getNetzwerkInterfaces().get(0);
 			anschluss2 = nic2.getPort();
 		}
 
 		anschluss1 = localPort;
 		tmpCable.setDasKabel(new Kabel());
-		tmpCable.getDasKabel().setAnschluesse(
-				new Port[] { anschluss1, anschluss2 });
+		tmpCable.getDasKabel().setAnschluesse(new Port[] { anschluss1, anschluss2 });
 
 		// Main.debug.println("DEBUG:  ("+this.hashCode()+") addCable:   jetzt hinzufügen von Kabel...\n\t"
 		// + tmpCable.toString());
@@ -1289,13 +1114,8 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 
 	// react to clicked interface button in localPanel (BasicSettingsDialog)
 	private void interfaceButtonClicked(ActionEvent e) {
-		Main.debug
-				.println("INVOKED ("
-						+ this.hashCode()
-						+ ") "
-						+ getClass()
-						+ " (JVermittlungsrechnerKonfiguration), interfaceButtonClicked("
-						+ e + ")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (JVermittlungsrechnerKonfiguration), interfaceButtonClicked(" + e + ")");
 		JButton source = (JButton) e.getSource();
 		LinePanel formerLine, currLine;
 		LinePanel tmpLP = null;
@@ -1308,9 +1128,9 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				if (btnLocal[i] == source) // found current source button
 					currIdx = i;
 				if (btnLocal[i].getBackground().equals(Color.YELLOW)) // some
-																		// button
-																		// marked
-																		// yellow
+				                                                      // button
+				                                                      // marked
+				                                                      // yellow
 					formerIdx = i;
 			}
 		}
@@ -1323,36 +1143,30 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				formerLine = null;
 				currLine = null;
 				for (int i = 0; i < cables.size(); i++) {
-					if (cables.get(i).getName().substring(2)
-							.equals(String.valueOf(formerIdx))) {
+					if (cables.get(i).getName().substring(2).equals(String.valueOf(formerIdx))) {
 						// found corresponding cable (i.e., it exists!)
 						formerLine = cables.get(i);
 						// Main.debug.println("DEBUG: interfaceButtonClicked;  formerLine="+formerLine.toString()+", index="+i);
 					}
-					if (cables.get(i).getName().substring(2)
-							.equals(String.valueOf(currIdx))) {
+					if (cables.get(i).getName().substring(2).equals(String.valueOf(currIdx))) {
 						// found corresponding cable (i.e., it exists!)
 						currLine = cables.get(i);
 						// Main.debug.println("DEBUG: interfaceButtonClicked;  currLine="+currLine.toString()+", index="+i);
 					}
 				}
 				if (formerLine != null) { // found corresponding cable (i.e., it
-											// exists!)
+					                      // exists!)
 					formerLine.lineColor = new Color(64, 64, 64);
-					formerLine.lineEnd = new Point(282, source.getY()
-							+ (source.getHeight() / 2));
-					formerLine.setName(formerLine.getName().substring(0, 2)
-							+ currIdx);
+					formerLine.lineEnd = new Point(282, source.getY() + (source.getHeight() / 2));
+					formerLine.setName(formerLine.getName().substring(0, 2) + currIdx);
 					source.setBackground(Color.GREEN);
 					// Main.debug.println("DEBUG: interfaceButtonClicked;  formerLine != null ("+formerLine.toString()+")");
 				}
 				if (currLine != null) { // found corresponding cable (i.e., it
-										// exists!)
-					currLine.lineEnd = new Point(282,
-							btnLocal[formerIdx].getY()
-									+ (btnLocal[formerIdx].getHeight() / 2));
-					currLine.setName(currLine.getName().substring(0, 2)
-							+ formerIdx);
+					                    // exists!)
+					currLine.lineEnd = new Point(282, btnLocal[formerIdx].getY()
+					        + (btnLocal[formerIdx].getHeight() / 2));
+					currLine.setName(currLine.getName().substring(0, 2) + formerIdx);
 					btnLocal[formerIdx].setBackground(Color.GREEN);
 					// Main.debug.println("DEBUG: interfaceButtonClicked;  currLine != null ("+currLine.toString()+")");
 				}
@@ -1360,8 +1174,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 				exchangeNICdata(formerIdx, currIdx);
 			} else {
 				for (int i = 0; i < cables.size(); i++) {
-					if (cables.get(i).getName().substring(2)
-							.equals(String.valueOf(formerIdx))) {
+					if (cables.get(i).getName().substring(2).equals(String.valueOf(formerIdx))) {
 						// found corresponding cable (i.e., it exists!)
 						cables.get(i).lineColor = new Color(64, 64, 64);
 						source.setBackground(Color.GREEN);
@@ -1371,8 +1184,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		} else {
 			// else mark current source button
 			for (int i = 0; i < cables.size(); i++) {
-				if (cables.get(i).getName().substring(2)
-						.equals(String.valueOf(currIdx))) {
+				if (cables.get(i).getName().substring(2).equals(String.valueOf(currIdx))) {
 					// found corresponding cable (i.e., it exists!)
 					source.setBackground(Color.YELLOW);
 					cables.get(i).lineColor = Color.MAGENTA;
@@ -1384,7 +1196,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 
 	public void updateAttribute() {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
-				+ " (JVermittlungsrechnerKonfiguration), updateAttribute()");
+		        + " (JVermittlungsrechnerKonfiguration), updateAttribute()");
 		ListIterator it;
 		Vermittlungsrechner vRechner;
 		VermittlungsrechnerBetriebssystem bs;
@@ -1398,8 +1210,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		gateway.setText(bs.getStandardGateway());
 		rip.setSelected(bs.isRipEnabled());
 
-		tpNetzwerkKarten.setEnabledAt(tpNetzwerkKarten.getTabCount() - 1,
-				!bs.isRipEnabled());
+		tpNetzwerkKarten.setEnabledAt(tpNetzwerkKarten.getTabCount() - 1, !bs.isRipEnabled());
 
 		it = vRechner.getNetzwerkInterfaces().listIterator();
 		for (int i = 0; it.hasNext() && i < ipAdressen.length; i++) {
@@ -1409,12 +1220,10 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 
 			tempKnoten = holeVerbundeneKomponente(nic);
 			if (tempKnoten == null)
-				verbundeneKomponente[i].setText(messages
-						.getString("jvermittlungsrechnerkonfiguration_msg16"));
+				verbundeneKomponente[i].setText(messages.getString("jvermittlungsrechnerkonfiguration_msg16"));
 			else
-				verbundeneKomponente[i].setText(messages
-						.getString("jvermittlungsrechnerkonfiguration_msg6")
-						+ " " + tempKnoten.holeAnzeigeName());
+				verbundeneKomponente[i].setText(messages.getString("jvermittlungsrechnerkonfiguration_msg6") + " "
+				        + tempKnoten.holeAnzeigeName());
 		}
 
 		vRechner = (Vermittlungsrechner) holeHardware();
@@ -1424,19 +1233,16 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		for (int i = 0; it.hasNext(); i++) {
 			tempNic = (NetzwerkInterface) it.next();
 			if (holeVerbundeneKomponente(tempNic) == null) {
-				tpNetzwerkKarten.setIconAt(i + 1, new ImageIcon(getClass()
-						.getResource("/gfx/allgemein/conn_fail.png")));
+				tpNetzwerkKarten
+				        .setIconAt(i + 1, new ImageIcon(getClass().getResource("/gfx/allgemein/conn_fail.png")));
 			} else {
-				tpNetzwerkKarten.setIconAt(i + 1, new ImageIcon(getClass()
-						.getResource("/gfx/allgemein/conn_ok.png")));
+				tpNetzwerkKarten.setIconAt(i + 1, new ImageIcon(getClass().getResource("/gfx/allgemein/conn_ok.png")));
 			}
 			String tabtitle;
 			if (tempNic.getIp() != null) {
 				tabtitle = tempNic.getIp();
 			} else {
-				tabtitle = messages
-						.getString("jvermittlungsrechnerkonfiguration_msg10")
-						+ (i + 1);
+				tabtitle = messages.getString("jvermittlungsrechnerkonfiguration_msg10") + (i + 1);
 			}
 			tpNetzwerkKarten.setTitleAt(i + 1, tabtitle);
 		}
@@ -1445,13 +1251,8 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 	}
 
 	private Knoten holeVerbundeneKomponente(NetzwerkInterface nic) {
-		Main.debug
-				.println("INVOKED ("
-						+ this.hashCode()
-						+ ") "
-						+ getClass()
-						+ " (JVermittlungsrechnerKonfiguration), holeVerbundeneKomponente("
-						+ nic + ")");
+		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+		        + " (JVermittlungsrechnerKonfiguration), holeVerbundeneKomponente(" + nic + ")");
 		Port lokalerAnschluss, entfernterAnschluss;
 		Port[] ports;
 		ListIterator it1, it2;
@@ -1467,8 +1268,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		else
 			entfernterAnschluss = ports[0];
 
-		it1 = GUIContainer.getGUIContainer().getGUIKnotenItemList()
-				.listIterator();
+		it1 = GUIContainer.getGUIContainer().getKnotenItems().listIterator();
 		while (it1.hasNext()) {
 			knoten = ((GUIKnotenItem) it1.next()).getKnoten();
 			if (knoten instanceof LokalerKnoten) {
@@ -1478,15 +1278,13 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 						return knoten;
 				}
 			} else if (knoten instanceof InternetKnoten) {
-				it2 = ((InternetKnoten) knoten).getNetzwerkInterfaces()
-						.listIterator();
+				it2 = ((InternetKnoten) knoten).getNetzwerkInterfaces().listIterator();
 				while (it2.hasNext()) {
 					if (((NetzwerkInterface) it2.next()).getPort() == entfernterAnschluss)
 						return knoten;
 				}
 			} else {
-				Main.debug.println("ERROR (" + this.hashCode()
-						+ "): Knotentyp unbekannt.");
+				Main.debug.println("ERROR (" + this.hashCode() + "): Knotentyp unbekannt.");
 			}
 		}
 
@@ -1495,8 +1293,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 
 	private Kabel getConnectedCable(NetzwerkInterface nic) {
 		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
-				+ " (JVermittlungsrechnerKonfiguration), getConnectedCable("
-				+ nic + ")");
+		        + " (JVermittlungsrechnerKonfiguration), getConnectedCable(" + nic + ")");
 		ListIterator<GUIKabelItem> it;
 		Verbindung nicConn, tmpConn;
 		GUIKabelItem cable;
@@ -1505,7 +1302,7 @@ public class JVermittlungsrechnerKonfiguration extends JKonfiguration implements
 		if (nicConn == null)
 			return null;
 
-		it = GUIContainer.getGUIContainer().getCablelist().listIterator();
+		it = GUIContainer.getGUIContainer().getCableItems().listIterator();
 
 		while (it.hasNext()) {
 			cable = ((GUIKabelItem) it.next());
