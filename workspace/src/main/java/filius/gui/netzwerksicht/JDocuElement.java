@@ -93,6 +93,7 @@ public class JDocuElement extends JPanel implements I18n {
             textArea.setBorder(BorderFactory.createEmptyBorder(TEXT_BORDER_WIDTH, TEXT_BORDER_WIDTH, TEXT_BORDER_WIDTH,
                     TEXT_BORDER_WIDTH));
             textArea.setLineWrap(true);
+            textArea.setWrapStyleWord(true);
             textArea.setEditable(enabled);
             this.add(textArea, BorderLayout.CENTER);
         }

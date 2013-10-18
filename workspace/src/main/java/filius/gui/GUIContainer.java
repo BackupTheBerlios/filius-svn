@@ -135,13 +135,13 @@ public class GUIContainer implements Serializable, I18n {
     /** enthält einen Integerwert dafür welche Ansicht gerade aktiv ist */
     private int activeSite = GUIMainMenu.MODUS_ENTWURF;
 
-    private List<GUIKnotenItem> itemlist = new LinkedList<GUIKnotenItem>();
-    private List<GUIKabelItem> cablelist = new LinkedList<GUIKabelItem>();
+    private List<GUIKnotenItem> nodeItems = new LinkedList<GUIKnotenItem>();
+    private List<GUIKabelItem> cableItems = new LinkedList<GUIKabelItem>();
 
     private List<GUIDocuItem> docuItems = new ArrayList<GUIDocuItem>();
 
     public List<GUIKnotenItem> getKnotenItems() {
-        return itemlist;
+        return nodeItems;
     }
 
     public JSidebarButton getZiel2Label() {
@@ -421,7 +421,8 @@ public class GUIContainer implements Serializable, I18n {
         if (fileChooser.showSaveDialog(JMainFrame.getJMainFrame()) == JFileChooser.APPROVE_OPTION) {
             if (fileChooser.getSelectedFile() != null) {
                 GUIPrintPanel printPanel = new GUIPrintPanel();
-                printPanel.updateViewport(itemlist, cablelist, docuItems, SzenarioVerwaltung.getInstance().holePfad());
+                printPanel
+                        .updateViewport(nodeItems, cableItems, docuItems, SzenarioVerwaltung.getInstance().holePfad());
                 BufferedImage bi = new BufferedImage(printPanel.getWidth(), printPanel.getHeight(),
                         BufferedImage.TYPE_INT_ARGB);
                 Graphics g = bi.createGraphics();
@@ -470,7 +471,7 @@ public class GUIContainer implements Serializable, I18n {
 
         SzenarioVerwaltung.getInstance().setzeGeaendert();
 
-        ListIterator<GUIKnotenItem> it = itemlist.listIterator();
+        ListIterator<GUIKnotenItem> it = nodeItems.listIterator();
         while (it.hasNext()) {
             item = (GUIKnotenItem) it.next();
             item.getImageLabel().setSelektiert(false);
@@ -516,7 +517,7 @@ public class GUIContainer implements Serializable, I18n {
 
             setProperty(item);
             item.getImageLabel().setSelektiert(true);
-            itemlist.add(item);
+            nodeItems.add(item);
 
             draftPanel.add(templabel);
             draftPanel.repaint();
@@ -602,18 +603,19 @@ public class GUIContainer implements Serializable, I18n {
      * @author Johannes Bade & Thomas Gerding
      */
     public void clearAllItems() {
-        itemlist.clear();
-        cablelist.clear();
+        nodeItems.clear();
+        cableItems.clear();
+        docuItems.clear();
         updateViewport();
     }
 
     public void updateViewport() {
         Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (GUIContainer), updateViewport()");
         if (activeSite == GUIMainMenu.MODUS_AKTION) {
-            simulationPanel.updateViewport(itemlist, cablelist, docuItems, false);
+            simulationPanel.updateViewport(nodeItems, cableItems, docuItems, false);
             simulationPanel.updateUI();
         } else {
-            draftPanel.updateViewport(itemlist, cablelist, docuItems, activeSite == GUIMainMenu.MODUS_DOKUMENTATION);
+            draftPanel.updateViewport(nodeItems, cableItems, docuItems, activeSite == GUIMainMenu.MODUS_DOKUMENTATION);
             draftPanel.updateUI();
         }
     }
@@ -627,7 +629,7 @@ public class GUIContainer implements Serializable, I18n {
      */
     public void updateCables() {
         Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (GUIContainer), updateCables()");
-        ListIterator<GUIKabelItem> it = cablelist.listIterator();
+        ListIterator<GUIKabelItem> it = cableItems.listIterator();
         while (it.hasNext()) {
             GUIKabelItem tempCable = (GUIKabelItem) it.next();
             tempCable.getKabelpanel().updateBounds();
@@ -693,11 +695,11 @@ public class GUIContainer implements Serializable, I18n {
     }
 
     public List<GUIKabelItem> getCableItems() {
-        return cablelist;
+        return cableItems;
     }
 
     public void setCablelist(List<GUIKabelItem> cablelist) {
-        this.cablelist = cablelist;
+        this.cableItems = cablelist;
     }
 
     public int getAbstandLinks() {
