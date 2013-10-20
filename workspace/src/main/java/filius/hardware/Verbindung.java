@@ -37,138 +37,134 @@ import filius.rahmenprogramm.I18n;
  */
 public abstract class Verbindung extends Hardware implements Serializable, I18n {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Verzoegerung der Uebertragung in Millisekunden, wenn der
-	 * Verzoegerungsfaktor 1 ist.
-	 */
-	private static final int MIN_VERZOEGERUNG = 50;
+    /**
+     * Verzoegerung der Uebertragung in Millisekunden, wenn der Verzoegerungsfaktor 1 ist.
+     */
+    private static final int MIN_VERZOEGERUNG = 50;
 
-	/** Faktor der Verzoegerungszeit, der zwischen 1 und 100 */
-	private static int verzoegerungsFaktor = 1;
+    /** Faktor der Verzoegerungszeit, der zwischen 1 und 100 */
+    private static int verzoegerungsFaktor = 1;
 
-	/**
-	 * maximale Anzahl von Hops zum Datenaustausch. Diese Zahl wird verwendet,
-	 * um eine Round-Trip-Time (RTT) zu berechnen. Da es auch möglich ist,
-	 * Datenaustausch mit einem einem virtuellen Rechnernetz ueber eine
-	 * 'Modemverbindung' zu erstellen, wird diese Zahl hoch angesetzt. <br />
-	 * Mit dieser Zahl sind die HOPS fuer einen Round-Trip als fuer die Hin- und
-	 * Zurueck-Uebertragung beim Datenaustausch mit einem anderen Knoten
-	 * gemeint.
-	 */
-	private static final int MAX_HOPS = 50;
+    /**
+     * maximale Anzahl von Hops zum Datenaustausch. Diese Zahl wird verwendet, um eine Round-Trip-Time (RTT) zu
+     * berechnen. Da es auch möglich ist, Datenaustausch mit einem einem virtuellen Rechnernetz ueber eine
+     * 'Modemverbindung' zu erstellen, wird diese Zahl hoch angesetzt. <br />
+     * Mit dieser Zahl sind die HOPS fuer einen Round-Trip als fuer die Hin- und Zurueck-Uebertragung beim
+     * Datenaustausch mit einem anderen Knoten gemeint.
+     */
+    private static final int MAX_HOPS = 50;
 
-	// extend RTT in case of slow machines by this factor; 1: no change
-	private static int extendRTTfactor = 1;
+    // extend RTT in case of slow machines by this factor; 1: no change
+    private static int extendRTTfactor = 1;
 
-	private Port[] anschluesse = null;
+    private Port[] anschluesse = null;
 
-	private SimplexVerbindung simplexEins, simplexZwei;
+    private SimplexVerbindung simplexEins, simplexZwei;
 
-	public void setAnschluesse(Port[] anschluesse) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Verbindung), setAnschluesse("
-		        + anschluesse + ")");
-		this.anschluesse = anschluesse;
+    private Thread threadSimplexEins;
 
-		try {
-			verbinde();
-		} catch (VerbindungsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace(Main.debug);
-		}
-	}
+    private Thread threadSimplexZwei;
 
-	private void verbinde() throws VerbindungsException {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Verbindung), verbinde()" + "\t"
-		        + anschluesse[0].hashCode() + " <-> " + anschluesse[1].hashCode());
-		try {
-			simplexEins = new SimplexVerbindung(anschluesse[0], anschluesse[1], this);
-			simplexZwei = new SimplexVerbindung(anschluesse[1], anschluesse[0], this);
+    public void setAnschluesse(Port[] anschluesse) {
+        Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Verbindung), setAnschluesse("
+                + anschluesse + ")");
+        this.anschluesse = anschluesse;
 
-			anschluesse[0].setVerbindung(this);
-			anschluesse[1].setVerbindung(this);
+        try {
+            verbinde();
+        } catch (VerbindungsException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace(Main.debug);
+        }
+    }
 
-			Thread t1 = new Thread(simplexEins);
-			Thread t2 = new Thread(simplexZwei);
+    private void verbinde() throws VerbindungsException {
+        Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Verbindung), verbinde()" + "\t"
+                + anschluesse[0].hashCode() + " <-> " + anschluesse[1].hashCode());
+        try {
+            simplexEins = new SimplexVerbindung(anschluesse[0], anschluesse[1], this);
+            simplexZwei = new SimplexVerbindung(anschluesse[1], anschluesse[0], this);
 
-			t1.start();
-			t2.start();
+            anschluesse[0].setVerbindung(this);
+            anschluesse[1].setVerbindung(this);
 
-		} catch (NullPointerException e) {
-			simplexEins = null;
-			simplexZwei = null;
-			anschluesse[0].setVerbindung(null);
-			anschluesse[1].setVerbindung(null);
-			throw new VerbindungsException("EXCEPTION: " + messages.getString("verbindung_msg1"));
-		}
-	}
+            threadSimplexEins = new Thread(simplexEins);
+            threadSimplexZwei = new Thread(simplexZwei);
 
-	public Port[] getAnschluesse() {
-		return anschluesse;
-	}
+            threadSimplexEins.start();
+            threadSimplexZwei.start();
+        } catch (NullPointerException e) {
+            simplexEins = null;
+            simplexZwei = null;
+            anschluesse[0].setVerbindung(null);
+            anschluesse[1].setVerbindung(null);
+            throw new VerbindungsException("EXCEPTION: " + messages.getString("verbindung_msg1"));
+        }
+    }
 
-	public void anschluesseTrennen() throws VerbindungsException {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Verbindung), anschluesseTrennen()");
-		simplexEins.anschluesseTrennen();
-		simplexZwei.anschluesseTrennen();
-	}
+    public Port[] getAnschluesse() {
+        return anschluesse;
+    }
 
-	public static int holeVerzoegerungsFaktor() {
-		return verzoegerungsFaktor;
-	}
+    public void anschluesseTrennen() {
+        Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Verbindung), anschluesseTrennen()");
+        simplexEins.anschluesseTrennen();
+        simplexZwei.anschluesseTrennen();
+        threadSimplexEins.interrupt();
+        threadSimplexZwei.interrupt();
+    }
 
-	/**
-	 * Zum setzen den Verzoegerungsfaktors. Das Produkt daraus und der minimalen
-	 * Verzoegerung ergibt die tatsaechliche Verzoegerung bei der Uebertragung
-	 * zwischen zwei Knoten im Rechnernetz. Der Wert des Faktors muss zwischen 1
-	 * und 100 liegen. Wenn der uebergebene Parameter ausserhalb dieses Bereichs
-	 * liegt, wird er auf den Minimal- bzw. Maximalwert gesetzt.
-	 * 
-	 * @param verzoegerungsFaktor
-	 */
-	public static void setzeVerzoegerungsFaktor(int verzoegerungsFaktor) {
-		Main.debug.println("INVOKED (static) filius.hardware.Verbindung, setzeVerzoegerungsFaktor("
-		        + verzoegerungsFaktor + ")");
-		if (verzoegerungsFaktor < 1) {
-			Verbindung.verzoegerungsFaktor = 1;
-		} else if (verzoegerungsFaktor > 100) {
-			Verbindung.verzoegerungsFaktor = 100;
-		} else {
-			Verbindung.verzoegerungsFaktor = verzoegerungsFaktor;
-		}
-	}
+    public static int holeVerzoegerungsFaktor() {
+        return verzoegerungsFaktor;
+    }
 
-	/**
-	 * Gibt die Verzoegerung einer Verbindung zwischen zwei Knoten im
-	 * Rechnernetz in Millisekunden zurueck. Dazu wird die minimale
-	 * Verzoegerungszeit von 50 Millisekunden mit dem Verzoegerungsfaktor
-	 * multipliziert.
-	 * 
-	 * @return Verzoegerung der Uebertragung zwischen zwei Knoten im Rechnernetz
-	 *         in Millisekunden
-	 */
-	public static int holeVerzoegerung() {
-		return verzoegerungsFaktor * MIN_VERZOEGERUNG;
-	}
+    /**
+     * Zum setzen den Verzoegerungsfaktors. Das Produkt daraus und der minimalen Verzoegerung ergibt die tatsaechliche
+     * Verzoegerung bei der Uebertragung zwischen zwei Knoten im Rechnernetz. Der Wert des Faktors muss zwischen 1 und
+     * 100 liegen. Wenn der uebergebene Parameter ausserhalb dieses Bereichs liegt, wird er auf den Minimal- bzw.
+     * Maximalwert gesetzt.
+     * 
+     * @param verzoegerungsFaktor
+     */
+    public static void setzeVerzoegerungsFaktor(int verzoegerungsFaktor) {
+        Main.debug.println("INVOKED (static) filius.hardware.Verbindung, setzeVerzoegerungsFaktor("
+                + verzoegerungsFaktor + ")");
+        if (verzoegerungsFaktor < 1) {
+            Verbindung.verzoegerungsFaktor = 1;
+        } else if (verzoegerungsFaktor > 100) {
+            Verbindung.verzoegerungsFaktor = 100;
+        } else {
+            Verbindung.verzoegerungsFaktor = verzoegerungsFaktor;
+        }
+    }
 
-	public static void setRTTfactor(int factor) {
-		if (factor >= 1 && factor <= 5) {
-			extendRTTfactor = factor;
-		}
-	}
+    /**
+     * Gibt die Verzoegerung einer Verbindung zwischen zwei Knoten im Rechnernetz in Millisekunden zurueck. Dazu wird
+     * die minimale Verzoegerungszeit von 50 Millisekunden mit dem Verzoegerungsfaktor multipliziert.
+     * 
+     * @return Verzoegerung der Uebertragung zwischen zwei Knoten im Rechnernetz in Millisekunden
+     */
+    public static int holeVerzoegerung() {
+        return verzoegerungsFaktor * MIN_VERZOEGERUNG;
+    }
 
-	public static int getRTTfactor() {
-		return extendRTTfactor;
-	}
+    public static void setRTTfactor(int factor) {
+        if (factor >= 1 && factor <= 5) {
+            extendRTTfactor = factor;
+        }
+    }
 
-	/**
-	 * maximale Round-Trip-Time (RTT) in Millisekunden <br />
-	 * solange wird auf eine Antwort auf ein Segment gewartet
-	 */
-	public static int holeRTT() {
-		// new Exception().printStackTrace(Main.debug); // DEBUG to disclose
-		// calling functions
-		return MAX_HOPS * holeVerzoegerung() * extendRTTfactor;
-	}
+    public static int getRTTfactor() {
+        return extendRTTfactor;
+    }
+
+    /**
+     * maximale Round-Trip-Time (RTT) in Millisekunden <br />
+     * solange wird auf eine Antwort auf ein Segment gewartet
+     */
+    public static int holeRTT() {
+        return MAX_HOPS * holeVerzoegerung() * extendRTTfactor;
+    }
 }

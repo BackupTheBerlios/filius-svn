@@ -29,70 +29,63 @@ import java.io.Serializable;
 import java.util.LinkedList;
 
 import filius.Main;
-import filius.exception.VerbindungsException;
 import filius.software.netzzugangsschicht.EthernetFrame;
 
 public class Port implements Serializable {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 1L;
-	private LinkedList<EthernetFrame> eingangsPuffer = new LinkedList<EthernetFrame>();
-	private LinkedList<EthernetFrame> ausgangsPuffer = new LinkedList<EthernetFrame>();
-	private Verbindung verbindung = null;
-	private NetzwerkInterface nic = null;
+    private static final long serialVersionUID = 1L;
+    private LinkedList<EthernetFrame> eingangsPuffer = new LinkedList<EthernetFrame>();
+    private LinkedList<EthernetFrame> ausgangsPuffer = new LinkedList<EthernetFrame>();
+    private Verbindung verbindung = null;
+    private NetzwerkInterface nic = null;
 
-	// constructor with parameter for all other nodes with explicit NIC for each
-	// port
-	public Port(NetzwerkInterface nic) {
-		this.nic = nic;
-	}
+    // constructor with parameter for all other nodes with explicit NIC for each
+    // port
+    public Port(NetzwerkInterface nic) {
+        this.nic = nic;
+    }
 
-	// constructor without parameters for switches
-	public Port() {
-	}
+    // constructor without parameters for switches
+    public Port() {}
 
-	public NetzwerkInterface getNIC() {
-		return nic;
-	}
+    public NetzwerkInterface getNIC() {
+        return nic;
+    }
 
-	public boolean isPortFrei() {
-		return (verbindung == null);
-	}
+    public boolean isPortFrei() {
+        return (verbindung == null);
+    }
 
-	public boolean setVerbindung(Verbindung verbindung) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Port), setVerbindung(" + verbindung
-		        + ")");
-		if (isPortFrei()) {
-			this.verbindung = verbindung;
-			return true;
-		} else {
-			// Main.debug.println("\tPort: Dieser Port ist schon belegt. Port "+this);
+    public boolean setVerbindung(Verbindung verbindung) {
+        Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Port), setVerbindung(" + verbindung
+                + ")");
+        if (isPortFrei()) {
+            this.verbindung = verbindung;
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-			return false;
-		}
-	}
+    public void entferneVerbindung() {
+        Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Port), entferneVerbindung()");
+        this.verbindung = null;
+    }
 
-	public void entferneVerbindung() throws VerbindungsException {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Port), entferneVerbindung()");
-		this.verbindung = null;
-	}
+    public LinkedList<EthernetFrame> holeAusgangsPuffer() {
+        return ausgangsPuffer;
+    }
 
-	public LinkedList<EthernetFrame> holeAusgangsPuffer() {
-		return ausgangsPuffer;
-	}
+    public LinkedList<EthernetFrame> holeEingangsPuffer() {
+        return eingangsPuffer;
+    }
 
-	public LinkedList<EthernetFrame> holeEingangsPuffer() {
-		return eingangsPuffer;
-	}
+    public void setzeEingangsPuffer(LinkedList<EthernetFrame> puffer) {
+        this.eingangsPuffer = puffer;
+    }
 
-	public void setzeEingangsPuffer(LinkedList<EthernetFrame> puffer) {
-		this.eingangsPuffer = puffer;
-	}
-
-	public Verbindung getVerbindung() {
-		return verbindung;
-	}
+    public Verbindung getVerbindung() {
+        return verbindung;
+    }
 
 }

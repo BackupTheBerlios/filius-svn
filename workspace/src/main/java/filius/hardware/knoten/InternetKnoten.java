@@ -35,95 +35,99 @@ import filius.hardware.Port;
 
 public abstract class InternetKnoten extends Knoten {
 
-	private static final long serialVersionUID = 1L;
-	private List<NetzwerkInterface> netzwerkInterfaces = new LinkedList<NetzwerkInterface>();
+    private static final long serialVersionUID = 1L;
+    private List<NetzwerkInterface> netzwerkInterfaces = new LinkedList<NetzwerkInterface>();
 
-	public Port holeFreienPort() {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (InternetKnoten), holeFreienPort()");
-		ListIterator<NetzwerkInterface> iter = getNetzwerkInterfaces().listIterator();
-		while (iter.hasNext()) {
-			NetzwerkInterface nic = (NetzwerkInterface) iter.next();
-			Port anschluss = nic.getPort();
-			if (anschluss.isPortFrei()) {
-				// Main.debug.println("\tfound free port: "+anschluss);
-				return anschluss;
-			}
-		}
-		// Main.debug.println("\tno free port available");
-		return null;
-	}
+    public Port holeFreienPort() {
+        Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (InternetKnoten), holeFreienPort()");
+        ListIterator<NetzwerkInterface> iter = getNetzwerkInterfaces().listIterator();
+        while (iter.hasNext()) {
+            NetzwerkInterface nic = (NetzwerkInterface) iter.next();
+            Port anschluss = nic.getPort();
+            if (anschluss.isPortFrei()) {
+                // Main.debug.println("\tfound free port: "+anschluss);
+                return anschluss;
+            }
+        }
+        // Main.debug.println("\tno free port available");
+        return null;
+    }
 
-	/**
-	 * 
-	 * Gibt das NetzwerkInterface zurueck, dass die angegebene mac Adresse hat.
-	 * Falls kein Interface diese Mac-Adresse besitzt, wird null zurueckgegeben.
-	 * 
-	 * @author Johannes Bade
-	 * @param mac
-	 * @return
-	 */
-	public NetzwerkInterface getNetzwerkInterfaceByMac(String mac) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
-		        + " (InternetKnoten), getNetzwerkInterfaceByMac(" + mac + ")");
-		NetzwerkInterface rueckgabe = null;
-		ListIterator<NetzwerkInterface> it = this.netzwerkInterfaces.listIterator();
-		while (it.hasNext()) {
-			NetzwerkInterface ni = (NetzwerkInterface) it.next();
-			if (ni.getMac().equals(mac)) {
-				rueckgabe = ni;
-			}
-		}
-		return rueckgabe;
-	}
+    /**
+     * 
+     * Gibt das NetzwerkInterface zurueck, dass die angegebene mac Adresse hat. Falls kein Interface diese Mac-Adresse
+     * besitzt, wird null zurueckgegeben.
+     * 
+     * @author Johannes Bade
+     * @param mac
+     * @return
+     */
+    public NetzwerkInterface getNetzwerkInterfaceByMac(String mac) {
+        Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+                + " (InternetKnoten), getNetzwerkInterfaceByMac(" + mac + ")");
+        NetzwerkInterface rueckgabe = null;
+        ListIterator<NetzwerkInterface> it = this.netzwerkInterfaces.listIterator();
+        while (it.hasNext()) {
+            NetzwerkInterface ni = (NetzwerkInterface) it.next();
+            if (ni.getMac().equals(mac)) {
+                rueckgabe = ni;
+            }
+        }
+        return rueckgabe;
+    }
 
-	/**
-	 * 
-	 * Gibt die Netzwerkkarte mit der entsprechenden IP zurueck
-	 * 
-	 * @author Thomas
-	 * @param mac
-	 * @return
-	 */
-	public NetzwerkInterface getNetzwerkInterfaceByIp(String ip) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
-		        + " (InternetKnoten), getNetzwerkInterfaceByIp(" + ip + ")");
-		if (ip.equals("127.0.0.1")) {
-			return (NetzwerkInterface) netzwerkInterfaces.get(0);
-		}
-		NetzwerkInterface rueckgabe = null;
-		ListIterator<NetzwerkInterface> it = this.netzwerkInterfaces.listIterator();
-		while (it.hasNext()) {
-			NetzwerkInterface ni = (NetzwerkInterface) it.next();
-			if (ni.getIp().equals(ip)) {
-				rueckgabe = ni;
-			}
-		}
-		return rueckgabe;
-	}
+    public void removeNic(NetzwerkInterface nic) {
+        this.netzwerkInterfaces.remove(nic);
+    }
 
-	public List<NetzwerkInterface> getNetzwerkInterfaces() {
-		return netzwerkInterfaces;
-	}
+    /**
+     * 
+     * Gibt die Netzwerkkarte mit der entsprechenden IP zurueck
+     * 
+     * @author Thomas
+     * @param mac
+     * @return
+     */
+    public NetzwerkInterface getNetzwerkInterfaceByIp(String ip) {
+        Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+                + " (InternetKnoten), getNetzwerkInterfaceByIp(" + ip + ")");
+        if (ip.equals("127.0.0.1")) {
+            return (NetzwerkInterface) netzwerkInterfaces.get(0);
+        }
+        NetzwerkInterface rueckgabe = null;
+        ListIterator<NetzwerkInterface> it = this.netzwerkInterfaces.listIterator();
+        while (it.hasNext()) {
+            NetzwerkInterface ni = (NetzwerkInterface) it.next();
+            if (ni.getIp().equals(ip)) {
+                rueckgabe = ni;
+            }
+        }
+        return rueckgabe;
+    }
 
-	public void setNetzwerkInterfaces(List<NetzwerkInterface> netzwerkInterfaces) {
-		this.netzwerkInterfaces = netzwerkInterfaces;
-	}
+    public List<NetzwerkInterface> getNetzwerkInterfaces() {
+        return netzwerkInterfaces;
+    }
 
-	public int holeAnzahlAnschluesse() {
-		return netzwerkInterfaces.size();
-	}
+    public void setNetzwerkInterfaces(List<NetzwerkInterface> netzwerkInterfaces) {
+        this.netzwerkInterfaces = netzwerkInterfaces;
+    }
 
-	public void hinzuAnschluss() {
-		netzwerkInterfaces.add(new NetzwerkInterface());
-	}
+    public int holeAnzahlAnschluesse() {
+        return netzwerkInterfaces.size();
+    }
 
-	public void setzeAnzahlAnschluesse(int anzahlAnschluesse) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
-		        + " (InternetKnoten), setzeAnzahlAnschluesse(" + anzahlAnschluesse + ")");
+    public void hinzuAnschluss() {
+        netzwerkInterfaces.add(new NetzwerkInterface());
+    }
 
-		netzwerkInterfaces = new LinkedList<NetzwerkInterface>();
-		for (int i = 0; i < anzahlAnschluesse; i++) {
-			netzwerkInterfaces.add(new NetzwerkInterface());
-		}
-	}
+    public void setzeAnzahlAnschluesse(int anzahlAnschluesse) {
+        Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+                + " (InternetKnoten), setzeAnzahlAnschluesse(" + anzahlAnschluesse + ")");
+
+        netzwerkInterfaces = new LinkedList<NetzwerkInterface>();
+        for (int i = 0; i < anzahlAnschluesse; i++) {
+            netzwerkInterfaces.add(new NetzwerkInterface());
+        }
+    }
 }
