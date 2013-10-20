@@ -36,6 +36,7 @@ import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -430,14 +431,21 @@ public class GUIContainer implements Serializable, I18n {
                 g.dispose();
                 BufferedImage printArea = bi.getSubimage(printPanel.getClipX(), printPanel.getClipY(),
                         printPanel.getClipWidth(), printPanel.getClipHeight());
+                String imagePath = fileChooser.getSelectedFile().getAbsolutePath();
+                imagePath = imagePath.endsWith(".png") ? imagePath : imagePath + ".png";
+                Main.debug.println("export to file: " + imagePath);
+                ImageOutputStream outputStream = null;
                 try {
-                    String imagePath = fileChooser.getSelectedFile().getAbsolutePath();
-                    imagePath = imagePath.endsWith(".png") ? imagePath : imagePath + ".png";
-                    Main.debug.println("export to file: " + imagePath);
-                    ImageOutputStream outputStream = new FileImageOutputStream(new File(imagePath));
+                    outputStream = new FileImageOutputStream(new File(imagePath));
                     ImageIO.write(printArea, "png", outputStream);
                 } catch (Exception ex) {
                     Main.debug.println("export of file failed: " + ex.getMessage());
+                } finally {
+                    if (outputStream != null) {
+                        try {
+                            outputStream.close();
+                        } catch (IOException e) {}
+                    }
                 }
             }
         }
@@ -935,6 +943,10 @@ public class GUIContainer implements Serializable, I18n {
                 break;
             }
         }
+    }
+
+    public void removeCableItem(GUIKabelItem cableItem) {
+        cableItems.remove(cableItem);
     }
 
 }
