@@ -36,237 +36,247 @@ import filius.Main;
  * 
  */
 public class Email {
-	private AddressEntry absender;
+    private AddressEntry absender;
 
-	private List<AddressEntry> empfaenger = new LinkedList<AddressEntry>();
+    private List<AddressEntry> empfaenger = new LinkedList<AddressEntry>();
 
-	private List<AddressEntry> cc = new LinkedList<AddressEntry>();
+    private List<AddressEntry> cc = new LinkedList<AddressEntry>();
 
-	private List<AddressEntry> bcc = new LinkedList<AddressEntry>();
+    private List<AddressEntry> bcc = new LinkedList<AddressEntry>();
 
-	private String betreff;
+    private String betreff;
 
-	private String text = "";
+    private String text = "";
 
-	private boolean neu = true;// dient dazu, um festzustellen, ob eine Email
-	                           // schon mal abgerufen,
-	// und somit wahrscheinlich schon mal gelesen wurde. Standardmaessig
-	// ist das true, d.h. sie wurde noch nicht gelesen.
+    /**
+     * dient dazu, um festzustellen, ob eine Email schon mal abgerufen, und somit wahrscheinlich schon mal gelesen
+     * wurde. Standardmaessig ist das true, d.h. sie wurde noch nicht gelesen.
+     */
+    private boolean neu = true;
 
-	private String dateReceived = "";// dieser Wert wird vom Server, wenn
-	                                 // erhalten gesetzt
+    /**
+     * dieser Wert wird vom Server, wenn erhalten gesetzt
+     */
+    private String dateReceived = "";
 
-	private boolean delete = false;// wird als zu loeschen markiert, wenn sich
-	                               // ausgeloggt wird, wird
+    /**
+     * wird als zu loeschen markiert, wenn sich ausgeloggt wird, wird
+     */
+    private boolean delete = false;
 
-	// sie endgueltig geloescht. Sie wird dann nur nicht mehr angezeigt.
-	private boolean versendet = false;
+    /** sie endgueltig geloescht. Sie wird dann nur nicht mehr angezeigt. */
+    private boolean versendet = false;
 
-	public Email() {
-	}
+    public Email() {}
 
-	/**
-	 * Dies ist der Konstruktor der Email. Immer wenn eine neue Email erzeugt
-	 * wird, wird ihr der String ihrer Attribute übergeben, die dann ausgelesen
-	 * werden, und in ihren jeweiligen Attributen gespeichert werden. Bsp.: <br />
-	 * <code>
-	 * From: <bob@filius.de>
-	 * To: <eve@filius.de>, <ken@uni.de>
-	 * Cc: <john@uni.de>
-	 * Bcc: <berta@filius.de>
-	 * Subject: Eine kurze Nachricht
-	 * 
-	 * Das ist der Nachrichtentext.
-	 * </code>
-	 * 
-	 * @param nachricht
-	 */
-	public Email(String nachricht) {
-		String fieldName, fieldData;
-		String[] liste;
-		String[] emaildaten = nachricht.split("\n");
-		int pos1, pos2;
+    /**
+     * Dies ist der Konstruktor der Email. Immer wenn eine neue Email erzeugt wird, wird ihr der String ihrer Attribute
+     * übergeben, die dann ausgelesen werden, und in ihren jeweiligen Attributen gespeichert werden. Bsp.: <br />
+     * <code>
+     * From: <bob@filius.de>
+     * To: <eve@filius.de>, <ken@uni.de>
+     * Cc: <john@uni.de>
+     * Bcc: <berta@filius.de>
+     * Subject: Eine kurze Nachricht
+     * 
+     * Das ist der Nachrichtentext.
+     * </code>
+     * 
+     * @param nachricht
+     */
+    public Email(String nachricht) {
+        String fieldName, fieldData;
+        String[] liste;
+        String[] emaildaten = nachricht.split("\n");
+        int pos1, pos2;
+        boolean header = true;
 
-		for (int i = 0; i < emaildaten.length; i++) {
-			pos1 = 0;
-			pos2 = emaildaten[i].indexOf(":");
-			if (pos2 > pos1) {
-				fieldName = emaildaten[i].substring(pos1, pos2).trim();
-				fieldData = emaildaten[i].substring(pos2 + 1).trim();
-			} else {
-				fieldName = null;
-				fieldData = null;
-			}
+        for (int i = 0; i < emaildaten.length; i++) {
+            pos1 = 0;
+            pos2 = emaildaten[i].indexOf(":");
+            if (pos2 > pos1) {
+                fieldName = emaildaten[i].substring(pos1, pos2).trim();
+                fieldData = emaildaten[i].substring(pos2 + 1).trim();
+            } else {
+                fieldName = null;
+                fieldData = null;
+            }
+            if (header) {
+                if ("from".equalsIgnoreCase(fieldName)) {
+                    absender = new AddressEntry(fieldData);
+                } else if ("to".equalsIgnoreCase(fieldName)) {
+                    empfaenger.clear();
+                    liste = fieldData.split(",");
+                    for (int j = 0; j < liste.length; j++) {
+                        empfaenger.add(new AddressEntry(liste[j]));
+                    }
+                } else if ("cc".equalsIgnoreCase(fieldName)) {
+                    cc.clear();
+                    liste = fieldData.split(",");
+                    for (int j = 0; j < liste.length; j++) {
+                        cc.add(new AddressEntry(liste[j]));
+                    }
+                } else if ("bcc".equalsIgnoreCase(fieldName)) {
+                    bcc.clear();
+                    liste = fieldData.split(",");
+                    for (int j = 0; j < liste.length; j++) {
+                        bcc.add(new AddressEntry(liste[j]));
+                    }
+                } else if ("subject".equalsIgnoreCase(fieldName)) {
+                    betreff = fieldData;
+                } else if (text.equals("")) {
+                    header = false;
+                }
+            } else {
+                text = text + emaildaten[i] + "\n";
+            }
+        }
+    }
 
-			if ("from".equalsIgnoreCase(fieldName)) {
-				absender = new AddressEntry(fieldData);
-			} else if ("to".equalsIgnoreCase(fieldName)) {
-				empfaenger.clear();
-				liste = fieldData.split(",");
-				for (int j = 0; j < liste.length; j++) {
-					empfaenger.add(new AddressEntry(liste[j]));
-				}
-			} else if ("cc".equalsIgnoreCase(fieldName)) {
-				cc.clear();
-				liste = fieldData.split(",");
-				for (int j = 0; j < liste.length; j++) {
-					cc.add(new AddressEntry(liste[j]));
-				}
-			} else if ("bcc".equalsIgnoreCase(fieldName)) {
-				bcc.clear();
-				liste = fieldData.split(",");
-				for (int j = 0; j < liste.length; j++) {
-					bcc.add(new AddressEntry(liste[j]));
-				}
-			} else if ("subject".equalsIgnoreCase(fieldName)) {
-				betreff = fieldData;
-			} else {
-				if (!text.equals(""))
-					text = text + "\n";
-				text = text + emaildaten[i];
-			}
-		}
-	}
+    /**
+     * In dieser Methode werden die Attribute der Email wieder zu einem langen String zusammen gesetzt. Er hat
+     * anschliessend wieder die gleiche Form, wie der String, der beim Erzeugen eines neuen Email-Objektes mit
+     * uebergeben wurde. <br />
+     * <b> Achtung: </b> Die BCC-Empfaenger werden nicht mit ausgegeben! <br />
+     * Bsp.: <br />
+     * <code>
+     * From: <bob@filius.de>
+     * To: <eve@filius.de>, <ken@uni.de>
+     * Cc: <john@uni.de>
+     * Subject: Eine kurze Nachricht
+     * 
+     * Das ist der Nachrichtentext.
+     * </code>
+     */
+    public String toString() {
+        Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Email), toString()");
+        String ergebnis;
+        String toListe = "", ccListe = "";
 
-	/**
-	 * In dieser Methode werden die Attribute der Email wieder zu einem langen
-	 * String zusammen gesetzt. Er hat anschliessend wieder die gleiche Form,
-	 * wie der String, der beim Erzeugen eines neuen Email-Objektes mit
-	 * uebergeben wurde. <br />
-	 * <b> Achtung: </b> Die BCC-Empfaenger werden nicht mit ausgegeben! <br />
-	 * Bsp.: <br />
-	 * <code>
-	 * From: <bob@filius.de>
-	 * To: <eve@filius.de>, <ken@uni.de>
-	 * Cc: <john@uni.de>
-	 * Subject: Eine kurze Nachricht
-	 * 
-	 * Das ist der Nachrichtentext.
-	 * </code>
-	 */
-	public String toString() {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (Email), toString()");
-		String ergebnis;
-		String toListe = "", ccListe = "";
+        toListe = holeEmpfaengerListe();
 
-		for (AddressEntry rcpt : empfaenger) {
-			toListe += rcpt.toString() + ", ";
-		}
-		if (!toListe.isEmpty()) {
-			toListe = toListe.substring(0, toListe.length() - 2);
-		}
+        for (AddressEntry rcpt : cc) {
+            ccListe += rcpt.toString() + ", ";
+        }
+        if (!ccListe.isEmpty()) {
+            ccListe = ccListe.substring(0, ccListe.length() - 2);
+        }
 
-		for (AddressEntry rcpt : cc) {
-			ccListe += rcpt.toString() + ", ";
-		}
-		if (!ccListe.isEmpty()) {
-			ccListe = ccListe.substring(0, ccListe.length() - 2);
-		}
+        ergebnis = "";
+        if (absender != null) {
+            ergebnis += "From: " + absender.toString() + "" + "\n";
+        }
+        if (!toListe.equals("")) {
+            ergebnis += "To: " + toListe + "\n";
+        }
+        if (!ccListe.equals("")) {
+            ergebnis += "Cc: " + ccListe + "\n";
+        }
+        if (betreff != null) {
+            ergebnis += "Subject: " + betreff.trim() + "\n";
+        }
+        if (!dateReceived.equals("")) {
+            ergebnis += "Date Received: " + dateReceived + "\n";
+        }
+        if (text != null) {
+            ergebnis += "\n" + text.trim();
+        }
 
-		ergebnis = "";
-		if (absender != null) {
-			ergebnis += "From: " + absender.toString() + "" + "\n";
-		}
-		if (!toListe.equals("")) {
-			ergebnis += "To: " + toListe + "\n";
-		}
-		if (!ccListe.equals("")) {
-			ergebnis += "Cc: " + ccListe + "\n";
-		}
-		if (betreff != null) {
-			ergebnis += "Subject: " + betreff.trim() + "\n";
-		}
-		if (!dateReceived.equals("")) {
-			ergebnis += "Date Received: " + dateReceived + "\n";
-		}
-		if (text != null) {
-			ergebnis += "\n" + text.trim();
-		}
+        return ergebnis;
+    }
 
-		return ergebnis;
-	}
+    public String holeEmpfaengerListe() {
+        String toListe = "";
+        for (AddressEntry rcpt : empfaenger) {
+            toListe += rcpt.toString() + ", ";
+        }
+        if (!toListe.isEmpty()) {
+            toListe = toListe.substring(0, toListe.length() - 2);
+        }
+        return toListe;
+    }
 
-	public boolean getDelete() {
-		return delete;
-	}
+    public boolean getDelete() {
+        return delete;
+    }
 
-	public void setDelete(boolean delete) {
-		this.delete = delete;
-	}
+    public void setDelete(boolean delete) {
+        this.delete = delete;
+    }
 
-	public boolean getNeu() {
-		return neu;
-	}
+    public boolean getNeu() {
+        return neu;
+    }
 
-	public void setNeu(boolean neu) {
-		this.neu = neu;
-	}
+    public void setNeu(boolean neu) {
+        this.neu = neu;
+    }
 
-	public AddressEntry getAbsender() {
-		return absender;
-	}
+    public AddressEntry getAbsender() {
+        return absender;
+    }
 
-	public List<AddressEntry> getEmpfaenger() {
-		return empfaenger;
-	}
+    public List<AddressEntry> getEmpfaenger() {
+        return empfaenger;
+    }
 
-	public String getBetreff() {
-		return betreff;
-	}
+    public String getBetreff() {
+        return betreff;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public void setAbsender(String absender) {
-		this.absender = new AddressEntry(absender);
-	}
+    public void setAbsender(String absender) {
+        this.absender = new AddressEntry(absender);
+    }
 
-	public void setAbsender(AddressEntry absender) {
-		this.absender = absender;
-	}
+    public void setAbsender(AddressEntry absender) {
+        this.absender = absender;
+    }
 
-	public void setBetreff(String betreff) {
-		this.betreff = betreff;
-	}
+    public void setBetreff(String betreff) {
+        this.betreff = betreff;
+    }
 
-	public void setEmpfaenger(List<AddressEntry> recipients) {
-		empfaenger = recipients;
-	}
+    public void setEmpfaenger(List<AddressEntry> recipients) {
+        empfaenger = recipients;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-	public String getDateReceived() {
-		return dateReceived;
-	}
+    public String getDateReceived() {
+        return dateReceived;
+    }
 
-	public void setDateReceived(String dateReceived) {
-		this.dateReceived = dateReceived;
-	}
+    public void setDateReceived(String dateReceived) {
+        this.dateReceived = dateReceived;
+    }
 
-	public boolean isVersendet() {
-		return versendet;
-	}
+    public boolean isVersendet() {
+        return versendet;
+    }
 
-	public void setVersendet(boolean versendet) {
-		this.versendet = versendet;
-	}
+    public void setVersendet(boolean versendet) {
+        this.versendet = versendet;
+    }
 
-	public List<AddressEntry> getBcc() {
-		return bcc;
-	}
+    public List<AddressEntry> getBcc() {
+        return bcc;
+    }
 
-	public void setBcc(List<AddressEntry> bcc) {
-		this.bcc = bcc;
-	}
+    public void setBcc(List<AddressEntry> bcc) {
+        this.bcc = bcc;
+    }
 
-	public List<AddressEntry> getCc() {
-		return cc;
-	}
+    public List<AddressEntry> getCc() {
+        return cc;
+    }
 
-	public void setCc(List<AddressEntry> cc) {
-		this.cc = cc;
-	}
+    public void setCc(List<AddressEntry> cc) {
+        this.cc = cc;
+    }
 }

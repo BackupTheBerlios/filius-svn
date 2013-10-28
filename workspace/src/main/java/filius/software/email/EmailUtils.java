@@ -34,34 +34,36 @@ import java.util.List;
  */
 public class EmailUtils {
 
-	/**
-	 * Wandelt einen String in eine Liste von Adressen, jeder der durch Kommata
-	 * getrennten Werte des Strings wird ein eigenes Listenelement.
-	 */
-	public static List<AddressEntry> stringToAddressEntryList(String addresses) {
-		List<AddressEntry> ergebnis = new LinkedList<AddressEntry>();
-		String[] argument = addresses.split(",");
-		for (int i = 0; i < argument.length; i++) {
-			ergebnis.add(new AddressEntry(argument[i]));
-		}
-		return ergebnis;
-	}
+    /**
+     * Wandelt einen String in eine Liste von Adressen, jeder der durch Kommata getrennten Werte des Strings wird ein
+     * eigenes Listenelement.
+     */
+    public static List<AddressEntry> stringToAddressEntryList(String addresses) {
+        List<AddressEntry> ergebnis = new LinkedList<AddressEntry>();
+        String[] argument = addresses.split(",");
+        for (String address : argument) {
+            if (!address.trim().isEmpty()) {
+                ergebnis.add(new AddressEntry(address));
+            }
+        }
+        return ergebnis;
+    }
 
-	/**
-	 * Diese Mehtode wandelt eine Liste von Adressen in einen String, die
-	 * einzelnen Listenelemente durch Kommata getrennt.
-	 */
-	public static String addressEntryListToString(List<AddressEntry> addresses) {
-		StringBuffer str = new StringBuffer();
-		for (AddressEntry address : addresses) {
-			str.append(address.toString());
-			str.append(", ");
-		}
+    /**
+     * Diese Mehtode wandelt eine Liste von Adressen in einen String, die einzelnen Listenelemente durch Kommata
+     * getrennt.
+     */
+    public static String addressEntryListToString(List<AddressEntry> addresses) {
+        StringBuffer str = new StringBuffer();
+        for (AddressEntry address : addresses) {
+            str.append(address.toString());
+            str.append(", ");
+        }
 
-		if (str.length() > 2) {
-			return str.substring(0, str.length() - 2);
-		} else {
-			return "";
-		}
-	}
+        if (str.length() > 2) {
+            return str.substring(0, str.length() - 2);
+        } else {
+            return "";
+        }
+    }
 }

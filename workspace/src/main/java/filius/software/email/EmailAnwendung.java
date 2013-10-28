@@ -26,9 +26,9 @@
 package filius.software.email;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.ListIterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import filius.Main;
@@ -42,237 +42,222 @@ import filius.software.system.Datei;
  * 
  */
 public class EmailAnwendung extends Anwendung {
-	// Attribute
-	private Vector adressbuch = new Vector();
+    // Attribute
+    private Vector<Kontakt> adressbuch = new Vector<Kontakt>();
 
-	private int sitzungsnummer = 0;
+    private int sitzungsnummer = 0;
 
-	private LinkedList<Email> erstellteNachrichten = new LinkedList<Email>();
+    private List<Email> erstellteNachrichten = new LinkedList<Email>();
 
-	private LinkedList<Email> empfangeneNachrichten = new LinkedList<Email>();
+    private List<Email> empfangeneNachrichten = new LinkedList<Email>();
 
-	private LinkedList<Email> gesendeteNachrichten = new LinkedList<Email>();
+    private List<Email> gesendeteNachrichten = new LinkedList<Email>();
 
-	private HashMap kontoListe = new HashMap();
+    private Map<String, EmailKonto> kontoListe = new HashMap<String, EmailKonto>();
 
-	private POP3Client pop3client;
+    private POP3Client pop3client;
 
-	private SMTPClient smtpclient;
+    private SMTPClient smtpclient;
 
-	// Methoden
-	/**
-	 * Startet die Email-Anwendung und für Sie jeweils einen Pop3- und
-	 * Smtp-Client.
-	 */
-	public void starten() {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (EmailAnwendung), starten()");
-		super.starten();
+    /**
+     * Startet die Email-Anwendung und für Sie jeweils einen Pop3- und Smtp-Client.
+     */
+    public void starten() {
+        Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (EmailAnwendung), starten()");
+        super.starten();
 
-		pop3client = new POP3Client(this);
-		pop3client.starten();
+        pop3client = new POP3Client(this);
+        pop3client.starten();
 
-		smtpclient = new SMTPClient(this);
-		smtpclient.starten();
-	}
+        smtpclient = new SMTPClient(this);
+        smtpclient.starten();
+    }
 
-	/**
-	 * Methode beendet die EmailAnwendung inkl. der dazu gehörigen smtp und pop3
-	 * clients. Dazu wird die Methode der Superklasse aufgerufen und der Socket
-	 * geschlossen.
-	 */
-	public void beenden() {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (EmailAnwendung), beenden()");
-		super.beenden();
-		if (pop3client != null)
-			pop3client.beenden();
-		if (smtpclient != null)
-			smtpclient.beenden();
-	}
+    /**
+     * Methode beendet die EmailAnwendung inkl. der dazu gehörigen smtp und pop3 clients. Dazu wird die Methode der
+     * Superklasse aufgerufen und der Socket geschlossen.
+     */
+    public void beenden() {
+        Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (EmailAnwendung), beenden()");
+        super.beenden();
+        if (pop3client != null)
+            pop3client.beenden();
+        if (smtpclient != null)
+            smtpclient.beenden();
+    }
 
-	/**
-	 * ruft die Methode versendeEmail in SMTPClient auf, um eine Email zu
-	 * versenden. Diese Methode selbst ist nicht blockierend und übernimmt auch
-	 * den Verbindungs- auf-,bzw. abbau.
-	 * 
-	 * @param email
-	 * @param remoteServerIP
-	 */
-	public void versendeEmail(String remoteServerIP, Email email, String absender) {
-		String rcpts = EmailUtils.addressEntryListToString(email.getEmpfaenger());
-		if (email.getCc().size() > 0) {
-			rcpts += ", ";
-			rcpts += EmailUtils.addressEntryListToString(email.getCc());
-		}
-		if (email.getBcc().size() > 0) {
-			rcpts += ", ";
-			rcpts += EmailUtils.addressEntryListToString(email.getBcc());
-		}
-		smtpclient.versendeEmail(remoteServerIP, email, absender, rcpts);
-	}
+    /**
+     * ruft die Methode versendeEmail in SMTPClient auf, um eine Email zu versenden. Diese Methode selbst ist nicht
+     * blockierend und übernimmt auch den Verbindungs- auf-,bzw. abbau.
+     * 
+     * @param email
+     * @param remoteServerIP
+     */
+    public void versendeEmail(String remoteServerIP, Email email, String absender) {
+        String rcpts = EmailUtils.addressEntryListToString(email.getEmpfaenger());
+        if (email.getCc().size() > 0) {
+            rcpts += ", ";
+            rcpts += EmailUtils.addressEntryListToString(email.getCc());
+        }
+        if (email.getBcc().size() > 0) {
+            rcpts += ", ";
+            rcpts += EmailUtils.addressEntryListToString(email.getBcc());
+        }
+        smtpclient.versendeEmail(remoteServerIP, email, absender, rcpts);
+    }
 
-	/**
-	 * 
-	 * @param emailAdresse
-	 * @param benutzername
-	 * @param passwort
-	 * @param pop3Port
-	 * @param pop3Server
-	 */
-	public void emailsAbholenEmails(String benutzername, String passwort, String pop3Port, String pop3Server) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
-		        + " (EmailAnwendung), emailsAbholenEmails(" + benutzername + "," + passwort + "," + pop3Port + ","
-		        + pop3Server + ")");
-		pop3client.emailsHolen(pop3Server, pop3Port, benutzername, passwort);
-	}
+    /**
+     * 
+     * @param emailAdresse
+     * @param benutzername
+     * @param passwort
+     * @param pop3Port
+     * @param pop3Server
+     */
+    public void emailsAbholenEmails(String benutzername, String passwort, String pop3Port, String pop3Server) {
+        Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
+                + " (EmailAnwendung), emailsAbholenEmails(" + benutzername + "," + passwort + "," + pop3Port + ","
+                + pop3Server + ")");
+        pop3client.emailsHolen(pop3Server, pop3Port, benutzername, passwort);
+    }
 
-	public boolean kontaktHinzufuegen(String name, String vorname, String strasse, int hausnr, int plz, String wohnort,
-	        String email, String telefon) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
-		        + " (EmailAnwendung), kontaktHinzufuegen(" + name + "," + vorname + "," + strasse + "," + hausnr + ","
-		        + plz + "," + wohnort + "," + email + "," + telefon + ")");
-		if (EingabenUeberpruefung.isGueltig(name, EingabenUeberpruefung.musterMindEinZeichen)
-		        && EingabenUeberpruefung.isGueltig(vorname, EingabenUeberpruefung.musterMindEinZeichen)
-		        && EingabenUeberpruefung.isGueltig(email, EingabenUeberpruefung.musterEmailAdresse)) {
-			try {
-				Kontakt kontaktNeu = new Kontakt();
+    public boolean kontaktHinzufuegen(String name, String vorname, String strasse, int hausnr, int plz, String wohnort,
+            String email, String telefon) {
+        Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+                + " (EmailAnwendung), kontaktHinzufuegen(" + name + "," + vorname + "," + strasse + "," + hausnr + ","
+                + plz + "," + wohnort + "," + email + "," + telefon + ")");
+        if (EingabenUeberpruefung.isGueltig(name, EingabenUeberpruefung.musterMindEinZeichen)
+                && EingabenUeberpruefung.isGueltig(vorname, EingabenUeberpruefung.musterMindEinZeichen)
+                && EingabenUeberpruefung.isGueltig(email, EingabenUeberpruefung.musterEmailAdresse)) {
+            try {
+                Kontakt kontaktNeu = new Kontakt();
 
-				kontaktNeu.setName(name);
-				kontaktNeu.setVorname(vorname);
-				kontaktNeu.setStrasse(strasse);
-				kontaktNeu.setHausnr(hausnr);
-				kontaktNeu.setPlz(plz);
-				kontaktNeu.setWohnort(wohnort);
-				kontaktNeu.setEmail(email);
-				kontaktNeu.setTelefon(telefon);
+                kontaktNeu.setName(name);
+                kontaktNeu.setVorname(vorname);
+                kontaktNeu.setStrasse(strasse);
+                kontaktNeu.setHausnr(hausnr);
+                kontaktNeu.setPlz(plz);
+                kontaktNeu.setWohnort(wohnort);
+                kontaktNeu.setEmail(email);
+                kontaktNeu.setTelefon(telefon);
 
-				getAdressbuch().add(kontaktNeu);
-			} catch (Exception e) {
-				e.printStackTrace(Main.debug);
-				return false;
-			}
-		} else {
-			return false;
-		}
+                getAdressbuch().add(kontaktNeu);
+            } catch (Exception e) {
+                e.printStackTrace(Main.debug);
+                return false;
+            }
+        } else {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * FUNKTIONIERT
-	 * 
-	 * @param name
-	 * @param vorname
-	 * @param email
-	 * @return
-	 */
-	public boolean kontaktLoeschen(String name, String vorname, String email) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
-		        + " (EmailAnwendung), kontaktLoeschen(" + name + "," + vorname + "," + email + ")");
-		if (EingabenUeberpruefung.isGueltig(name, EingabenUeberpruefung.musterMindEinZeichen)
-		        && EingabenUeberpruefung.isGueltig(vorname, EingabenUeberpruefung.musterMindEinZeichen)
-		        && EingabenUeberpruefung.isGueltig(email, EingabenUeberpruefung.musterEmailAdresse)) {
-			for (ListIterator iter = adressbuch.listIterator(); iter.hasNext();) {
-				Kontakt kontakt = (Kontakt) iter.next();
+    public boolean kontaktLoeschen(String name, String vorname, String email) {
+        Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+                + " (EmailAnwendung), kontaktLoeschen(" + name + "," + vorname + "," + email + ")");
+        if (EingabenUeberpruefung.isGueltig(name, EingabenUeberpruefung.musterMindEinZeichen)
+                && EingabenUeberpruefung.isGueltig(vorname, EingabenUeberpruefung.musterMindEinZeichen)
+                && EingabenUeberpruefung.isGueltig(email, EingabenUeberpruefung.musterEmailAdresse)) {
+            for (Kontakt kontakt : adressbuch) {
+                if (email.equalsIgnoreCase(kontakt.getEmail())) {
+                    if (name.equals(kontakt.getName()) && vorname.equals(kontakt.getVorname())) {
+                        adressbuch.remove(kontakt);
+                        return true;
+                    }
+                }
+            }
+        }
 
-				if (email.equalsIgnoreCase(kontakt.getEmail())) {
-					if (name.equals(kontakt.getName()) && vorname.equals(kontakt.getVorname())) {
-						adressbuch.remove(kontakt);
-						return true;
-					}
-				}
-			}
-		} else {
-		}
+        return false;
+    }
 
-		return false;
-	}
+    public void speichern() {
+        Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+                + " (EmailAnwendung), speichern()");
+        Datei datei = new Datei();
+        String kontenString = "";
+        for (EmailKonto konto : kontoListe.values()) {
+            kontenString += konto.toString() + "\n";
+        }
+        datei.setDateiInhalt(kontenString);
+        datei.setName("konten.txt");
+        datei.setDateiTyp("text/txt");
+        getSystemSoftware().getDateisystem().speicherDatei(getSystemSoftware().getDateisystem().getRoot(), datei);
+    }
 
-	public void speichern() {
-		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
-		        + " (EmailAnwendung), speichern()");
-		Datei datei = new Datei();
-		String kontenString = "";
-		Iterator iter = kontoListe.values().iterator();
+    public void laden() {
+        Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+                + " (EmailAnwendung), laden()");
+        Datei datei = getSystemSoftware().getDateisystem().holeDatei(getSystemSoftware().getDateisystem().getRoot(),
+                "konten.txt");
+        if (datei != null) {
+            String kontenString = datei.getDateiInhalt();
+            String[] konten = kontenString.split("\n");
+            for (int i = 0; i < konten.length; i++) {
+                String konto = konten[i];
+                EmailKonto tmpKonto = new EmailKonto(konto);
+                kontoListe.put(tmpKonto.getBenutzername(), tmpKonto);
+            }
+        }
 
-		while (iter.hasNext()) {
-			EmailKonto konto = (EmailKonto) iter.next();
+    }
 
-			kontenString += konto.toString() + "\n";
-		}
-		datei.setDateiInhalt(kontenString);
-		datei.setName("konten.txt");
-		datei.setDateiTyp("text/txt");
-		getSystemSoftware().getDateisystem().speicherDatei(getSystemSoftware().getDateisystem().getRoot(), datei);
-	}
+    public POP3Client holePOP3Client() {
+        return pop3client;
+    }
 
-	public void laden() {
-		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
-		        + " (EmailAnwendung), laden()");
-		Datei datei = getSystemSoftware().getDateisystem().holeDatei(getSystemSoftware().getDateisystem().getRoot(),
-		        "konten.txt");
-		if (datei != null) {
-			String kontenString = datei.getDateiInhalt();
-			String[] konten = kontenString.split("\n");
-			for (int i = 0; i < konten.length; i++) {
-				String konto = konten[i];
-				EmailKonto tmpKonto = new EmailKonto(konto);
-				kontoListe.put(tmpKonto.getBenutzername(), tmpKonto);
-			}
-		}
+    public Vector<Kontakt> getAdressbuch() {
+        return adressbuch;
+    }
 
-	}
+    public void setAdressbuch(Vector<Kontakt> adressbuch) {
+        this.adressbuch = adressbuch;
+    }
 
-	public POP3Client holePOP3Client() {
-		return pop3client;
-	}
+    public int getSitzungsnummer() {
+        return sitzungsnummer;
+    }
 
-	// GET- und SET-Methoden
+    public void setSitzungsnummer(int sitzungsnummer) {
+        this.sitzungsnummer = sitzungsnummer;
+    }
 
-	public Vector getAdressbuch() {
-		return adressbuch;
-	}
+    public List<Email> getEmpfangeneNachrichten() {
+        return empfangeneNachrichten;
+    }
 
-	public void setAdressbuch(Vector adressbuch) {
-		this.adressbuch = adressbuch;
-	}
+    public void setEmpfangeneNachrichten(List<Email> empfangeneNachrichten) {
+        this.empfangeneNachrichten = empfangeneNachrichten;
+    }
 
-	public int getSitzungsnummer() {
-		return sitzungsnummer;
-	}
+    public List<Email> getErstellteNachrichten() {
+        return erstellteNachrichten;
+    }
 
-	public void setSitzungsnummer(int sitzungsnummer) {
-		this.sitzungsnummer = sitzungsnummer;
-	}
+    public void setErstellteNachrichten(List<Email> erstellteNachrichten) {
+        this.erstellteNachrichten = erstellteNachrichten;
+    }
 
-	public LinkedList getEmpfangeneNachrichten() {
-		return empfangeneNachrichten;
-	}
+    public List<Email> getGesendeteNachrichten() {
+        return gesendeteNachrichten;
+    }
 
-	public void setEmpfangeneNachrichten(LinkedList empfangeneNachrichten) {
-		this.empfangeneNachrichten = empfangeneNachrichten;
-	}
+    public void addGesendeteNachricht(Email gesendeteNachricht) {
+        if (!gesendeteNachrichten.contains(gesendeteNachricht)) {
+            this.gesendeteNachrichten.add(gesendeteNachricht);
+        }
+    }
 
-	public LinkedList getErstellteNachrichten() {
-		return erstellteNachrichten;
-	}
+    public void setGesendeteNachrichten(List<Email> gesendeteNachrichten) {
+        this.gesendeteNachrichten = gesendeteNachrichten;
+    }
 
-	public void setErstellteNachrichten(LinkedList erstellteNachrichten) {
-		this.erstellteNachrichten = erstellteNachrichten;
-	}
+    public Map<String, EmailKonto> getKontoListe() {
+        return kontoListe;
+    }
 
-	public LinkedList getGesendeteNachrichten() {
-		return gesendeteNachrichten;
-	}
-
-	public void setGesendeteNachrichten(LinkedList gesendeteNachrichten) {
-		this.gesendeteNachrichten = gesendeteNachrichten;
-	}
-
-	public HashMap getKontoListe() {
-		return kontoListe;
-	}
-
-	public void setKontoListe(HashMap kontoListe) {
-		this.kontoListe = kontoListe;
-	}
+    public void setKontoListe(Map<String, EmailKonto> kontoListe) {
+        this.kontoListe = kontoListe;
+    }
 }

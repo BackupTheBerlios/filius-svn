@@ -26,6 +26,7 @@
 package filius.software.email;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import filius.Main;
 
@@ -35,161 +36,160 @@ import filius.Main;
  * 
  */
 public class EmailKonto {
-	private String benutzername;
-	private String passwort;
-	private String nachname = "";
-	private String vorname = "";
-	private String pop3server, smtpserver, pop3port, smtpport;
-	private String emailAdresse;
+    private String benutzername;
+    private String passwort;
+    private String nachname = "";
+    private String vorname = "";
+    private String pop3server, smtpserver, pop3port, smtpport;
+    private String emailAdresse;
 
-	private LinkedList nachrichten = new LinkedList();
+    private List<Email> nachrichten = new LinkedList<Email>();
 
-	public EmailKonto() {
-	}
+    public EmailKonto() {}
 
-	/* Liest durch Semicolon getrennte Werte ein */
-	public EmailKonto(String kontoString) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (EmailKonto), constr: EmailKonto("
-		        + kontoString + ")");
-		String[] teile = kontoString.split(";");
-		if (teile.length > 8) {
-			pop3server = teile[0];
-			smtpserver = teile[1];
-			pop3port = teile[2];
-			smtpport = teile[3];
-			benutzername = teile[4];
-			passwort = teile[5];
-			nachname = teile[6];
-			vorname = teile[7];
-			emailAdresse = teile[8];
-		}
-	}
+    /* Liest durch Semicolon getrennte Werte ein */
+    public EmailKonto(String kontoString) {
+        Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (EmailKonto), constr: EmailKonto("
+                + kontoString + ")");
+        String[] teile = kontoString.split(";");
+        if (teile.length > 8) {
+            pop3server = teile[0];
+            smtpserver = teile[1];
+            pop3port = teile[2];
+            smtpport = teile[3];
+            benutzername = teile[4];
+            passwort = teile[5];
+            nachname = teile[6];
+            vorname = teile[7];
+            emailAdresse = teile[8];
+        }
+    }
 
-	public String toString() {
-		Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (EmailKonto), toString()");
-		String ergebnis = "" + pop3server + ";" + smtpserver + ";" + pop3port + ";" + smtpport + ";" + benutzername
-		        + ";" + passwort + ";" + nachname + ";" + vorname + ";" + emailAdresse;
-		return ergebnis;
-	}
+    public String toString() {
+        Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass() + " (EmailKonto), toString()");
+        String ergebnis = "" + pop3server + ";" + smtpserver + ";" + pop3port + ";" + smtpport + ";" + benutzername
+                + ";" + passwort + ";" + nachname + ";" + vorname + ";" + emailAdresse;
+        return ergebnis;
+    }
 
-	public String getBenutzername() {
-		return benutzername;
-	}
+    public String getBenutzername() {
+        return benutzername;
+    }
 
-	public String getPasswort() {
-		return passwort;
-	}
+    public String getPasswort() {
+        return passwort;
+    }
 
-	public LinkedList getNachrichten() {
-		return nachrichten;
-	}
+    public List<Email> getNachrichten() {
+        return nachrichten;
+    }
 
-	public void setBenutzername(String benutzername) {
-		this.benutzername = benutzername;
-	}
+    public void setBenutzername(String benutzername) {
+        this.benutzername = benutzername;
+    }
 
-	public void setPasswort(String passwort) {
-		this.passwort = passwort;
-	}
+    public void setPasswort(String passwort) {
+        this.passwort = passwort;
+    }
 
-	public void setNachrichten(LinkedList nachrichten) {
-		this.nachrichten = nachrichten;
-	}
+    public void setNachrichten(List<Email> nachrichten) {
+        this.nachrichten = nachrichten;
+    }
 
-	public String getNachname() {
-		return nachname;
-	}
+    public String getNachname() {
+        return nachname;
+    }
 
-	public void setNachname(String nachname) {
-		if (nachname != null)
-			this.nachname = nachname;
-		else
-			this.nachname = "";
-	}
+    public void setNachname(String nachname) {
+        if (nachname != null)
+            this.nachname = nachname;
+        else
+            this.nachname = "";
+    }
 
-	public String getVorname() {
-		return vorname;
-	}
+    public String getVorname() {
+        return vorname;
+    }
 
-	public void setVorname(String vorname) {
-		if (vorname != null)
-			this.vorname = vorname;
-		else
-			this.vorname = "";
-	}
+    public void setVorname(String vorname) {
+        if (vorname != null)
+            this.vorname = vorname;
+        else
+            this.vorname = "";
+    }
 
-	/**
-	 * @return the pop3port
-	 */
-	public String getPop3port() {
-		return pop3port;
-	}
+    /**
+     * @return the pop3port
+     */
+    public String getPop3port() {
+        return pop3port;
+    }
 
-	/**
-	 * @param pop3port
-	 *            the pop3port to set
-	 */
-	public void setPop3port(String pop3port) {
-		this.pop3port = pop3port;
-	}
+    /**
+     * @param pop3port
+     *            the pop3port to set
+     */
+    public void setPop3port(String pop3port) {
+        this.pop3port = pop3port;
+    }
 
-	/**
-	 * @return the pop3server
-	 */
-	public String getPop3server() {
-		return pop3server;
-	}
+    /**
+     * @return the pop3server
+     */
+    public String getPop3server() {
+        return pop3server;
+    }
 
-	/**
-	 * @param pop3server
-	 *            the pop3server to set
-	 */
-	public void setPop3server(String pop3server) {
-		this.pop3server = pop3server;
-	}
+    /**
+     * @param pop3server
+     *            the pop3server to set
+     */
+    public void setPop3server(String pop3server) {
+        this.pop3server = pop3server;
+    }
 
-	/**
-	 * @return the smtpport
-	 */
-	public String getSmtpport() {
-		return smtpport;
-	}
+    /**
+     * @return the smtpport
+     */
+    public String getSmtpport() {
+        return smtpport;
+    }
 
-	/**
-	 * @param smtpport
-	 *            the smtpport to set
-	 */
-	public void setSmtpport(String smtpport) {
-		this.smtpport = smtpport;
-	}
+    /**
+     * @param smtpport
+     *            the smtpport to set
+     */
+    public void setSmtpport(String smtpport) {
+        this.smtpport = smtpport;
+    }
 
-	/**
-	 * @return the smtpserver
-	 */
-	public String getSmtpserver() {
-		return smtpserver;
-	}
+    /**
+     * @return the smtpserver
+     */
+    public String getSmtpserver() {
+        return smtpserver;
+    }
 
-	/**
-	 * @param smtpserver
-	 *            the smtpserver to set
-	 */
-	public void setSmtpserver(String smtpserver) {
-		this.smtpserver = smtpserver;
-	}
+    /**
+     * @param smtpserver
+     *            the smtpserver to set
+     */
+    public void setSmtpserver(String smtpserver) {
+        this.smtpserver = smtpserver;
+    }
 
-	/**
-	 * @return the emailAdresse
-	 */
-	public String getEmailAdresse() {
-		return emailAdresse;
-	}
+    /**
+     * @return the emailAdresse
+     */
+    public String getEmailAdresse() {
+        return emailAdresse;
+    }
 
-	/**
-	 * @param emailAdresse
-	 *            the emailAdresse to set
-	 */
-	public void setEmailAdresse(String emailAdresse) {
-		this.emailAdresse = emailAdresse;
-	}
+    /**
+     * @param emailAdresse
+     *            the emailAdresse to set
+     */
+    public void setEmailAdresse(String emailAdresse) {
+        this.emailAdresse = emailAdresse;
+    }
 }

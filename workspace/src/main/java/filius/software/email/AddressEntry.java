@@ -30,48 +30,50 @@ package filius.software.email;
  * 
  */
 public class AddressEntry {
-	private String name;
-	private String mailAddress;
+    private String name;
+    private String mailAddress;
 
-	public AddressEntry(String entry) {
-		String trimmedEntry = entry.trim();
-		int addressStartPos = trimmedEntry.indexOf("<");
-		int addressEndPos = trimmedEntry.indexOf(">");
-		if (addressStartPos >= 0 && addressEndPos > addressStartPos) {
-			mailAddress = trimmedEntry.substring(addressStartPos + 1, addressEndPos).trim();
-			if (addressStartPos > 0) {
-				name = trimmedEntry.substring(0, addressStartPos).trim();
-			}
-		} else {
-			name = trimmedEntry;
-		}
-	}
+    public AddressEntry(String entry) {
+        String trimmedEntry = entry.trim();
+        int addressStartPos = trimmedEntry.indexOf("<");
+        int addressEndPos = trimmedEntry.indexOf(">");
+        if (addressStartPos >= 0 && addressEndPos > addressStartPos) {
+            mailAddress = trimmedEntry.substring(addressStartPos + 1, addressEndPos).trim();
+            if (addressStartPos > 0) {
+                name = trimmedEntry.substring(0, addressStartPos).trim();
+            }
+        } else if (!trimmedEntry.contains("<") && !trimmedEntry.contains(">") && trimmedEntry.contains("@")) {
+            mailAddress = trimmedEntry;
+        } else {
+            name = trimmedEntry;
+        }
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getMailAddress() {
-		return mailAddress;
-	}
+    public String getMailAddress() {
+        return mailAddress;
+    }
 
-	public void setMailAddress(String mailAddress) {
-		this.mailAddress = mailAddress;
-	}
+    public void setMailAddress(String mailAddress) {
+        this.mailAddress = mailAddress;
+    }
 
-	@Override
-	public String toString() {
-		if (name == null && mailAddress == null)
-			return null;
-		else if (name == null)
-			return "<" + mailAddress + ">";
-		else if (mailAddress == null)
-			return name;
-		else
-			return name + " <" + mailAddress + ">";
-	}
+    @Override
+    public String toString() {
+        if (name == null && mailAddress == null)
+            return null;
+        else if (name == null)
+            return "<" + mailAddress + ">";
+        else if (mailAddress == null)
+            return name;
+        else
+            return name + " <" + mailAddress + ">";
+    }
 }
