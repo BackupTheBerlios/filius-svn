@@ -35,72 +35,72 @@ import filius.software.transportschicht.UDPSocket;
 
 public class DNSServerMitarbeiter extends ServerMitarbeiter {
 
-	public DNSServerMitarbeiter(DNSServer server, Socket socket) {
-		super(server, socket);
-	}
+    public DNSServerMitarbeiter(DNSServer server, Socket socket) {
+        super(server, socket);
+    }
 
-	protected void verarbeiteNachricht(String dateneinheit) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
-		        + " (DNSServerMitarbeiter), verarbeiteNachricht(" + dateneinheit + ")");
-		DNSNachricht nachricht, antwort;
-		ResourceRecord record;
+    protected void verarbeiteNachricht(String dateneinheit) {
+        Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+                + " (DNSServerMitarbeiter), verarbeiteNachricht(" + dateneinheit + ")");
+        DNSNachricht nachricht, antwort;
+        ResourceRecord record;
 
-		nachricht = new DNSNachricht(dateneinheit);
-		antwort = new DNSNachricht(DNSNachricht.RESPONSE);
-		antwort.setId(nachricht.getId());
+        nachricht = new DNSNachricht(dateneinheit);
+        antwort = new DNSNachricht(DNSNachricht.RESPONSE);
+        antwort.setId(nachricht.getId());
 
-		for (Query query : nachricht.holeQueries()) {
-			server.benachrichtigeBeobachter(messages.getString("sw_dnsservermitarbeiter_msg1") + query);
+        for (Query query : nachricht.holeQueries()) {
+            server.benachrichtigeBeobachter(messages.getString("sw_dnsservermitarbeiter_msg1") + query);
 
-			record = ((DNSServer) server).holeRecord(query.holeDomainname(), query.holeTyp());
-			if (record == null) {
-				record = ((DNSServer) server).holeNSRecord(query.holeDomainname());
-			}
+            record = ((DNSServer) server).holeRecord(query.holeDomainname(), query.holeTyp());
+            if (record == null) {
+                record = ((DNSServer) server).holeNSRecord(query.holeDomainname());
+            }
 
-			if (record != null) {
-				if (record.getType().equals(ResourceRecord.ADDRESS)) {
-					antwort.hinzuAntwortResourceRecord(record.toString());
-				} else if (record.getType().equals(ResourceRecord.NAME_SERVER)) {
-					if (((DNSServer) server).isRecursiveResolutionEnabled()) {
-						Resolver resolver = ((InternetKnotenBetriebssystem) server.getSystemSoftware()).holeDNSClient();
-						record = ((DNSServer) server).holeRecord(record.getRdata(), ResourceRecord.ADDRESS);
-						if (record != null) {
-							try {
-								String ipAdresse = resolver.holeIPAdresse(query.holeDomainname(), record.getRdata());
-								record = new ResourceRecord(query.holeDomainname(), ResourceRecord.ADDRESS, ipAdresse);
-								antwort.hinzuAntwortResourceRecord(record.toString());
-							} catch (TimeoutException e) {
-								antwort.hinzuAntwortResourceRecord(record.toString());
-								record = ((DNSServer) server).holeRecord(record.getRdata(), ResourceRecord.ADDRESS);
-								if (record != null) {
-									antwort.hinzuAntwortResourceRecord(record.toString());
-								}
-							}
-						}
-					} else {
-						antwort.hinzuAntwortResourceRecord(record.toString());
-						record = ((DNSServer) server).holeRecord(record.getRdata(), ResourceRecord.ADDRESS);
-						if (record != null) {
-							antwort.hinzuAntwortResourceRecord(record.toString());
-						}
-					}
-				} else if (record.getType().equals(ResourceRecord.MAIL_EXCHANGE)) {
-					antwort.hinzuAntwortResourceRecord(record.toString());
-					record = ((DNSServer) server).holeRecord(record.getRdata(), ResourceRecord.ADDRESS);
-					if (record != null) {
-						antwort.hinzuAntwortResourceRecord(record.toString());
-					}
-				}
-			}
-		}
+            if (record != null) {
+                if (record.getType().equals(ResourceRecord.ADDRESS)) {
+                    antwort.hinzuAntwortResourceRecord(record.toString());
+                } else if (record.getType().equals(ResourceRecord.NAME_SERVER)) {
+                    if (((DNSServer) server).isRecursiveResolutionEnabled()) {
+                        Resolver resolver = ((InternetKnotenBetriebssystem) server.getSystemSoftware()).holeDNSClient();
+                        record = ((DNSServer) server).holeRecord(record.getRdata(), ResourceRecord.ADDRESS);
+                        if (record != null) {
+                            try {
+                                String ipAdresse = resolver.holeIPAdresse(query.holeDomainname(), record.getRdata());
+                                record = new ResourceRecord(query.holeDomainname(), ResourceRecord.ADDRESS, ipAdresse);
+                                antwort.hinzuAntwortResourceRecord(record.toString());
+                            } catch (TimeoutException e) {
+                                antwort.hinzuAntwortResourceRecord(record.toString());
+                                record = ((DNSServer) server).holeRecord(record.getRdata(), ResourceRecord.ADDRESS);
+                                if (record != null) {
+                                    antwort.hinzuAntwortResourceRecord(record.toString());
+                                }
+                            }
+                        }
+                    } else {
+                        antwort.hinzuAntwortResourceRecord(record.toString());
+                        record = ((DNSServer) server).holeRecord(record.getRdata(), ResourceRecord.ADDRESS);
+                        if (record != null) {
+                            antwort.hinzuAntwortResourceRecord(record.toString());
+                        }
+                    }
+                } else if (record.getType().equals(ResourceRecord.MAIL_EXCHANGE)) {
+                    antwort.hinzuAntwortResourceRecord(record.toString());
+                    record = ((DNSServer) server).holeRecord(record.getRdata(), ResourceRecord.ADDRESS);
+                    if (record != null) {
+                        antwort.hinzuAntwortResourceRecord(record.toString());
+                    }
+                }
+            }
+        }
 
-		if (socket != null) {
-			((UDPSocket) socket).senden(antwort.toString());
+        if (socket != null) {
+            ((UDPSocket) socket).senden(antwort.toString());
 
-			server.benachrichtigeBeobachter(messages.getString("sw_dnsservermitarbeiter_msg2") + "\n>>>>\n"
-			        + antwort.toString() + "<<<<");
-		}
+            server.benachrichtigeBeobachter(messages.getString("sw_dnsservermitarbeiter_msg2") + "\n>>>>\n"
+                    + antwort.toString() + "<<<<");
+        }
 
-	}
+    }
 
 }

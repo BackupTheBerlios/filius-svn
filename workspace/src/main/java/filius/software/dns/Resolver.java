@@ -104,8 +104,7 @@ public class Resolver extends ClientAnwendung {
                     tmp = socket.empfangen(10 * Verbindung.holeRTT());
                     if (tmp == null) {
                         Main.debug.println("ERROR (" + this.hashCode() + "): keine Antwort auf Query empfangen");
-                        throw new TimeoutException(); // inform calling function
-                                                      // about Timeout
+                        throw new TimeoutException();
                     }
 
                     antwort = new DNSNachricht(tmp);
