@@ -71,32 +71,22 @@ import filius.software.system.Dateisystem;
 
 public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
 
-    /**
-	 *
-	 */
     private static final long serialVersionUID = 1L;
 
+    private final ImageIcon dateiIcon = new ImageIcon(getClass().getResource("/gfx/desktop/datei.png"));
+    private final ImageIcon ordnerIcon = new ImageIcon(getClass().getResource("/gfx/desktop/ordner.png"));
     private JPanel backPanel;
-
     private JTree tv;
-
     private DefaultMutableTreeNode aktuellerOrdner;
-
     private JList dateiListe;
-
-    private GUIApplicationFileExplorerWindow dies;
-
     private DefaultMutableTreeNode selektierteNode, zwischenAblageNode;
-
     private JButton btImportieren;
-
-    private String datei, pfad;
-
+    private String datei;
+    private String pfad;
     private JInternalFrame fileImportFrame;
 
     public GUIApplicationFileExplorerWindow(final GUIDesktopPanel desktop, String appName) {
         super(desktop, appName);
-        this.dies = this;
         aktuellerOrdner = holeAnwendung().getSystemSoftware().getDateisystem().getRoot();
 
         initialisiereKomponenten();
@@ -108,20 +98,16 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
         tv = new JTree(aktuellerOrdner);
 
         tv.addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
             public void valueChanged(TreeSelectionEvent e) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) tv.getLastSelectedPathComponent();
 
-                if (node == null)
-                    return;
-
-                aktuellerOrdner = node;
-
-                ordnerInhaltAnzeigen(node);
+                if (node != null) {
+                    aktuellerOrdner = node;
+                    ordnerInhaltAnzeigen(node);
+                }
             }
         });
-
-        ImageIcon dateiIcon = new ImageIcon(getClass().getResource("/gfx/desktop/datei.png"));
-        ImageIcon ordnerIcon = new ImageIcon(getClass().getResource("/gfx/desktop/ordner.png"));
 
         tv.setBounds(0, 0, 150, 100);
         tv.setCellRenderer(new GUITreeRenderer(dateiIcon, ordnerIcon));
@@ -131,19 +117,19 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
         final JButton aktualisieren = new JButton(messages.getString("fileexplorer_msg1"));
         aktualisieren.setActionCommand("aktualisieren");
         aktualisieren.addActionListener(new ActionListener() {
-
+            @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getActionCommand().equals(aktualisieren.getActionCommand())) {
                     aktualisieren();
                 }
             }
-
         });
         box.add(aktualisieren);
         box.add(Box.createVerticalStrut(5));
 
         btImportieren = new JButton(messages.getString("fileexplorer_msg2"));
         btImportieren.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 fileImport();
             }
@@ -151,7 +137,7 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
         box.add(btImportieren);
 
         JScrollPane scrollpane = new JScrollPane(tv);
-
+        scrollpane.setPreferredSize(new Dimension(10, 240));
         Box horBox = Box.createHorizontalBox();
         horBox.add(scrollpane);
         horBox.setPreferredSize(new Dimension(180, 240));
@@ -159,11 +145,12 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
         dateiListe = new JList(lmDateiListe);
         dateiListe.setFixedCellHeight(16);
         JScrollPane dateiListenScrollPane = new JScrollPane(dateiListe);
+        dateiListenScrollPane.setPreferredSize(new Dimension(10, 240));
         horBox.add(dateiListenScrollPane);
 
         dateiListe.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent e) {
-                /* Rechte Maustaste (Einmal geklickt) */
                 if (e.getButton() == 3) {
                     if (aktuellerOrdner != null) {
                         int index = ((JList) e.getSource()).locationToIndex(e.getPoint());
@@ -197,7 +184,8 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
                                 }
                                 /* Loeschen */
                                 if (e.getActionCommand().equals(miLoeschen.getActionCommand())) {
-                                    int loeschAbfrage = JOptionPane.showConfirmDialog(dies,
+                                    int loeschAbfrage = JOptionPane.showConfirmDialog(
+                                            GUIApplicationFileExplorerWindow.this,
                                             messages.getString("fileexplorer_msg18"),
                                             messages.getString("fileexplorer_msg18"), JOptionPane.YES_NO_OPTION);
 
@@ -236,7 +224,8 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
                                 }
                                 /* Umbenennen */
                                 if (e.getActionCommand().equals(miUmbenennen.getActionCommand())) {
-                                    String neuerName = JOptionPane.showInputDialog(dies,
+                                    String neuerName = JOptionPane.showInputDialog(
+                                            GUIApplicationFileExplorerWindow.this,
                                             messages.getString("fileexplorer_msg9"));
                                     if (neuerName != null && !neuerName.trim().isEmpty()) {
                                         if (!holeAnwendung().getSystemSoftware().getDateisystem()
@@ -262,31 +251,25 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
                         miEinfuegen.addActionListener(al);
                         miUmbenennen.addActionListener(al);
 
-                        /*
-                         * Neuer Ordner kann nur angelegt werden, wenn kein Eintrag selektiert ist
-                         */
                         if (selektiert == -1) {
                             popmen.add(miNeuerOrdner);
                             if (zwischenAblageNode != null) {
                                 popmen.add(miEinfuegen);
                             }
-                            ;
                         } else {
                             String[] teile = lm.getElementAt(index).toString().split(";");
                             if (teile.length > 0) {
                                 selektierteNode = Dateisystem.verzeichnisKnoten(aktuellerOrdner, teile[1]);
+                                dateiListe.setSelectedIndex(index);
                             }
                             popmen.add(miLoeschen);
                             popmen.add(miAusschneiden);
                             popmen.add(miKopieren);
                             popmen.add(miUmbenennen);
-
                         }
 
-                        dies.add(popmen);
-
-                        popmen.show(dies.getRootPane().getLayeredPane(), e.getX() + tv.getWidth(), e.getY()
-                                + btImportieren.getY() + btImportieren.getHeight());
+                        GUIApplicationFileExplorerWindow.this.add(popmen);
+                        popmen.show(GUIApplicationFileExplorerWindow.this.dateiListe, e.getX(), e.getY());
                     }
 
                 }
@@ -394,7 +377,7 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
         JButton fileButton = new JButton(messages.getString("fileexplorer_msg14"));
         fileButton.setSize(new Dimension(100, 30));
         fileButton.addMouseListener(new MouseInputAdapter() {
-
+            @Override
             public void mousePressed(MouseEvent e) {
                 JFileChooser fc = new JFileChooser();
                 if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -405,10 +388,8 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
                 }
 
                 if (datei != null) {
-
                     inputField.setText(pfad + datei);
                     renameField.setText(datei);
-
                 }
 
                 try {
@@ -443,6 +424,7 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
         JButton importButton = new JButton(messages.getString("fileexplorer_msg15"));
         importButton.setSize(new Dimension(100, 30));
         importButton.addMouseListener(new MouseInputAdapter() {
+            @Override
             public void mousePressed(MouseEvent z) {
                 if (inputField.getText().equals("") || renameField.getText().equals("")) {
                     outputField.setText(messages.getString("fileexplorer_msg16"));
@@ -451,21 +433,9 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
                     if (aktuellerOrdner == null) {
                         outputField.setText(messages.getString("fileexplorer_msg17"));
                     } else {
-                        // if (inputField.getText().equals(pfad + datei)
-                        // && datei.equals(renameField.getText())) {
                         outputField.setText(((FileExplorer) holeAnwendung()).addFile(pfad, datei, aktuellerOrdner,
                                 renameField.getText()));
                         aktualisieren();
-                        // }
-                        // else if (inputField.getText().equals(pfad + datei)
-                        // && !renameField.getText().equals("")) {
-                        // outputField
-                        // .setText(((FileExplorer) holeAnwendung())
-                        // .addFile(outputField.getText(), "",
-                        // aktuellerOrdner,
-                        // renameField.getText()));
-                        // aktualisieren();
-                        // }
                     }
                 }
             }
@@ -493,6 +463,8 @@ public class GUIApplicationFileExplorerWindow extends GUIApplicationWindow {
         }
     }
 
-    public void update(Observable arg0, Object arg1) {}
-
+    @Override
+    public void update(Observable arg0, Object arg1) {
+        aktualisieren();
+    }
 }
