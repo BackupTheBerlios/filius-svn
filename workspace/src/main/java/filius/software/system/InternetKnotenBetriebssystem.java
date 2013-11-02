@@ -260,6 +260,8 @@ public abstract class InternetKnotenBetriebssystem extends SystemSoftware {
         Main.debug.println("INVOKED (" + this.hashCode() + ") " + getClass()
                 + " (InternetKnotenBetriebssystem), starten()");
 
+        dateisystem.fixDirectory(dateisystem.getRoot());
+
         // Die Protokoll-Threads der einzelnen Schichten werden
         // beginnend mit der untersten Schicht gestartet.
         ethernet.starten();
