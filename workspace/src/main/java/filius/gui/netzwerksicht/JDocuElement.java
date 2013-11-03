@@ -29,6 +29,7 @@ import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -48,6 +49,7 @@ import javax.swing.event.MouseInputAdapter;
 import javax.swing.text.BadLocationException;
 
 import filius.gui.GUIContainer;
+import filius.gui.JMainFrame;
 import filius.rahmenprogramm.I18n;
 import filius.rahmenprogramm.SzenarioVerwaltung;
 
@@ -103,6 +105,7 @@ public class JDocuElement extends JPanel implements I18n {
     private void initListener() {
         JComponent comp = textArea != null ? textArea : this;
         comp.addMouseListener(new MouseInputAdapter() {
+            @Override
             public void mouseReleased(MouseEvent e) {
                 if (JDocuElement.this.enabled) {
                     JDocuElement.this.selected = false;
@@ -112,37 +115,12 @@ public class JDocuElement extends JPanel implements I18n {
                 }
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 if (JDocuElement.this.enabled) {
                     JDocuElement.this.selected = true;
-                    int x = e.getX();
-                    int y = e.getY();
-                    if (x <= TEXT_BORDER_WIDTH) {
-                        updateType = GUIContainer.LEFT_SIZING;
-                    } else if (x >= JDocuElement.this.getWidth() - TEXT_BORDER_WIDTH) {
-                        updateType = GUIContainer.RIGHT_SIZING;
-                    } else if (y <= TEXT_BORDER_WIDTH) {
-                        updateType = GUIContainer.UPPER_SIZING;
-                    } else if (y >= JDocuElement.this.getHeight() - TEXT_BORDER_WIDTH) {
-                        updateType = GUIContainer.LOWER_SIZING;
-                    } else if (JDocuElement.this.textArea != null) {
-                        try {
-                            Rectangle charPos = JDocuElement.this.textArea.modelToView(JDocuElement.this.textArea
-                                    .viewToModel(e.getPoint()));
-                            if (e.getY() >= charPos.getY() && e.getY() <= charPos.getY() + charPos.getHeight()) {
-                                updateType = GUIContainer.NONE;
-                            } else {
-                                updateType = GUIContainer.MOVE;
-                                elemMoveOffset = new Dimension(e.getX(), e.getY());
-                            }
-                        } catch (BadLocationException e1) {}
-                    } else {
-                        updateType = GUIContainer.MOVE;
-                        elemMoveOffset = new Dimension(e.getX(), e.getY());
-                    }
                     if (e.getButton() == MouseEvent.BUTTON3) {
                         final JMenuItem pmLoeschen = new JMenuItem(messages.getString("guievents_msg7"));
-
                         pmLoeschen.addActionListener(new ActionListener() {
 
                             public void actionPerformed(ActionEvent evt) {
@@ -156,11 +134,19 @@ public class JDocuElement extends JPanel implements I18n {
                         JDocuElement.this.add(popmen);
                         popmen.setVisible(true);
                         popmen.show(JDocuElement.this, e.getX(), e.getY());
+                    } else if (updateType == GUIContainer.MOVE) {
+                        elemMoveOffset = new Dimension(e.getX(), e.getY());
                     }
                 }
             }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                JMainFrame.getJMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            }
         });
         comp.addMouseMotionListener(new MouseInputAdapter() {
+            @Override
             public void mouseDragged(MouseEvent e) {
                 if (JDocuElement.this.enabled) {
                     if (JDocuElement.this.updateType == GUIContainer.MOVE) {
@@ -181,6 +167,46 @@ public class JDocuElement extends JPanel implements I18n {
                         JDocuElement.this.setBounds(JDocuElement.this.getX(), JDocuElement.this.getY() + e.getY(),
                                 JDocuElement.this.getWidth(), JDocuElement.this.getHeight() - e.getY());
                     }
+                }
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+                if (x <= TEXT_BORDER_WIDTH) {
+                    updateType = GUIContainer.LEFT_SIZING;
+                } else if (x >= JDocuElement.this.getWidth() - TEXT_BORDER_WIDTH) {
+                    updateType = GUIContainer.RIGHT_SIZING;
+                } else if (y <= TEXT_BORDER_WIDTH) {
+                    updateType = GUIContainer.UPPER_SIZING;
+                } else if (y >= JDocuElement.this.getHeight() - TEXT_BORDER_WIDTH) {
+                    updateType = GUIContainer.LOWER_SIZING;
+                } else if (JDocuElement.this.textArea != null) {
+                    try {
+                        Rectangle charPos = JDocuElement.this.textArea.modelToView(JDocuElement.this.textArea
+                                .viewToModel(e.getPoint()));
+                        if (e.getY() >= charPos.getY() && e.getY() <= charPos.getY() + charPos.getHeight()) {
+                            updateType = GUIContainer.NONE;
+                        } else {
+                            updateType = GUIContainer.MOVE;
+                        }
+                    } catch (BadLocationException e1) {}
+                } else {
+                    updateType = GUIContainer.MOVE;
+                }
+                if (updateType == GUIContainer.MOVE) {
+                    JMainFrame.getJMainFrame().setCursor(new Cursor(Cursor.MOVE_CURSOR));
+                } else if (updateType == GUIContainer.RIGHT_SIZING) {
+                    JMainFrame.getJMainFrame().setCursor(new Cursor(Cursor.E_RESIZE_CURSOR));
+                } else if (updateType == GUIContainer.LEFT_SIZING) {
+                    JMainFrame.getJMainFrame().setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));
+                } else if (updateType == GUIContainer.UPPER_SIZING) {
+                    JMainFrame.getJMainFrame().setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
+                } else if (updateType == GUIContainer.LOWER_SIZING) {
+                    JMainFrame.getJMainFrame().setCursor(new Cursor(Cursor.S_RESIZE_CURSOR));
+                } else {
+                    JMainFrame.getJMainFrame().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 }
             }
         });

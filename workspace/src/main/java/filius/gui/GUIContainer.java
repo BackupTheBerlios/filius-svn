@@ -168,8 +168,6 @@ public class GUIContainer implements Serializable, I18n {
     }
 
     /**
-     * 
-     * 
      * Die Prozedur wird erst aufgerufen wenn der Container c zugewiesen wurde. Sie Initialisiert die einzelnen Panels
      * und weist die ActionListener zu.
      * 
