@@ -1,3 +1,15 @@
+filius (1.5.3) unstable; urgency=low
+  * Moeglichkeit, Textfelder und Strukturierungsfelder einzufuegen
+  * Exportieren der Netzansicht als PNG moeglich
+  * Bounce-Mails bei nicht erreichbaren Empfaengern
+  * Reduzierung der Schnittstellen eines Vermittlungsrechners ist jetzt moeglich
+  * IP-Adresse der Vermittlungsrechner-Schnittstellen werden jetzt als Reitertitel verwendet
+  * Fehlerbehebung: leere Ordner-/Dateinamen möglich -> Datei-Explorer Fehlfunktion
+  * Fehlerbehebung: Linux-Startskript ohne 'realpath'
+  * Fehlerbehebung: mehrere E-Mail-Benutzerkonten in E-Mail-Anwendung möglich
+  * Fehlerbehebung: einzelne Nachrichten wurden bei Wechsel zwischen Entwurfs- und Aktionsmodus wiederholt verarbeitet 
+ -- Stefan Freischlad <kontakt@lernsoftware-filius.de>  Thu, 07 Nov 2013 00:00:00 +0000
+
 filius (1.5.2) unstable; urgency=low
   * Umbenennung "Terminal" zu "Befehlszeile"/"Command line"
   * Neue Befehlszeilenwerkzeuge: arp, cat
