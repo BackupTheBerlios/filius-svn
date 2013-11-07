@@ -79,9 +79,6 @@ import filius.software.email.EmailUtils;
  */
 public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
 
-    /**
-	 *
-	 */
     private static final long serialVersionUID = 1L;
 
     private JTabbedPane tabbedPane;
@@ -565,36 +562,36 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
     }
 
     public void emailsAbholen() {
-        inFrAbholen = new JInternalFrame(messages.getString("emailanwendung_msg23"));
-        inFrAbholen.setBounds(100, 50, 384, 64);
-        inFrAbholen.setVisible(true);
-        inFrAbholen.setResizable(true);
-        inFrAbholen.setClosable(true);
-        addFrame(inFrAbholen);
-        try {
-            inFrAbholen.setSelected(true);
-        } catch (PropertyVetoException e) {
-            e.printStackTrace(Main.debug);
+        if (!((EmailAnwendung) holeAnwendung()).getKontoListe().isEmpty()) {
+            inFrAbholen = new JInternalFrame(messages.getString("emailanwendung_msg23"));
+            inFrAbholen.setBounds(100, 50, 384, 64);
+            inFrAbholen.setVisible(true);
+            inFrAbholen.setResizable(true);
+            inFrAbholen.setClosable(true);
+            addFrame(inFrAbholen);
+            try {
+                inFrAbholen.setSelected(true);
+            } catch (PropertyVetoException e) {
+                e.printStackTrace(Main.debug);
+            }
+
+            progressBar = new JProgressBar(0, 100);
+            progressBar.setValue(0);
+            progressBar.setIndeterminate(true);
+            progressBar.setStringPainted(true);
+
+            inFrAbholen.getContentPane().add(progressBar);
+            inFrAbholen.getContentPane().invalidate();
+            inFrAbholen.getContentPane().validate();
+
+            for (EmailKonto aktuellesKonto : ((EmailAnwendung) holeAnwendung()).getKontoListe().values()) {
+                progressBar.setString(messages.getString("emailanwendung_msg24") + aktuellesKonto.getEmailAdresse()
+                        + ")");
+                ((EmailAnwendung) holeAnwendung()).emailsAbholenEmails(aktuellesKonto.getBenutzername(),
+                        aktuellesKonto.getPasswort(), aktuellesKonto.getPop3port(), aktuellesKonto.getPop3server());
+                tabbedPane.setSelectedIndex(0);
+            }
         }
-
-        progressBar = new JProgressBar(0, 100);
-        progressBar.setValue(0);
-        progressBar.setIndeterminate(true);
-        progressBar.setStringPainted(true);
-
-        inFrAbholen.getContentPane().add(progressBar);
-        inFrAbholen.getContentPane().invalidate();
-        inFrAbholen.getContentPane().validate();
-
-        Iterator it = ((EmailAnwendung) holeAnwendung()).getKontoListe().values().iterator();
-        while (it.hasNext()) {
-            EmailKonto aktuellesKonto = (EmailKonto) it.next();
-            progressBar.setString(messages.getString("emailanwendung_msg24") + aktuellesKonto.getEmailAdresse() + ")");
-            ((EmailAnwendung) holeAnwendung()).emailsAbholenEmails(aktuellesKonto.getBenutzername(),
-                    aktuellesKonto.getPasswort(), aktuellesKonto.getPop3port(), aktuellesKonto.getPop3server());
-            tabbedPane.setSelectedIndex(0);
-        }
-
     }
 
     private void posteingangAktualisieren() {
@@ -827,50 +824,39 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
 
     private boolean kontoSpeichern() {
         String[] teilStrings;
-        String tmp = "";
-        EmailKonto neuesKonto = null;
-        Iterator it;
-
-        it = ((EmailAnwendung) holeAnwendung()).getKontoListe().values().iterator();
-        if (it.hasNext())
-            neuesKonto = (EmailKonto) it.next();
 
         if (EingabenUeberpruefung.isGueltig(tfPOP3Port.getText(), EingabenUeberpruefung.musterPort)
                 && EingabenUeberpruefung.isGueltig(tfSMTPPort.getText(), EingabenUeberpruefung.musterPort)
                 && EingabenUeberpruefung.isGueltig(tfBenutzername.getText(),
                         EingabenUeberpruefung.musterEmailBenutzername)) {
 
-            if (neuesKonto == null) {
-                neuesKonto = new EmailKonto();
-            }
-
+            EmailKonto konto = new EmailKonto();
             if (tfName.getText().trim().equals("")) {
-                neuesKonto.setVorname("");
-                neuesKonto.setNachname("");
+                konto.setVorname("");
+                konto.setNachname("");
             } else {
                 teilStrings = tfName.getText().split(" ");
                 if (teilStrings.length == 1) {
-                    neuesKonto.setVorname(tfName.getText().trim());
+                    konto.setVorname(tfName.getText().trim());
                 } else if (teilStrings.length >= 2) {
-                    neuesKonto.setNachname(teilStrings[teilStrings.length - 1]);
+                    konto.setNachname(teilStrings[teilStrings.length - 1]);
+                    String tmp = "";
                     for (int i = 0; i < teilStrings.length - 1; i++)
                         tmp += teilStrings[i] + " ";
-                    neuesKonto.setVorname(tmp.trim());
+                    konto.setVorname(tmp.trim());
                 }
             }
-            neuesKonto.setBenutzername(tfBenutzername.getText());
-            neuesKonto.setPasswort(new String(tfPasswort.getPassword()));
-            neuesKonto.setPop3port(tfPOP3Port.getText());
-            neuesKonto.setPop3server(tfPOP3Server.getText());
-            neuesKonto.setSmtpport(tfSMTPPort.getText());
-            neuesKonto.setSmtpserver(tfSMTPServer.getText());
-            neuesKonto.setEmailAdresse(tfEmailAdresse.getText());
+            konto.setBenutzername(tfBenutzername.getText());
+            konto.setPasswort(new String(tfPasswort.getPassword()));
+            konto.setPop3port(tfPOP3Port.getText());
+            konto.setPop3server(tfPOP3Server.getText());
+            konto.setSmtpport(tfSMTPPort.getText());
+            konto.setSmtpserver(tfSMTPServer.getText());
+            konto.setEmailAdresse(tfEmailAdresse.getText());
 
-            ((EmailAnwendung) holeAnwendung()).getKontoListe().clear();
-            ((EmailAnwendung) holeAnwendung()).getKontoListe().put(neuesKonto.getBenutzername(), neuesKonto);
+            ((EmailAnwendung) holeAnwendung()).setzeKonto(konto);
 
             speichern();
-
             return true;
         } else {
             return false;
@@ -945,8 +931,6 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
         if (arg1 instanceof Exception) {
             showMessageDialog(((Exception) arg1).getMessage());
         }
-
-        // Main.debug.println(arg1);
 
         if (arg1 == null || arg1.equals("") || arg1 instanceof Exception) {
             if (inFrVerfassen != null) {

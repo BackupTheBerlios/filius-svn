@@ -57,11 +57,11 @@ public class EmailUtils {
         StringBuffer str = new StringBuffer();
         for (AddressEntry address : addresses) {
             str.append(address.toString());
-            str.append(", ");
+            str.append(",");
         }
 
-        if (str.length() > 2) {
-            return str.substring(0, str.length() - 2);
+        if (str.length() > 1) {
+            return str.substring(0, str.length() - 1);
         } else {
             return "";
         }

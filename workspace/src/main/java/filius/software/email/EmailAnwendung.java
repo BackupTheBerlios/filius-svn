@@ -25,7 +25,7 @@
  */
 package filius.software.email;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -53,11 +53,11 @@ public class EmailAnwendung extends Anwendung {
 
     private List<Email> gesendeteNachrichten = new LinkedList<Email>();
 
-    private Map<String, EmailKonto> kontoListe = new HashMap<String, EmailKonto>();
-
     private POP3Client pop3client;
 
     private SMTPClient smtpclient;
+
+    private EmailKonto konto;
 
     /**
      * Startet die Email-Anwendung und für Sie jeweils einen Pop3- und Smtp-Client.
@@ -96,11 +96,11 @@ public class EmailAnwendung extends Anwendung {
     public void versendeEmail(String remoteServerIP, Email email, String absender) {
         String rcpts = EmailUtils.addressEntryListToString(email.getEmpfaenger());
         if (email.getCc().size() > 0) {
-            rcpts += ", ";
+            rcpts += ",";
             rcpts += EmailUtils.addressEntryListToString(email.getCc());
         }
         if (email.getBcc().size() > 0) {
-            rcpts += ", ";
+            rcpts += ",";
             rcpts += EmailUtils.addressEntryListToString(email.getBcc());
         }
         smtpclient.versendeEmail(remoteServerIP, email, absender, rcpts);
@@ -176,11 +176,7 @@ public class EmailAnwendung extends Anwendung {
         Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
                 + " (EmailAnwendung), speichern()");
         Datei datei = new Datei();
-        String kontenString = "";
-        for (EmailKonto konto : kontoListe.values()) {
-            kontenString += konto.toString() + "\n";
-        }
-        datei.setDateiInhalt(kontenString);
+        datei.setDateiInhalt(konto.toString());
         datei.setName("konten.txt");
         datei.setDateiTyp("text/txt");
         getSystemSoftware().getDateisystem().speicherDatei(getSystemSoftware().getDateisystem().getRoot(), datei);
@@ -195,9 +191,7 @@ public class EmailAnwendung extends Anwendung {
             String kontenString = datei.getDateiInhalt();
             String[] konten = kontenString.split("\n");
             for (int i = 0; i < konten.length; i++) {
-                String konto = konten[i];
-                EmailKonto tmpKonto = new EmailKonto(konto);
-                kontoListe.put(tmpKonto.getBenutzername(), tmpKonto);
+                this.konto = new EmailKonto(konten[i]);
             }
         }
 
@@ -254,10 +248,19 @@ public class EmailAnwendung extends Anwendung {
     }
 
     public Map<String, EmailKonto> getKontoListe() {
-        return kontoListe;
+        if (konto != null) {
+            return Collections.singletonMap(this.konto.getBenutzername(), this.konto);
+        }
+        return Collections.EMPTY_MAP;
+    }
+
+    public void setzeKonto(EmailKonto konto) {
+        this.konto = konto;
     }
 
     public void setKontoListe(Map<String, EmailKonto> kontoListe) {
-        this.kontoListe = kontoListe;
+        if (!kontoListe.isEmpty()) {
+            this.konto = kontoListe.values().toArray(new EmailKonto[kontoListe.size()])[0];
+        }
     }
 }

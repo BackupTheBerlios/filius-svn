@@ -36,51 +36,45 @@ import filius.software.transportschicht.TCPSocket;
  * 
  */
 public class SMTPServer extends TCPServerAnwendung {
-	// Attribute
-	private EmailServer emailServer;
+    private EmailServer emailServer;
 
-	// Konstruktor(en)
+    public SMTPServer(int port, EmailServer emailServer) {
+        super();
+        Main.debug.println("INVOKED-2 (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+                + " (SMTPServer), constr: SMTPServer(" + port + "," + emailServer + ")");
 
-	public SMTPServer(// Betriebssystem bs,
-	        int port, EmailServer emailServer) {
-		super();
-		Main.debug.println("INVOKED-2 (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
-		        + " (SMTPServer), constr: SMTPServer(" + port + "," + emailServer + ")");
+        this.port = port;
+        this.emailServer = emailServer;
+    }
 
-		this.port = port;
-		this.emailServer = emailServer;
-	}
+    public EmailServer getEmailServer() {
+        return emailServer;
+    }
 
-	// GET & SET-METHODEN
+    public void setEmailServer(EmailServer emailServer) {
+        this.emailServer = emailServer;
+    }
 
-	public EmailServer getEmailServer() {
-		return emailServer;
-	}
+    public int getPort() {
+        return port;
+    }
 
-	public void setEmailServer(EmailServer emailServer) {
-		this.emailServer = emailServer;
-	}
+    public void setPort(int port) {
+        this.port = port;
+    }
 
-	public int getPort() {
-		return port;
-	}
+    public EmailServer holeEmailServer() {
+        return emailServer;
+    }
 
-	public void setPort(int port) {
-		this.port = port;
-	}
+    @Override
+    protected void neuerMitarbeiter(Socket socket) {
+        Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+                + " (SMTPServer), neuerMitarbeiter(" + socket + ")");
+        SMTPMitarbeiter smtpMitarbeiter;
 
-	public EmailServer holeEmailServer() {
-		return emailServer;
-	}
-
-	@Override
-	protected void neuerMitarbeiter(Socket socket) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
-		        + " (SMTPServer), neuerMitarbeiter(" + socket + ")");
-		SMTPMitarbeiter smtpMitarbeiter;
-
-		smtpMitarbeiter = new SMTPMitarbeiter((TCPSocket) socket, this);
-		smtpMitarbeiter.starten();
-		mitarbeiter.add(smtpMitarbeiter);
-	}
+        smtpMitarbeiter = new SMTPMitarbeiter((TCPSocket) socket, this);
+        smtpMitarbeiter.starten();
+        mitarbeiter.add(smtpMitarbeiter);
+    }
 }

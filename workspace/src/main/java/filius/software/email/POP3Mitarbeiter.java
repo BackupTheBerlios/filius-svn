@@ -65,8 +65,8 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
         this.socket = socket;
         this.emailServer = pop3Server.holeEmailServer();
 
+        emailServer.benachrichtigeBeobachter(EmailServer.LINE_SEPARATOR);
         sendeAntwort("+OK POP3 server ready");
-
     }
 
     @Override
@@ -173,7 +173,6 @@ public class POP3Mitarbeiter extends ServerMitarbeiter {
             socket.schliessen();
             socket = null;
             beenden();
-            // benachrichtigeBeobachter("Verbindung getrennt");
         }
     }
 

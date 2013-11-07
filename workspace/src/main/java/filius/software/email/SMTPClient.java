@@ -38,6 +38,7 @@ import filius.software.clientserver.ClientAnwendung;
 import filius.software.transportschicht.TCPSocket;
 
 public class SMTPClient extends ClientAnwendung implements I18n {
+
     /**
      * Die Anwendung, die diesen SMTP-Client verwendet (das kann eine EmailAnwendung zum Versand einer erstellten
      * Nachricht oder ein EMailServer zur Weiterleitung einer empfangenen Nachricht sein)
@@ -125,14 +126,16 @@ public class SMTPClient extends ClientAnwendung implements I18n {
     public void initialisiereSocket(String zielAdresse, Integer port) {
         Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
                 + " (SMTPClient), initialisiereSocket(" + zielAdresse + "," + port + ")");
+        anwendung.benachrichtigeBeobachter(EmailServer.LINE_SEPARATOR);
         try {
             socket = new TCPSocket(getSystemSoftware(), zielAdresse, port);
             socket.verbinden();
 
-            if (socket.istVerbunden())
+            if (socket.istVerbunden()) {
                 anwendung.benachrichtigeBeobachter(messages.getString("sw_smtpclient_msg1") + " "
                         + socket.holeZielIPAdresse() + ":" + socket.holeZielPort() + " "
                         + messages.getString("sw_smtpclient_msg2"));
+            }
         } catch (Exception e) {
             e.printStackTrace(Main.debug);
             socket = null;
@@ -148,8 +151,9 @@ public class SMTPClient extends ClientAnwendung implements I18n {
                 + " (SMTPClient), schliesseSocket()");
         if (socket != null) {
             socket.schliessen();
-            anwendung.benachrichtigeBeobachter(messages.getString("sw_smtpclient_msg1") + socket.holeZielIPAdresse()
-                    + ":" + socket.holeZielPort() + messages.getString("sw_smtpclient_msg3"));
+            anwendung.benachrichtigeBeobachter(messages.getString("sw_smtpclient_msg1") + " "
+                    + socket.holeZielIPAdresse() + ":" + socket.holeZielPort() + " "
+                    + messages.getString("sw_smtpclient_msg3"));
             socket = null;
         }
     }
@@ -210,6 +214,7 @@ public class SMTPClient extends ClientAnwendung implements I18n {
                     ((EmailAnwendung) anwendung).addGesendeteNachricht(email);
                 }
 
+                anwendung.benachrichtigeBeobachter(messages.getString("sw_smtpclient_msg4") + " " + rcpts);
                 anwendung.benachrichtigeBeobachter();
             } catch (Exception e) {
                 e.printStackTrace(Main.debug);

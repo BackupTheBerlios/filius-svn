@@ -52,6 +52,8 @@ import filius.software.system.InternetKnotenBetriebssystem;
  *         POP3- und SMTPServer realisiert. Daher wird der nun überarbeitet. 13.12.2006
  */
 public class EmailServer extends Anwendung implements I18n {
+    public static final String LINE_SEPARATOR = "----";
+
     private List<EmailKonto> listeBenutzerkonten = new LinkedList<EmailKonto>();
     private String mailDomain = "filius.de";
     private POP3Server pop3;

@@ -60,7 +60,6 @@ public class SMTPMitarbeiter extends ServerMitarbeiter {
     private Email email = null;
     private EmailKonto empfaengerKonto = new EmailKonto();
 
-    // Konstruktor(en)
     public SMTPMitarbeiter(// Betriebssystem bs,
             TCPSocket socket, SMTPServer server) {
         super(server, socket);
@@ -69,10 +68,10 @@ public class SMTPMitarbeiter extends ServerMitarbeiter {
 
         this.socket = socket;
         this.emailServer = server.holeEmailServer();
+
+        emailServer.benachrichtigeBeobachter(EmailServer.LINE_SEPARATOR);
         senden(messages.getString("sw_smtpmitarbeiter_msg1") + " " + emailServer.getMailDomain());
     }
-
-    // Methoden
 
     /**
      * In dieser Methode werden die ankommenden Befehle und Daten zur Uebertragung einer E-Mail verarbeitet.
