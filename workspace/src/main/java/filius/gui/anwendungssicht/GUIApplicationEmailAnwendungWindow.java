@@ -43,14 +43,12 @@ import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
@@ -79,47 +77,30 @@ import filius.software.email.EmailUtils;
  */
 public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
 
+    private enum ListMode {
+        INBOX, OUTBOX, UNKNOWN
+    };
+
     private static final long serialVersionUID = 1L;
 
     private JTabbedPane tabbedPane;
-
     private JPanel gesendetPanel, eingangPanel, backPanel;
-
     private JScrollPane gesendetScroll, eingangScroll;
-
     private JEditorPane emailVorschau;
-
     private JButton buttonMailsAbholen, buttonMailVerfassen, buttonMailAntworten, buttonKonten, buttonEmailLoeschen;
-
-    private Email aktuelleMail = null;
-
     private JProgressBar progressBar;
-
     private JInternalFrame inFrVerfassen, inFrAbholen, inFrKonten;
-
     private Box middleBox;
-
     private DefaultTableModel posteingangModell = new DefaultTableModel(0, 2);
-
     private DefaultTableModel gesendeteModell = new DefaultTableModel(0, 2);
-
     private JTable posteingangTable, gesendeteTable;
-
-    private DefaultListModel lmKonten;
-
-    private JList jlKonten;
-
     private JTextField tfName, tfEmailAdresse, tfPOP3Server, tfPOP3Port, tfSMTPServer, tfSMTPPort, tfBenutzername;
-
     private JPasswordField tfPasswort;
 
-    private JPanel rechtesKontenPanel;
-
-    private int index, zeilenNummer;
-
-    private boolean kontoMailOK, kontoPOPPortOK, kontoSMTPPortOK, kontoBenutzerOK;
-
-    private int auswahlfuerloeschen, paa = -1;
+    private Email aktuelleMail = null;
+    private int zeilenNummer;
+    private int auswahlfuerloeschen;
+    ListMode paa = ListMode.UNKNOWN;
 
     public GUIApplicationEmailAnwendungWindow(GUIDesktopPanel desktop, String appName) {
         super(desktop, appName);
@@ -156,7 +137,7 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
             public void valueChanged(ListSelectionEvent lse) {
                 zeilenNummer = posteingangTable.getSelectedRow();
                 auswahlfuerloeschen = zeilenNummer;
-                paa = 0;
+                paa = ListMode.INBOX;
                 if (zeilenNummer != -1) {
                     Email tmpEmail = (Email) ((EmailAnwendung) holeAnwendung()).getEmpfangeneNachrichten().get(
                             zeilenNummer);
@@ -180,7 +161,7 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
             public void valueChanged(ListSelectionEvent lse) {
                 zeilenNummer = gesendeteTable.getSelectedRow();
                 auswahlfuerloeschen = zeilenNummer;
-                paa = 1;
+                paa = ListMode.OUTBOX;
                 if (zeilenNummer != -1) {
                     Email tmpEmail = (Email) ((EmailAnwendung) holeAnwendung()).getGesendeteNachrichten().get(
                             zeilenNummer);
@@ -313,47 +294,30 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
      * 
      * @return boolean
      */
-    public void emailLoeschen(int i, int j /* ob Posteingang- oder ausgang */) {
-        if (j == 0) // dann loeschen aus dem Posteingang
-        {
-            // Main.debug
-            // .println("================================= GUIAppl. Client Action command: größe der Liste: "
-            // + ((EmailAnwendung) holeAnwendung())
-            // .getEmpfangeneNachrichten().size()
-            // + " ===============");
-            ((EmailAnwendung) holeAnwendung()).getEmpfangeneNachrichten().remove(i);
-            posteingangModell.setRowCount(0);
+    public void emailLoeschen(int rowIndex, ListMode list) {
+        if (ListMode.INBOX.equals(list)) {
+            // dann loeschen aus dem Posteingang
+            ((EmailAnwendung) holeAnwendung()).removeReceivedMail(posteingangTable.getSelectedRow());
             zeilenNummer = zeilenNummer - 1;
             posteingangAktualisieren();
             emailVorschau.setText(" ");
             emailVorschau.updateUI();
-        }
-        if (j == 1) // dann loeschen aus dem Postausgang
-        {
-            ((EmailAnwendung) holeAnwendung()).getEmpfangeneNachrichten().remove(i);
-            gesendeteModell.setRowCount(0);
+        } else if (ListMode.OUTBOX.equals(list)) {
+            // dann loeschen aus dem Postausgang
+            ((EmailAnwendung) holeAnwendung()).removeSentMail(gesendeteTable.getSelectedRow());
             zeilenNummer = zeilenNummer - 1;
             gesendeteAktualisieren();
             emailVorschau.setText(" ");
             emailVorschau.updateUI();
-        } else if (j == -1) {
-            // Main.debug
-            // .println("============================================GuiAppl. Emailloeschen: Email konnte nicht geloescht werden=======================================");
+        } else {
+            Main.debug
+                    .println("============================================GuiAppl. Emailloeschen: Email konnte nicht geloescht werden=======================================");
         }
-
     }
 
     // provide more sophisticated and 'real' layout for quoted text
     private String replyLayout(String text) {
         return "> " + text.replaceAll("\\n", "\n> ");
-    }
-
-    private String extractMailAddress(String mailTo) {
-        if (mailTo.indexOf("<") < 0) // no "<...>" form, i.e. no name
-            return mailTo.trim();
-        else {
-            return mailTo.substring(mailTo.indexOf("<") + 1, mailTo.indexOf(">")).trim();
-        }
     }
 
     private void emailVerfassen(Email antwortAuf) {
@@ -496,12 +460,11 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
                 String kontoString;
                 EmailKonto versendeKonto;
                 boolean eingabeFehler = false;
-                String[] adressen;
 
                 mail = new Email();
 
                 if (cbAbsender.getSelectedItem() == null) {
-                    String msgNoAccountAvailable = GUIApplicationEmailAnwendungWindow.this.messages
+                    String msgNoAccountAvailable = GUIApplicationEmailAnwendungWindow.messages
                             .getString("emailanwendung_msg47");
                     GUIApplicationEmailAnwendungWindow.this.showMessageDialog(msgNoAccountAvailable);
                 } else {

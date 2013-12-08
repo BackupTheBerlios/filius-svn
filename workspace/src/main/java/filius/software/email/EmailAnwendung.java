@@ -25,8 +25,8 @@
  */
 package filius.software.email;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -45,9 +45,9 @@ public class EmailAnwendung extends Anwendung {
     // Attribute
     private Vector<Kontakt> adressbuch = new Vector<Kontakt>();
 
-    private List<Email> erstellteNachrichten = new LinkedList<Email>();
-    private List<Email> empfangeneNachrichten = new LinkedList<Email>();
-    private List<Email> gesendeteNachrichten = new LinkedList<Email>();
+    private List<Email> erstellteNachrichten = new ArrayList<Email>();
+    private List<Email> empfangeneNachrichten = new ArrayList<Email>();
+    private List<Email> gesendeteNachrichten = new ArrayList<Email>();
     private POP3Client pop3client;
     private SMTPClient smtpclient;
     private EmailKonto konto;
@@ -206,6 +206,12 @@ public class EmailAnwendung extends Anwendung {
         return empfangeneNachrichten;
     }
 
+    public void removeReceivedMail(int index) {
+        if (empfangeneNachrichten.size() > index && 0 <= index) {
+            empfangeneNachrichten.remove(index);
+        }
+    }
+
     public void setEmpfangeneNachrichten(List<Email> empfangeneNachrichten) {
         this.empfangeneNachrichten = empfangeneNachrichten;
     }
@@ -225,6 +231,12 @@ public class EmailAnwendung extends Anwendung {
     public void addGesendeteNachricht(Email gesendeteNachricht) {
         if (!gesendeteNachrichten.contains(gesendeteNachricht)) {
             this.gesendeteNachrichten.add(gesendeteNachricht);
+        }
+    }
+
+    public void removeSentMail(int index) {
+        if (gesendeteNachrichten.size() > index && 0 <= index) {
+            gesendeteNachrichten.remove(index);
         }
     }
 
