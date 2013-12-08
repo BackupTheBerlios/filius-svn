@@ -38,35 +38,33 @@ import filius.software.transportschicht.TCPSocket;
 
 public class POP3Server extends TCPServerAnwendung // extends EmailServer
 {
-	private EmailServer emailServer;
+    private EmailServer emailServer;
 
-	// Konstruktor(en)
+    // Konstruktor(en)
 
-	public POP3Server(int port, // Betriebssystem bs,
-	        EmailServer emailServer) {
-		super();
-		Main.debug.println("INVOKED-2 (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
-		        + " (POP3Server), constr: POP3Server(" + port + "," + emailServer + ")");
+    public POP3Server(int port, // Betriebssystem bs,
+            EmailServer emailServer) {
+        super();
+        Main.debug.println("INVOKED-2 (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+                + " (POP3Server), constr: POP3Server(" + port + "," + emailServer + ")");
 
-		this.port = port;
-		this.emailServer = emailServer;
-	}
+        this.port = port;
+        this.emailServer = emailServer;
+    }
 
-	public EmailServer holeEmailServer() {
-		return emailServer;
-	}
+    public EmailServer holeEmailServer() {
+        return emailServer;
+    }
 
-	// Methoden
+    // Methoden
 
-	protected void neuerMitarbeiter(Socket socket) {
-		Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
-		        + " (POP3Server), neuerMitarbeiter(" + socket + ")");
-		POP3Mitarbeiter popMitarbeiter;
+    protected void neuerMitarbeiter(Socket socket) {
+        Main.debug.println("INVOKED (" + this.hashCode() + ", T" + this.getId() + ") " + getClass()
+                + " (POP3Server), neuerMitarbeiter(" + socket + ")");
+        POP3Mitarbeiter popMitarbeiter;
 
-		popMitarbeiter = new POP3Mitarbeiter((TCPSocket) socket, this);
-		popMitarbeiter.starten();
-		mitarbeiter.add(popMitarbeiter);
-
-	}
-
+        popMitarbeiter = new POP3Mitarbeiter((TCPSocket) socket, this);
+        popMitarbeiter.starten();
+        mitarbeiter.add(popMitarbeiter);
+    }
 }

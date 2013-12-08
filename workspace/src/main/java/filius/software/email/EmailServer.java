@@ -128,13 +128,13 @@ public class EmailServer extends Anwendung implements I18n {
 
         pop3 = new POP3Server(110, this);
         pop3.setSystemSoftware(getSystemSoftware());
-        pop3.starten();
         pop3.setAktiv(aktiv);
+        pop3.starten();
 
         smtp = new SMTPServer(25, this);
         smtp.setSystemSoftware(getSystemSoftware());
-        smtp.starten();
         smtp.setAktiv(aktiv);
+        smtp.starten();
     }
 
     /**
