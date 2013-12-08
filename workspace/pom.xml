@@ -6,7 +6,7 @@
 	<artifactId>filius</artifactId>
 	<version>1.5.4</version>
 	<properties>
-		<buildDate>06.12.2013</buildDate>
+		<buildDate>08.12.2013</buildDate>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>4.10</junit.version>
 		<mockito.version>1.9.0</mockito.version>
