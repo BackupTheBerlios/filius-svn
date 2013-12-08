@@ -392,7 +392,7 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
 
         Box absenderBox = Box.createHorizontalBox();
 
-        Iterator it = ((EmailAnwendung) holeAnwendung()).getKontoListe().values().iterator();
+        Iterator it = ((EmailAnwendung) holeAnwendung()).holeKontoListe().values().iterator();
         Vector kontenVector = new Vector();
         while (it.hasNext()) {
             EmailKonto aktuellesKonto = (EmailKonto) it.next();
@@ -506,7 +506,7 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
                     GUIApplicationEmailAnwendungWindow.this.showMessageDialog(msgNoAccountAvailable);
                 } else {
                     kontoString = cbAbsender.getSelectedItem().toString();
-                    versendeKonto = (EmailKonto) ((EmailAnwendung) holeAnwendung()).getKontoListe().get(kontoString);
+                    versendeKonto = (EmailKonto) ((EmailAnwendung) holeAnwendung()).holeKontoListe().get(kontoString);
 
                     mail.setAbsender(versendeKonto.getVorname()
                             + (!versendeKonto.getNachname().isEmpty() ? (" " + versendeKonto.getNachname()) : "")
@@ -562,7 +562,7 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
     }
 
     public void emailsAbholen() {
-        if (!((EmailAnwendung) holeAnwendung()).getKontoListe().isEmpty()) {
+        if (!((EmailAnwendung) holeAnwendung()).holeKontoListe().isEmpty()) {
             inFrAbholen = new JInternalFrame(messages.getString("emailanwendung_msg23"));
             inFrAbholen.setBounds(100, 50, 384, 64);
             inFrAbholen.setVisible(true);
@@ -584,7 +584,7 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
             inFrAbholen.getContentPane().invalidate();
             inFrAbholen.getContentPane().validate();
 
-            for (EmailKonto aktuellesKonto : ((EmailAnwendung) holeAnwendung()).getKontoListe().values()) {
+            for (EmailKonto aktuellesKonto : ((EmailAnwendung) holeAnwendung()).holeKontoListe().values()) {
                 progressBar.setString(messages.getString("emailanwendung_msg24") + aktuellesKonto.getEmailAdresse()
                         + ")");
                 ((EmailAnwendung) holeAnwendung()).emailsAbholenEmails(aktuellesKonto.getBenutzername(),
@@ -600,7 +600,9 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
         for (Email neueMail : empfangeneNachrichten) {
             Vector<String> v = new Vector<String>();
             String absender;
-            if (neueMail.getAbsender().getName() == null) {
+            if (neueMail.getAbsender() == null) {
+                absender = "";
+            } else if (neueMail.getAbsender().getName() == null) {
                 absender = neueMail.getAbsender().getMailAddress();
             } else {
                 absender = neueMail.getAbsender().getName();
@@ -623,7 +625,7 @@ public class GUIApplicationEmailAnwendungWindow extends GUIApplicationWindow {
     }
 
     private void kontoAktualisieren() {
-        Map<String, EmailKonto> kontoListe = ((EmailAnwendung) holeAnwendung()).getKontoListe();
+        Map<String, EmailKonto> kontoListe = ((EmailAnwendung) holeAnwendung()).holeKontoListe();
         for (EmailKonto konto : kontoListe.values()) {
             tfName.setText(konto.getVorname() + " " + konto.getNachname());
             tfEmailAdresse.setText(konto.getEmailAdresse());

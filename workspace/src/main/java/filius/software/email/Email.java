@@ -25,7 +25,7 @@
  */
 package filius.software.email;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import filius.Main;
@@ -37,15 +37,10 @@ import filius.Main;
  */
 public class Email {
     private AddressEntry absender;
-
-    private List<AddressEntry> empfaenger = new LinkedList<AddressEntry>();
-
-    private List<AddressEntry> cc = new LinkedList<AddressEntry>();
-
-    private List<AddressEntry> bcc = new LinkedList<AddressEntry>();
-
+    private List<Object> empfaenger = new ArrayList<Object>();
+    private List<Object> cc = new ArrayList<Object>();
+    private List<Object> bcc = new ArrayList<Object>();
     private String betreff;
-
     private String text = "";
 
     /**
@@ -155,7 +150,7 @@ public class Email {
 
         toListe = holeEmpfaengerListe();
 
-        for (AddressEntry rcpt : cc) {
+        for (Object rcpt : cc) {
             ccListe += rcpt.toString() + ", ";
         }
         if (!ccListe.isEmpty()) {
@@ -187,7 +182,7 @@ public class Email {
 
     public String holeEmpfaengerListe() {
         String toListe = "";
-        for (AddressEntry rcpt : empfaenger) {
+        for (Object rcpt : empfaenger) {
             toListe += rcpt.toString() + ", ";
         }
         if (!toListe.isEmpty()) {
@@ -217,7 +212,11 @@ public class Email {
     }
 
     public List<AddressEntry> getEmpfaenger() {
-        return empfaenger;
+        ArrayList<AddressEntry> addressList = new ArrayList<AddressEntry>(empfaenger.size());
+        for (Object entry : empfaenger) {
+            addressList.add(new AddressEntry(entry));
+        }
+        return addressList;
     }
 
     public String getBetreff() {
@@ -241,7 +240,9 @@ public class Email {
     }
 
     public void setEmpfaenger(List<AddressEntry> recipients) {
-        empfaenger = recipients;
+        for (AddressEntry entry : recipients) {
+            this.empfaenger.add((Object) entry);
+        }
     }
 
     public void setText(String text) {
@@ -265,18 +266,30 @@ public class Email {
     }
 
     public List<AddressEntry> getBcc() {
-        return bcc;
+        ArrayList<AddressEntry> addressList = new ArrayList<AddressEntry>(empfaenger.size());
+        for (Object entry : bcc) {
+            addressList.add(new AddressEntry(entry));
+        }
+        return addressList;
     }
 
     public void setBcc(List<AddressEntry> bcc) {
-        this.bcc = bcc;
+        for (AddressEntry entry : bcc) {
+            this.bcc.add((Object) entry);
+        }
     }
 
     public List<AddressEntry> getCc() {
-        return cc;
+        ArrayList<AddressEntry> addressList = new ArrayList<AddressEntry>(empfaenger.size());
+        for (Object entry : cc) {
+            addressList.add(new AddressEntry(entry));
+        }
+        return addressList;
     }
 
     public void setCc(List<AddressEntry> cc) {
-        this.cc = cc;
+        for (AddressEntry entry : cc) {
+            this.cc.add((Object) entry);
+        }
     }
 }

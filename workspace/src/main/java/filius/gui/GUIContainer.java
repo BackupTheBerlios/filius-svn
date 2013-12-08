@@ -374,7 +374,9 @@ public class GUIContainer implements Serializable, I18n {
         designView.addMouseMotionListener(new MouseInputAdapter() {
             public void mouseMoved(MouseEvent e) {
                 if (kabelvorschau.isVisible()) {
-                    kabelvorschau.setBounds(e.getX(), e.getY(), kabelvorschau.getWidth(), kabelvorschau.getHeight());
+                    kabelvorschau.setBounds(e.getX() + designView.getHorizontalScrollBar().getValue(), e.getY()
+                            + designView.getVerticalScrollBar().getValue(), kabelvorschau.getWidth(),
+                            kabelvorschau.getHeight());
                     if (ziel2Label != null)
                         ziel2Label.setLocation(e.getX() + designView.getHorizontalScrollBar().getValue(), e.getY()
                                 + designView.getVerticalScrollBar().getValue());

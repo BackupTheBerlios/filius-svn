@@ -247,18 +247,18 @@ public class EmailAnwendung extends Anwendung {
         this.gesendeteNachrichten = gesendeteNachrichten;
     }
 
-    public Map<String, EmailKonto> getKontoListe() {
+    public Map<String, EmailKonto> holeKontoListe() {
         if (konto != null) {
             return Collections.singletonMap(this.konto.getBenutzername(), this.konto);
         }
-        return Collections.EMPTY_MAP;
+        return Collections.<String, EmailKonto> emptyMap();
     }
 
     public void setzeKonto(EmailKonto konto) {
         this.konto = konto;
     }
 
-    public void setKontoListe(Map<String, EmailKonto> kontoListe) {
+    public void setzeKontoListe(Map<String, EmailKonto> kontoListe) {
         if (!kontoListe.isEmpty()) {
             this.konto = kontoListe.values().toArray(new EmailKonto[kontoListe.size()])[0];
         }

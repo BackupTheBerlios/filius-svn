@@ -360,8 +360,8 @@ public class GUIEvents implements I18n {
             if (neuesKabel.getKabelpanel().getZiel2() == null && neuesKabel.getKabelpanel().getZiel1() != aktivesItem) {
                 connectCableToSecondComponent(aktivesItem);
             }
-            int posX = currentPosX;
-            int posY = currentPosY;
+            int posX = currentPosX + GUIContainer.getGUIContainer().getScrollPane().getHorizontalScrollBar().getValue();
+            int posY = currentPosY + GUIContainer.getGUIContainer().getScrollPane().getVerticalScrollBar().getValue();
             resetAndShowCablePreview(posX, posY);
         }
     }

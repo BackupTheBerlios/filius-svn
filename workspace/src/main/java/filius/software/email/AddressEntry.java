@@ -34,6 +34,10 @@ public class AddressEntry {
     private String mailAddress;
 
     public AddressEntry(String entry) {
+        initFromString(entry);
+    }
+
+    private void initFromString(String entry) {
         String trimmedEntry = entry.trim();
         int addressStartPos = trimmedEntry.indexOf("<");
         int addressEndPos = trimmedEntry.indexOf(">");
@@ -46,6 +50,16 @@ public class AddressEntry {
             mailAddress = trimmedEntry;
         } else {
             name = trimmedEntry;
+        }
+    }
+
+    public AddressEntry(Object address) {
+        if (address instanceof String) {
+            this.initFromString((String) address);
+        } else if (address instanceof AddressEntry) {
+            AddressEntry addressEntry = (AddressEntry) address;
+            this.name = addressEntry.name;
+            this.mailAddress = addressEntry.mailAddress;
         }
     }
 
