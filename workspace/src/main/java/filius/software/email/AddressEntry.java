@@ -35,6 +35,8 @@ public class AddressEntry implements Serializable {
     private String name;
     private String mailAddress;
 
+    public AddressEntry() {}
+
     public AddressEntry(String entry) {
         initFromString(entry);
     }

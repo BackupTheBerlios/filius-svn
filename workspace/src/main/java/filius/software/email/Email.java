@@ -25,6 +25,7 @@
  */
 package filius.software.email;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,11 +36,11 @@ import filius.Main;
  * @author Andre Asschoff
  * 
  */
-public class Email {
-    private Object absender;
-    private List<Object> empfaenger = new ArrayList<Object>();
-    private List<Object> cc = new ArrayList<Object>();
-    private List<Object> bcc = new ArrayList<Object>();
+public class Email implements Serializable {
+    private AddressEntry absender;
+    private List<AddressEntry> empfaenger = new ArrayList<AddressEntry>();
+    private List<AddressEntry> cc = new ArrayList<AddressEntry>();
+    private List<AddressEntry> bcc = new ArrayList<AddressEntry>();
     private String betreff;
     private String text = "";
 
@@ -212,11 +213,7 @@ public class Email {
     }
 
     public List<AddressEntry> getEmpfaenger() {
-        ArrayList<AddressEntry> addressList = new ArrayList<AddressEntry>(empfaenger.size());
-        for (Object entry : empfaenger) {
-            addressList.add(new AddressEntry(entry));
-        }
-        return addressList;
+        return this.empfaenger;
     }
 
     public String getBetreff() {
@@ -239,10 +236,8 @@ public class Email {
         this.betreff = betreff;
     }
 
-    public void setEmpfaenger(List<AddressEntry> recipients) {
-        for (AddressEntry entry : recipients) {
-            this.empfaenger.add((Object) entry);
-        }
+    public void setEmpfaenger(List<AddressEntry> empfaenger) {
+        this.empfaenger = empfaenger;
     }
 
     public void setText(String text) {
@@ -266,30 +261,18 @@ public class Email {
     }
 
     public List<AddressEntry> getBcc() {
-        ArrayList<AddressEntry> addressList = new ArrayList<AddressEntry>(empfaenger.size());
-        for (Object entry : bcc) {
-            addressList.add(new AddressEntry(entry));
-        }
-        return addressList;
+        return this.bcc;
     }
 
     public void setBcc(List<AddressEntry> bcc) {
-        for (AddressEntry entry : bcc) {
-            this.bcc.add((Object) entry);
-        }
+        this.bcc = bcc;
     }
 
     public List<AddressEntry> getCc() {
-        ArrayList<AddressEntry> addressList = new ArrayList<AddressEntry>(empfaenger.size());
-        for (Object entry : cc) {
-            addressList.add(new AddressEntry(entry));
-        }
-        return addressList;
+        return this.cc;
     }
 
     public void setCc(List<AddressEntry> cc) {
-        for (AddressEntry entry : cc) {
-            this.cc.add((Object) entry);
-        }
+        this.cc = cc;
     }
 }

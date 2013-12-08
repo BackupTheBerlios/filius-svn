@@ -35,54 +35,54 @@ import org.junit.Test;
  */
 public class EmailTest {
 
-	@Test
-	public void subject_trim() throws Exception {
-		String subject = "test subject";
-		Email mail = new Email("subject:    " + subject);
-		assertThat(mail.getBetreff()).isEqualTo(subject);
-		mail = new Email("subject: " + subject + "    ");
-		assertThat(mail.getBetreff()).isEqualTo(subject);
-	}
+    @Test
+    public void subject_trim() throws Exception {
+        String subject = "test subject";
+        Email mail = new Email("subject:    " + subject);
+        assertThat(mail.getBetreff()).isEqualTo(subject);
+        mail = new Email("subject: " + subject + "    ");
+        assertThat(mail.getBetreff()).isEqualTo(subject);
+    }
 
-	@Test
-	public void subject_caseOfHeaderSpecifier() throws Exception {
-		String subject = "test subject";
-		Email mail = new Email("subject:" + subject);
-		assertThat(mail.getBetreff()).isEqualTo(subject);
-		mail = new Email("SuBjEct:" + subject);
-		assertThat(mail.getBetreff()).isEqualTo(subject);
-	}
+    @Test
+    public void subject_caseOfHeaderSpecifier() throws Exception {
+        String subject = "test subject";
+        Email mail = new Email("subject:" + subject);
+        assertThat(mail.getBetreff()).isEqualTo(subject);
+        mail = new Email("SuBjEct:" + subject);
+        assertThat(mail.getBetreff()).isEqualTo(subject);
+    }
 
-	@Test
-	public void sender_trim() throws Exception {
-		String sender = "sender";
-		Email mail = new Email("from:    " + sender);
-		assertThat(mail.getAbsender().toString()).isEqualTo(sender);
-		mail = new Email("from: " + sender + "    ");
-		assertThat(mail.getAbsender().toString()).isEqualTo(sender);
-	}
+    @Test
+    public void sender_trim() throws Exception {
+        String sender = "sender";
+        Email mail = new Email("from:    " + sender);
+        assertThat(mail.getAbsender().toString()).isEqualTo(sender);
+        mail = new Email("from: " + sender + "    ");
+        assertThat(mail.getAbsender().toString()).isEqualTo(sender);
+    }
 
-	@Test
-	public void sender_nameAndAddress() throws Exception {
-		String sender = "sender";
-		String senderAddress = "< senderAddress >";
-		Email mail = new Email("from: " + sender + "  " + senderAddress);
-		assertThat(mail.getAbsender().toString()).isEqualTo("sender <senderAddress>");
-		mail = new Email("from: " + sender);
-		assertThat(mail.getAbsender().toString()).isEqualTo("sender");
-		mail = new Email("from: " + senderAddress);
-		assertThat(mail.getAbsender().toString()).isEqualTo("<senderAddress>");
-	}
+    @Test
+    public void sender_nameAndAddress() throws Exception {
+        String sender = "sender";
+        String senderAddress = "< senderAddress >";
+        Email mail = new Email("from: " + sender + "  " + senderAddress);
+        assertThat(mail.getAbsender().toString()).isEqualTo("sender <senderAddress>");
+        mail = new Email("from: " + sender);
+        assertThat(mail.getAbsender().toString()).isEqualTo("sender");
+        mail = new Email("from: " + senderAddress);
+        assertThat(mail.getAbsender().toString()).isEqualTo("<senderAddress>");
+    }
 
-	@Test
-	public void recipient_one_nameAndAddress() throws Exception {
-		String rcpt = "rcpt";
-		String rcptAddress = "< rcptAddress >";
-		Email mail = new Email("to: " + rcpt + "  " + rcptAddress);
-		assertThat(mail.getEmpfaenger().get(0).toString()).isEqualTo("rcpt <rcptAddress>");
-		mail = new Email("to: " + rcpt);
-		assertThat(mail.getEmpfaenger().get(0).toString()).isEqualTo("rcpt");
-		mail = new Email("to: " + rcptAddress);
-		assertThat(mail.getEmpfaenger().get(0).toString()).isEqualTo("<rcptAddress>");
-	}
+    @Test
+    public void recipient_one_nameAndAddress() throws Exception {
+        String rcpt = "rcpt";
+        String rcptAddress = "< rcptAddress >";
+        Email mail = new Email("to: " + rcpt + "  " + rcptAddress);
+        assertThat(mail.getEmpfaenger().get(0).toString()).isEqualTo("rcpt <rcptAddress>");
+        mail = new Email("to: " + rcpt);
+        assertThat(mail.getEmpfaenger().get(0).toString()).isEqualTo("rcpt");
+        mail = new Email("to: " + rcptAddress);
+        assertThat(mail.getEmpfaenger().get(0).toString()).isEqualTo("<rcptAddress>");
+    }
 }

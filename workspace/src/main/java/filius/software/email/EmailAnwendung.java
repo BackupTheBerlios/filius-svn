@@ -45,18 +45,11 @@ public class EmailAnwendung extends Anwendung {
     // Attribute
     private Vector<Kontakt> adressbuch = new Vector<Kontakt>();
 
-    private int sitzungsnummer = 0;
-
     private List<Email> erstellteNachrichten = new LinkedList<Email>();
-
     private List<Email> empfangeneNachrichten = new LinkedList<Email>();
-
     private List<Email> gesendeteNachrichten = new LinkedList<Email>();
-
     private POP3Client pop3client;
-
     private SMTPClient smtpclient;
-
     private EmailKonto konto;
 
     /**
@@ -207,14 +200,6 @@ public class EmailAnwendung extends Anwendung {
 
     public void setAdressbuch(Vector<Kontakt> adressbuch) {
         this.adressbuch = adressbuch;
-    }
-
-    public int getSitzungsnummer() {
-        return sitzungsnummer;
-    }
-
-    public void setSitzungsnummer(int sitzungsnummer) {
-        this.sitzungsnummer = sitzungsnummer;
     }
 
     public List<Email> getEmpfangeneNachrichten() {
