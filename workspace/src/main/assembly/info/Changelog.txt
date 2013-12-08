@@ -1,3 +1,12 @@
+filius (1.5.4) unstable; urgency=low
+  * Fehlerbehebung: Inkompatibilität beim Oeffnen von Projektdateien, die mit aelterer Version erstellt wurden, behoben
+  * Fehlerbehebung: Kabelwerkzeug wurde an falscher Position angezeigt, wenn Arbeitsbereich per Schieber verschoben wurde
+  * Fehlerbehebung: Absender und Empfaenger einer Mail wurde nicht in Projektdatei gespeichert
+  * Fehlerbehebung: ARP-Anfrage wurde mehrfach versendet
+  * Fehlerbehebung: Dokumentationselemente wurden bei Oeffnen eines neuen Projekts (erstellt mit aelterer Version) nicht immer entfernt
+  * Fehlerbehebung: Loeschen gesendeter Mails war nicht mehr moeglich
+  * Fehlerbehebung: POP3-Server hat nicht immer geantwortet
+
 filius (1.5.3) unstable; urgency=low
   * Moeglichkeit, Textfelder und Strukturierungsfelder einzufuegen
   * Exportieren der Netzansicht als PNG moeglich
