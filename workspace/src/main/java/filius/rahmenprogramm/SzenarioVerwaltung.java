@@ -298,9 +298,12 @@ public class SzenarioVerwaltung extends Observable implements I18n {
                 Main.debug.println("WARNING: Certain elements might not be rendered correctly any more!");
             }
 
+            hardwareItems.clear();
+            kabelItems.clear();
+            docuItems.clear();
+
             if (tmpObject == null)
                 tmpObject = xmldec.readObject();
-            hardwareItems.clear();
             if (tmpObject instanceof List && !((List) tmpObject).isEmpty()
                     && ((List) tmpObject).get(0) instanceof GUIKnotenItem) {
                 List<GUIKnotenItem> tempList = (List<GUIKnotenItem>) tmpObject;
@@ -311,7 +314,6 @@ public class SzenarioVerwaltung extends Observable implements I18n {
             }
 
             tmpObject = xmldec.readObject();
-            kabelItems.clear();
             if (tmpObject instanceof List && !((List) tmpObject).isEmpty()
                     && ((List) tmpObject).get(0) instanceof GUIKabelItem) {
                 List<GUIKabelItem> tempList = (List<GUIKabelItem>) tmpObject;
@@ -321,7 +323,6 @@ public class SzenarioVerwaltung extends Observable implements I18n {
             }
 
             tmpObject = xmldec.readObject();
-            docuItems.clear();
             if (tmpObject instanceof List && !((List) tmpObject).isEmpty()
                     && ((List) tmpObject).get(0) instanceof GUIDocuItem) {
                 List<GUIDocuItem> tempList = (List<GUIDocuItem>) tmpObject;

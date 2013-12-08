@@ -120,8 +120,6 @@ public class GUIContainer implements Serializable, I18n {
     private JScrollPane documentSidebarScrollpane;
 
     private JDocuElement docuElement;
-    private int docuElementUpdateType = NONE;
-    private Dimension docuElemMoveOffset;
 
     private JSidebarButton dragVorschau, kabelvorschau;
     private JSidebarButton ziel2Label;
