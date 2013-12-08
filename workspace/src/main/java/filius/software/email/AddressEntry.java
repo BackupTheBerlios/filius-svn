@@ -25,11 +25,13 @@
  */
 package filius.software.email;
 
+import java.io.Serializable;
+
 /**
  * @author stefan
  * 
  */
-public class AddressEntry {
+public class AddressEntry implements Serializable {
     private String name;
     private String mailAddress;
 

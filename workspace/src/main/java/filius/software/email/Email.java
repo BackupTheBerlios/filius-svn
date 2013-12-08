@@ -36,7 +36,7 @@ import filius.Main;
  * 
  */
 public class Email {
-    private AddressEntry absender;
+    private Object absender;
     private List<Object> empfaenger = new ArrayList<Object>();
     private List<Object> cc = new ArrayList<Object>();
     private List<Object> bcc = new ArrayList<Object>();
@@ -208,7 +208,7 @@ public class Email {
     }
 
     public AddressEntry getAbsender() {
-        return absender;
+        return new AddressEntry(absender);
     }
 
     public List<AddressEntry> getEmpfaenger() {
