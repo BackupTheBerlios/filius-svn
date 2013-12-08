@@ -153,11 +153,11 @@ public class ARP extends VermittlungsProtokoll {
             return ((String[]) arpTabelle.get(zielIp))[0];
         } else {
             // ARP-Broadcast und warte auf Antwort
-            for (int i = 0; arpTabelle.get(zielIp) == null && i < 3; i++) {
+            for (int i = 0; arpTabelle.get(zielIp) == null && i < 2; i++) {
                 sendeARPBroadcast(zielIp);
                 synchronized (arpTabelle) {
                     try {
-                        arpTabelle.wait(Verbindung.holeRTT());
+                        arpTabelle.wait(Verbindung.holeRTT() / 2);
                     } catch (InterruptedException e) {
                         Main.debug.println("EXCEPTION (" + this.hashCode()
                                 + "): keine Anwort auf ARP-Broadcast fuer IP-Adresse " + zielIp + " eingegangen!");
